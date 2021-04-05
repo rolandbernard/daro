@@ -12,7 +12,7 @@
 We plan to make a game that teaches people the basics of coding using a simple, self-designed
 programming language. The idea is to create simple puzzles with increasing difficulty that ask the
 player to solve programming-related problems, such as finding the minimum in an array, creating sums
-etc
+etc.
 
 ## Getting Started
 <!-- TODO -->
@@ -23,7 +23,7 @@ etc
 ### How to Run
 <!-- TODO -->
 
-### How To use
+### How to Use
 <!-- TODO -->
 
 ## Implementation
