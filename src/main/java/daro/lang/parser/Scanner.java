@@ -1,6 +1,255 @@
 package daro.lang.parser;
 
 public class Scanner {
-    // TODO
+    /**
+     * This variable stores the string on which the scanner will operate.
+     */
+    private final String string;
+    /**
+     * This variable stores the current offset of the next (non-cached) token.
+     */
+    private int offset;
+    /**
+     * This variable stores the next {@link Token} if one is cached.
+     */
+    private Token nextToken;
+
+    /**
+     * Create a scanner to operate on the given {@link String}.
+     * @param string The string to operate on
+     */
+    public Scanner(String string) {
+        this.string = string;
+        offset = 0;
+    }
+
+    /**
+     * Skip the next whitespace character in the scanner and return if a whitespace was consumed.
+     * @return true if a character was consumed, otherwise false
+     */
+    private boolean skipWhitespace() {
+        if (offset < string.length() && Character.isWhitespace(string.charAt(offset))) {
+            offset++;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Skip the next comment starting at offset and return if a comment was consumed.
+     * @return true if a comment was found, otherwise false
+     */
+    private boolean skipComments() {
+        if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("//")) {
+            while (offset < string.length() && string.charAt(offset) != '\n') {
+                offset++;
+            }
+            offset++;
+            if (offset > string.length()) {
+            	offset = string.length();
+            }
+            return true;
+        } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("/*")) {
+            int depth = 0;
+            offset += 2;
+            while (offset + 1 < string.length() && (depth != 0 || !string.substring(offset, offset + 2).equals("*/"))) {
+                if (string.substring(offset, offset + 2).equals("/*")) {
+                    depth++;
+                } else if (string.substring(offset, offset + 2).equals("*/")) {
+                    depth--;
+                }
+                offset++;
+            }
+            offset += 2;
+            if (offset > string.length()) {
+            	offset = string.length();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Return if the giver character is a hexadecimal digit or not.
+     * @param c The character to test
+     * @return true is c is a hexadecimal digit, otherwise false
+     */
+    private static boolean isHexDigit(char c) {
+        if (c >= '0' && c <= '9') {
+            return true;
+        } else if (c >= 'a' && c <= 'f') {
+            return true;
+        } else if (c >= 'A' && c <= 'F') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Return the next {@link Token} starting from offset.
+     * @return The next {@link Token} or null of end of file
+     */
+    private Token determineNext() {
+        // First skip all whitespaces and comments
+        while (skipWhitespace() || skipComments());
+        int start = offset;
+        if (offset < string.length()) {
+            if (string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
+                // Don't use Character.isDigit here, because it includes not ASCII digits
+                if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0b")) {
+                    offset += 2;
+                    while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '1') {
+                        offset++;
+                    }
+                    return new Token(TokenKind.INTEGER, string.substring(start, offset));
+                } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0o")) {
+                    offset += 2;
+                    while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '7') {
+                        offset++;
+                    }
+                    return new Token(TokenKind.INTEGER, string.substring(start, offset));
+                } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0x")) {
+                    offset += 2;
+                    while (offset < string.length() && isHexDigit(string.charAt(offset))) {
+                        offset++;
+                    }
+                    return new Token(TokenKind.INTEGER, string.substring(start, offset));
+                } else {
+                    while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
+                        offset++;
+                    }
+                    if (offset < string.length() && string.charAt(offset) == '.') {
+                        offset++;
+                        while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
+                            offset++;
+                        }
+                        if (offset < string.length() && string.charAt(offset) == 'e') {
+                            offset++;
+                            if (offset < string.length() && (string.charAt(offset) == '+' || string.charAt(offset) == '-')) {
+                                offset++;
+                            }
+                            while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
+                                offset++;
+                            }
+                        }
+                        return new Token(TokenKind.REAL, string.substring(start, offset));
+                    } else {
+                        return new Token(TokenKind.INTEGER, string.substring(start, offset));
+                    }
+                }
+            } else if (string.charAt(offset) == '"') {
+                offset++;
+                while (offset < string.length() && string.charAt(offset) != '"') {
+                    if (offset + 1 < string.length() && string.charAt(offset) == '\\') {
+                        offset++;
+                    }
+                    offset++;
+                }
+                offset++;
+				if (offset > string.length()) {
+					offset = string.length();
+				}
+                return new Token(TokenKind.STRING, string.substring(start, offset));
+            } else if (string.charAt(offset) == '\'') {
+                offset++;
+                while (offset < string.length() && string.charAt(offset) != '\'') {
+                    if (offset + 1 < string.length() && string.charAt(offset) == '\\') {
+                        offset++;
+                    }
+                    offset++;
+                }
+                offset++;
+				if (offset > string.length()) {
+					offset = string.length();
+				}
+                return new Token(TokenKind.CHARACTER, string.substring(start, offset));
+            } else if (Character.isLetter(string.charAt(offset))) {
+                offset++;
+                while (offset < string.length() && (Character.isLetterOrDigit(string.charAt(offset)) || string.charAt(offset) == '_')) {
+                    offset++;
+                }
+                String source = string.substring(start, offset);
+                TokenKind kind = TokenKind.findForFixedSource(source);
+                if (kind != null) {
+                    return new Token(kind);
+                } else {
+                    return new Token(TokenKind.IDENTIFIER, string.substring(start, offset));
+                }
+            } else {
+                TokenKind kind = null;
+                if (offset + 1 < string.length()) {
+                    kind = TokenKind.findForFixedSource(string.substring(offset, offset + 2));
+                    if (kind != null) {
+                        offset += 2;
+                        return new Token(kind, string.substring(start, offset));
+                    }
+                }
+                kind = TokenKind.findForFixedSource(string.substring(offset, offset + 1));
+                if (kind != null) {
+                    offset++;
+                    return new Token(kind, string.substring(start, offset));
+                } else {
+                    offset++;
+                    return new Token(TokenKind.INVALID, string.substring(start, offset));
+                }
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Cache the next {@link Token} if one is not already cached.
+     */
+    private void cacheToken() {
+        if (nextToken == null) {
+            nextToken = determineNext();
+        }
+    }
+
+    /**
+     * Test if the scanner has a next {@link Token}.
+     * @return true if the is a next {@link Token}, otherwise false
+     */
+    public boolean hasNext() {
+        cacheToken();
+        return nextToken != null;
+    }
+
+    /**
+     * Test if the next {@link Token} is of the given {@link TokenKind}.
+     * @param kind The kind to look for
+     * @return true if the next {@link Token} has {@link TokenKind} kind, otherwise false
+     */
+    public boolean hasNext(TokenKind kind) {
+        return hasNext() && nextToken.getKind() == kind;
+    }
+
+    /**
+     * Return the next {@link Token}.
+     * @return The next {@link Token}
+     */
+    public Token next() {
+        cacheToken();
+        Token ret = nextToken;
+        nextToken = null;
+        return ret;
+    }
+
+    /**
+     * Return the next {@link Token} if is is of the given {@link TokenKind}.
+     * @param kind The kind to search for
+     * @return The {@link TokenKind} if the next {@link Token} hast the correct kind, otherwise null
+     */
+    public Token accept(TokenKind kind) {
+        if (hasNext(kind)) {
+            return next();
+        } else {
+            return null;
+        }
+    }
 }
 

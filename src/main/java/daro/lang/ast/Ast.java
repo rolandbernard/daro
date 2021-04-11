@@ -1,4 +1,4 @@
-package daro.lang.parser.ast;
+package daro.lang.ast;
 
 public abstract class Ast {
     // TODO
