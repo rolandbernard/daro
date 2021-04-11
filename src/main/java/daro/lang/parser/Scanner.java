@@ -185,7 +185,7 @@ public class Scanner {
                     offset = string.length();
                 }
                 return new Token(TokenKind.CHARACTER, string.substring(start, offset));
-            } else if (Character.isLetter(string.charAt(offset))) {
+            } else if (Character.isLetter(string.charAt(offset)) || string.charAt(offset) == '_') {
                 // This is an identifier (e.g. main) or keyword (e.g. else)
                 offset++;
                 while (offset < string.length() && (Character.isLetterOrDigit(string.charAt(offset)) || string.charAt(offset) == '_')) {

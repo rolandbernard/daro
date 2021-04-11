@@ -90,6 +90,26 @@ public class ScannerTest {
     }
 
     @Test
+    void identifierScannerNextKind() {
+        Scanner scanner = new Scanner("_this_is valid_1234 alsoThis Äǹd THIS");
+        assertEquals(TokenKind.IDENTIFIER, scanner.next().getKind());
+        assertEquals(TokenKind.IDENTIFIER, scanner.next().getKind());
+        assertEquals(TokenKind.IDENTIFIER, scanner.next().getKind());
+        assertEquals(TokenKind.IDENTIFIER, scanner.next().getKind());
+        assertEquals(TokenKind.IDENTIFIER, scanner.next().getKind());
+    }
+
+    @Test
+    void identifierScannerNextSource() {
+        Scanner scanner = new Scanner("_this_is valid_1234 alsoThis Äǹd THIS");
+        assertEquals("_this_is", scanner.next().getSource());
+        assertEquals("valid_1234", scanner.next().getSource());
+        assertEquals("alsoThis", scanner.next().getSource());
+        assertEquals("Äǹd", scanner.next().getSource());
+        assertEquals("THIS", scanner.next().getSource());
+    }
+
+    @Test
     void leadingBlockCommentScanner() {
         Scanner scanner = new Scanner("/* Hello \n world */ fn main() { x := 12.7 }");
         assertEquals("fn", scanner.next().getSource());
@@ -201,7 +221,7 @@ public class ScannerTest {
 
     @Test
     void binaryIntegerScannerNextSource() {
-        Scanner scanner = new Scanner("0b1010234");
+        Scanner scanner = new Scanner("0b1010 234");
         assertEquals("0b1010", scanner.next().getSource());
         assertEquals("234", scanner.next().getSource());
     }
@@ -221,7 +241,7 @@ public class ScannerTest {
 
     @Test
     void octalIntegerScannerNextSource() {
-        Scanner scanner = new Scanner("0o123798");
+        Scanner scanner = new Scanner("0o1237 98");
         assertEquals("0o1237", scanner.next().getSource());
         assertEquals("98", scanner.next().getSource());
     }
@@ -241,9 +261,10 @@ public class ScannerTest {
 
     @Test
     void hexidecimalIntegerScannerNextSource() {
-        Scanner scanner = new Scanner("0x1234aBcTest");
+        Scanner scanner = new Scanner("0x1234aBc 0x1234test");
         assertEquals("0x1234aBc", scanner.next().getSource());
-        assertEquals("Test", scanner.next().getSource());
+        assertEquals("0x1234", scanner.next().getSource());
+        assertEquals("test", scanner.next().getSource());
     }
 
     @Test
@@ -261,7 +282,7 @@ public class ScannerTest {
 
     @Test
     void realWithExponentScannerNextSource() {
-        Scanner scanner = new Scanner("1230.1234e+12Test");
+        Scanner scanner = new Scanner("1230.1234e+12 Test");
         assertEquals("1230.1234e+12", scanner.next().getSource());
         assertEquals("Test", scanner.next().getSource());
     }
@@ -270,6 +291,42 @@ public class ScannerTest {
     void trailingRealWithExponentScannerNextSource() {
         Scanner scanner = new Scanner("1230.1234e+12");
         assertEquals("1230.1234e+12", scanner.next().getSource());
+    }
+
+    @Test
+    void trailingRealWithoutExponentScannerNextKind() {
+        Scanner scanner = new Scanner("1230.1234");
+        assertEquals(TokenKind.REAL, scanner.next().getKind());
+    }
+
+    @Test
+    void trailingRealWithoutExponentScannerNextSource() {
+        Scanner scanner = new Scanner("1230.1234");
+        assertEquals("1230.1234", scanner.next().getSource());
+    }
+
+    @Test
+    void trailingRealWithEmptyExponentScannerNextKind() {
+        Scanner scanner = new Scanner("1230.1234e");
+        assertEquals(TokenKind.REAL, scanner.next().getKind());
+    }
+
+    @Test
+    void trailingRealWithEmptyScannerNextSource() {
+        Scanner scanner = new Scanner("1230.1234e");
+        assertEquals("1230.1234e", scanner.next().getSource());
+    }
+
+    @Test
+    void trailingRealWithSimpleExponentScannerNextKind() {
+        Scanner scanner = new Scanner("1230.1234e12");
+        assertEquals(TokenKind.REAL, scanner.next().getKind());
+    }
+
+    @Test
+    void trailingRealWithSimpleEmptyScannerNextSource() {
+        Scanner scanner = new Scanner("1230.1234e12");
+        assertEquals("1230.1234e12", scanner.next().getSource());
     }
 
     @Test
