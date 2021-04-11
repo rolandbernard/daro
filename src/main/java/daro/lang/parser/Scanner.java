@@ -1,5 +1,11 @@
 package daro.lang.parser;
 
+/**
+ * This class can be used to tokenize the input string into {@link Token}
+ * objects for easier parsing afterwards.
+ *
+ * @author Roland Bernard
+ */
 public class Scanner {
     /**
      * This variable stores the string on which the scanner will operate.
@@ -42,6 +48,7 @@ public class Scanner {
      */
     private boolean skipComments() {
         if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("//")) {
+            // Skip a line comment (e.g. // Comment)
             while (offset < string.length() && string.charAt(offset) != '\n') {
                 offset++;
             }
@@ -51,7 +58,8 @@ public class Scanner {
             }
             return true;
         } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("/*")) {
-            int depth = 0;
+            // Skip block comment (e.g. /* Comment /* nested */ */)
+            int depth = 0; // Store the current nesting level
             offset += 2;
             while (offset + 1 < string.length() && (depth != 0 || !string.substring(offset, offset + 2).equals("*/"))) {
                 if (string.substring(offset, offset + 2).equals("/*")) {
@@ -99,19 +107,23 @@ public class Scanner {
         if (offset < string.length()) {
             if (string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
                 // Don't use Character.isDigit here, because it includes not ASCII digits
+                // This is a number literal (eighter integer or real)
                 if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0b")) {
+                    // Binary integer literal (e.g. 0b100100)
                     offset += 2;
                     while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '1') {
                         offset++;
                     }
                     return new Token(TokenKind.INTEGER, string.substring(start, offset));
                 } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0o")) {
+                    // Octal integer literal (e.g. 0o7711)
                     offset += 2;
                     while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '7') {
                         offset++;
                     }
                     return new Token(TokenKind.INTEGER, string.substring(start, offset));
                 } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0x")) {
+                    // Hexadecimal integer literal (e.g. 0xffaa)
                     offset += 2;
                     while (offset < string.length() && isHexDigit(string.charAt(offset))) {
                         offset++;
@@ -122,11 +134,13 @@ public class Scanner {
                         offset++;
                     }
                     if (offset < string.length() && string.charAt(offset) == '.') {
+                        // Floating point number literal (e.g. 1.2)
                         offset++;
                         while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
                             offset++;
                         }
                         if (offset < string.length() && string.charAt(offset) == 'e') {
+                            // Exponent e.g. (1.2e+12)
                             offset++;
                             if (offset < string.length() && (string.charAt(offset) == '+' || string.charAt(offset) == '-')) {
                                 offset++;
@@ -137,10 +151,12 @@ public class Scanner {
                         }
                         return new Token(TokenKind.REAL, string.substring(start, offset));
                     } else {
+                        // Decimal integer literal (e.g. 12)
                         return new Token(TokenKind.INTEGER, string.substring(start, offset));
                     }
                 }
             } else if (string.charAt(offset) == '"') {
+                // This is a string literal (e.g. "Hello world!")
                 offset++;
                 while (offset < string.length() && string.charAt(offset) != '"') {
                     if (offset + 1 < string.length() && string.charAt(offset) == '\\') {
@@ -149,11 +165,14 @@ public class Scanner {
                     offset++;
                 }
                 offset++;
-				if (offset > string.length()) {
-					offset = string.length();
-				}
+                if (offset > string.length()) {
+                    offset = string.length();
+                }
                 return new Token(TokenKind.STRING, string.substring(start, offset));
             } else if (string.charAt(offset) == '\'') {
+                // This is a character literal. (e.g. 'a', '\n')
+                // The tokenizer is more permisive than the language. Errors will be thrown in the
+                // parser.
                 offset++;
                 while (offset < string.length() && string.charAt(offset) != '\'') {
                     if (offset + 1 < string.length() && string.charAt(offset) == '\\') {
@@ -162,11 +181,12 @@ public class Scanner {
                     offset++;
                 }
                 offset++;
-				if (offset > string.length()) {
-					offset = string.length();
-				}
+                if (offset > string.length()) {
+                    offset = string.length();
+                }
                 return new Token(TokenKind.CHARACTER, string.substring(start, offset));
             } else if (Character.isLetter(string.charAt(offset))) {
+                // This is an identifier (e.g. main) or keyword (e.g. else)
                 offset++;
                 while (offset < string.length() && (Character.isLetterOrDigit(string.charAt(offset)) || string.charAt(offset) == '_')) {
                     offset++;
@@ -179,6 +199,7 @@ public class Scanner {
                     return new Token(TokenKind.IDENTIFIER, string.substring(start, offset));
                 }
             } else {
+                // This is eighter invalid or an operator (e.g. +)
                 TokenKind kind = null;
                 if (offset + 1 < string.length()) {
                     kind = TokenKind.findForFixedSource(string.substring(offset, offset + 2));
