@@ -114,21 +114,21 @@ public class Scanner {
                     while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '1') {
                         offset++;
                     }
-                    return new Token(TokenKind.INTEGER, string.substring(start, offset));
+                    return new Token(TokenKind.INTEGER, start, string.substring(start, offset));
                 } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0o")) {
                     // Octal integer literal (e.g. 0o7711)
                     offset += 2;
                     while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '7') {
                         offset++;
                     }
-                    return new Token(TokenKind.INTEGER, string.substring(start, offset));
+                    return new Token(TokenKind.INTEGER, start, string.substring(start, offset));
                 } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0x")) {
                     // Hexadecimal integer literal (e.g. 0xffaa)
                     offset += 2;
                     while (offset < string.length() && isHexDigit(string.charAt(offset))) {
                         offset++;
                     }
-                    return new Token(TokenKind.INTEGER, string.substring(start, offset));
+                    return new Token(TokenKind.INTEGER, start, string.substring(start, offset));
                 } else {
                     while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
                         offset++;
@@ -149,10 +149,10 @@ public class Scanner {
                                 offset++;
                             }
                         }
-                        return new Token(TokenKind.REAL, string.substring(start, offset));
+                        return new Token(TokenKind.REAL, start, string.substring(start, offset));
                     } else {
                         // Decimal integer literal (e.g. 12)
-                        return new Token(TokenKind.INTEGER, string.substring(start, offset));
+                        return new Token(TokenKind.INTEGER, start, string.substring(start, offset));
                     }
                 }
             } else if (string.charAt(offset) == '"') {
@@ -168,7 +168,7 @@ public class Scanner {
                 if (offset > string.length()) {
                     offset = string.length();
                 }
-                return new Token(TokenKind.STRING, string.substring(start, offset));
+                return new Token(TokenKind.STRING, start, string.substring(start, offset));
             } else if (string.charAt(offset) == '\'') {
                 // This is a character literal. (e.g. 'a', '\n')
                 // The tokenizer is more permisive than the language. Errors will be thrown in the
@@ -184,7 +184,7 @@ public class Scanner {
                 if (offset > string.length()) {
                     offset = string.length();
                 }
-                return new Token(TokenKind.CHARACTER, string.substring(start, offset));
+                return new Token(TokenKind.CHARACTER, start, string.substring(start, offset));
             } else if (Character.isLetter(string.charAt(offset)) || string.charAt(offset) == '_') {
                 // This is an identifier (e.g. main) or keyword (e.g. else)
                 offset++;
@@ -194,9 +194,9 @@ public class Scanner {
                 String source = string.substring(start, offset);
                 TokenKind kind = TokenKind.findForFixedSource(source);
                 if (kind != null) {
-                    return new Token(kind);
+                    return new Token(kind, start);
                 } else {
-                    return new Token(TokenKind.IDENTIFIER, string.substring(start, offset));
+                    return new Token(TokenKind.IDENTIFIER, start, string.substring(start, offset));
                 }
             } else {
                 // This is eighter invalid or an operator (e.g. +)
@@ -205,16 +205,16 @@ public class Scanner {
                     kind = TokenKind.findForFixedSource(string.substring(offset, offset + 2));
                     if (kind != null) {
                         offset += 2;
-                        return new Token(kind, string.substring(start, offset));
+                        return new Token(kind, start, string.substring(start, offset));
                     }
                 }
                 kind = TokenKind.findForFixedSource(string.substring(offset, offset + 1));
                 if (kind != null) {
                     offset++;
-                    return new Token(kind, string.substring(start, offset));
+                    return new Token(kind, start, string.substring(start, offset));
                 } else {
                     offset++;
-                    return new Token(TokenKind.INVALID, string.substring(start, offset));
+                    return new Token(TokenKind.INVALID, start, string.substring(start, offset));
                 }
             }
         } else {

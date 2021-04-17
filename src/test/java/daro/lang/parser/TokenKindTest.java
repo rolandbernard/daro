@@ -16,7 +16,7 @@ public class TokenKindTest {
     @Test
     void getFixedSourceTokenKind() {
         TokenKind kind = TokenKind.ELSE;
-        assertEquals(kind.getFixedSource(), "else");
+        assertEquals("else", kind.getFixedSource());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class TokenKindTest {
     @Test
     void findFixedSourceTokenKind() {
         TokenKind kind = TokenKind.findForFixedSource("else");
-        assertEquals(kind, TokenKind.ELSE);
+        assertEquals(TokenKind.ELSE, kind);
     }
 
     @Test

@@ -16,6 +16,10 @@ public class Token {
      * This variable stores the source string of the {@link Token}.
      */
     private final String source;
+    /**
+     * This variable stores the source position of the {@link Token}.
+     */
+    private final int position;
 
     /**
      * Create a {@link Token} from the given {@link TokenKind}. The token type must
@@ -25,8 +29,8 @@ public class Token {
      * @param kind The kind of token you want to create
      * @throws IllegalArgumentException
      */
-    public Token(TokenKind kind) throws IllegalArgumentException {
-        this(kind, kind.getFixedSource());
+    public Token(TokenKind kind, int position) throws IllegalArgumentException {
+        this(kind, position, kind.getFixedSource());
     }
 
     /**
@@ -35,11 +39,14 @@ public class Token {
      * @param kind   The kind of token you want to create
      * @param source The source string for the token
      */
-    public Token(TokenKind kind, String source) throws IllegalArgumentException  {
+    public Token(TokenKind kind, int position, String source) throws IllegalArgumentException  {
         if (source == null) {
             throw new IllegalArgumentException("Source string is null");
+        } else if (position < 0) {
+            throw new IllegalArgumentException("Position must be positive");
         } else {
             this.kind = kind;
+            this.position = position;
             this.source = source;
         }
     }
@@ -60,6 +67,15 @@ public class Token {
      */
     public String getSource() {
         return source;
+    }
+
+    /**
+     * Get the source position for this token.
+     * 
+     * @return The source position of this token
+     */
+    public int getPosition() {
+        return position;
     }
 }
 

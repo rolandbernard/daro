@@ -52,6 +52,20 @@ public class ScannerTest {
     }
 
     @Test
+    void simpleScannerNextPosition() {
+        Scanner scanner = new Scanner("fn main() { x := 12.7 }");
+        assertEquals(0, scanner.next().getPosition());
+        assertEquals(3, scanner.next().getPosition());
+        assertEquals(7, scanner.next().getPosition());
+        assertEquals(8, scanner.next().getPosition());
+        assertEquals(10, scanner.next().getPosition());
+        assertEquals(12, scanner.next().getPosition());
+        assertEquals(14, scanner.next().getPosition());
+        assertEquals(17, scanner.next().getPosition());
+        assertEquals(22, scanner.next().getPosition());
+    }
+
+    @Test
     void simpleScannerAccept() {
         Scanner scanner = new Scanner("fn main() { x := 12.7 }");
         assertNull(scanner.accept(TokenKind.IDENTIFIER));
