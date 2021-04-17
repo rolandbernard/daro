@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a character literal. e.g. {@code 'a'}
+ * 
+ * @author Roland Bernard
+ */
 public class AstCharacter extends AstNode {
     private final char value;
 

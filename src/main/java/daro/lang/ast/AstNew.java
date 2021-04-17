@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a new operation. e.g. {@code new foo{ ... }}
+ * 
+ * @author Roland Bernard
+ */
 public class AstNew extends AstNode {
     private final AstNode type;
     private final AstInitializer initializer;

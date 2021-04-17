@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a member access. e.g. {@code foo.bar}
+ * 
+ * @author Roland Bernard
+ */
 public class AstMember extends AstNode {
     private final AstNode operator;
     private final String name;

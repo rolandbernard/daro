@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for calls. e.g. {@code foo(1, 2, 3)}
+ * 
+ * @author Roland Bernard
+ */
 public class AstCall extends AstNode {
     private final AstNode function;
     private final AstNode[] parameters;

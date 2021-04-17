@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a multiplication. e.g. {@code foo * bar}
+ * 
+ * @author Roland Bernard
+ */
 public class AstMultiply extends AstBinaryNode {
 
     public AstMultiply(Position position, AstNode left, AstNode right) {

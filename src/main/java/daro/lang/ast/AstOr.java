@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a boolean or. e.g. {@code foo || bar}
+ * 
+ * @author Roland Bernard
+ */
 public class AstOr extends AstBinaryNode {
 
     public AstOr(Position position, AstNode left, AstNode right) {

@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a integer literal. e.g. {@code 42}
+ * 
+ * @author Roland Bernard
+ */
 public class AstInteger extends AstNode {
     private final long value;
 

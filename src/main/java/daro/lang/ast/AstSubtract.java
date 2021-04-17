@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a subtraction. e.g. {@code foo - bar}
+ * 
+ * @author Roland Bernard
+ */
 public class AstSubtract extends AstBinaryNode {
 
     public AstSubtract(Position position, AstNode left, AstNode right) {

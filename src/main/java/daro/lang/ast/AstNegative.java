@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a negation. e.g. {@code -foo}
+ * 
+ * @author Roland Bernard
+ */
 public class AstNegative extends AstUnaryNode {
 
     public AstNegative(Position position, AstNode operator) {

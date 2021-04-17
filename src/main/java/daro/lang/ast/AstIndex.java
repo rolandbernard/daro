@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a array indexing operation. e.g. {@code foo[bar]}
+ * 
+ * @author Roland Bernard
+ */
 public abstract class AstIndex extends AstBinaryNode {
 
     public AstIndex(Position position, AstNode left, AstNode right) {

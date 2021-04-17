@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a string literal. e.g. {@code "foo"}
+ * 
+ * @author Roland Bernard
+ */
 public class AstString extends AstNode {
     private final String value;
 

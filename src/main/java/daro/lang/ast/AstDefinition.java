@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a variable definition. e.g. {@code foo: bar = fizz}
+ * 
+ * @author Roland Bernard
+ */
 public class AstDefinition extends AstNode {
     private final String name;
     private final AstNode type;

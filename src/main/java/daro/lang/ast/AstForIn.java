@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a for-in loop. e.g. {@code for foo in bar { ... }}
+ * 
+ * @author Roland Bernard
+ */
 public class AstForIn extends AstNode {
     private final AstSymbol variable;
     private final AstNode list;

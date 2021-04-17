@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a if-else condition. e.g. {@code if foo { ... } else { ... }}
+ * 
+ * @author Roland Bernard
+ */
 public class AstIfElse extends AstNode {
     private final AstNode condition;
     private final AstNode ifBlock;

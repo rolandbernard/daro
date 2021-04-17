@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a equal comparison. e.g. {@code foo == bar}
+ * 
+ * @author Roland Bernard
+ */
 public class AstEqual extends AstBinaryNode {
 
     public AstEqual(Position position, AstNode left, AstNode right) {

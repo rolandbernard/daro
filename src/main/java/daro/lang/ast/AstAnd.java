@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for boolean and. e.g. {@code foo && bar}
+ * 
+ * @author Roland Bernard
+ */
 public class AstAnd extends AstBinaryNode {
 
     public AstAnd(Position position, AstNode left, AstNode right) {

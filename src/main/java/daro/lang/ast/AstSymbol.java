@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Class representing an ast node for a symbol. e.g. {@code foo}
+ * 
+ * @author Roland Bernard
+ */
 public class AstSymbol extends AstNode {
     private final String name;
 

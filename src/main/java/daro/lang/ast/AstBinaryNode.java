@@ -1,5 +1,10 @@
 package daro.lang.ast;
 
+/**
+ * Abstract super class representing an ast node for a binary opreation like addition, subtraction, etc.
+ * 
+ * @author Roland Bernard
+ */
 public abstract class AstBinaryNode extends AstNode {
     private final AstNode left;
     private final AstNode right;
