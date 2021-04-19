@@ -21,15 +21,21 @@ public class Position {
      * @param length The length
      */
     public Position(int start, int length) {
-        this.start = start;
-        this.end = start + length;
+        if (start < 0) {
+            throw new IllegalArgumentException("Position start must be non-negative");
+        } else if (length < 0) {
+            throw new IllegalArgumentException("Position length must be non-negative");
+        } else {
+            this.start = start;
+            this.end = start + length;
+        }
     }
 
     /**
      * Returns the starting position of the source code {@link Position}
      * @return The start position
      */
-    int getStart() {
+    public int getStart() {
         return start;
     }
 
@@ -37,7 +43,7 @@ public class Position {
      * Returns the ending position (exclusive) of the source code {@link Position}
      * @return The end position
      */
-    int getEnd() {
+    public int getEnd() {
         return end;
     }
 
@@ -45,7 +51,27 @@ public class Position {
      * Returns the length of the source code {@link Position}
      * @return The length position
      */
-    int getLength() {
+    public int getLength() {
         return end - start;
+    }
+
+    @Override
+    public int hashCode() {
+        return (997 * start) ^ (991 * end);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Position) {
+            Position position = (Position)obj;
+            return (start == position.getStart() && end == position.getEnd());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "(" + start + "," + getLength() + ")";
     }
 }
