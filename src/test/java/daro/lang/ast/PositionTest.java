@@ -14,14 +14,14 @@ public class PositionTest {
 
     @Test
     void getEndPosition() {
-        Position position = new Position(42, 100);
-        assertEquals(142, position.getEnd());
+        Position position = new Position(00, 100);
+        assertEquals(100, position.getEnd());
     }
 
     @Test
     void getLengthPosition() {
-        Position position = new Position(0, 100);
-        assertEquals(100, position.getLength());
+        Position position = new Position(42, 100);
+        assertEquals(58, position.getLength());
     }
 
     @Test

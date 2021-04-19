@@ -20,14 +20,14 @@ public class Position {
      * @param start The starting position
      * @param length The length
      */
-    public Position(int start, int length) {
+    public Position(int start, int end) {
         if (start < 0) {
             throw new IllegalArgumentException("Position start must be non-negative");
-        } else if (length < 0) {
+        } else if (end < start) {
             throw new IllegalArgumentException("Position length must be non-negative");
         } else {
             this.start = start;
-            this.end = start + length;
+            this.end = end;
         }
     }
 

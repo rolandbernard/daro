@@ -1,5 +1,7 @@
 package daro.lang.parser;
 
+import daro.lang.ast.Position;
+
 // TODO: Maybe switch from an enum kinds to using a class hierarchy
 
 /**
@@ -70,12 +72,21 @@ public class Token {
     }
 
     /**
+     * Get the source position start for this token.
+     * 
+     * @return The source position start of this token
+     */
+    public int getStart() {
+        return position;
+    }
+
+    /**
      * Get the source position for this token.
      * 
      * @return The source position of this token
      */
-    public int getPosition() {
-        return position;
+    public Position getPosition() {
+        return new Position(position, position + source.length());
     }
 }
 

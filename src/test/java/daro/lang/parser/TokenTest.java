@@ -1,5 +1,6 @@
 package daro.lang.parser;
 
+import daro.lang.ast.Position;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +22,7 @@ public class TokenTest {
     @Test
     void fixedSourceGetPositionToken() {
         Token kind = new Token(TokenKind.ELSE, 42);
-        assertEquals(42, kind.getPosition());
+        assertEquals(new Position(42, 46), kind.getPosition());
     }
 
     @Test
@@ -39,7 +40,7 @@ public class TokenTest {
     @Test
     void getPositionToken() {
         Token kind = new Token(TokenKind.INTEGER, 42, "1234");
-        assertEquals(42, kind.getPosition());
+        assertEquals(new Position(42, 46), kind.getPosition());
     }
 
     @Test

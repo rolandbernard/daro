@@ -54,15 +54,15 @@ public class ScannerTest {
     @Test
     void simpleScannerNextPosition() {
         Scanner scanner = new Scanner("fn main() { x := 12.7 }");
-        assertEquals(0, scanner.next().getPosition());
-        assertEquals(3, scanner.next().getPosition());
-        assertEquals(7, scanner.next().getPosition());
-        assertEquals(8, scanner.next().getPosition());
-        assertEquals(10, scanner.next().getPosition());
-        assertEquals(12, scanner.next().getPosition());
-        assertEquals(14, scanner.next().getPosition());
-        assertEquals(17, scanner.next().getPosition());
-        assertEquals(22, scanner.next().getPosition());
+        assertEquals(0, scanner.next().getStart());
+        assertEquals(3, scanner.next().getStart());
+        assertEquals(7, scanner.next().getStart());
+        assertEquals(8, scanner.next().getStart());
+        assertEquals(10, scanner.next().getStart());
+        assertEquals(12, scanner.next().getStart());
+        assertEquals(14, scanner.next().getStart());
+        assertEquals(17, scanner.next().getStart());
+        assertEquals(22, scanner.next().getStart());
     }
 
     @Test
