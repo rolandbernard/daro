@@ -88,6 +88,15 @@ public class Token {
     public Position getPosition() {
         return new Position(position, position + source.length());
     }
+
+    /**
+     * Get the source position end for this token.
+     * 
+     * @return The source position start of this token
+     */
+    public int getEnd() {
+        return position + source.length();
+    }
 }
 
 

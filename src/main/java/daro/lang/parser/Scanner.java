@@ -250,6 +250,20 @@ public class Scanner {
     }
 
     /**
+     * Test if the next {@link Token} is of one of the given {@link TokenKind}s.
+     * @param kinds The kinds of token to look for
+     * @return true if the next {@link Token} has a kind inside kinds, otherwise false
+     */
+    public boolean hasNext(TokenKind[] kinds) {
+        for (TokenKind kind : kinds) {
+            if (hasNext(kind)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Return the next {@link Token}.
      * @return The next {@link Token}
      */

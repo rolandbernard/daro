@@ -96,6 +96,21 @@ public class ScannerTest {
     }
 
     @Test
+    void simpleScannerHasNextOfSomeKind() {
+        Scanner scanner = new Scanner("fn main()");
+        assertTrue(scanner.hasNext(new TokenKind[]{ TokenKind.FN, TokenKind.IDENTIFIER }));
+        scanner.next();
+        assertTrue(scanner.hasNext(new TokenKind[]{ TokenKind.FN, TokenKind.IDENTIFIER }));
+        scanner.next();
+        assertFalse(scanner.hasNext(new TokenKind[]{ TokenKind.FN, TokenKind.IDENTIFIER }));
+        assertTrue(scanner.hasNext(new TokenKind[]{ TokenKind.CLOSE_PAREN, TokenKind.OPEN_PAREN, TokenKind.IDENTIFIER}));
+        scanner.next();
+        assertTrue(scanner.hasNext(new TokenKind[]{ TokenKind.CLOSE_PAREN, TokenKind.OPEN_PAREN, TokenKind.IDENTIFIER}));
+        scanner.next();
+        assertFalse(scanner.hasNext(new TokenKind[]{ TokenKind.CLOSE_PAREN, TokenKind.OPEN_PAREN, TokenKind.IDENTIFIER}));
+    }
+
+    @Test
     void simpleScannerAcceptSource() {
         Scanner scanner = new Scanner("fn main() { x := 12.7 }");
         assertEquals("fn", scanner.accept(TokenKind.FN).getSource());

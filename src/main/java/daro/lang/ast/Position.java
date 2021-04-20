@@ -57,7 +57,7 @@ public class Position {
 
     @Override
     public int hashCode() {
-        return (997 * start) ^ (991 * end);
+        return (997 * Integer.hashCode(start)) ^ (991 * Integer.hashCode(end));
     }
 
     @Override
