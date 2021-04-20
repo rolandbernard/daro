@@ -114,4 +114,140 @@ public class AstTest {
         );
         assertEquals("(AstPositive (AstBitwiseNot (AstNegative '5')))", node1.toString());
     }
+
+    @Test
+    void equalsAstBlock() {
+        AstBlock node1 = new AstBlock(null,
+            new AstNode[] {
+                new AstString(null, "The answer"),
+                new AstInteger(null, 42),
+                new AstString(null, "The question"),
+                new AstAddition(null,
+                    new AstReal(null, 5),
+                    new AstReal(null, 6)
+                ),
+            }
+        );
+        AstBlock node2 = new AstBlock(null,
+            new AstNode[] {
+                new AstString(null, "The answer"),
+                new AstInteger(null, 42),
+                new AstString(null, "The question"),
+                new AstAddition(null,
+                    new AstReal(null, 5),
+                    new AstReal(null, 6)
+                ),
+            }
+        );
+        assertEquals(node1, node1);
+        assertEquals(node1, node2);
+    }
+
+    @Test
+    void notEqualsAstBlock() {
+        AstBlock node1 = new AstBlock(null,
+            new AstNode[] {
+                new AstString(null, "The answer"),
+                new AstInteger(null, 42),
+                new AstString(null, "The question"),
+                new AstAddition(null,
+                    new AstInteger(null, 5),
+                    new AstReal(null, 6)
+                ),
+            }
+        );
+        AstBlock node2 = new AstBlock(null,
+            new AstNode[] {
+                new AstInteger(null, 42),
+                new AstString(null, "The answer"),
+                new AstAddition(null,
+                    new AstReal(null, 6),
+                    new AstInteger(null, 5)
+                ),
+                new AstString(null, "The question"),
+            }
+        );
+        assertNotEquals(node1, node2);
+        assertNotEquals(node1, new Object());
+        assertNotEquals(node1, null);
+    }
+
+    @Test
+    void toStringAstBlock() {
+        AstBlock node1 = new AstBlock(null,
+            new AstNode[] {
+                new AstString(null, "The answer"),
+                new AstInteger(null, 42),
+                new AstString(null, "The question"),
+                new AstAddition(null,
+                    new AstInteger(null, 5),
+                    new AstReal(null, 6)
+                ),
+            }
+        );
+        assertEquals("(AstBlock \"The answer\" 42 \"The question\" (AstAddition 5 6.0))", node1.toString());
+    }
+
+    @Test
+    void equalsAstCall() {
+        AstCall node1 = new AstCall(null,
+            new AstSymbol(null, "foo"),
+            new AstNode[] {
+                new AstInteger(null, 1),
+                new AstInteger(null, 2),
+                new AstInteger(null, 3),
+            }
+        );
+        AstCall node2 = new AstCall(null,
+            new AstSymbol(null, "foo"),
+            new AstNode[] {
+                new AstInteger(null, 1),
+                new AstInteger(null, 2),
+                new AstInteger(null, 3),
+            }
+        );
+        assertEquals(node1, node1);
+        assertEquals(node1, node2);
+    }
+
+    @Test
+    void notEqualsAstCall() {
+        AstCall node1 = new AstCall(null,
+            new AstSymbol(null, "foo"),
+            new AstNode[] {
+                new AstInteger(null, 1),
+                new AstInteger(null, 2),
+                new AstInteger(null, 3),
+            }
+        );
+        AstCall node2 = new AstCall(null,
+            new AstSymbol(null, "foo"),
+            new AstNode[] { }
+        );
+        AstCall node3 = new AstCall(null,
+            new AstSymbol(null, "fo"),
+            new AstNode[] {
+                new AstInteger(null, 1),
+                new AstInteger(null, 2),
+                new AstInteger(null, 3),
+            }
+        );
+        assertNotEquals(node1, node2);
+        assertNotEquals(node1, node3);
+        assertNotEquals(node1, new Object());
+        assertNotEquals(node1, null);
+    }
+
+    @Test
+    void toStringAstCall() {
+        AstCall node1 = new AstCall(null,
+            new AstSymbol(null, "foo"),
+            new AstNode[] {
+                new AstInteger(null, 1),
+                new AstInteger(null, 2),
+                new AstInteger(null, 3),
+            }
+        );
+        assertEquals("(AstCall foo (1 2 3))", node1.toString());
+    }
 }

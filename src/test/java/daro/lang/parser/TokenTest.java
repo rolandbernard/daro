@@ -44,6 +44,18 @@ public class TokenTest {
     }
 
     @Test
+    void getStartToken() {
+        Token kind = new Token(TokenKind.INTEGER, 42, "1234");
+        assertEquals(42, kind.getStart());
+    }
+
+    @Test
+    void getEndToken() {
+        Token kind = new Token(TokenKind.INTEGER, 42, "1234");
+        assertEquals(46, kind.getEnd());
+    }
+
+    @Test
     void failOnMissingFixedSourceToken() {
         assertThrows(IllegalArgumentException.class, () -> {
             new Token(TokenKind.INTEGER, 0);
@@ -60,7 +72,7 @@ public class TokenTest {
     @Test
     void failOnNegativePositionToken() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Token(TokenKind.INTEGER, -1, null);
+            new Token(TokenKind.INTEGER, -1, "123");
         });
     }
 }
