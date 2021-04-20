@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public class AstReal extends AstNode {
+public final class AstReal extends AstNode {
     private final double value;
 
     public AstReal(Position position, double value) {
@@ -19,6 +19,26 @@ public class AstReal extends AstNode {
 
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return Double.hashCode(value);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AstReal) {
+            AstReal node = (AstReal)obj;
+            return value == node.getValue();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
     }
 }
 

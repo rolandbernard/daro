@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public class AstPositive extends AstUnaryNode {
+public final class AstPositive extends AstUnaryNode {
 
     public AstPositive(Position position, AstNode operator) {
         super(position, operator);

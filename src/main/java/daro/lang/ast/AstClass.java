@@ -1,11 +1,13 @@
 package daro.lang.ast;
 
+import java.util.Objects;
+
 /**
  * Class representing an ast node for a class. e.g. {@code class foo { ... }}
  * 
  * @author Roland Bernard
  */
-public class AstClass extends AstNode {
+public final class AstClass extends AstNode {
     private final String name;
     private final AstBlock body;
 
@@ -25,6 +27,27 @@ public class AstClass extends AstNode {
 
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return (997 * name.hashCode()) ^ (991 * body.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AstClass) {
+            AstClass node = (AstClass)obj;
+            return Objects.equals(name, node.getName())
+                && Objects.equals(body, node.getBody());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "(" + this.getClass().getSimpleName() + " " + name + " " + body + ")";
     }
 }
 

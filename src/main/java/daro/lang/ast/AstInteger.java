@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public class AstInteger extends AstNode {
+public final class AstInteger extends AstNode {
     private final long value;
 
     public AstInteger(Position position, long value) {
@@ -19,6 +19,26 @@ public class AstInteger extends AstNode {
 
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(value);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AstInteger) {
+            AstInteger node = (AstInteger)obj;
+            return value == node.getValue();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
     }
 }
 

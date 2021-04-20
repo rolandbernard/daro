@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public abstract class AstAssignment extends AstBinaryNode {
+public final class AstAssignment extends AstBinaryNode {
 
     public AstAssignment(Position position, AstNode left, AstNode right) {
         super(position, left, right);

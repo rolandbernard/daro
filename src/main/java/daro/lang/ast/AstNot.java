@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public class AstNot extends AstUnaryNode {
+public final class AstNot extends AstUnaryNode {
 
     public AstNot(Position position, AstNode operator) {
         super(position, operator);

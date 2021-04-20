@@ -1,23 +1,25 @@
 package daro.lang.ast;
 
+import java.util.Objects;
+
 /**
  * Class representing an ast node for a for-in loop. e.g. {@code for foo in bar { ... }}
  * 
  * @author Roland Bernard
  */
-public class AstForIn extends AstNode {
+public final class AstForIn extends AstNode {
     private final AstSymbol variable;
     private final AstNode list;
-    private final AstNode block;
+    private final AstNode body;
 
-    public AstForIn(Position position, AstSymbol variable, AstNode list, AstBlock block) {
+    public AstForIn(Position position, AstSymbol variable, AstNode list, AstBlock body) {
         super(position);
         this.variable = variable;
         this.list = list;
-        this.block = block;
+        this.body = body;
     }
 
-    public AstSymbol variable() {
+    public AstSymbol getVariable() {
         return variable;
     }
 
@@ -25,12 +27,34 @@ public class AstForIn extends AstNode {
         return list;
     }
 
-    public AstNode getBlock() {
-        return block;
+    public AstNode getBody() {
+        return body;
     }
 
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return (997 * variable.hashCode()) ^ (991 * list.hashCode()) ^ (877 * body.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AstForIn) {
+            AstForIn node = (AstForIn)obj;
+            return Objects.equals(variable, node.getVariable())
+                && Objects.equals(list, node.getList())
+                && Objects.equals(body, node.getBody());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "(" + this.getClass().getSimpleName() + " " + variable + " " + list + " " + body + ")";
     }
 }
 

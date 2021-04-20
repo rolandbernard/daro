@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public class AstMultiply extends AstBinaryNode {
+public final class AstMultiply extends AstBinaryNode {
 
     public AstMultiply(Position position, AstNode left, AstNode right) {
         super(position, left, right);

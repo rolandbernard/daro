@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public class AstBitwiseXor extends AstBinaryNode {
+public final class AstBitwiseXor extends AstBinaryNode {
 
     public AstBitwiseXor(Position position, AstNode left, AstNode right) {
         super(position, left, right);

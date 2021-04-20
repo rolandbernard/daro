@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public class AstShiftLeft extends AstBinaryNode {
+public final class AstShiftLeft extends AstBinaryNode {
 
     public AstShiftLeft(Position position, AstNode left, AstNode right) {
         super(position, left, right);

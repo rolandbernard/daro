@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public class AstEqual extends AstBinaryNode {
+public final class AstEqual extends AstBinaryNode {
 
     public AstEqual(Position position, AstNode left, AstNode right) {
         super(position, left, right);

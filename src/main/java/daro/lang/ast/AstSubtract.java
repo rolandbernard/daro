@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public class AstSubtract extends AstBinaryNode {
+public final class AstSubtract extends AstBinaryNode {
 
     public AstSubtract(Position position, AstNode left, AstNode right) {
         super(position, left, right);

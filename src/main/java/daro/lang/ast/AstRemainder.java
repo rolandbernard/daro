@@ -5,7 +5,7 @@ package daro.lang.ast;
  * 
  * @author Roland Bernard
  */
-public class AstRemainder extends AstBinaryNode {
+public final class AstRemainder extends AstBinaryNode {
 
     public AstRemainder(Position position, AstNode left, AstNode right) {
         super(position, left, right);
