@@ -35,10 +35,24 @@ public class PositionTest {
     void equalsPosition() {
         Position position1 = new Position(42, 100);
         Position position2 = new Position(42, 100);
-        Position position3 = new Position(0, 100);
+        assertEquals(position1, position1);
         assertEquals(position1, position2);
+    }
+
+    @Test
+    void notEqualsPosition() {
+        Position position1 = new Position(42, 100);
+        Position position2 = new Position(0, 100);
+        Position position3 = new Position(42, 101);
+        assertNotEquals(position1, position2);
         assertNotEquals(position1, position3);
-        assertNotEquals(position2, position3);
+        assertNotEquals(position2, new Object());
+    }
+
+    @Test
+    void toStringPosition() {
+        Position position1 = new Position(42, 100);
+        assertEquals("(42,58)", position1.toString());
     }
 
     @Test
