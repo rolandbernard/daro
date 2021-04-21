@@ -589,15 +589,20 @@ public class AstTest {
             new AstInitializer(null, new AstNode[] { new AstInteger(null, 42) })
         );
         AstNew node2 = new AstNew(null,
-            new AstSymbol(null, "bar"),
+            null,
             new AstInitializer(null, new AstNode[] { new AstInteger(null, 42) })
         );
         AstNew node3 = new AstNew(null,
             new AstSymbol(null, "foo"),
-            new AstInitializer(null, new AstNode[] { new AstInteger(null, 12) })
+            new AstInitializer(null, new AstNode[] { null })
+        );
+        AstNew node4 = new AstNew(null,
+            new AstSymbol(null, "foo"),
+            null
         );
         assertNotEquals(node1, node2);
         assertNotEquals(node1, node3);
+        assertNotEquals(node1, node4);
         assertNotEquals(node1, new Object());
         assertNotEquals(node1, null);
     }

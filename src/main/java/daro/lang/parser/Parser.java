@@ -37,7 +37,7 @@ public class Parser {
     }
 
     /**
-     * Return the first option that does not return null.
+     * Utility function that returns the first option that does not resolve to null.
      * @param <T> The type of parameter returned by the supplies
      * @param options The different suppliers that should be tested
      * @return The first option in options that return non-null or null if all return null
@@ -61,6 +61,9 @@ public class Parser {
         ArrayList<AstNode> statements = new ArrayList<>();
         AstNode statement;
         do {
+            while (scanner.accept(TokenKind.SEMICOLON) != null) {
+                // Consume all semicolons
+            }
             statement = parserStatement();
             if (statement != null) {
                 statements.add(statement);
@@ -256,14 +259,234 @@ public class Parser {
     }
 
     private AstNode parseUnaryPrefixExpression() {
-        return null;
+        if (scanner.hasNext(TokenKind.PLUS)) {
+            Token token = scanner.next();
+            AstNode operand = parseUnarySuffixExpression();
+            if (operand == null) {
+                throw new ParsingException(token.getPosition(), "Expected an expression after unary `+`");
+            }
+            return new AstPositive(new Position(token.getStart(), operand.getEnd()), operand);
+        } else if (scanner.hasNext(TokenKind.MINUS)) {
+            Token token = scanner.next();
+            AstNode operand = parseUnarySuffixExpression();
+            if (operand == null) {
+                throw new ParsingException(token.getPosition(), "Expected an expression after unary `-`");
+            }
+            return new AstNegative(new Position(token.getStart(), operand.getEnd()), operand);
+        } else if (scanner.hasNext(TokenKind.TILDE)) {
+            Token token = scanner.next();
+            AstNode operand = parseUnarySuffixExpression();
+            if (operand == null) {
+                throw new ParsingException(token.getPosition(), "Expected an expression after `~`");
+            }
+            return new AstBitwiseNot(new Position(token.getStart(), operand.getEnd()), operand);
+        } else if (scanner.hasNext(TokenKind.BANG)) {
+            Token token = scanner.next();
+            AstNode operand = parseUnarySuffixExpression();
+            if (operand == null) {
+                throw new ParsingException(token.getPosition(), "Expected an expression after `!`");
+            }
+            return new AstNot(new Position(token.getStart(), operand.getEnd()), operand);
+        } else if (scanner.hasNext(TokenKind.OPEN_BRACKET)) {
+            Token token = scanner.next();
+            if (!scanner.hasNext(TokenKind.CLOSE_BRACKET)) {
+                throw new ParsingException(token.getPosition(), "Expected a closing `]` after opening `[`");
+            }
+            Token closing = scanner.next();
+            AstNode operand = parseUnarySuffixExpression();
+            if (operand == null) {
+                throw new ParsingException(
+                    new Position(token.getStart(), closing.getEnd()),
+                    "Expected an expression after unary prefix `[]`"
+                );
+            }
+            return new AstPositive(new Position(token.getStart(), operand.getEnd()), operand);
+        } else {
+            return parseUnarySuffixExpression();
+        }
     }
 
     private AstNode parseUnarySuffixExpression() {
-        return null;
+        AstNode operand = parseBaseExpression();
+        if (operand != null) {
+            if (scanner.hasNext(TokenKind.OPEN_PAREN)) {
+                Token open = scanner.next();
+                ArrayList<AstNode> parameters = new ArrayList<>();
+                AstNode parameter;
+                do {
+                    parameter = parseExpression();
+                    if (parameter != null) {
+                        parameters.add(parameter);
+                    }
+                } while(parameter != null && scanner.accept(TokenKind.COMMA) != null);
+                Token closing = scanner.accept(TokenKind.CLOSE_PAREN);
+                if (closing == null) {
+                    throw new ParsingException(
+                        new Position(open.getStart(), parameters.get(parameters.size() - 1).getEnd()),
+                        "Expected a closing `)` after opening `(`"
+                    );
+                }
+                return new AstCall(
+                    new Position(operand.getStart(), closing.getEnd()),
+                    operand, parameters.toArray(new AstNode[parameters.size()])
+                );
+            } else if (scanner.hasNext(TokenKind.OPEN_BRACKET)) {
+                Token open = scanner.next();
+                AstNode index = parseExpression();
+                if (index == null) {
+                    throw new ParsingException(
+                        new Position(operand.getStart(), open.getEnd()),
+                        "Expected an expression after indexing `[`"
+                    );
+                }
+                Token closing = scanner.accept(TokenKind.CLOSE_BRACKET);
+                if (closing == null) {
+                    throw new ParsingException(
+                        new Position(open.getStart(), index.getEnd()),
+                        "Expected a closing `]` after opening `[`"
+                    );
+                }
+                return new AstIndex(
+                    new Position(operand.getStart(), closing.getEnd()),
+                    operand, index
+                );
+            } else if (scanner.hasNext(TokenKind.DOT)) {
+                Token dot = scanner.next();
+                Token member = scanner.accept(TokenKind.IDENTIFIER);
+                if (member == null) {
+                    throw new ParsingException(
+                        new Position(operand.getStart(), dot.getEnd()),
+                        "Expected member name after accessing `.`"
+                    );
+                }
+                return new AstMember(
+                    new Position(operand.getStart(), member.getEnd()),
+                    operand, member.getSource()
+                );
+            } else {
+                return operand;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * This is a utility function that convets a string containing escaped characters with `\` into
+     * a string containing the actual characters. E.g. \\\" will be transformed into \"
+     * @param input The string that should be converted
+     * @return The converted string
+     */
+    private static String resolveEscapeCharacters(String input) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == '\\' && i + 1 < input.length()) {
+                i++;
+                switch (input.charAt(i)) {
+                    case 'b':
+                        builder.append('\b');
+                        break;
+                    case 't':
+                        builder.append('\t');
+                        break;
+                    case 'n':
+                        builder.append('\n');
+                        break;
+                    case 'f':
+                        builder.append('\f');
+                        break;
+                    case 'r':
+                        builder.append('\r');
+                        break;
+                    default:
+                        builder.append(input.charAt(i));
+                        break;
+                }
+            } else {
+                builder.append(input.charAt(i));
+            }
+        }
+        return builder.toString();
     }
 
     private AstNode parseBaseExpression() {
+        if (scanner.hasNext(TokenKind.OPEN_PAREN)) {
+            Token open = scanner.next();
+            AstNode value = parseExpression();
+            if (value == null) {
+                throw new ParsingException(open.getPosition(), "Expected an expression after opening `(`");
+            }
+            Token closing = scanner.accept(TokenKind.CLOSE_PAREN);
+            if (closing == null) {
+                throw new ParsingException(
+                    new Position(open.getStart(), value.getEnd()),
+                    "Expected a closing `)` after opening `(`"
+                );
+            }
+            return value;
+        } else if (scanner.hasNext(TokenKind.NEW)) {
+            Token token = scanner.next();
+            AstNode type = parseUnaryPrefixExpression();
+            if (type == null) {
+                throw new ParsingException(token.getPosition(), "Expected an expression after `new`");
+            }
+            AstInitializer initializer = parseInitializer();
+            return new AstNew(
+                new Position(token.getStart(), initializer == null ? type.getEnd() : initializer.getEnd()),
+                type, initializer
+            );
+        } else if (scanner.hasNext(TokenKind.INTEGER)) {
+            Token token = scanner.next();
+            String source = token.getSource();
+            long value;
+            if (source.startsWith("0b")) {
+                value = Long.valueOf(source.substring(2), 2);
+            } else if (source.startsWith("0o")) {
+                value = Long.valueOf(source.substring(2), 8);
+            } else if (source.startsWith("0x")) {
+                value = Long.valueOf(source.substring(2), 16);
+            } else {
+                value = Long.valueOf(source, 10);
+            }
+            return new AstInteger(token.getPosition(), value);
+        } else if (scanner.hasNext(TokenKind.REAL)) {
+            Token token = scanner.next();
+            double value = Double.valueOf(token.getSource());
+            return new AstReal(token.getPosition(), value);
+        } else if (scanner.hasNext(TokenKind.STRING)) {
+            Token token = scanner.next();
+            String source = token.getSource();
+            if (source.charAt(0) == '"') {
+                source = source.substring(1);
+            }
+            if (!source.isEmpty() && source.charAt(source.length() - 1) == '"') {
+                source = source.substring(0, source.length() - 1);
+            }
+            String value = resolveEscapeCharacters(source);
+            return new AstString(token.getPosition(), value);
+        } else if (scanner.hasNext(TokenKind.CHARACTER)) {
+            Token token = scanner.next();
+            String source = token.getSource();
+            if (source.charAt(0) == '\'') {
+                source = source.substring(1);
+            }
+            if (!source.isEmpty() && source.charAt(source.length() - 1) == '\'') {
+                source = source.substring(0, source.length() - 1);
+            }
+            String value = resolveEscapeCharacters(source);
+            if (value.length() != 1) {
+                throw new ParsingException(token.getPosition(), "Character literals should include exactly one character");
+            }
+            return new AstCharacter(token.getPosition(), value.charAt(0));
+        } else if (scanner.hasNext(TokenKind.IDENTIFIER)) {
+            Token name = scanner.next();
+            return new AstSymbol(name.getPosition(), name.getSource());
+        } else {
+            return null;
+        }
+    }
+
+    private AstInitializer parseInitializer() {
         return null;
     }
 }
