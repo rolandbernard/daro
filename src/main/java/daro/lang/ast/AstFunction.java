@@ -69,7 +69,7 @@ public final class AstFunction extends AstNode {
         return "("
             + this.getClass().getSimpleName() + " " + name + " " + type + " ("
             + Arrays.stream(parameters).map(String::valueOf).collect(Collectors.joining(" "))
-            + ")" + body + ")";
+            + ") " + body + ")";
     }
 }
 

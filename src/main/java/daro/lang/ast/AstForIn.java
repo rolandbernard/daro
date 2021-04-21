@@ -12,7 +12,7 @@ public final class AstForIn extends AstNode {
     private final AstNode list;
     private final AstNode body;
 
-    public AstForIn(Position position, AstSymbol variable, AstNode list, AstBlock body) {
+    public AstForIn(Position position, AstSymbol variable, AstNode list, AstNode body) {
         super(position);
         this.variable = variable;
         this.list = list;
