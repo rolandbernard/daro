@@ -17,12 +17,12 @@ public enum TokenKind {
     CHARACTER,
 
     FOR("for"),
-    MATCH("match"),
+    MATCH("match"), // TODO: implement ast
     IF("if"),
     ELSE("else"),
     NEW("new"),
     FN("fn"),
-    IMPORT("import"),
+    IMPORT("import"), // TODO: implement ast
     CLASS("class"),
     RETURN("return"),
     COLON(":"),

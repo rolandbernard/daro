@@ -14,6 +14,10 @@ import daro.lang.ast.*;
  * @author Roland Bernard
  */
 public class Parser {
+    /**
+     * This variable stores the scanner used for parsing. It is initialzed with the source code that
+     * should be parsed on instance creation of the {@link Parser} object.
+     */
     private final Scanner scanner;
 
     /**
@@ -84,6 +88,14 @@ public class Parser {
     private AstNode parserStatement() {
         return firstNonNull(
             this::parseIfElse,
+            // TODO: add missing statements:
+            //  * class definition
+            //  * function definition
+            //  * variable definition
+            //  * for (in) loop
+            //  * return statement
+            //  * code block
+            //  * assignment (probably part of parsing expressions)
             this::parseExpression
         );
     }
@@ -177,6 +189,11 @@ public class Parser {
         return ret;
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * boolean or operation. i.e. ||
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseLazyOrExpression() {
         return parseBinaryExpression(
             this::parseLazyAndExpression,
@@ -185,6 +202,11 @@ public class Parser {
         );
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * boolean and operation. i.e. &&
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseLazyAndExpression() {
         return parseBinaryExpression(
             this::parseComparisonExpression,
@@ -193,6 +215,11 @@ public class Parser {
         );
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * comparison operations. i.e. == != < <= > >=
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseComparisonExpression() {
         return parseBinaryExpression(
             this::parseBitwiseOrExpression,
@@ -206,6 +233,11 @@ public class Parser {
         );
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * bitwise or operation. i.e. |
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseBitwiseOrExpression() {
         return parseBinaryExpression(
             this::parseBitwiseXorExpression,
@@ -214,6 +246,11 @@ public class Parser {
         );
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * bitwise xor operation. i.e. ^
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseBitwiseXorExpression() {
         return parseBinaryExpression(
             this::parseBitwiseAndExpression,
@@ -222,6 +259,11 @@ public class Parser {
         );
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * bitwise and operation. i.e. &
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseBitwiseAndExpression() {
         return parseBinaryExpression(
             this::parseShiftExpression,
@@ -230,6 +272,11 @@ public class Parser {
         );
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * shift operations. i.e. << >>
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseShiftExpression() {
         return parseBinaryExpression(
             this::parseAdditiveExpression,
@@ -239,6 +286,11 @@ public class Parser {
         );
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * additive operations. i.e. + -
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseAdditiveExpression() {
         return parseBinaryExpression(
             this::parseMultiplicativeExpression,
@@ -248,6 +300,11 @@ public class Parser {
         );
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * multiplication operation. i.e. * / %
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseMultiplicativeExpression() {
         return parseBinaryExpression(
             this::parseUnaryPrefixExpression,
@@ -258,6 +315,11 @@ public class Parser {
         );
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * unary prefix operations. i.e. + - ~ ! []
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseUnaryPrefixExpression() {
         if (scanner.hasNext(TokenKind.PLUS)) {
             Token token = scanner.next();
@@ -306,6 +368,11 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * unary suffix operations. i.e. () [] .
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseUnarySuffixExpression() {
         AstNode operand = parseBaseExpression();
         if (operand != null) {
@@ -409,6 +476,12 @@ public class Parser {
         return builder.toString();
     }
 
+    /**
+     * Parses the base objects of an expression. This includes expressions wrapped in parenthesies,
+     * objects created with `new`, integer, real, string and character literals, as well as simple
+     * variable access.
+     * @return The root node of the parsed ast tree
+     */
     private AstNode parseBaseExpression() {
         if (scanner.hasNext(TokenKind.OPEN_PAREN)) {
             Token open = scanner.next();
@@ -486,8 +559,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a initializer list. e.g. {{1, "Hello"}, { id = 2, text = "ok" }, null}
+     * @return The root node of the parsed ast tree
+     */
     private AstInitializer parseInitializer() {
-        return null;
+        return null; // TODO: implement parsing
     }
 }
 

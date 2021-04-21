@@ -3,7 +3,6 @@ package daro.lang.ast;
 /**
  * Abstract super class for all classes representing a node in the ast.
  *
- * 
  * @author Roland Bernard
  */
 public abstract class AstNode {

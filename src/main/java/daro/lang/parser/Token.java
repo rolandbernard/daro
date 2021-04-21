@@ -2,8 +2,6 @@ package daro.lang.parser;
 
 import daro.lang.ast.Position;
 
-// TODO: Maybe switch from an enum kinds to using a class hierarchy
-
 /**
  * This class holds the tokens after the lexer stage,
  * 
