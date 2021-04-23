@@ -362,7 +362,7 @@ public class Parser {
                     "Expected an expression after unary prefix `[]`"
                 );
             }
-            return new AstPositive(new Position(token.getStart(), operand.getEnd()), operand);
+            return new AstArray(new Position(token.getStart(), operand.getEnd()), operand);
         } else {
             return parseUnarySuffixExpression();
         }
@@ -564,7 +564,30 @@ public class Parser {
      * @return The root node of the parsed ast tree
      */
     private AstInitializer parseInitializer() {
-        return null; // TODO: implement parsing
+        if (scanner.hasNext(TokenKind.OPEN_BRACE)) {
+            Token opening = scanner.next();
+            ArrayList<AstNode> values = new ArrayList<>();
+            AstNode value;
+            do {
+                // TODO: enable parsing e.g. { name = "Roland", age = 20 }
+                value = firstNonNull(this::parseInitializer, this::parseExpression);
+                if (value != null) {
+                    values.add(value);
+                }
+            } while(value != null && scanner.accept(TokenKind.COMMA) != null);
+            Token closing = scanner.accept(TokenKind.CLOSE_BRACE);
+            if (closing == null) {
+                throw new ParsingException(
+                    new Position(opening.getStart(), values.get(values.size() - 1).getEnd()),
+                    "Expected a closing `{` after opening `}`"
+                );
+            }
+            return new AstInitializer(
+                new Position(opening.getStart(), closing.getEnd()),
+                values.toArray(new AstNode[values.size()])
+            );
+        }
+        return null;
     }
 }
 
