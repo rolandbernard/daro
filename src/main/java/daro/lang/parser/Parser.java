@@ -95,7 +95,6 @@ public class Parser {
             //  * for (in) loop
             //  * return statement
             //  * code block
-            //  * assignment (probably part of parsing expressions)
             this::parseExpression
         );
     }
@@ -150,7 +149,7 @@ public class Parser {
      * @return The parsed expression's ast, or null
      */
     private AstNode parseExpression() {
-        return parseLazyOrExpression();
+        return parseAssignmentExpression();
     }
 
     /**
@@ -187,6 +186,29 @@ public class Parser {
             }
         }
         return ret;
+    }
+
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the
+     * assignment operation. i.e. =
+     * @return The root node of the parsed ast tree
+     */
+    private AstNode parseAssignmentExpression() {
+        // This does not use parseBinaryExpression, because precedence goes right-to-left. e.g. x = a = 5 
+        AstNode ret = parseLazyOrExpression();
+        if (ret != null && scanner.hasNext(TokenKind.ASSIGN)) {
+            Token token = scanner.next();
+            AstNode right = parseAssignmentExpression();
+            if (right == null) {
+                throw new ParsingException(
+                    new Position(ret.getStart(), token.getEnd()),
+                    "Expected an expression after `=`"
+                );
+            }
+            return new AstAssignment(new Position(ret.getStart(), right.getEnd()), ret, right);
+        } else {
+            return ret;
+        }
     }
 
     /**
@@ -569,7 +591,6 @@ public class Parser {
             ArrayList<AstNode> values = new ArrayList<>();
             AstNode value;
             do {
-                // TODO: enable parsing e.g. { name = "Roland", age = 20 }
                 value = firstNonNull(this::parseInitializer, this::parseExpression);
                 if (value != null) {
                     values.add(value);
