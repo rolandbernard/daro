@@ -130,6 +130,7 @@ public class Scanner {
                     }
                     return new Token(TokenKind.INTEGER, start, string.substring(start, offset));
                 } else {
+                    boolean isFloat = false;
                     while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
                         offset++;
                     }
@@ -139,16 +140,20 @@ public class Scanner {
                         while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
                             offset++;
                         }
-                        if (offset < string.length() && string.charAt(offset) == 'e') {
-                            // Exponent e.g. (1.2e+12)
+                        isFloat = true;
+                    }
+                    if (offset < string.length() && string.charAt(offset) == 'e') {
+                        // Exponent e.g. (1.2e+12)
+                        offset++;
+                        if (offset < string.length() && (string.charAt(offset) == '+' || string.charAt(offset) == '-')) {
                             offset++;
-                            if (offset < string.length() && (string.charAt(offset) == '+' || string.charAt(offset) == '-')) {
-                                offset++;
-                            }
-                            while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
-                                offset++;
-                            }
                         }
+                        while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
+                            offset++;
+                        }
+                        isFloat = true;
+                    }
+                    if (isFloat) {
                         return new Token(TokenKind.REAL, start, string.substring(start, offset));
                     } else {
                         // Decimal integer literal (e.g. 12)

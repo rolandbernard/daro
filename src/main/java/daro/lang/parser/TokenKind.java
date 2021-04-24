@@ -17,6 +17,7 @@ public enum TokenKind {
     CHARACTER,
 
     FOR("for"),
+    IN("in"),
     MATCH("match"), // TODO: implement ast
     IF("if"),
     ELSE("else"),
