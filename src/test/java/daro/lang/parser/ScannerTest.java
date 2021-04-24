@@ -317,6 +317,20 @@ public class ScannerTest {
     }
 
     @Test
+    void simpleRealWithExponentScannerNextKind() {
+        Scanner scanner = new Scanner("1230e-12Test");
+        assertEquals(TokenKind.REAL, scanner.next().getKind());
+        assertEquals(TokenKind.IDENTIFIER, scanner.next().getKind());
+    }
+
+    @Test
+    void simpleRealWithExponentScannerNextSource() {
+        Scanner scanner = new Scanner("1230e+12 Test");
+        assertEquals("1230e+12", scanner.next().getSource());
+        assertEquals("Test", scanner.next().getSource());
+    }
+
+    @Test
     void trailingRealWithExponentScannerNextSource() {
         Scanner scanner = new Scanner("1230.1234e+12");
         assertEquals("1230.1234e+12", scanner.next().getSource());
