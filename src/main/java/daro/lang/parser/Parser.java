@@ -100,12 +100,160 @@ public class Parser {
             this::parseForLoop,
             this::parseReturn,
             this::parseCodeBlock,
-            // TODO: add missing statements:
-            //  * class definition
-            //  * function definition
-            //  * variable definition
+            this::parseFunctionDefinition,
+            this::parseClassDefinition,
+            this::parseVariableDefinition,
             this::parseExpression
         );
+    }
+
+    /**
+     * Parse a class definition.
+     * @return The parsed statement's ast, or null
+     */
+    private AstFunction parseFunctionDefinition() {
+        if (scanner.hasNext(TokenKind.FN)) {
+            Token token = scanner.next();
+            Token name = scanner.accept(TokenKind.IDENTIFIER);
+            if (name == null) {
+                throw new ParsingException(
+                    token.getPosition(),
+                    "Expected function name after `fn`"
+                );
+            }
+            Token opening = scanner.accept(TokenKind.OPEN_PAREN);
+            if (opening == null) {
+                throw new ParsingException(
+                    new Position(token.getStart(), name.getEnd()),
+                    "Expected opening `(` after function name"
+                );
+            }
+            ArrayList<AstDefinition> parameters = new ArrayList<>();
+            AstDefinition parameter;
+            do {
+                parameter = parseVariableDefinition();
+                if (parameter != null) {
+                    if (parameter.getValue() != null) {
+                        throw new ParsingException(
+                            parameter.getPosition(),
+                            "Function parameters cannot be assigned default values"
+                        );
+                    }
+                    parameters.add(parameter);
+                }
+            } while(parameter != null && scanner.accept(TokenKind.COMMA) != null);
+            Token closing = scanner.accept(TokenKind.CLOSE_PAREN);
+            if (closing == null) {
+                Position position;
+                if (parameters.isEmpty()) {
+                    position = opening.getPosition();
+                } else {
+                    position = new Position(opening.getStart(), parameters.get(parameters.size() - 1).getEnd());
+                }
+                throw new ParsingException(position, "Expected a closing `)` after opening `(`");
+            }
+            AstNode type = null;
+            if (scanner.hasNext(TokenKind.COLON)) {
+                Token colon = scanner.next();
+                type = parseUnaryPrefixExpression();
+                if (type == null) {
+                    throw new ParsingException(
+                        new Position(closing.getStart(), colon.getEnd()),
+                        "Expected return type after `:` of function definition"
+                    );
+                }
+            }
+            AstBlock body = parseCodeBlock();
+            if (body == null) {
+                throw new ParsingException(
+                    new Position(token.getStart(), name.getEnd()),
+                    "Expected body after parameter list"
+                );
+            }
+            return new AstFunction(
+                new Position(token.getStart(), body.getEnd()),
+                name.getSource(), type,
+                parameters.toArray(new AstDefinition[parameters.size()]),
+                body
+            );
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Parse a class definition.
+     * @return The parsed statement's ast, or null
+     */
+    private AstClass parseClassDefinition() {
+        if (scanner.hasNext(TokenKind.CLASS)) {
+            Token token = scanner.next();
+            Token name = scanner.accept(TokenKind.IDENTIFIER);
+            if (name == null) {
+                throw new ParsingException(
+                    token.getPosition(),
+                    "Expected class name after `class`"
+                );
+            }
+            AstBlock body = parseCodeBlock();
+            if (body == null) {
+                throw new ParsingException(
+                    new Position(token.getStart(), name.getEnd()),
+                    "Expected body after class name"
+                );
+            }
+            return new AstClass(
+                new Position(token.getStart(), body.getEnd()),
+                name.getSource(), body
+            );
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Parse a variable definition.
+     * @return The parsed statement's ast, or null
+     */
+    private AstDefinition parseVariableDefinition() {
+        if (scanner.hasNext(TokenKind.IDENTIFIER)) {
+            Token identifier = scanner.next();
+            if (scanner.hasNext(new TokenKind[] { TokenKind.COLON, TokenKind.DEFINE })) {
+                Token delim = scanner.next();
+                AstNode type = null;
+                if (delim.getKind() == TokenKind.COLON) {
+                    type = parseUnaryPrefixExpression();
+                    if (type == null) {
+                        throw new ParsingException(
+                            new Position(identifier.getStart(), delim.getEnd()),
+                            "Expected type after `:` of variable definition"
+                        );
+                    }
+                }
+                AstNode value = null;
+                if (delim.getKind() == TokenKind.DEFINE || scanner.hasNext(TokenKind.ASSIGN)) {
+                    if (scanner.hasNext(TokenKind.ASSIGN)) {
+                        delim = scanner.next();
+                    }
+                    value = parseExpression();
+                    if (value == null) {
+                        throw new ParsingException(delim.getPosition(), "Expected expression after `=`");
+                    }
+                }
+                Position position;
+                if (value == null) {
+                    position = new Position(identifier.getStart(), type.getEnd());
+                } else {
+                    position = new Position(identifier.getStart(), value.getEnd());
+                }
+                return new AstDefinition(position, identifier.getSource(), type, value);
+            } else {
+                scanner.revert(identifier);
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -226,7 +374,7 @@ public class Parser {
      * Parse a code block. e.g. { .. }
      * @return The parsed statement's ast, or null
      */
-    private AstNode parseCodeBlock() {
+    private AstBlock parseCodeBlock() {
         if (scanner.hasNext(TokenKind.OPEN_BRACE)) {
             Token opening = scanner.next();
             ArrayList<AstNode> statements = new ArrayList<>();

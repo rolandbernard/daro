@@ -280,6 +280,15 @@ public class Scanner {
     }
 
     /**
+     * Returns the scanner state to before calling next, which returned the given token.
+     * @param token The {@link Token} to revert
+     */
+    public void revert(Token token) {
+        nextToken = token;
+        offset = nextToken.getEnd();
+    }
+
+    /**
      * Return the next {@link Token} if is is of the given {@link TokenKind}.
      * @param kind The kind to search for
      * @return The {@link TokenKind} if the next {@link Token} hast the correct kind, otherwise null
