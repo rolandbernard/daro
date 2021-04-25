@@ -724,5 +724,169 @@ public class ParserTest {
             Parser.parseSourceCode("{ x = 1 ;; ");
         });
     }
+
+    @Test
+    void variableDefinition() {
+        AstNode ast = Parser.parseSourceCode("x : []int");
+        assertEquals(new AstBlock(null, new AstNode[] {
+            new AstDefinition(null, "x", new AstArray(null, new AstSymbol(null, "int")), null)
+        }), ast);
+    }
+
+    @Test
+    void initialzedVariableDefinition() {
+        AstNode ast = Parser.parseSourceCode("x : []int = 2 + 2");
+        assertEquals(new AstBlock(null, new AstNode[] {
+            new AstDefinition(null, "x",
+                new AstArray(null, new AstSymbol(null, "int")),
+                new AstAddition(null, new AstInteger(null, 2), new AstInteger(null, 2))
+            )
+        }), ast);
+    }
+
+    @Test
+    void typelessVariableDefinition() {
+        AstNode ast = Parser.parseSourceCode("x := 2 + 2");
+        assertEquals(new AstBlock(null, new AstNode[] {
+            new AstDefinition(null, "x", null,
+                new AstAddition(null, new AstInteger(null, 2), new AstInteger(null, 2))
+            )
+        }), ast);
+    }
+
+    @Test
+    void missingTypeVariableDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("x : ");
+        });
+    }
+
+    @Test
+    void missingValueVariableDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("x : []int = ");
+        });
+    }
+
+    @Test
+    void missingValueTypelessVariableDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("x := ");
+        });
+    }
+
+    @Test
+    void classDefinition() {
+        AstNode ast = Parser.parseSourceCode("class Foo { }");
+        assertEquals(new AstBlock(null, new AstNode[] {
+            new AstClass(null, "Foo", new AstBlock(null, new AstNode[0]))
+        }), ast);
+    }
+
+    @Test
+    void missingNameClassDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("class { }");
+        });
+    }
+
+    @Test
+    void missingBodyClassDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("class Foo ");
+        });
+    }
+
+    @Test
+    void functionDefinition() {
+        AstNode ast = Parser.parseSourceCode("fn foo(a: int, b: float): float { }");
+        assertEquals(new AstBlock(null, new AstNode[] {
+            new AstFunction(null, "foo",
+                new AstSymbol(null, "float"),
+                new AstDefinition[] {
+                    new AstDefinition(null, "a", new AstSymbol(null, "int"), null),
+                    new AstDefinition(null, "b", new AstSymbol(null, "float"), null),
+                },
+                new AstBlock(null, new AstNode[0])
+            )
+        }), ast);
+    }
+
+    @Test
+    void typelessFunctionDefinition() {
+        AstNode ast = Parser.parseSourceCode("fn foo(a: int, b: float) { }");
+        assertEquals(new AstBlock(null, new AstNode[] {
+            new AstFunction(null, "foo", null,
+                new AstDefinition[] {
+                    new AstDefinition(null, "a", new AstSymbol(null, "int"), null),
+                    new AstDefinition(null, "b", new AstSymbol(null, "float"), null),
+                },
+                new AstBlock(null, new AstNode[0])
+            )
+        }), ast);
+    }
+
+    @Test
+    void parameterlessFunctionDefinition() {
+        AstNode ast = Parser.parseSourceCode("fn foo(): float { }");
+        assertEquals(new AstBlock(null, new AstNode[] {
+            new AstFunction(null, "foo",
+                new AstSymbol(null, "float"),
+                new AstDefinition[] { },
+                new AstBlock(null, new AstNode[0])
+            )
+        }), ast);
+    }
+
+    @Test
+    void missingNameFunctionDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("fn ");
+        });
+    }
+
+    @Test
+    void missingParametersFunctionDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("fn foo ");
+        });
+    }
+
+    @Test
+    void missingClosingParenFunctionDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("fn foo (");
+        });
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("fn foo (a: int, ");
+        });
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("fn foo (a: int, b: int ");
+        });
+    }
+
+    @Test
+    void incorrectParameterFunctionDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("fn foo (a: int = 0) { }");
+        });
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("fn foo (a := 0) { }");
+        });
+    }
+
+    @Test
+    void missingTypeFunctionDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("fn foo(): { }");
+        });
+    }
+
+    @Test
+    void missingBodyFunctionDefinition() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("fn foo(): int ");
+        });
+    }
 }
 

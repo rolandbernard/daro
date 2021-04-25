@@ -460,4 +460,21 @@ public class ScannerTest {
             assertEquals(token, scanner.next().getKind());
         }
     }
+
+    @Test
+    void revertToken() {
+        Scanner scanner = new Scanner("a = 5;");
+        assertEquals(TokenKind.IDENTIFIER, scanner.next().getKind());
+        Token token = scanner.next();
+        assertEquals(TokenKind.ASSIGN, token.getKind());
+        assertTrue(scanner.hasNext(TokenKind.INTEGER));
+        scanner.revert(token);
+        assertEquals(TokenKind.ASSIGN, scanner.next().getKind());
+        assertEquals(TokenKind.INTEGER, scanner.next().getKind());
+        assertEquals(TokenKind.SEMICOLON, scanner.next().getKind());
+        scanner.revert(token);
+        assertEquals(TokenKind.ASSIGN, scanner.next().getKind());
+        assertEquals(TokenKind.INTEGER, scanner.next().getKind());
+        assertEquals(TokenKind.SEMICOLON, scanner.next().getKind());
+    }
 }
