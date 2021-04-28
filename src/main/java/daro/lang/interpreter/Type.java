@@ -8,7 +8,8 @@ package daro.lang.interpreter;
 public abstract class Type {
 
     /**
-     * This method instantiates a object of the corresponding interpreter {@link Value}.
+     * This method instantiates a object of the corresponding interpreter {@link Value} and
+     * initialize it with the default value for the type.
      * @return The created {@link Value} object
      */
     public abstract Value instantiate();

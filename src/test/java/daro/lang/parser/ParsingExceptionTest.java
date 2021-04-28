@@ -8,6 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ParsingExceptionTest {
 
     @Test
+    void getMessage() {
+        ParsingException exception = new ParsingException(new Position(10, 15), "Error");
+        assertEquals("Error", exception.getMessage());
+    }
+
+    @Test
     void getPosition() {
         ParsingException exception = new ParsingException(new Position(10, 15), "Error");
         assertEquals(new Position(10, 15), exception.getPosition());

@@ -3,6 +3,8 @@ package daro.lang.interpreter;
 import daro.lang.ast.*;
 import daro.lang.parser.*;
 
+// TODO: Reevaluate how we want to implement the interpreter
+
 /**
  * This class implements a simple low setup time interpreter for the Daro language. It is
  * implemented using multiple visitors.

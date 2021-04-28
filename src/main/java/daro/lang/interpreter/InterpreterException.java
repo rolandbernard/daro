@@ -11,14 +11,6 @@ public class InterpreterException extends IllegalArgumentException {
     private final Interpreter interpreter;
 
     /**
-     * Create a {@link InterpreterException} for the given interpreter.
-     * @param interpreter The interpreter that caused the exception
-     */
-    public InterpreterException(Interpreter interpreter) {
-        this.interpreter = interpreter;
-    }
-
-    /**
      * Create a {@link InterpreterException} for the given interpreter and message.
      * @param interpreter The interpreter that caused the exception
      * @param message The message for the exception
