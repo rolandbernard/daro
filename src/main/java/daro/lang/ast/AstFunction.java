@@ -11,14 +11,12 @@ import java.util.stream.Collectors;
  */
 public final class AstFunction extends AstNode {
     private final String name;
-    private final AstNode type;
-    private final AstDefinition[] parameters;
+    private final AstSymbol[] parameters;
     private final AstBlock body;
 
-    public AstFunction(Position position, String name, AstNode type, AstDefinition[] parameters, AstBlock body) {
+    public AstFunction(Position position, String name, AstSymbol[] parameters, AstBlock body) {
         super(position);
         this.name = name;
-        this.type = type;
         this.parameters = parameters;
         this.body = body;
     }
@@ -27,11 +25,7 @@ public final class AstFunction extends AstNode {
         return name;
     }
 
-    public AstNode getType() {
-        return type;
-    }
-
-    public AstDefinition[] getParameters() {
+    public AstSymbol[] getParameters() {
         return parameters;
     }
 
@@ -46,7 +40,6 @@ public final class AstFunction extends AstNode {
     @Override
     public int hashCode() {
         return (997 * name.hashCode())
-            ^ (991 * type.hashCode())
             ^ (877 * Arrays.hashCode(parameters))
             ^ (953 * body.hashCode());
     }
@@ -56,7 +49,6 @@ public final class AstFunction extends AstNode {
         if (obj instanceof AstFunction) {
             AstFunction node = (AstFunction)obj;
             return Objects.equals(name, node.getName())
-                && Objects.equals(type, node.getType())
                 && Arrays.equals(parameters, node.getParameters())
                 && Objects.equals(body, node.getBody());
         } else {
@@ -67,7 +59,7 @@ public final class AstFunction extends AstNode {
     @Override
     public String toString() {
         return "("
-            + this.getClass().getSimpleName() + " " + name + " " + type + " ("
+            + this.getClass().getSimpleName() + " " + name + " ("
             + Arrays.stream(parameters).map(String::valueOf).collect(Collectors.joining(" "))
             + ") " + body + ")";
     }

@@ -71,8 +71,6 @@ public interface Visitor {
 
     public void visit(AstAssignment ast);
 
-    public void visit(AstDefinition ast);
-
     public void visit(AstSymbol ast);
 
     public void visit(AstMember ast);
