@@ -7,88 +7,88 @@ package daro.lang.ast;
  *
  * @author Roland Bernard
  */
-public interface Visitor {
+public interface Visitor<T> {
 
-    public void visit(AstInteger ast);
+    public T visit(AstInteger ast);
 
-    public void visit(AstReal ast);
+    public T visit(AstReal ast);
 
-    public void visit(AstString ast);
+    public T visit(AstString ast);
 
-    public void visit(AstCharacter ast);
+    public T visit(AstCharacter ast);
 
-    public void visit(AstAddition ast);
+    public T visit(AstAddition ast);
 
-    public void visit(AstSubtract ast);
+    public T visit(AstSubtract ast);
 
-    public void visit(AstMultiply ast);
+    public T visit(AstMultiply ast);
 
-    public void visit(AstDivide ast);
+    public T visit(AstDivide ast);
 
-    public void visit(AstRemainder ast);
+    public T visit(AstRemainder ast);
 
-    public void visit(AstShiftLeft ast);
+    public T visit(AstShiftLeft ast);
 
-    public void visit(AstShiftRight ast);
+    public T visit(AstShiftRight ast);
 
-    public void visit(AstEqual ast);
+    public T visit(AstEqual ast);
 
-    public void visit(AstNotEqual ast);
+    public T visit(AstNotEqual ast);
 
-    public void visit(AstLessThan ast);
+    public T visit(AstLessThan ast);
 
-    public void visit(AstLessOrEqual ast);
+    public T visit(AstLessOrEqual ast);
 
-    public void visit(AstMoreThan ast);
+    public T visit(AstMoreThan ast);
 
-    public void visit(AstMoreOrEqual ast);
+    public T visit(AstMoreOrEqual ast);
 
-    public void visit(AstBitwiseAnd ast);
+    public T visit(AstBitwiseAnd ast);
 
-    public void visit(AstBitwiseOr ast);
+    public T visit(AstBitwiseOr ast);
 
-    public void visit(AstBitwiseXor ast);
+    public T visit(AstBitwiseXor ast);
 
-    public void visit(AstAnd ast);
+    public T visit(AstAnd ast);
 
-    public void visit(AstOr ast);
+    public T visit(AstOr ast);
 
-    public void visit(AstPositive ast);
+    public T visit(AstPositive ast);
 
-    public void visit(AstNegative ast);
+    public T visit(AstNegative ast);
 
-    public void visit(AstBitwiseNot ast);
+    public T visit(AstBitwiseNot ast);
 
-    public void visit(AstNot ast);
+    public T visit(AstNot ast);
 
-    public void visit(AstReturn ast);
+    public T visit(AstReturn ast);
 
-    public void visit(AstClass ast);
+    public T visit(AstClass ast);
 
-    public void visit(AstFunction ast);
+    public T visit(AstFunction ast);
 
-    public void visit(AstBlock ast);
+    public T visit(AstBlock ast);
 
-    public void visit(AstAssignment ast);
+    public T visit(AstAssignment ast);
 
-    public void visit(AstSymbol ast);
+    public T visit(AstSymbol ast);
 
-    public void visit(AstMember ast);
+    public T visit(AstMember ast);
 
-    public void visit(AstCall ast);
+    public T visit(AstCall ast);
 
-    public void visit(AstIndex ast);
+    public T visit(AstIndex ast);
 
-    public void visit(AstNew ast);
+    public T visit(AstNew ast);
 
-    public void visit(AstArray ast);
+    public T visit(AstArray ast);
 
-    public void visit(AstIfElse ast);
+    public T visit(AstIfElse ast);
 
-    public void visit(AstFor ast);
+    public T visit(AstFor ast);
 
-    public void visit(AstForIn ast);
+    public T visit(AstForIn ast);
 
-    public void visit(AstInitializer ast);
+    public T visit(AstInitializer ast);
 }
 

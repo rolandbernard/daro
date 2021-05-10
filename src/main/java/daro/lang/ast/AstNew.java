@@ -25,8 +25,8 @@ public final class AstNew extends AstNode {
         return initializer;
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     @Override

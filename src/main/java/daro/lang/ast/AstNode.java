@@ -52,6 +52,6 @@ public abstract class AstNode {
      * Accepts a ast {@link Visitor} calling a method debending on the base class implementation.
      * @param visitor The visitor to accept
      */
-    abstract public void accept(Visitor visitor);
+    abstract public <T> T accept(Visitor<T> visitor);
 }
 
