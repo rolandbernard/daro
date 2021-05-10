@@ -23,4 +23,23 @@ public class EmptyScope implements Scope {
     public VariableLocation getVariableLocation(String name) {
         return null;
     }
+
+    @Override
+    public int hashCode() {
+        return 1234567;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof EmptyScope) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "{}";
+    }
 }

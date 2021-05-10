@@ -3,6 +3,7 @@ package daro.lang.interpreter;
 import daro.lang.values.UserObject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class implements a simple scope. A scope is a collection of variables (with names and
@@ -62,5 +63,35 @@ public class BlockScope implements Scope {
                 variables.put(name, value);
             };
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return (971 * variables.hashCode()) ^ (991 * parent.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof BlockScope) {
+            BlockScope scope = (BlockScope)object;
+            return variables.equals(scope.variables)
+                && parent.equals(scope.parent);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder ret = new StringBuilder();
+        ret.append("{");
+        if (parent != null) {
+            ret.append(parent.toString());
+        }
+        ret.append(variables.entrySet().stream()
+            .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
+            .collect(Collectors.joining(", ")));
+        ret.append("}");
+        return ret.toString();
     }
 }
