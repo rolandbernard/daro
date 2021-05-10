@@ -4,7 +4,7 @@ import daro.lang.ast.Position;
 
 /**
  * This class represents an error thrown during the interpreter execution. It includes a reference
- * to the interpreter in which the exception was thrown.
+ * to the position where the exception was thrown.
  *
  * @author Roland Bernard
  */
