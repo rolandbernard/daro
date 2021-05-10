@@ -1,7 +1,6 @@
 package daro.lang.interpreter;
 
-import java.util.HashMap;
-import java.util.Map;
+import daro.lang.values.UserObject;
 
 /**
  * This interface should be implemented by all of the scope classes. A scope is a collection of variables

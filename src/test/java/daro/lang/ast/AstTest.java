@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigInteger;
+
 public class AstTest {
 
     @Test
@@ -33,7 +35,7 @@ public class AstTest {
     @Test
     void valueIntegerAst() {
         AstInteger node = new AstInteger(new Position(0, 10), 42);
-        assertEquals(42, node.getValue());
+        assertEquals(BigInteger.valueOf(42), node.getValue());
     }
 
     @Test

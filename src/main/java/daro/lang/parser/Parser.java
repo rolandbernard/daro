@@ -1,5 +1,6 @@
 package daro.lang.parser;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
@@ -750,15 +751,15 @@ public class Parser {
         } else if (scanner.hasNext(TokenKind.INTEGER)) {
             Token token = scanner.next();
             String source = token.getSource();
-            long value;
+            BigInteger value;
             if (source.startsWith("0b")) {
-                value = Long.valueOf(source.substring(2), 2);
+                value = new BigInteger(source.substring(2), 2);
             } else if (source.startsWith("0o")) {
-                value = Long.valueOf(source.substring(2), 8);
+                value = new BigInteger(source.substring(2), 8);
             } else if (source.startsWith("0x")) {
-                value = Long.valueOf(source.substring(2), 16);
+                value = new BigInteger(source.substring(2), 16);
             } else {
-                value = Long.valueOf(source, 10);
+                value = new BigInteger(source);
             }
             return new AstInteger(token.getPosition(), value);
         } else if (scanner.hasNext(TokenKind.REAL)) {

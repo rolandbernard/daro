@@ -1,19 +1,25 @@
 package daro.lang.ast;
 
+import java.math.BigInteger;
+
 /**
  * Class representing an ast node for a integer literal. e.g. {@code 42}
  * 
  * @author Roland Bernard
  */
 public final class AstInteger extends AstNode {
-    private final long value;
+    private final BigInteger value;
 
-    public AstInteger(Position position, long value) {
+    public AstInteger(Position position, BigInteger value) {
         super(position);
         this.value = value;
     }
 
-    public long getValue() {
+    public AstInteger(Position position, long value) {
+        this(position, BigInteger.valueOf(value));
+    }
+
+    public BigInteger getValue() {
         return value;
     }
 
@@ -23,14 +29,14 @@ public final class AstInteger extends AstNode {
 
     @Override
     public int hashCode() {
-        return Long.hashCode(value);
+        return value.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstInteger) {
             AstInteger node = (AstInteger)obj;
-            return value == node.getValue();
+            return value.equals(node.getValue());
         } else {
             return false;
         }

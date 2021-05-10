@@ -10,12 +10,15 @@ import java.util.Map;
  * 
  * @author Roland Bernard
  */
-public class RootScope implements Scope {
-    private static final Map<String, UserObject> variables;
+public class ConstantScope implements Scope {
+    private final Map<String, UserObject> variables;
 
-    static {
-        variables = new HashMap<>();
-        // TODO: fill the root scope
+    public ConstantScope() {
+        variables = Map.of();
+    }
+
+    public ConstantScope(Map<String, UserObject> mapping) {
+        variables = Map.copyOf(mapping);
     }
 
     @Override
