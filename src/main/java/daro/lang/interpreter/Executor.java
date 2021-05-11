@@ -19,11 +19,21 @@ public class Executor implements Visitor<UserObject> {
     }
 
     /**
+     * Run the given {@link AstNode} in the given {@link Scope}.
+     * @param scope The scope to execute in
+     * @param program The {@link AstNode} to execute
+     * @return The result of the execution
+     */
+    public static UserObject execute(Scope scope, AstNode program) {
+        return (new Executor(scope)).execute(program);
+    }
+
+    /**
      * Run the {@link AstNode} in the scope of the {@link Executor}
      * @param program The {@link AstNode} to execute
      * @return The result of the execution
      */
-    public UserObject executeAst(AstNode program) {
+    public UserObject execute(AstNode program) {
         return program.accept(this);
     }
 

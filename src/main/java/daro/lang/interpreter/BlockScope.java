@@ -32,6 +32,16 @@ public class BlockScope implements Scope {
         this.variables = new HashMap<>();
     }
 
+    /**
+     * Create a new variable that will shadow variables that might already exist in a parent scope.
+     * This is to be used when executing functions to set the parameters.
+     * @param name The name of the variable
+     * @param value The value it should be set to
+     */
+    public void forceNewVariable(String name, UserObject value) {
+        variables.put(name, value);
+    }
+
     @Override
     public boolean containsVariable(String name) {
         if (variables.containsKey(name)) {
