@@ -1,0 +1,14 @@
+.nav-text {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-fill: #fff;
+}
+
+.text {
+    -fx-font-family: "Montserrat";
+}
+
+.icon {
+    -fx-font-family: "Material Icons";
+    -fx-font-weight: normal;
+}
