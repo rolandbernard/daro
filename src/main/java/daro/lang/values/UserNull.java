@@ -39,4 +39,9 @@ public class UserNull extends UserObject {
     public String toString() {
         return "null";
     }
+
+    @Override
+    public boolean isTrue() {
+        return false;
+    }
 }

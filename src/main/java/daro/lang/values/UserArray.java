@@ -62,4 +62,9 @@ public class UserArray extends UserObject {
             .map(String::valueOf)
             .collect(Collectors.joining(", ", "[", "]"));
     }
+
+    @Override
+    public boolean isTrue() {
+        return true;
+    }
 }

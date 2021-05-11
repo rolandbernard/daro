@@ -10,7 +10,7 @@ import daro.lang.interpreter.Scope;
  * 
  * @author Roland Bernard
  */
-public class UserInteger extends UserObject {
+public class UserInteger extends UserNumber {
     private final BigInteger value;
 
     public UserInteger(BigInteger value) {
@@ -50,5 +50,15 @@ public class UserInteger extends UserObject {
     @Override
     public String toString() {
         return String.valueOf(value);
+    }
+
+    @Override
+    public double doubleValue() {
+        return value.doubleValue();
+    }
+
+    @Override
+    public boolean isTrue() {
+        return !value.equals(BigInteger.ZERO);
     }
 }

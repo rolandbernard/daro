@@ -51,4 +51,9 @@ public abstract class UserType extends UserObject {
         // overwitten by types that need more (e.g. class, array).
         return this.getClass() == object.getClass();
     }
+
+    @Override
+    public boolean isTrue() {
+        return true;
+    }
 }

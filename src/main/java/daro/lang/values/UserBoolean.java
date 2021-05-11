@@ -4,24 +4,24 @@ import daro.lang.interpreter.EmptyScope;
 import daro.lang.interpreter.Scope;
 
 /**
- * This {@link UserObject} represents a string value.
+ * This {@link UserObject} represents a boolean value.
  * 
  * @author Roland Bernard
  */
-public class UserString extends UserObject {
-    private final String value;
+public class UserBoolean extends UserObject {
+    private final boolean value;
 
-    public UserString(String value) {
+    public UserBoolean(boolean value) {
         this.value = value;
     }
 
-    public String getValue() {
+    public boolean getValue() {
         return value;
     }
 
     @Override
     public UserType getType() {
-        return new UserTypeString();
+        return new UserTypeBoolean();
     }
 
     @Override
@@ -32,14 +32,14 @@ public class UserString extends UserObject {
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return Boolean.hashCode(value);
     }
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserString) {
-            UserString integer = (UserString)object;
-            return value.equals(integer.getValue());
+        if (object instanceof UserBoolean) {
+            UserBoolean bool = (UserBoolean)object;
+            return value == bool.getValue();
         } else {
             return false;
         }
@@ -52,6 +52,6 @@ public class UserString extends UserObject {
 
     @Override
     public boolean isTrue() {
-        return !value.isEmpty();
+        return value;
     }
 }

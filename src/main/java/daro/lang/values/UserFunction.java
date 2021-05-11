@@ -34,4 +34,9 @@ public abstract class UserFunction extends UserObject {
      * @return The return value of the function
      */
     public abstract UserObject execute(UserObject[] params);
+
+    @Override
+    public boolean isTrue() {
+        return true;
+    }
 }

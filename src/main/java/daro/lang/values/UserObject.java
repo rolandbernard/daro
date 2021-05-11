@@ -20,4 +20,12 @@ public abstract class UserObject {
      * @return The member scope of the object
      */
     public abstract Scope getMemberScope();
+
+    /**
+     * This function should return true if the value is considered true for the purpose of
+     * conditions in conditional statements. Object that return true for this function do not
+     * necessarily have to be equal to the {@link UserBoolean} of value true.
+     * @return It the object is 'true'
+     */
+    public abstract boolean isTrue();
 }

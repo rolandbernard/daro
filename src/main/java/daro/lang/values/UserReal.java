@@ -4,11 +4,11 @@ import daro.lang.interpreter.EmptyScope;
 import daro.lang.interpreter.Scope;
 
 /**
- * This {@link UserObject} represents an integer value.
+ * This {@link UserObject} represents a real value.
  * 
  * @author Roland Bernard
  */
-public class UserReal extends UserObject {
+public class UserReal extends UserNumber {
     private final double value;
 
     public UserReal(double value) {
@@ -48,5 +48,15 @@ public class UserReal extends UserObject {
     @Override
     public String toString() {
         return String.valueOf(value);
+    }
+
+    @Override
+    public double doubleValue() {
+        return value;
+    }
+
+    @Override
+    public boolean isTrue() {
+        return value != 0.0;
     }
 }

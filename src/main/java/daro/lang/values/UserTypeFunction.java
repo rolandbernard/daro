@@ -27,6 +27,6 @@ public class UserTypeFunction extends UserType {
 
     @Override
     public String toString() {
-        return "null";
+        return "function";
     }
 }

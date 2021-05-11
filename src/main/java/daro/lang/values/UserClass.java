@@ -51,4 +51,9 @@ public class UserClass extends UserObject {
     public String toString() {
         return classType.toString() + scope.toString();
     }
+
+    @Override
+    public boolean isTrue() {
+        return true;
+    }
 }
