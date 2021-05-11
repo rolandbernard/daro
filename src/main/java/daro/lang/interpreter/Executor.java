@@ -1,7 +1,13 @@
 package daro.lang.interpreter;
 
+import java.math.BigInteger;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+
 import daro.lang.ast.*;
-import daro.lang.values.UserObject;
+import daro.lang.values.*;
 
 /**
  * This class implements a simple scope. A scope is a collection of variables (with names and
@@ -34,169 +40,291 @@ public class Executor implements Visitor<UserObject> {
      * @return The result of the execution
      */
     public UserObject execute(AstNode program) {
-        return program.accept(this);
+        if (program != null) {
+            return program.accept(this);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * This is a utility function that executes the {@link AstNode} and throws a
+     * {@link InterpreterException} if the returned value is undefined.
+     * @param program The {@link AstNode} to execute
+     * @return The result of the execution
+     */
+    private UserObject require(AstNode program) {
+        UserObject value = program.accept(this);
+        if (value != null) {
+            return value;
+        } else {
+            throw new InterpreterException(program.getPosition(), "Value must not be undefined");
+        }
     }
 
     @Override
     public UserObject visit(AstInteger ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return new UserInteger(ast.getValue());
     }
 
     @Override
     public UserObject visit(AstReal ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return new UserReal(ast.getValue());
     }
 
     @Override
     public UserObject visit(AstString ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return new UserString(ast.getValue());
     }
 
     @Override
     public UserObject visit(AstCharacter ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return new UserInteger(BigInteger.valueOf((long)ast.getValue()));
+    }
+
+    /** 
+     * This is a utility function for execution of binary functions with different operations for
+     * different types of objects.
+     * @param integer The function to execute for integers
+     * @param number The function to execute for numbers
+     * @param all The function to execute for all other objects
+     * @return The result of the operation
+     */
+    private UserObject executeBinary(
+        AstBinaryNode ast, BiFunction<UserInteger, UserInteger, UserObject> integer,
+        BiFunction<UserNumber, UserNumber, UserObject> number, BinaryOperator<UserObject> all
+    ) {
+        UserObject left = require(ast.getLeft());
+        UserObject right = require(ast.getRight());
+        if (integer != null && left instanceof UserInteger && right instanceof UserInteger) {
+            UserInteger a = (UserInteger)left;
+            UserInteger b = (UserInteger)right;
+            return integer.apply(a, b);
+        } else if (number != null && left instanceof UserNumber && right instanceof UserNumber) {
+            UserNumber a = (UserNumber)left;
+            UserNumber b = (UserNumber)right;
+            return number.apply(a, b);
+        } else if (all != null) {
+            return all.apply(left, right);
+        } else {
+            throw new InterpreterException(
+                ast.getPosition(),
+                "Objects of types `" + left.getType().toString() + "` and `"
+                + right.getType().toString() + "` do not support this operation."
+            );
+        }
     }
 
     @Override
     public UserObject visit(AstAddition ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserInteger(a.getValue().add(b.getValue())),
+            (a, b) -> new UserReal(a.doubleValue() + b.doubleValue()),
+            (a, b) -> new UserString(a.toString() + b.toString())
+        );
     }
 
     @Override
     public UserObject visit(AstSubtract ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserInteger(a.getValue().subtract(b.getValue())),
+            (a, b) -> new UserReal(a.doubleValue() - b.doubleValue()),
+            null
+        );
     }
 
     @Override
     public UserObject visit(AstMultiply ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserInteger(a.getValue().multiply(b.getValue())),
+            (a, b) -> new UserReal(a.doubleValue() * b.doubleValue()),
+            null
+        );
     }
 
     @Override
     public UserObject visit(AstDivide ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserInteger(a.getValue().divide(b.getValue())),
+            (a, b) -> new UserReal(a.doubleValue() / b.doubleValue()),
+            null
+        );
     }
 
     @Override
     public UserObject visit(AstRemainder ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserInteger(a.getValue().remainder(b.getValue())),
+            (a, b) -> new UserReal(a.doubleValue() % b.doubleValue()),
+            null
+        );
     }
 
     @Override
     public UserObject visit(AstShiftLeft ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserInteger(a.getValue().shiftLeft(b.getValue().intValue())),
+            null, null
+        );
     }
 
     @Override
     public UserObject visit(AstShiftRight ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserInteger(a.getValue().shiftRight(b.getValue().intValue())),
+            null, null
+        );
     }
 
     @Override
     public UserObject visit(AstEqual ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast, null, null,
+            (a, b) -> new UserBoolean(a.equals(b))
+        );
     }
 
     @Override
     public UserObject visit(AstNotEqual ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast, null, null,
+            (a, b) -> new UserBoolean(!a.equals(b))
+        );
     }
 
     @Override
     public UserObject visit(AstLessThan ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) < 0),
+            (a, b) -> new UserBoolean(a.doubleValue() < b.doubleValue()),
+            (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) < 0)
+        );
     }
 
     @Override
     public UserObject visit(AstLessOrEqual ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) <= 0),
+            (a, b) -> new UserBoolean(a.doubleValue() <= b.doubleValue()),
+            (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) <= 0)
+        );
     }
 
     @Override
     public UserObject visit(AstMoreThan ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) > 0),
+            (a, b) -> new UserBoolean(a.doubleValue() > b.doubleValue()),
+            (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) > 0)
+        );
     }
 
     @Override
     public UserObject visit(AstMoreOrEqual ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) >= 0),
+            (a, b) -> new UserBoolean(a.doubleValue() >= b.doubleValue()),
+            (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) >= 0)
+        );
     }
 
     @Override
     public UserObject visit(AstBitwiseAnd ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserInteger(a.getValue().and(b.getValue())),
+            null, null
+        );
     }
 
     @Override
     public UserObject visit(AstBitwiseOr ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserInteger(a.getValue().or(b.getValue())),
+            null, null
+        );
     }
 
     @Override
     public UserObject visit(AstBitwiseXor ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeBinary(ast,
+            (a, b) -> new UserInteger(a.getValue().xor(b.getValue())),
+            null, null
+        );
     }
 
     @Override
     public UserObject visit(AstAnd ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return new UserBoolean(require(ast.getLeft()).isTrue() && require(ast.getRight()).isTrue());
     }
 
     @Override
     public UserObject visit(AstOr ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return new UserBoolean(require(ast.getLeft()).isTrue() || require(ast.getRight()).isTrue());
+    }
+
+    /** 
+     * This is a utility function for execution of unary functions with different operations for
+     * different types of objects.
+     * @param integer The function to execute for integers
+     * @param number The function to execute for numbers
+     * @param all The function to execute for all other objects
+     * @return The result of the operation
+     */
+    private UserObject executeUnary(
+        AstUnaryNode ast, Function<UserInteger, ? extends UserObject> integer,
+        Function<UserNumber, ? extends UserObject> number, UnaryOperator<UserObject> all
+    ) {
+        UserObject value = require(ast.getOperand());
+        if (integer != null && value instanceof UserInteger) {
+            UserInteger a = (UserInteger)value;
+            return integer.apply(a);
+        } else if (number != null && value instanceof UserNumber) {
+            UserNumber a = (UserNumber)value;
+            return number.apply(a);
+        } else if (all != null) {
+            return all.apply(value);
+        } else {
+            throw new InterpreterException(
+                ast.getPosition(),
+                "Objects of type `" + value.getType().toString() + "` do not support this operation."
+            );
+        }
     }
 
     @Override
     public UserObject visit(AstPositive ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeUnary(ast, Function.identity(), Function.identity(), null);
     }
 
     @Override
     public UserObject visit(AstNegative ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeUnary(ast,
+            a -> new UserInteger(a.getValue().negate()),
+            a -> new UserReal(-a.doubleValue()),
+            null
+        );
     }
 
     @Override
     public UserObject visit(AstBitwiseNot ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeUnary(ast,
+            a -> new UserInteger(a.getValue().not()),
+            null, null
+        );
     }
 
     @Override
     public UserObject visit(AstNot ast) {
-        // TODO Auto-generated method stub
-        return null;
+        return executeUnary(ast, null, null,
+            a -> new UserBoolean(!a.isTrue())
+        );
     }
 
     @Override
     public UserObject visit(AstReturn ast) {
-        // TODO Auto-generated method stub
-        return null;
+        if (ast.getOperand() == null) {
+            throw new ReturnException(ast.getPosition(), null);
+        } else {
+            throw new ReturnException(ast.getPosition(), require(ast.getOperand()));
+        }
     }
 
     @Override

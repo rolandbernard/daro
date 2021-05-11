@@ -7,6 +7,7 @@ import daro.lang.ast.AstFunction;
 import daro.lang.ast.AstSymbol;
 import daro.lang.interpreter.BlockScope;
 import daro.lang.interpreter.Executor;
+import daro.lang.interpreter.ReturnException;
 import daro.lang.interpreter.Scope;
 
 /**
@@ -41,7 +42,11 @@ public class UserAstFunction extends UserFunction {
         for (int i = 0; i < params.length && i < parameters.length; i++) {
             parameterScope.forceNewVariable(parameters[i].getName(), params[i]);
         }
-        return Executor.execute(parameterScope, ast.getBody());
+        try {
+            return Executor.execute(parameterScope, ast.getBody());
+        } catch (ReturnException returned) {
+            return returned.getReturnValue();
+        }
     }
 
     @Override
