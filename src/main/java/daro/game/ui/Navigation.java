@@ -1,23 +1,24 @@
 package daro.game.ui;
 
+import daro.game.main.GameHelper;
+import daro.game.pages.CoursePage;
+import daro.game.pages.PlaygroundPage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 
 public class Navigation extends VBox {
 
-    private ArrayList<HBox> navItems;
+    private LinkedHashMap<HBox, Node> navItems;
 
     public Navigation() {
         this.setPrefHeight(720);
@@ -38,17 +39,18 @@ public class Navigation extends VBox {
     }
 
     private VBox getNavigation() {
-        navItems = new ArrayList<>();
-        navItems.add(getNavItem("\ue021", "Course"));
-        navItems.add(getNavItem("\uea26", "Playground"));
-        navItems.add(getNavItem("\ue9ba", "Exit"));
+        navItems = new LinkedHashMap<>();
+        navItems.put(getNavItem("\ue021", "Course", true), new CoursePage());
+        navItems.put(getNavItem("\uea26", "Playground", false), new PlaygroundPage());
+        navItems.put(getNavItem("\ue9ba", "Exit", false), null);
+
         VBox navigation = new VBox();
-        navItems.forEach(item -> navigation.getChildren().add(item));
+        navigation.getChildren().addAll(navItems.keySet());
         navigation.setSpacing(5);
         return navigation;
     }
 
-    private HBox getNavItem(String icon, String label) {
+    private HBox getNavItem(String icon, String label, boolean isDefault) {
         Text labelText = new Text(label);
         labelText.getStyleClass().addAll("nav-text", "text");
 
@@ -57,9 +59,22 @@ public class Navigation extends VBox {
 
         HBox navItem = new HBox(iconText, labelText);
         navItem.setAlignment(Pos.CENTER_LEFT);
-        navItem.setPadding(new Insets(10));
         navItem.setSpacing(20);
         navItem.setPrefWidth(240);
+        navItem.setCursor(Cursor.HAND);
+        navItem.getStyleClass().add("nav-item");
+        if(isDefault) {
+            navItem.getStyleClass().add("active");
+        }
+
+        navItem.setOnMouseClicked(event -> {
+            if(navItems.get(navItem) == null)
+                System.exit(0);
+            GameHelper.updateContainer(navItems.get(navItem));
+            navItems.keySet().forEach(item -> item.getStyleClass().remove("active"));
+            navItem.getStyleClass().add("active");
+        });
+
         return navItem;
     }
 }

@@ -4,6 +4,15 @@
     -fx-fill: #fff;
 }
 
+.nav-item {
+    -fx-background-radius: 10px;
+    -fx-padding: 12px 16px;
+}
+
+.nav-item.active {
+    -fx-background-color: #FF3D23;
+}
+
 .text {
     -fx-font-family: "Montserrat";
 }
