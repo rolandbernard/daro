@@ -27,7 +27,8 @@ public interface Scope {
 
     /**
      * Returns a {@link VariableLocation} to store a variable of the given name. If the variable
-     * does not exist in this scope, a new one will be created in the lowest scope.
+     * does not exist in this scope, a new one will be created in the lowest scope. If the variable
+     * does not support writing to, this method may return `null` (e.g. you can not overwrite false).
      * @param name The name to search for
      * @return A {@link VariableLocation} to store the variable at
      */

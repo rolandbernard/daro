@@ -1,6 +1,6 @@
 package daro.lang.interpreter;
 
-import daro.lang.values.UserObject;
+import daro.lang.values.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,6 +16,32 @@ public class RootScope implements Scope {
 
     static {
         variables = new HashMap<>();
+        // Types
+        variables.put("nulltype", new UserTypeNull());
+        variables.put("int", new UserTypeInteger());
+        variables.put("real", new UserTypeReal());
+        variables.put("bool", new UserTypeBoolean());
+        variables.put("string", new UserTypeString());
+        variables.put("type", new UserTypeType());
+        variables.put("function", new UserTypeFunction());
+        variables.put("array", new UserTypeArray());
+        variables.put("array", new UserTypeArray());
+        // Values
+        variables.put("null", new UserNull());
+        variables.put("true", new UserBoolean(true));
+        variables.put("false", new UserBoolean(false));
+        // Functions
+        variables.put("print", new UserLambdaFunction(-1, params -> {
+            for (UserObject object : params) {
+                System.out.print(object.toString());
+            }
+        }));
+        variables.put("println", new UserLambdaFunction(-1, params -> {
+            for (UserObject object : params) {
+                System.out.print(object.toString());
+            }
+            System.out.println();
+        }));
         // TODO: fill the root scope
     }
 

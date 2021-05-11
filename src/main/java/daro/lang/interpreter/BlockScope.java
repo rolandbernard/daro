@@ -34,7 +34,8 @@ public class BlockScope implements Scope {
 
     /**
      * Create a new variable that will shadow variables that might already exist in a parent scope.
-     * This is to be used when executing functions to set the parameters.
+     * This is to be used when executing functions to set the parameters or for inserting function
+     * and class values into the scope.
      * @param name The name of the variable
      * @param value The value it should be set to
      */

@@ -23,7 +23,7 @@ public abstract class UserFunction extends UserObject {
 
     /**
      * Get the number of parameters that this function can be called with.
-     * @return The number of parameters
+     * @return The number of parameters, or a negative integer if there is no limit (i.e. varargs)
      */
     public abstract int getParamCount();
 

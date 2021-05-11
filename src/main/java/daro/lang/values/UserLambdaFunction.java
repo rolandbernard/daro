@@ -1,6 +1,7 @@
 package daro.lang.values;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -29,6 +30,19 @@ public class UserLambdaFunction extends UserFunction {
     public UserLambdaFunction(int parameters, Function<UserObject[], UserObject> function) {
         this.parameters = parameters;
         this.function = function;
+    }
+
+    /**
+     * Create a {@link UserFunction} from a parameter count and a {@link Consumer}.
+     * @param parameters The number of parameters the function accepts
+     * @param function The {@link Consumer} the fuction executes
+     */
+    public UserLambdaFunction(int parameters, Consumer<UserObject[]> function) {
+        this.parameters = parameters;
+        this.function = params -> {
+            function.accept(params);
+            return null;
+        };
     }
 
     @Override

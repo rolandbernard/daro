@@ -1,7 +1,6 @@
 package daro.lang.interpreter;
 
 import daro.lang.values.UserObject;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
