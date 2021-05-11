@@ -1,7 +1,6 @@
 .nav-text {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-fill: #fff;
 }
 
 .nav-item {
@@ -14,10 +13,30 @@
 }
 
 .text {
+    -fx-fill: #fff;
     -fx-font-family: "Montserrat";
 }
 
 .icon {
     -fx-font-family: "Material Icons";
     -fx-font-weight: normal;
+    -fx-fill: #fff;
+}
+
+.track, .increment-button, .decrement-button {
+    -fx-background-color: #200D57;
+    -fx-border-color: #200D57;
+    -fx-stroke-color: #200D57;
+}
+
+.thumb {
+    -fx-background-color: #fff;
+}
+
+.heading {
+    -fx-font-weight: bold;
+}
+
+.heading.large {
+    -fx-font-size: 48px;
 }

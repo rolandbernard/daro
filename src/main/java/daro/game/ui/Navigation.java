@@ -6,7 +6,6 @@ import daro.game.pages.PlaygroundPage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -18,11 +17,13 @@ import java.util.LinkedHashMap;
 
 public class Navigation extends VBox {
 
-    private LinkedHashMap<HBox, Node> navItems;
+    public static final double NAVIGATION_WIDTH = 320;
+
+    private LinkedHashMap<HBox, Page> navItems;
 
     public Navigation() {
-        this.setPrefHeight(720);
-        this.setPrefWidth(320);
+        this.setPrefHeight(GameHelper.GAME_HEIGHT);
+        this.setPrefWidth(NAVIGATION_WIDTH);
         this.setStyle("-fx-background-color: #1A0A47");
         this.setAlignment(Pos.TOP_CENTER);
         this.setPadding(new Insets(80, 30, 80, 30));
