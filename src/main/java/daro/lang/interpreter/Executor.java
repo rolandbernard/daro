@@ -359,14 +359,14 @@ public class Executor implements Visitor<UserObject> {
         BlockScope innerScope = new BlockScope(scope);
         AstSequence sequence = ast.getSequence();
         ScopeInitializer.initialize(innerScope, sequence);
-        return Executor.execute(innerScope, sequence);
+        return execute(innerScope, sequence);
     }
 
     @Override
     public UserObject visit(AstSequence ast) {
         UserObject value = null;
         for (AstNode statement : ast.getStatemens()) {
-            value = require(statement);
+            value = execute(statement);
         }
         return value;
     }
@@ -499,7 +499,7 @@ public class Executor implements Visitor<UserObject> {
             for (int i = 0; i < array.getLength(); i++) {
                 UserObject item = array.getValueAt(i);
                 innerScope.forceNewVariable(ast.getVariable().getName(), item);
-                ret = Executor.execute(innerScope, ast.getBody());
+                ret = execute(innerScope, ast.getBody());
             }
             return ret;
         } else {

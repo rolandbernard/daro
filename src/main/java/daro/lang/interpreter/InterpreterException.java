@@ -29,4 +29,28 @@ public class InterpreterException extends IllegalArgumentException {
     public Position getPosition() {
         return position;
     }
+
+    /**
+     * Return the starting offset of the position of the error.
+     * @return The start of the error
+     */
+    public int getStart() {
+        return position.getStart();
+    }
+
+    /**
+     * Return the end offset of the position of the error.
+     * @return The end of the error
+     */
+    public int getEnd() {
+        return position.getEnd();
+    }
+
+    /**
+     * Return the length offset of the position of the error.
+     * @return The length of the error
+     */
+    public int getLength() {
+        return position.getLength();
+    }
 }
