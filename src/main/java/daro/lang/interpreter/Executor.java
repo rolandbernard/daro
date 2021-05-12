@@ -55,7 +55,7 @@ public class Executor implements Visitor<UserObject> {
      * @return The result of the execution
      */
     private UserObject require(AstNode program) {
-        UserObject value = program.accept(this);
+        UserObject value = execute(program);
         if (value != null) {
             return value;
         } else {
@@ -426,9 +426,9 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstIndex ast) {
-        UserObject left = Executor.execute(scope, ast.getLeft());
+        UserObject left = require(ast.getLeft());
         if (left instanceof UserArray) {
-            UserObject right = Executor.execute(scope, ast.getRight());
+            UserObject right = require(ast.getRight());
             if (right instanceof UserInteger) {
                 UserArray array = (UserArray)left;
                 int index = ((UserInteger)right).getValue().intValue();
@@ -447,37 +447,68 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstNew ast) {
-        // TODO Auto-generated method stub
-        return null;
+        UserObject kind = require(ast.getType());
+        if (kind instanceof UserType) {
+            UserType type = (UserType)kind;
+            if (ast.getInitialzer() != null) {
+                return type.instantiate(scope, ast.getInitialzer());
+            } else {
+                return type.instantiate();
+            }
+        } else {
+            throw new InterpreterException(ast.getType().getPosition(), "Value is not a type");
+        }
     }
 
     @Override
     public UserObject visit(AstArray ast) {
-        // TODO Auto-generated method stub
-        return null;
+        UserObject value = require(ast.getOperand());
+        if (value instanceof UserType) {
+            UserType type = (UserType)value;
+            return new UserTypeStrictArray(type);
+        } else {
+            throw new InterpreterException(ast.getOperand().getPosition(), "Value is not a type");
+        }
     }
 
     @Override
     public UserObject visit(AstIfElse ast) {
-        // TODO Auto-generated method stub
-        return null;
+        if (require(ast.getCondition()).isTrue()) {
+            return execute(ast.getIf());
+        } else {
+            return execute(ast.getElse());
+        }
     }
 
     @Override
     public UserObject visit(AstFor ast) {
-        // TODO Auto-generated method stub
-        return null;
+        UserObject value = null;
+        while (require(ast.getCondition()).isTrue()) {
+            value = execute(ast.getBody());
+        }
+        return value;
     }
 
     @Override
     public UserObject visit(AstForIn ast) {
-        // TODO Auto-generated method stub
-        return null;
+        BlockScope innerScope = new BlockScope(scope);
+        UserObject value = require(ast.getList());
+        if (value instanceof UserArray) {
+            UserObject ret = null;
+            UserArray array = (UserArray)value;
+            for (int i = 0; i < array.getLength(); i++) {
+                UserObject item = array.getValueAt(i);
+                innerScope.forceNewVariable(ast.getVariable().getName(), item);
+                ret = Executor.execute(innerScope, ast.getBody());
+            }
+            return ret;
+        } else {
+            throw new InterpreterException(ast.getList().getPosition(), "Value is not an array");
+        }
     }
 
     @Override
     public UserObject visit(AstInitializer ast) {
-        // TODO Auto-generated method stub
-        return null;
+        throw new InterpreterException(ast.getPosition(), "Execution error");
     }
 }

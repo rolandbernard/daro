@@ -13,7 +13,7 @@ import daro.lang.interpreter.ScopeInitializer;
  */
 public class UserClass extends UserObject {
     private final UserTypeClass classType;
-    private final Scope scope;
+    private final BlockScope scope;
 
     public UserClass(Scope globalScope, UserTypeClass classType) {
         this.classType = classType;
@@ -34,7 +34,7 @@ public class UserClass extends UserObject {
 
     @Override
     public Scope getMemberScope() {
-        return scope;
+        return scope.getFinalLevel();
     }
 
     @Override

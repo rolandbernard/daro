@@ -1,11 +1,5 @@
 package daro.lang.interpreter;
 
-import java.math.BigInteger;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
-
 import daro.lang.ast.*;
 import daro.lang.values.*;
 

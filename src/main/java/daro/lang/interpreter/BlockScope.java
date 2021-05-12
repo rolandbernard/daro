@@ -33,6 +33,25 @@ public class BlockScope implements Scope {
     }
 
     /**
+     * Creates a new {@link BlockScope} with the given parent and internal map. This constructor is only to be
+     * used internaly by this class.
+     * @param variables The interal variables map
+     */
+    private BlockScope(Scope parent, Map<String, UserObject> variables) {
+        this.parent = parent;
+        this.variables = variables;
+    }
+
+    /**
+     * Returns a {@link BlockScope} that only includes the last level of this scope. This method is
+     * used inside classes as the member scope.
+     * @return The last level scope
+     */
+    public BlockScope getFinalLevel() {
+        return new BlockScope(null, variables);
+    }
+
+    /**
      * Create a new variable that will shadow variables that might already exist in a parent scope.
      * This is to be used when executing functions to set the parameters or for inserting function
      * and class values into the scope.
