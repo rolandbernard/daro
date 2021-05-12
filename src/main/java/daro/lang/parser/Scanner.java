@@ -300,5 +300,14 @@ public class Scanner {
             return null;
         }
     }
+
+    /**
+     * Return the next token without actually consuming it.
+     * @return The next token
+     */
+    public Token peek() {
+        cacheToken();
+        return nextToken;
+    }
 }
 

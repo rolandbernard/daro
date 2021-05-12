@@ -69,6 +69,8 @@ public interface Visitor<T> {
 
     public T visit(AstBlock ast);
 
+    public T visit(AstSequence ast);
+
     public T visit(AstAssignment ast);
 
     public T visit(AstSymbol ast);

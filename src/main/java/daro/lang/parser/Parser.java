@@ -32,11 +32,11 @@ public class Parser {
     /**
      * Parse the source code found in the given {@link String} into a ast tree using the types in
      * daro.lang.ast. Errors during parsing will throw a {@link ParsingException}. A empty source
-     * does not constitute an syntax error and will return an empty {@link AstBlock} node.
+     * does not constitute an syntax error and will return an empty {@link AstSequence} node.
      * @param source The source code that should be parsed
      * @return The root node for the resulting ast tree
      */
-    public static AstBlock parseSourceCode(String source) {
+    public static AstSequence parseSourceCode(String source) {
         Parser parser = new Parser(source);
         return parser.parseRoot();
     }
@@ -62,7 +62,22 @@ public class Parser {
      * Parse a root element of a Daro source code unit.
      * @return The parsed ast for the ast
      */
-    private AstBlock parseRoot() {
+    private AstSequence parseRoot() {
+        AstSequence sequence = parseSequence();
+        if (scanner.hasNext()) {
+            throw new ParsingException(
+                sequence.getLastPosition(),
+                "Expected another statement (or the end)"
+            );
+        }
+        return sequence;
+    }
+
+    /**
+     * Parse a sequence of statements optionaly seperated by semicolons.
+     * @return The parsed {@link AstSequence}
+     */
+    private AstSequence parseSequence() {
         ArrayList<AstNode> statements = new ArrayList<>();
         AstNode statement;
         do {
@@ -74,20 +89,11 @@ public class Parser {
                 statements.add(statement);
             }
         } while(statement != null);
-        if (scanner.hasNext()) {
-            Position position;
-            if (statements.isEmpty()) {
-                position = new Position(0, 0);
-            } else {
-                position = statements.get(statements.size() - 1).getPosition();
-            }
-            throw new ParsingException(position, "Expected another statement (or the end)");
-        }
         if (statements.isEmpty()) {
-            return new AstBlock(new Position(0, 0), new AstNode[0]);
+            return new AstSequence(new Position(0, 0), new AstNode[0]);
         } else {
             Position position = new Position(statements.get(0).getStart(), statements.get(statements.size() - 1).getEnd());
-            return new AstBlock(position, statements.toArray(new AstNode[statements.size()]));
+            return new AstSequence(position, statements.toArray(new AstNode[statements.size()]));
         }
     }
 
@@ -315,30 +321,17 @@ public class Parser {
     private AstBlock parseCodeBlock() {
         if (scanner.hasNext(TokenKind.OPEN_BRACE)) {
             Token opening = scanner.next();
-            ArrayList<AstNode> statements = new ArrayList<>();
-            AstNode statement;
-            do {
-                while (scanner.accept(TokenKind.SEMICOLON) != null) {
-                    // Consume all semicolons
-                }
-                statement = parserStatement();
-                if (statement != null) {
-                    statements.add(statement);
-                }
-            } while(statement != null);
+            AstSequence sequence = parseSequence();
             Token closing = scanner.accept(TokenKind.CLOSE_BRACE);
             if (closing == null) {
-                Position position;
-                if (statements.isEmpty()) {
-                    position = opening.getPosition();
-                } else {
-                    position = new Position(opening.getStart(), statements.get(statements.size() - 1).getEnd());
-                }
-                throw new ParsingException(position, "Expected a closing `{` after opening `}`");
+                throw new ParsingException(
+                    opening.getPosition(),
+                    "Expected a closing `{` after opening `}`"
+                );
             }
             return new AstBlock(
                 new Position(opening.getStart(), closing.getEnd()),
-                statements.toArray(new AstNode[statements.size()])
+                sequence.getStatemens()
             );
         } else {
             return null;

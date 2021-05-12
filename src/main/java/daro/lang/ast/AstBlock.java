@@ -1,50 +1,23 @@
 package daro.lang.ast;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 /**
- * Class representing an ast node for code blocks. e.g. {@code { ... }}
+ * Class representing an ast node for code blocks. e.g. {@code { ... }}.
+ * A block is basically a sequence that has a seperate scope during execution.
  * 
  * @author Roland Bernard
  */
-public final class AstBlock extends AstNode {
-    private final AstNode[] content;
+public final class AstBlock extends AstSequence {
 
     public AstBlock(Position position, AstNode[] content) {
-        super(position);
-        this.content = content;
+        super(position, content);
     }
 
-    public AstNode[] getContent() {
-        return content;
+    public AstSequence getSequence() {
+        return new AstSequence(getPosition(), getStatemens());
     }
 
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(content);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof AstBlock) {
-            AstBlock node = (AstBlock)obj;
-            return Arrays.equals(content, node.getContent());
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "("
-            + this.getClass().getSimpleName() + " "
-            + Arrays.stream(content).map(String::valueOf).collect(Collectors.joining(" "))
-            + ")";
     }
 }
 
