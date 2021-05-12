@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigInteger;
+
 public class ParserTest {
 
     @Test
@@ -734,10 +736,11 @@ public class ParserTest {
     }
 
     @Test
-    void missingNameClassDefinition() {
-        assertThrows(ParsingException.class, () -> {
-            Parser.parseSourceCode("class { }");
-        });
+    void anonymousClassDefinition() {
+        AstNode ast = Parser.parseSourceCode("class { }");
+        assertEquals(new AstSequence(null, new AstNode[] {
+            new AstClass(null, null, new AstBlock(null, new AstNode[0]))
+        }), ast);
     }
 
     @Test
@@ -773,10 +776,19 @@ public class ParserTest {
     }
 
     @Test
-    void missingNameFunctionDefinition() {
-        assertThrows(ParsingException.class, () -> {
-            Parser.parseSourceCode("fn ");
-        });
+    void anonymousFunctionDefinition() {
+        AstNode ast = Parser.parseSourceCode("fn (n) { 2*n }");
+        assertEquals(new AstSequence(null, new AstNode[] {
+            new AstFunction(null, null,
+                new AstSymbol[] { new AstSymbol(null, "n") },
+                new AstBlock(null, new AstNode[] {
+                    new AstMultiply(null,
+                        new AstInteger(null, BigInteger.valueOf(2)),
+                        new AstSymbol(null, "n")
+                    ),
+                })
+            )
+        }), ast);
     }
 
     @Test

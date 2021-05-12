@@ -73,6 +73,10 @@ public class UserLambdaFunction extends UserFunction {
 
     @Override
     public String toString() {
-        return "function (" + String.valueOf(parameters) + ")";
+        if (parameters >= 0) {
+            return "function (" + String.valueOf(parameters) + ")";
+        } else {
+            return "function (...)";
+        }
     }
 }

@@ -106,12 +106,7 @@ public class Parser {
      */
     private AstNode parserStatement() {
         return firstNonNull(
-            this::parseIfElse,
-            this::parseForLoop,
             this::parseReturn,
-            this::parseCodeBlock,
-            this::parseFunctionDefinition,
-            this::parseClassDefinition,
             this::parseExpression
         );
     }
@@ -124,12 +119,6 @@ public class Parser {
         if (scanner.hasNext(TokenKind.FN)) {
             Token token = scanner.next();
             Token name = scanner.accept(TokenKind.IDENTIFIER);
-            if (name == null) {
-                throw new ParsingException(
-                    token.getPosition(),
-                    "Expected function name after `fn`"
-                );
-            }
             Token opening = scanner.accept(TokenKind.OPEN_PAREN);
             if (opening == null) {
                 throw new ParsingException(
@@ -164,7 +153,7 @@ public class Parser {
             }
             return new AstFunction(
                 new Position(token.getStart(), body.getEnd()),
-                name.getSource(),
+                name != null ? name.getSource() : null,
                 parameters.toArray(new AstSymbol[parameters.size()]),
                 body
             );
@@ -181,12 +170,6 @@ public class Parser {
         if (scanner.hasNext(TokenKind.CLASS)) {
             Token token = scanner.next();
             Token name = scanner.accept(TokenKind.IDENTIFIER);
-            if (name == null) {
-                throw new ParsingException(
-                    token.getPosition(),
-                    "Expected class name after `class`"
-                );
-            }
             AstBlock body = parseCodeBlock();
             if (body == null) {
                 throw new ParsingException(
@@ -196,7 +179,7 @@ public class Parser {
             }
             return new AstClass(
                 new Position(token.getStart(), body.getEnd()),
-                name.getSource(), body
+                name != null ? name.getSource(): null , body
             );
         } else {
             return null;
@@ -719,12 +702,30 @@ public class Parser {
      * @return The root node of the parsed ast tree
      */
     private AstNode parseBaseExpression() {
+        return firstNonNull(
+            this::parseIfElse,
+            this::parseForLoop,
+            this::parseCodeBlock,
+            this::parseFunctionDefinition,
+            this::parseClassDefinition,
+            this::parseParenthesis,
+            this::parseNew,
+            this::parseInteger,
+            this::parseReal,
+            this::parseString,
+            this::parseCharacter,
+            this::parseSymbol
+        );
+    }
+
+    /**
+     * Parses an expression inside parenthesies. e.g. (5 + 6)
+     * @return The parsed {@link AstNode}
+     */
+    private AstNode parseParenthesis() {
         if (scanner.hasNext(TokenKind.OPEN_PAREN)) {
             Token open = scanner.next();
-            AstNode value = parseExpression();
-            if (value == null) {
-                throw new ParsingException(open.getPosition(), "Expected an expression after opening `(`");
-            }
+            AstSequence value = parseSequence();
             Token closing = scanner.accept(TokenKind.CLOSE_PAREN);
             if (closing == null) {
                 throw new ParsingException(
@@ -732,8 +733,22 @@ public class Parser {
                     "Expected a closing `)` after opening `(`"
                 );
             }
-            return value;
-        } else if (scanner.hasNext(TokenKind.NEW)) {
+            if (value.getStatemens().length == 1) {
+                return value.getStatemens()[0];
+            } else {
+                return value;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Parses a new statement. e.g. new foo, new array{1, 2, 3, 4}
+     * @return The parsed ast node
+     */
+    private AstNew parseNew() {
+        if (scanner.hasNext(TokenKind.NEW)) {
             Token token = scanner.next();
             AstNode type = parseUnaryPrefixExpression();
             if (type == null) {
@@ -744,7 +759,17 @@ public class Parser {
                 new Position(token.getStart(), initializer == null ? type.getEnd() : initializer.getEnd()),
                 type, initializer
             );
-        } else if (scanner.hasNext(TokenKind.INTEGER)) {
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Parses a integer literal. e.g. 0b1010, 1234
+     * @return The parsed ast node
+     */
+    private AstInteger parseInteger() {
+        if (scanner.hasNext(TokenKind.INTEGER)) {
             Token token = scanner.next();
             String source = token.getSource();
             BigInteger value;
@@ -758,11 +783,31 @@ public class Parser {
                 value = new BigInteger(source);
             }
             return new AstInteger(token.getPosition(), value);
-        } else if (scanner.hasNext(TokenKind.REAL)) {
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Parses a real literal. e.g. 12e-3
+     * @return The parsed ast node
+     */
+    private AstReal parseReal() {
+        if (scanner.hasNext(TokenKind.REAL)) {
             Token token = scanner.next();
             double value = Double.valueOf(token.getSource());
             return new AstReal(token.getPosition(), value);
-        } else if (scanner.hasNext(TokenKind.STRING)) {
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Parses a string literal. e.g. "Hello"
+     * @return The parsed ast node
+     */
+    private AstString parseString() {
+        if (scanner.hasNext(TokenKind.STRING)) {
             Token token = scanner.next();
             String source = token.getSource();
             if (source.length() >= 2 && source.charAt(source.length() - 1) == '"') {
@@ -772,7 +817,17 @@ public class Parser {
             }
             String value = resolveEscapeCharacters(source);
             return new AstString(token.getPosition(), value);
-        } else if (scanner.hasNext(TokenKind.CHARACTER)) {
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Parses a character literal. e.g. 'c'
+     * @return The parsed ast node
+     */
+    private AstCharacter parseCharacter() {
+        if (scanner.hasNext(TokenKind.CHARACTER)) {
             Token token = scanner.next();
             String source = token.getSource();
             if (source.length() >= 2 && source.charAt(source.length() - 1) == '\'') {
@@ -785,7 +840,17 @@ public class Parser {
                 throw new ParsingException(token.getPosition(), "Character literals should include exactly one character");
             }
             return new AstCharacter(token.getPosition(), value.charAt(0));
-        } else if (scanner.hasNext(TokenKind.IDENTIFIER)) {
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Parses an indentifier into an {@link AstSymbol}. e.g. foo
+     * @return The parsed ast node
+     */
+    private AstSymbol parseSymbol() {
+        if (scanner.hasNext(TokenKind.IDENTIFIER)) {
             Token name = scanner.next();
             return new AstSymbol(name.getPosition(), name.getSource());
         } else {

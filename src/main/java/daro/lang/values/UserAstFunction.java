@@ -67,7 +67,8 @@ public class UserAstFunction extends UserFunction {
 
     @Override
     public String toString() {
-        return "function " + ast.getName()
+        return "function "
+            + (ast.getName() != null ? ast.getName() : "")
             + Arrays.stream(ast.getParameters())
                 .map(AstSymbol::getName)
                 .collect(Collectors.joining(", ", "(", ")"));

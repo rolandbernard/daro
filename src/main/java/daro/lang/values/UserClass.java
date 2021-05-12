@@ -23,6 +23,7 @@ public class UserClass extends UserObject {
 
     private void initialize() {
         AstSequence sequence = classType.getDefinition().getBody().getSequence();
+        scope.forceNewVariable("this", this);
         ScopeInitializer.initialize(scope, sequence);
         Executor.execute(scope, sequence);
     }
