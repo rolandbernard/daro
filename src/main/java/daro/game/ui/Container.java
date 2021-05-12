@@ -1,14 +1,14 @@
 package daro.game.ui;
 
-import daro.game.main.GameHelper;
+import daro.game.main.Game;
 import javafx.scene.control.ScrollPane;
 
 
 public class Container extends ScrollPane {
 
     public Container() {
-        this.setHeight(GameHelper.GAME_HEIGHT);
-        this.setPrefWidth(GameHelper.GAME_WIDTH - Navigation.WIDTH);
+        this.setHeight(Game.HEIGHT);
+        this.setPrefWidth(Game.WIDTH - Navigation.WIDTH);
         this.setHbarPolicy(ScrollBarPolicy.NEVER);
         this.setStyle("-fx-background-color: #200D57");
         this.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
