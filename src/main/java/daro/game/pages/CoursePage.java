@@ -13,7 +13,7 @@ public class CoursePage extends Page {
     public CoursePage() {
         Heading heading = new Heading("Courses", "Learn the fundamentals of programming with the interactive course.");
         this.getChildren().addAll(heading, getLevelGroups());
-        this.setSpacing(50);
+        this.setSpacing(60);
     }
 
     private FlowPane getLevelGroups() {

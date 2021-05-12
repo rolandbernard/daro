@@ -1,7 +1,10 @@
 package daro.game.ui;
 
+import daro.game.main.GameHelper;
 import daro.game.main.LevelGroup;
+import daro.game.pages.LevelGroupPage;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -15,8 +18,12 @@ public class LevelGroupItem extends VBox {
         this.setPrefHeight(DIMENSION);
         this.setPrefWidth(DIMENSION);
         this.setStyle("-fx-background-color: #381A90; -fx-background-radius: 25px");
-        this.setPadding(new Insets(40));
+        this.setPadding(new Insets(30));
+        this.setCursor(Cursor.HAND);
         this.getChildren().addAll(getHeading());
+        this.setOnMouseClicked(event -> {
+            GameHelper.updateContainer(new LevelGroupPage(levelGroup));
+        });
     }
 
     private VBox getHeading() {
