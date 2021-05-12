@@ -5,7 +5,8 @@ import daro.lang.ast.AstInitializer;
 import daro.lang.interpreter.Scope;
 
 /**
- * This class represents the type for a array object ({@link UserArray}).
+ * This class represents the type for a class instance ({@link UserClass}). A class is always linked
+ * to the scope they are defined in which is used to instantiate the class.
  * 
  * @author Roland Bernard
  */
@@ -24,13 +25,11 @@ public class UserTypeClass extends UserType {
 
     @Override
     public UserObject instantiate() {
-        UserClass ret = new UserClass(globalScope, this);
-        ret.initialize();
-        return ret;
+        return new UserClass(globalScope, this);
     }
 
     @Override
-    public UserObject instantiate(AstInitializer initializer) {
+    public UserObject instantiate(Scope scope, AstInitializer initializer) {
         // TODO: implement using executor
         return null;
     }

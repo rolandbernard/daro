@@ -1,6 +1,7 @@
 package daro.lang.values;
 
 import daro.lang.ast.AstInitializer;
+import daro.lang.interpreter.Scope;
 
 /**
  * This class represents the type for a type object ({link UserType}).
@@ -15,7 +16,7 @@ public class UserTypeType extends UserType {
     }
 
     @Override
-    public UserObject instantiate(AstInitializer initializer) {
+    public UserObject instantiate(Scope scope, AstInitializer initializer) {
         // TODO: implement using type builder
         return null;
     }

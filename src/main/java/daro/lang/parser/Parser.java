@@ -90,7 +90,7 @@ public class Parser {
             }
         } while(statement != null);
         if (statements.isEmpty()) {
-            return new AstSequence(new Position(0, 0), new AstNode[0]);
+            return new AstSequence(scanner.peek().getPosition(), new AstNode[0]);
         } else {
             Position position = new Position(statements.get(0).getStart(), statements.get(statements.size() - 1).getEnd());
             return new AstSequence(position, statements.toArray(new AstNode[statements.size()]));

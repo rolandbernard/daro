@@ -15,9 +15,10 @@ public class UserClass extends UserObject {
     public UserClass(Scope globalScope, UserTypeClass classType) {
         this.classType = classType;
         this.scope = new BlockScope(globalScope);
+        initialize();
     }
 
-    public void initialize() {
+    private void initialize() {
         // TODO: run with executor
     }
 

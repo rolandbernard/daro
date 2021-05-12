@@ -3,6 +3,7 @@ package daro.lang.values;
 import java.util.List;
 
 import daro.lang.ast.AstInitializer;
+import daro.lang.interpreter.Scope;
 
 /**
  * This class represents the type for a array object ({@link UserArray}).
@@ -17,7 +18,7 @@ public class UserTypeArray extends UserType {
     }
 
     @Override
-    public UserObject instantiate(AstInitializer initializer) {
+    public UserObject instantiate(Scope scope, AstInitializer initializer) {
         // TODO: implement using executor
         return null;
     }

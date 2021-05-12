@@ -42,15 +42,8 @@ public class Interpreter {
      * @throws ParsingException It the source cannot be parsed
      */
     public UserObject execute(String source) {
-        // Here we have to execute every statement seperatly because a {link AstBlock} will
-        // otherwise create a new scope that will prevent the usage of the global scope.
-        // TODO: plug in ScopeInitializer
-        AstBlock ast = Parser.parseSourceCode(source);
-        UserObject value = null;
-        for (AstNode statement : ast.getContent()) {
-            value = execute(statement);
-        }
-        return value;
+        AstSequence ast = Parser.parseSourceCode(source);
+        return execute(ast);
     }
 }
 

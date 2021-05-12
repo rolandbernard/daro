@@ -2,6 +2,7 @@ package daro.lang.values;
 
 import daro.lang.ast.AstInitializer;
 import daro.lang.interpreter.InterpreterException;
+import daro.lang.interpreter.Scope;
 
 /**
  * This class represents the type for a null object ({link UserNull}).
@@ -16,7 +17,7 @@ public class UserTypeNull extends UserType {
     }
 
     @Override
-    public UserObject instantiate(AstInitializer initializer) {
+    public UserObject instantiate(Scope scope, AstInitializer initializer) {
         if (initializer.getValues().length != 0) {
             throw new InterpreterException(initializer.getPosition(), "Null type can not be initialized");
         } else {

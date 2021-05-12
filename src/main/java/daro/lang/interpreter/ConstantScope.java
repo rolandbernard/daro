@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This class implements the root scope of the program. It contains the predefined methods and
- * types in the Daro language.
+ * This class implements a constant scope. It contains the predefined variables that can not be
+ * changed again by the user.
  * 
  * @author Roland Bernard
  */

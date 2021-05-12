@@ -10,7 +10,8 @@ import daro.lang.ast.*;
 import daro.lang.values.*;
 
 /**
- * This class implements a simple scope. A scope is a collection of variables (with names and
+ * This class is used to execute an ast inside a given scope. It is implemented as a tree walking
+ * interpreter.
  * 
  * @author Roland Bernard
  */
@@ -411,5 +412,9 @@ public class Executor implements Visitor<UserObject> {
         return null;
     }
 
-
+    @Override
+    public UserObject visit(AstSequence ast) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
