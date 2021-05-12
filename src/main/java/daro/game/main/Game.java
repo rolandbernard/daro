@@ -14,9 +14,12 @@ public class Game extends Application {
     private final static Container CONTENT = new Container();
     public static final double HEIGHT = 720, WIDTH = 1280;
 
+    public static void main(String[] args) {
+        launch();
+    }
+
     @Override
     public void start(Stage stage) {
-
         HBox layout = new HBox(new Navigation(), CONTENT);
         Scene scene = new Scene(layout, WIDTH, HEIGHT);
 
@@ -25,17 +28,15 @@ public class Game extends Application {
         scene.getStylesheets().add("https://fonts.googleapis.com/icon?family=Material+Icons");
         scene.getStylesheets().add("styles/index.css");
 
+        LevelGroup.parseLevels();
+
         stage.setTitle("Learn programming with daro!");
         stage.setScene(scene);
         stage.show();
     }
 
-
     public static void setContent(Page n) {
         CONTENT.setContent(n);
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
 }

@@ -1,0 +1,16 @@
+{
+  "groups": [
+    {
+      "id": 1,
+      "name": "Data",
+      "description_short": "Variables and basic data structures",
+      "levels": [
+        {
+          "id": 1,
+          "name": "Test Level",
+          "description": "Write a Test"
+        }
+      ]
+    }
+  ]
+}
