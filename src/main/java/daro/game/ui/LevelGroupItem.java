@@ -18,9 +18,9 @@ public class LevelGroupItem extends VBox {
         this.setPrefHeight(DIMENSION);
         this.setPrefWidth(DIMENSION);
         this.setStyle("-fx-background-color: #381A90; -fx-background-radius: 25px");
-        this.setPadding(new Insets(30));
+        this.setPadding(new Insets(40, 30, 40, 30));
         this.setCursor(Cursor.HAND);
-        this.getChildren().addAll(getHeading());
+        this.getChildren().addAll(getHeading(), getCompleted());
         this.setOnMouseClicked(event -> {
             GameHelper.updateContainer(new LevelGroupPage(levelGroup));
         });
@@ -33,6 +33,14 @@ public class LevelGroupItem extends VBox {
         description.getStyleClass().addAll("text");
         VBox group = new VBox(heading, description);
         group.setSpacing(8);
+        return group;
+    }
+    private VBox getCompleted() {
+        int completed = levelGroup.countCompletedLevels(),
+                allLevels = levelGroup.countLevels();
+        Text ratio = new Text(completed + "/" + allLevels);
+
+        VBox group = new VBox(ratio);
         return group;
     }
 }

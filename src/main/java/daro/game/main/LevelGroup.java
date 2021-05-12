@@ -35,4 +35,12 @@ public class LevelGroup {
     public void setLevels(List<Level> levels) {
         this.levels = levels;
     }
+
+    public int countLevels() {
+        return levels.size();
+    }
+
+    public int countCompletedLevels() {
+        return (int) levels.stream().filter(Level::isCompleted).count();
+    }
 }

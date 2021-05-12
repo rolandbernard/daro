@@ -23,9 +23,9 @@ public class CoursePage extends Page {
         pane.setVgap(gap);
         pane.setHgap(gap);
         pane.getChildren().addAll(
-                new LevelGroupItem(new LevelGroup("test", "test", List.of(new Level()))),
-                new LevelGroupItem(new LevelGroup("test", "test", List.of(new Level()))),
-                new LevelGroupItem(new LevelGroup("test", "test", List.of(new Level())))
+                new LevelGroupItem(new LevelGroup("test", "test", List.of(new Level(true)))),
+                new LevelGroupItem(new LevelGroup("test", "test", List.of(new Level(false)))),
+                new LevelGroupItem(new LevelGroup("test", "test", List.of(new Level(false))))
         );
         return pane;
     }
