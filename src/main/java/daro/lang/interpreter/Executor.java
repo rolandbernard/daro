@@ -330,50 +330,119 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstClass ast) {
-        // TODO Auto-generated method stub
-        return null;
+        UserTypeClass value = new UserTypeClass(scope, ast);
+        if (ast.getName() != null) {
+            if (scope instanceof BlockScope) {
+                ((BlockScope)scope).forceNewVariable(ast.getName(), value);
+            } else {
+                throw new InterpreterException(ast.getPosition(), "The surrounding scope does not support class definitions");
+            }
+        }
+        return value;
     }
 
     @Override
     public UserObject visit(AstFunction ast) {
-        // TODO Auto-generated method stub
-        return null;
+        UserAstFunction value = new UserAstFunction(scope, ast);
+        if (ast.getName() != null) {
+            if (scope instanceof BlockScope) {
+                ((BlockScope)scope).forceNewVariable(ast.getName(), value);
+            } else {
+                throw new InterpreterException(ast.getPosition(), "The surrounding scope does not support function definitions");
+            }
+        }
+        return value;
     }
 
     @Override
     public UserObject visit(AstBlock ast) {
-        // TODO Auto-generated method stub
-        return null;
+        BlockScope innerScope = new BlockScope(scope);
+        AstSequence sequence = ast.getSequence();
+        ScopeInitializer.initialize(innerScope, sequence);
+        return Executor.execute(innerScope, sequence);
+    }
+
+    @Override
+    public UserObject visit(AstSequence ast) {
+        UserObject value = null;
+        for (AstNode statement : ast.getStatemens()) {
+            value = require(statement);
+        }
+        return value;
     }
 
     @Override
     public UserObject visit(AstAssignment ast) {
-        // TODO Auto-generated method stub
-        return null;
+        VariableLocation location = LocationEvaluator.execute(scope, ast.getLeft());
+        if (location != null) {
+            UserObject value = require(ast.getRight());
+            location.storeValue(value);
+            return value;
+        } else {
+            throw new InterpreterException(ast.getLeft().getPosition(), "Expression can not be written to");
+        }
     }
 
     @Override
     public UserObject visit(AstSymbol ast) {
-        // TODO Auto-generated method stub
-        return null;
+        UserObject value = scope.getVariableValue(ast.getName());
+        if (value == null) {
+            throw new InterpreterException(ast.getPosition(), "Variable is undefined");
+        } else {
+            return value;
+        }
     }
 
     @Override
     public UserObject visit(AstMember ast) {
-        // TODO Auto-generated method stub
-        return null;
+        UserObject left = require(ast.getOperand());
+        UserObject value = left.getMemberScope().getVariableValue(ast.getName());
+        if (value == null) {
+            throw new InterpreterException(ast.getPosition(), "Member variable is undefined");
+        } else {
+            return value;
+        }
     }
 
     @Override
     public UserObject visit(AstCall ast) {
-        // TODO Auto-generated method stub
-        return null;
+        UserObject left = require(ast.getFunction());
+        if (left instanceof UserFunction) {
+            UserFunction function = (UserFunction)left;
+            AstNode[] parameters = ast.getParameters();
+            if (function.getParamCount() >= 0 && function.getParamCount() != parameters.length) {
+                throw new InterpreterException(ast.getFunction().getPosition(), "Worng number of parameters");
+            } else {
+                UserObject[] parameterValues = new UserObject[parameters.length];
+                for (int i = 0; i < parameters.length; i++) {
+                    parameterValues[i] = require(parameters[i]);
+                }
+                return function.execute(parameterValues);
+            }
+        } else {
+            throw new InterpreterException(ast.getFunction().getPosition(), "Value is not a function");
+        }
     }
 
     @Override
     public UserObject visit(AstIndex ast) {
-        // TODO Auto-generated method stub
-        return null;
+        UserObject left = Executor.execute(scope, ast.getLeft());
+        if (left instanceof UserArray) {
+            UserObject right = Executor.execute(scope, ast.getRight());
+            if (right instanceof UserInteger) {
+                UserArray array = (UserArray)left;
+                int index = ((UserInteger)right).getValue().intValue();
+                if (index < 0 || index >= array.getLength()) {
+                    throw new InterpreterException(ast.getPosition(), "Index out of bounds");
+                } else {
+                    return array.getValueAt(index);
+                }
+            } else {
+                throw new InterpreterException(ast.getRight().getPosition(), "Index is not an integer");
+            }
+        } else {
+            throw new InterpreterException(ast.getLeft().getPosition(), "Value is not an array");
+        }
     }
 
     @Override
@@ -408,12 +477,6 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstInitializer ast) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public UserObject visit(AstSequence ast) {
         // TODO Auto-generated method stub
         return null;
     }

@@ -31,6 +31,9 @@ public class RootScope implements Scope {
         variables.put("true", new UserBoolean(true));
         variables.put("false", new UserBoolean(false));
         // Functions
+        variables.put("typeof", new UserLambdaFunction(1, params -> {
+            return params[0].getType();
+        }));
         variables.put("print", new UserLambdaFunction(-1, params -> {
             for (UserObject object : params) {
                 System.out.print(object.toString());

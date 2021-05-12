@@ -1,7 +1,10 @@
 package daro.lang.values;
 
+import daro.lang.ast.AstSequence;
 import daro.lang.interpreter.BlockScope;
+import daro.lang.interpreter.Executor;
 import daro.lang.interpreter.Scope;
+import daro.lang.interpreter.ScopeInitializer;
 
 /**
  * This {@link UserObject} represents an instance of a class.
@@ -19,7 +22,9 @@ public class UserClass extends UserObject {
     }
 
     private void initialize() {
-        // TODO: run with executor
+        AstSequence sequence = classType.getDefinition().getBody().getSequence();
+        ScopeInitializer.initialize(scope, sequence);
+        Executor.execute(scope, sequence);
     }
 
     @Override

@@ -29,6 +29,7 @@ public class Interpreter {
      * @throws InterpreterException It the code causes an exception during execution
      */
     public UserObject execute(AstNode ast) {
+        ScopeInitializer.initialize(globalScope, ast);
         return Executor.execute(globalScope, ast);
     }
 

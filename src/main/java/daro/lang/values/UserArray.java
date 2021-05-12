@@ -1,9 +1,11 @@
 package daro.lang.values;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import daro.lang.interpreter.EmptyScope;
+import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 
 /**
@@ -12,10 +14,14 @@ import daro.lang.interpreter.Scope;
  * @author Roland Bernard
  */
 public class UserArray extends UserObject {
-    private final List<UserObject> values;
+    private final ArrayList<UserObject> values;
 
     public UserArray(List<UserObject> values) {
-        this.values = values;
+        this.values = new ArrayList<>(values);
+    }
+
+    public int getLength() {
+        return values.size();
     }
 
     public UserObject getValueAt(int i) {
