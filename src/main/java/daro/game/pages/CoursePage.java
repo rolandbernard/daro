@@ -1,16 +1,32 @@
 package daro.game.pages;
 
+import daro.game.main.Level;
+import daro.game.main.LevelGroup;
+import daro.game.ui.Heading;
+import daro.game.ui.LevelGroupItem;
 import daro.game.ui.Page;
-import javafx.scene.text.Text;
+import javafx.scene.layout.FlowPane;
+
+import java.util.List;
 
 public class CoursePage extends Page {
     public CoursePage() {
-        Text heading = new Text("Courses");
-        heading.getStyleClass().addAll("heading", "large", "text");
+        Heading heading = new Heading("Courses", "Learn the fundamentals of programming with the interactive course.");
+        this.getChildren().addAll(heading, getLevelGroups());
+        this.setSpacing(50);
+    }
 
-        Text description = new Text("Learn the fundamentals of programming with the interactive course.");
-        description.getStyleClass().addAll("text", "description");
-        this.getChildren().addAll(heading, description);
-        this.setSpacing(10);
+    private FlowPane getLevelGroups() {
+        FlowPane pane = new FlowPane();
+        pane.setPrefWidth(Page.INNER_WIDTH);
+        double gap = (Page.INNER_WIDTH - (LevelGroupItem.DIMENSION * 3)) / 3;
+        pane.setVgap(gap);
+        pane.setHgap(gap);
+        pane.getChildren().addAll(
+                new LevelGroupItem(new LevelGroup("test", "test", List.of(new Level()))),
+                new LevelGroupItem(new LevelGroup("test", "test", List.of(new Level()))),
+                new LevelGroupItem(new LevelGroup("test", "test", List.of(new Level())))
+        );
+        return pane;
     }
 }

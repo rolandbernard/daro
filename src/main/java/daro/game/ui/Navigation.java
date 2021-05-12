@@ -17,13 +17,13 @@ import java.util.LinkedHashMap;
 
 public class Navigation extends VBox {
 
-    public static final double NAVIGATION_WIDTH = 320;
+    public static final double WIDTH = 320;
 
     private LinkedHashMap<HBox, Page> navItems;
 
     public Navigation() {
         this.setPrefHeight(GameHelper.GAME_HEIGHT);
-        this.setPrefWidth(NAVIGATION_WIDTH);
+        this.setPrefWidth(WIDTH);
         this.setStyle("-fx-background-color: #1A0A47");
         this.setAlignment(Pos.TOP_CENTER);
         this.setPadding(new Insets(80, 30, 80, 30));

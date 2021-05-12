@@ -5,10 +5,14 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 
 public class Page extends VBox {
+    public static double H_PADDING = 90,
+            WIDTH = GameHelper.GAME_WIDTH - Navigation.WIDTH,
+            INNER_WIDTH = WIDTH - H_PADDING * 2;
+
     public Page() {
-        this.setPadding(new Insets(100, 90, 80, 90));
+        this.setPadding(new Insets(100, H_PADDING, 80, H_PADDING));
         this.setStyle("-fx-background-color: #200D57");
-        this.setPrefWidth(GameHelper.GAME_WIDTH - Navigation.NAVIGATION_WIDTH);
-        this.setMinHeight(GameHelper.GAME_HEIGHT );
+        this.setPrefWidth(WIDTH);
+        this.setMinHeight(GameHelper.GAME_HEIGHT);
     }
 }
