@@ -31,7 +31,7 @@ public class Cli {
         }
         line--;
         current -= lines[line].length() + 1;
-        return offset - current;
+        return offset - current + 1;
     }
 
     private static void printError(String type, Position position, String program, String message) {

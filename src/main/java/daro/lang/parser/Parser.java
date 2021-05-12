@@ -66,7 +66,7 @@ public class Parser {
         AstSequence sequence = parseSequence();
         if (scanner.hasNext()) {
             throw new ParsingException(
-                sequence.getLastPosition(),
+                new Position(scanner.getOffset(), scanner.getOffset()),
                 "Expected another statement (or the end)"
             );
         }

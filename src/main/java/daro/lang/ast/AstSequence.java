@@ -24,21 +24,6 @@ public class AstSequence extends AstNode {
         return visitor.visit(this);
     }
 
-    /**
-     * Returns the position of the last statement in the sequence or the complete position if this
-     * sequence contains no statements.
-     * @return The position of the last statement
-     */
-    public Position getLastPosition() {
-        Position position;
-        if (statements.length == 0) {
-            position = getPosition();
-        } else {
-            position = statements[statements.length - 1].getPosition();
-        }
-        return position;
-    }
-
     @Override
     public int hashCode() {
         return Arrays.hashCode(statements);

@@ -302,10 +302,12 @@ public class Scanner {
     }
 
     /**
-     * Return the current offset the scanner is looking at.
+     * Return the starting offset of the next token or the offset of the end if there is no next
+     * token.
      * @return The current offset
      */
     public int getOffset() {
+        cacheToken();
         if (nextToken != null) {
             return nextToken.getStart();
         } else {
