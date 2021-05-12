@@ -302,12 +302,15 @@ public class Scanner {
     }
 
     /**
-     * Return the next token without actually consuming it.
-     * @return The next token
+     * Return the current offset the scanner is looking at.
+     * @return The current offset
      */
-    public Token peek() {
-        cacheToken();
-        return nextToken;
+    public int getOffset() {
+        if (nextToken != null) {
+            return nextToken.getStart();
+        } else {
+            return offset;
+        }
     }
 }
 

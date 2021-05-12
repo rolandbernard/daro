@@ -477,11 +477,4 @@ public class ScannerTest {
         assertEquals(TokenKind.INTEGER, scanner.next().getKind());
         assertEquals(TokenKind.SEMICOLON, scanner.next().getKind());
     }
-
-    @Test
-    void peekToken() {
-        Scanner scanner = new Scanner("a = 5;");
-        assertEquals(TokenKind.IDENTIFIER, scanner.peek().getKind());
-        assertEquals(TokenKind.IDENTIFIER, scanner.next().getKind());
-    }
 }
