@@ -10,9 +10,11 @@ public class MenuView extends View {
     /**
      * <strong>UI: <em>View</em></strong><br>
      * A view with a navigation sidebar and pages.
+     * @param defaultPage the starting page
      */
-    public MenuView() {
-        this.getChildren().addAll(new Navigation(), CONTENT);
+    public MenuView(Page defaultPage) {
+        setContent(defaultPage);
+        this.getChildren().addAll(new Navigation(defaultPage), CONTENT);
     }
 
     /**

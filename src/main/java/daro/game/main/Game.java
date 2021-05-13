@@ -1,5 +1,6 @@
 package daro.game.main;
 
+import daro.game.pages.CoursePage;
 import daro.game.views.MenuView;
 import daro.game.views.View;
 import javafx.application.Application;
@@ -9,7 +10,7 @@ import javafx.stage.Stage;
 
 public class Game extends Application {
     public static final double HEIGHT = 720, WIDTH = 1280;
-    private static final Scene SCENE = new Scene(new MenuView(), WIDTH, HEIGHT);
+    private static final Scene SCENE = new Scene(new MenuView(new CoursePage()), WIDTH, HEIGHT);
 
     public static void main(String[] args) {
         launch();

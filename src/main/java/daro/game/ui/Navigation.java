@@ -1,7 +1,6 @@
 package daro.game.ui;
 
 import daro.game.main.Game;
-import daro.game.pages.CoursePage;
 import daro.game.pages.Page;
 import daro.game.pages.PlaygroundPage;
 import daro.game.views.MenuView;
@@ -23,15 +22,16 @@ public class Navigation extends VBox {
     /**
      * <strong>UI: <em>Component</em></strong><br>
      * The main navigation-sidebar for the game
+     * @param defaultPage The default active page
      */
-    public Navigation() {
+    public Navigation(Page defaultPage) {
         this.setPrefHeight(Game.HEIGHT);
         this.setPrefWidth(WIDTH);
         this.setStyle("-fx-background-color: #1A0A47");
         this.setAlignment(Pos.TOP_CENTER);
         this.setPadding(new Insets(80, 30, 80, 30));
         this.setSpacing(40);
-        this.getChildren().addAll(getLogo(), getNavigation());
+        this.getChildren().addAll(getLogo(), getNavigation(defaultPage));
     }
 
     /**
@@ -50,12 +50,9 @@ public class Navigation extends VBox {
      * Generates the navigation item and links them to the pages.
      * @return a vertical box containing the links
      */
-    private VBox getNavigation() {
+    private VBox getNavigation(Page defaultPage) {
         navItems = new LinkedHashMap<>();
-        Page defaultPage = new CoursePage();
         navItems.put(new NavigationItem("\ue021", "Course", true), defaultPage);
-        MenuView.setContent(defaultPage);
-
         navItems.put(new NavigationItem("\uea26", "Playground", false), new PlaygroundPage());
         navItems.put(new NavigationItem("\ue9ba", "Exit", false), null);
         linkNavLinks();
