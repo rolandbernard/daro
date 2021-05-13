@@ -14,6 +14,7 @@ public class ScopeInitializer implements Visitor<Object> {
 
     /**
      * Create a new {@link ScopeInitializer} for initializing the given scope.
+     * @param scope The scope to initialize
      */
     public ScopeInitializer(Scope scope) {
         this.scope = scope;

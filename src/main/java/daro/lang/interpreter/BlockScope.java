@@ -25,7 +25,7 @@ public class BlockScope implements Scope {
 
     /**
      * Creates a new {@link BlockScope} with the given parent.
-     * @param parent
+     * @param parent The parent scope
      */
     public BlockScope(Scope parent) {
         this.parent = parent;

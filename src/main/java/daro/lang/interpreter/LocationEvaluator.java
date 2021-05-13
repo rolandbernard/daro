@@ -14,6 +14,7 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     /**
      * Create a new {@link LocationEvaluator} for execution in the given scope.
+     * @param scope The scope to execute in
      */
     public LocationEvaluator(Scope scope) {
         this.scope = scope;

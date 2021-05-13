@@ -20,6 +20,7 @@ public class Executor implements Visitor<UserObject> {
 
     /**
      * Create a new {@link Executor} for execution in the given scope.
+     * @param scope The scope to execute in
      */
     public Executor(Scope scope) {
         this.scope = scope;

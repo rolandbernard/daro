@@ -108,9 +108,8 @@ public enum TokenKind {
      * {@link IllegalArgumentException} will be thrown.
      * 
      * @return The fixed source string
-     * @throws IllegalArgumentException
      */
-    public String getFixedSource() throws IllegalArgumentException {
+    public String getFixedSource() {
         if (value == null) {
             throw new IllegalArgumentException("The token " + toString() + " has no fixed source");
         } else {

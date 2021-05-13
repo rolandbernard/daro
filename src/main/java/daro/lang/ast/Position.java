@@ -18,7 +18,7 @@ public class Position {
     /**
      * Create a source {@link Position} from the start position and length.
      * @param start The starting position
-     * @param length The length
+     * @param end The end position
      */
     public Position(int start, int end) {
         if (start < 0) {
