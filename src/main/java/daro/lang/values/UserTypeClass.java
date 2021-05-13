@@ -14,11 +14,20 @@ public class UserTypeClass extends UserType {
     private final Scope globalScope;
     private final AstClass definition;
 
+    /**
+     * Create a new class type from the given definition inside the given scope.
+     * @param globalScope The scope the class is defined in
+     * @param definition The definition of the class
+     */
     public UserTypeClass(Scope globalScope, AstClass definition) {
         this.globalScope = globalScope;
         this.definition = definition;
     }
 
+    /**
+     * Returns the class definition of this type.
+     * @return The {@link AstClass} of this type
+     */
     public AstClass getDefinition() {
         return definition;
     }

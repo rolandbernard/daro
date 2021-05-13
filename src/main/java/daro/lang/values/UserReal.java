@@ -11,10 +11,18 @@ import daro.lang.interpreter.Scope;
 public class UserReal extends UserNumber {
     private final double value;
 
+    /**
+     * Create a new {@link UserReal} from the given value.
+     * @param value The value that should be stored inside the object
+     */
     public UserReal(double value) {
         this.value = value;
     }
 
+    /**
+     * Return the double value of this {@link UserReal}
+     * @return The value of the object
+     */
     public double getValue() {
         return value;
     }

@@ -1,10 +1,11 @@
 package daro.lang.values;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import daro.lang.interpreter.EmptyScope;
+import daro.lang.interpreter.ConstantScope;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 
@@ -15,25 +16,85 @@ import daro.lang.interpreter.Scope;
  */
 public class UserArray extends UserObject {
     private final List<UserObject> values;
+    private final Scope memberScope;
 
+    /**
+     * Create a new {@link UserArray} with the values inside the given list.
+     * @param values The values of the array
+     */
     public UserArray(List<UserObject> values) {
         this.values = values;
+        this.memberScope = buildMemberScope();
     }
 
+    /**
+     * Build the member scope for this array.
+     * @return The member scope
+     */
+    private Scope buildMemberScope() {
+        Map<String, UserObject> variables = new HashMap<>();
+        variables.put("push", new UserLambdaFunction(params -> {
+            for (UserObject value : params) {
+                values.add(value);
+            }
+        }));
+        variables.put("pop", new UserLambdaFunction(0, params -> {
+            UserObject ret = values.get(values.size() - 1);
+            values.remove(values.size() - 1);
+            return ret;
+        }));
+        variables.put("sort", new UserLambdaFunction(1, params -> {
+            if (params[0] instanceof UserFunction) {
+                UserFunction function = (UserFunction)params[0];
+                if (function.getParamCount() >= 0 && function.getParamCount() != 2) {
+                    throw new InterpreterException("Sorting function must accept two arguments");
+                } else {
+                    values.sort((a, b) -> {
+                        UserObject less = function.execute(new UserObject[] { a, b });
+                        UserObject more = function.execute(new UserObject[] { b, a });
+                        if (less != null && less.isTrue() && more != null && more.isTrue()) {
+                            return 0;
+                        } else if (less != null && less.isTrue()) {
+                            return -1;
+                        } else if (more != null && more.isTrue()) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    });
+                }
+            } else {
+                throw new InterpreterException("Sorting comparison must be a function");
+            }
+        }));
+        // TODO: add methods
+        return new ConstantScope(variables);
+    }
+
+    /**
+     * Returns the length of the array.
+     * @return The length of the array
+     */
     public int getLength() {
         return values.size();
     }
 
+    /**
+     * Returns the value inside the array at index i.
+     * @param i The index to query
+     * @return The value at index i
+     */
     public UserObject getValueAt(int i) {
         return values.get(i);
     }
 
+    /**
+     * Put the given value inside the array at the given index.
+     * @param i The index to write to
+     * @param value The value that should be written
+     */
     public void putValueAt(int i, UserObject value) {
         values.set(i, value);
-    }
-
-    public List<UserObject> getValues() {
-        return values;
     }
 
     @Override
@@ -43,8 +104,7 @@ public class UserArray extends UserObject {
 
     @Override
     public Scope getMemberScope() {
-        // TODO: add methods
-        return new EmptyScope();
+        return memberScope;
     }
 
     @Override
@@ -56,7 +116,7 @@ public class UserArray extends UserObject {
     public boolean equals(Object object) {
         if (object instanceof UserArray) {
             UserArray array = (UserArray)object;
-            return values.equals(array.getValues());
+            return values.equals(array.values);
         } else {
             return false;
         }

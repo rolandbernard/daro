@@ -1,6 +1,6 @@
 package daro.lang.values;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import daro.lang.ast.AstInitializer;
 import daro.lang.interpreter.Scope;
@@ -14,7 +14,7 @@ public class UserTypeArray extends UserType {
 
     @Override
     public UserObject instantiate() {
-        return new UserArray(List.of());
+        return new UserArray(new ArrayList<>());
     }
 
     @Override

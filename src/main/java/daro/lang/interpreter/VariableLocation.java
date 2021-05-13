@@ -11,5 +11,9 @@ import daro.lang.values.UserObject;
  */
 public interface VariableLocation {
 
+    /**
+     * Write the given value into the variable location.
+     * @param value The value that should be written
+     */
     public void storeValue(UserObject value);
 }

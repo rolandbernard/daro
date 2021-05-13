@@ -1,6 +1,6 @@
 package daro.lang.values;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,12 +44,12 @@ public class UserTypeStrictArray extends UserType {
     @Override
     public UserObject instantiate() {
         if (size == null) {
-            return new UserArray(List.of());
+            return new UserArray(new ArrayList<>());
         } else {
             return new UserArray(
                 Stream.generate(() -> base.instantiate())
                     .limit(size)
-                    .collect(Collectors.toList())
+                    .collect(Collectors.toCollection(() -> new ArrayList<>()))
             );
         }
     }

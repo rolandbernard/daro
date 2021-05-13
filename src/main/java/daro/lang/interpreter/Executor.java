@@ -43,7 +43,16 @@ public class Executor implements Visitor<UserObject> {
      */
     public UserObject execute(AstNode program) {
         if (program != null) {
-            return program.accept(this);
+            try {
+                return program.accept(this);
+            } catch (InterpreterException error) {
+                if (error.getPosition() == null) {
+                    // Some exceptions are thrown in locations without positional information.
+                    throw new InterpreterException(program.getPosition(), error.getMessage());
+                } else {
+                    throw error;
+                }
+            }
         } else {
             return null;
         }
