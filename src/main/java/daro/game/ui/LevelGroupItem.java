@@ -3,6 +3,7 @@ package daro.game.ui;
 import daro.game.main.Game;
 import daro.game.main.LevelGroup;
 import daro.game.pages.LevelGroupPage;
+import daro.game.views.MenuView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -32,7 +33,7 @@ public class LevelGroupItem extends VBox {
         this.setCursor(Cursor.HAND);
         this.getChildren().addAll(getHeading(), getCompleted());
         this.setOnMouseClicked(event -> {
-            Game.setContent(new LevelGroupPage(levelGroup));
+            MenuView.setContent(new LevelGroupPage(levelGroup));
         });
     }
 

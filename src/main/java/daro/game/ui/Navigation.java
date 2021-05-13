@@ -4,6 +4,7 @@ import daro.game.main.Game;
 import daro.game.pages.CoursePage;
 import daro.game.pages.Page;
 import daro.game.pages.PlaygroundPage;
+import daro.game.views.MenuView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -53,7 +54,7 @@ public class Navigation extends VBox {
         navItems = new LinkedHashMap<>();
         Page defaultPage = new CoursePage();
         navItems.put(new NavigationItem("\ue021", "Course", true), defaultPage);
-        Game.setContent(defaultPage);
+        MenuView.setContent(defaultPage);
 
         navItems.put(new NavigationItem("\uea26", "Playground", false), new PlaygroundPage());
         navItems.put(new NavigationItem("\ue9ba", "Exit", false), null);
@@ -73,7 +74,7 @@ public class Navigation extends VBox {
             navItem.setOnMouseClicked(event -> {
                 if (navItems.get(navItem) == null)
                     System.exit(0);
-                Game.setContent(navItems.get(navItem));
+                MenuView.setContent(navItems.get(navItem));
                 navItems.keySet().forEach(item -> item.getStyleClass().remove("active"));
                 navItem.getStyleClass().add("active");
             });

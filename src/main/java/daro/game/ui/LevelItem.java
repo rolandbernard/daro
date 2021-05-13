@@ -1,7 +1,9 @@
 package daro.game.ui;
 
+import daro.game.main.Game;
 import daro.game.main.Level;
 import daro.game.pages.Page;
+import daro.game.views.LevelView;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.layout.VBox;
@@ -14,7 +16,7 @@ public class LevelItem extends VBox {
     /**
      * <strong>UI: <em>Component</em></strong><br>
      * An overview item, containing basic information about the level.
-     * When clicked it leads to the level page
+     * When clicked it changes the scene to the LevelView
      * @param level the level displayed
      */
     public LevelItem(Level level) {
@@ -25,6 +27,7 @@ public class LevelItem extends VBox {
         this.setStyle("-fx-background-radius: 25px; -fx-background-color: #381A90; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);");
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
+        this.setOnMouseClicked(event -> Game.setView(new LevelView(level)));
     }
 
     /**
