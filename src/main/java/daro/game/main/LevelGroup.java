@@ -5,6 +5,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LevelGroup {
@@ -52,24 +54,29 @@ public class LevelGroup {
     public static List<LevelGroup> parseLevels() {
 
         JSONParser parser = new JSONParser();
+        List<LevelGroup> groupsList = new ArrayList<>();
         try {
-            ClassLoader classLoader = LevelGroup.class.getClassLoader();
-            System.out.println(classLoader.getResource("data/levels.json"));
-
-            Object object = parser.parse(new FileReader(classLoader.getResource("data/levels.json").getFile()));
+            //todo: check pathing
+            Object object = parser.parse(new FileReader("src/main/resources/data/levels.json"));
             JSONObject jsonObject = (JSONObject) object;
-            System.out.println(jsonObject);
 
             JSONArray groups = (JSONArray) jsonObject.get("groups");
 
-            //Printing all the values
-            for (Object group : groups) {
-                System.out.println("\t" + group.toString());
-            }
+            groups.forEach(group -> {
+                JSONObject groupJson = (JSONObject) group;
+                System.out.println(groupJson.get("name"));
+                JSONArray levels = (JSONArray) groupJson.get("levels");
+                List<Level> levelsList = new ArrayList<>();
+                levels.forEach(level -> {
+                    JSONObject levelJson = (JSONObject) level;
+                    levelsList.add(new Level(levelJson.get("name").toString(), levelJson.get("description").toString(), false));
+                });
+                groupsList.add(new LevelGroup(groupJson.get("name").toString(), groupJson.get("description_short").toString(), levelsList));
+            });
         } catch (Exception fe) {
-            fe.printStackTrace();
+            System.out.println("There was an error with loading the levels.");
             return null;
         }
-        return null;
+        return groupsList;
     }
 }

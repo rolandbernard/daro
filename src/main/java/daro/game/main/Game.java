@@ -28,7 +28,6 @@ public class Game extends Application {
         scene.getStylesheets().add("https://fonts.googleapis.com/icon?family=Material+Icons");
         scene.getStylesheets().add("styles/index.css");
 
-        LevelGroup.parseLevels();
 
         stage.setTitle("Learn programming with daro!");
         stage.setScene(scene);
