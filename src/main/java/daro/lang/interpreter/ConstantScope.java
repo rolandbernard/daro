@@ -12,23 +12,37 @@ import java.util.stream.Collectors;
  */
 public class ConstantScope implements Scope {
     private final Map<String, UserObject> variables;
-
-    public ConstantScope() {
-        variables = Map.of();
-    }
+    private final Scope parent;
 
     public ConstantScope(Map<String, UserObject> mapping) {
+        this(null, mapping);
+    }
+
+    public ConstantScope(Scope parent, Map<String, UserObject> mapping) {
+        this.parent = parent;
         variables = Map.copyOf(mapping);
     }
 
     @Override
     public boolean containsVariable(String name) {
-        return variables.containsKey(name);
+        if (variables.containsKey(name)) {
+            return true;
+        } else if (parent != null) {
+            return parent.containsVariable(name);
+        } else {
+            return false;
+        }
     }
 
     @Override
     public UserObject getVariableValue(String name) {
-        return variables.get(name);
+        if (variables.containsKey(name)) {
+            return variables.get(name);
+        } else if (parent != null) {
+            return parent.getVariableValue(name);
+        } else {
+            return null;
+        }
     }
 
     @Override

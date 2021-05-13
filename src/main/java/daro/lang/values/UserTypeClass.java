@@ -52,6 +52,6 @@ public class UserTypeClass extends UserType {
 
     @Override
     public String toString() {
-        return definition.getName();
+        return definition.getName() != null ? definition.getName() : "class";
     }
 }

@@ -27,6 +27,6 @@ public class UserTypeNull extends UserType {
 
     @Override
     public String toString() {
-        return "null";
+        return "nulltype";
     }
 }

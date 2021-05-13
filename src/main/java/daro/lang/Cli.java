@@ -54,7 +54,11 @@ public class Cli {
             try {
                 UserObject value = interpreter.execute(program);
                 if (value != null) {
-                    System.out.println(value);
+                    try {
+                        System.out.println(value);
+                    } catch (StackOverflowError error) {
+                        System.out.println("..recursive object..");
+                    }
                 }
                 code.setLength(0);
             } catch (InterpreterException error) {

@@ -17,13 +17,14 @@ public class UserClass extends UserObject {
 
     public UserClass(Scope globalScope, UserTypeClass classType) {
         this.classType = classType;
-        this.scope = new BlockScope(globalScope);
+        BlockScope thisScope = new BlockScope(globalScope);
+        thisScope.forceNewVariable("this", this);
+        this.scope = new BlockScope(thisScope);
         initialize();
     }
 
     private void initialize() {
         AstSequence sequence = classType.getDefinition().getBody().getSequence();
-        scope.forceNewVariable("this", this);
         ScopeInitializer.initialize(scope, sequence);
         Executor.execute(scope, sequence);
     }
@@ -56,7 +57,7 @@ public class UserClass extends UserObject {
 
     @Override
     public String toString() {
-        return classType.toString() + scope.toString();
+        return classType.toString() + " " + scope.getFinalLevel().toString();
     }
 
     @Override
