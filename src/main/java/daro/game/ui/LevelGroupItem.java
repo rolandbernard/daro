@@ -4,6 +4,7 @@ import daro.game.main.Game;
 import daro.game.main.LevelGroup;
 import daro.game.pages.LevelGroupPage;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -12,20 +13,21 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class LevelGroupItem extends VBox {
-    public static double DIMENSION = 220, H_PADDING = 30, INNER_WIDTH = DIMENSION - H_PADDING * 2;
+    public static double DIMENSION = 240, H_PADDING = 30, INNER_WIDTH = DIMENSION - H_PADDING * 2;
     private LevelGroup levelGroup;
 
     /**
      * <strong>UI: <em>Component</em></strong><br>
      * A grid item that displays basic information about a level group (name, description,
      * completed levels)
+     * When clicked it leads to the level group detail page
      * @param levelGroup the level group that is displayed
      */
     public LevelGroupItem(LevelGroup levelGroup) {
         this.levelGroup = levelGroup;
         this.setSpacing(20);
         this.setPrefSize(DIMENSION, DIMENSION);
-        this.setStyle("-fx-background-color: #381A90; -fx-background-radius: 25px");
+        this.setStyle("-fx-background-color: #381A90; -fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);");
         this.setPadding(new Insets(40, H_PADDING, 30, H_PADDING));
         this.setCursor(Cursor.HAND);
         this.getChildren().addAll(getHeading(), getCompleted());
@@ -77,7 +79,9 @@ public class LevelGroupItem extends VBox {
         Rectangle bar = new Rectangle((INNER_WIDTH - 2) * percent, 6, Color.web("FF3D23"));
         bar.setArcHeight(8);
         bar.setArcWidth(8);
-        return new StackPane(border, bar);
+        StackPane graph = new StackPane(border, bar);
+        graph.setAlignment(Pos.CENTER_LEFT);
+        return graph;
     }
 
     /**

@@ -12,8 +12,13 @@ import java.util.List;
 public class LevelGroupTest {
 
     @Test
-    void shouldGenerateList() {
+    public void shouldGenerateList() {
         List<LevelGroup> groups = LevelGroup.parseLevels();
         assertNotEquals(null, groups);
+    }
+    @Test
+    public void listShouldContainElements() {
+        List<LevelGroup> groups = LevelGroup.parseLevels();
+        assertTrue(groups.size() > 0);
     }
 }

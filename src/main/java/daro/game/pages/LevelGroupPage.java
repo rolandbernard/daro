@@ -2,7 +2,9 @@ package daro.game.pages;
 
 import daro.game.main.LevelGroup;
 import daro.game.ui.Heading;
-import daro.game.ui.Page;
+import daro.game.ui.LevelItem;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class LevelGroupPage extends Page {
 
@@ -16,6 +18,23 @@ public class LevelGroupPage extends Page {
     public LevelGroupPage(LevelGroup levelGroup) {
         this.levelGroup = levelGroup;
         Heading heading = new Heading(levelGroup.getName(), levelGroup.getDescription());
-        this.getChildren().addAll(heading);
+        this.getChildren().addAll(heading, getLevelList());
+    }
+
+    /**
+     * Generates the list of links to the levels
+     * @return a vertical box containing the levels
+     */
+    private VBox getLevelList() {
+        VBox list = new VBox();
+        list.setSpacing(20);
+        if(levelGroup.getLevels() != null && levelGroup.getLevels().size() > 0) {
+            levelGroup.getLevels().forEach(level -> list.getChildren().add(new LevelItem(level)));
+        } else {
+            Text errorText = new Text("There was an error with loading the levels.");
+            errorText.getStyleClass().add("text");
+            list.getChildren().add(errorText);
+        }
+        return list;
     }
 }

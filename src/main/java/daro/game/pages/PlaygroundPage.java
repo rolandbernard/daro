@@ -1,7 +1,6 @@
 package daro.game.pages;
 
 import daro.game.ui.Heading;
-import daro.game.ui.Page;
 
 public class PlaygroundPage extends Page {
 

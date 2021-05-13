@@ -2,6 +2,7 @@ package daro.game.ui;
 
 import daro.game.main.Game;
 import daro.game.pages.CoursePage;
+import daro.game.pages.Page;
 import daro.game.pages.PlaygroundPage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

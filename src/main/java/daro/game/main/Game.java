@@ -2,7 +2,7 @@ package daro.game.main;
 
 import daro.game.ui.Container;
 import daro.game.ui.Navigation;
-import daro.game.ui.Page;
+import daro.game.pages.Page;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;

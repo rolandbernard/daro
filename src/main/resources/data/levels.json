@@ -8,7 +8,8 @@
         {
           "id": 1,
           "name": "Test Level",
-          "description": "Write a Test"
+          "description": "Write a Test",
+          "completed": true
         }
       ]
     },
@@ -20,7 +21,40 @@
         {
           "id": 1,
           "name": "Test Level",
-          "description": "Write a Test"
+          "description": "Write a Test",
+          "completed": true
+        },
+        {
+          "id": 2,
+          "name": "Test level 2",
+          "description": "This is an example text",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Sample group",
+      "description_short": "This is just a test",
+      "levels": [
+        {
+          "id": 1,
+          "name": "Test Level",
+          "description": "Write a Test",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Sample group",
+      "description_short": "This is just a test",
+      "levels": [
+        {
+          "id": 1,
+          "name": "Test Level",
+          "description": "Write a Test",
+          "completed": false
         }
       ]
     }

@@ -108,7 +108,7 @@ public class LevelGroup {
                                             (long) levelJson.get("id"),
                                             levelJson.get("name").toString(),
                                             levelJson.get("description").toString(),
-                                            false
+                                            (boolean) levelJson.get("completed")
                                     ));
                         });
                     }
