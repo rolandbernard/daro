@@ -4,7 +4,7 @@ import daro.lang.ast.AstInitializer;
 import daro.lang.interpreter.Scope;
 
 /**
- * This class represents the type for a type object ({link UserType}).
+ * This class represents the type for a type object ({@link UserType}).
  * 
  * @author Roland Bernard
  */

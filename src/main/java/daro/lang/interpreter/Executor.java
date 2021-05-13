@@ -20,6 +20,7 @@ public class Executor implements Visitor<UserObject> {
 
     /**
      * Create a new {@link Executor} for execution in the given scope.
+     * @param scope The scope to execute in
      */
     public Executor(Scope scope) {
         this.scope = scope;
@@ -86,6 +87,7 @@ public class Executor implements Visitor<UserObject> {
     /** 
      * This is a utility function for execution of binary functions with different operations for
      * different types of objects.
+     * @param ast The ast to execute
      * @param integer The function to execute for integers
      * @param number The function to execute for numbers
      * @param all The function to execute for all other objects
@@ -266,6 +268,7 @@ public class Executor implements Visitor<UserObject> {
     /** 
      * This is a utility function for execution of unary functions with different operations for
      * different types of objects.
+     * @param ast The ast to execute
      * @param integer The function to execute for integers
      * @param number The function to execute for numbers
      * @param all The function to execute for all other objects

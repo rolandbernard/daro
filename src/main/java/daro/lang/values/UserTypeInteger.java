@@ -6,7 +6,7 @@ import daro.lang.ast.AstInitializer;
 import daro.lang.interpreter.Scope;
 
 /**
- * This class represents the type for a integer object ({link UserInteger}).
+ * This class represents the type for a integer object ({@link UserInteger}).
  * 
  * @author Roland Bernard
  */

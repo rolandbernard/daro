@@ -15,10 +15,21 @@ public class ConstantScope implements Scope {
     private final Map<String, UserObject> variables;
     private final Scope parent;
 
+    /**
+     * Creates a new constant scope filling it with the given variable mapping.
+     * @param mapping The parring from names to values to use
+     */
     public ConstantScope(Map<String, UserObject> mapping) {
         this(null, mapping);
     }
 
+    /**
+     * Creates a new constant scope filling it with the given variable mapping, and pointing it to
+     * the given parent scope. The parent scope may change independently of the constant scope
+     * itself.
+     * @param parent The parent scope
+     * @param mapping The parring from names to values to use
+     */
     public ConstantScope(Scope parent, Map<String, UserObject> mapping) {
         this.parent = parent;
         variables = Map.copyOf(mapping);

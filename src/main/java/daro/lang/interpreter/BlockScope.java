@@ -26,7 +26,7 @@ public class BlockScope implements Scope {
 
     /**
      * Creates a new {@link BlockScope} with the given parent.
-     * @param parent
+     * @param parent The parent scope
      */
     public BlockScope(Scope parent) {
         this.parent = parent;
@@ -36,6 +36,7 @@ public class BlockScope implements Scope {
     /**
      * Creates a new {@link BlockScope} with the given parent and internal map. This constructor is only to be
      * used internaly by this class.
+     * @param parent The parent scope
      * @param variables The interal variables map
      */
     private BlockScope(Scope parent, Map<String, UserObject> variables) {

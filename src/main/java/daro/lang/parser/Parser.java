@@ -191,8 +191,8 @@ public class Parser {
     }
 
     /**
-     * Parse a `if` and `else` statement.
-     * @return The parsed `if`-`else` statement's ast, or null
+     * Parse a {@code if} and {@code else} statement.
+     * @return The parsed {@code if / else} statement's ast, or null
      */
     private AstIfElse parseIfElse() {
         if (scanner.hasNext(TokenKind.IF)) {
@@ -224,7 +224,7 @@ public class Parser {
     }
 
     /**
-     * Parse a `for`- or `for`-`in`-loop statement.
+     * Parse a {@code for}- or {@code for-in}-loop statement.
      * @return The parsed statement's ast, or null
      */
     private AstNode parseForLoop() {
@@ -282,7 +282,7 @@ public class Parser {
     }
 
     /**
-     * Parse a `return` statement.
+     * Parse a {@code return} statement.
      * @return The parsed statement's ast, or null
      */
     private AstNode parseReturn() {
@@ -305,7 +305,7 @@ public class Parser {
     }
 
     /**
-     * Parse a code block. e.g. { .. }
+     * Parse a code block. e.g. {@code { .. }}
      * @return The parsed statement's ast, or null
      */
     private AstBlock parseCodeBlock() {
@@ -331,18 +331,18 @@ public class Parser {
     /**
      * Parse an expression of the Daro language.
      * Operator precedence (from lowest to highest):
-     *   0. =
-     *   1. ||
-     *   2. &&
-     *   3. == != < <= > >=
-     *   4. |
-     *   5. ^
-     *   6. &
-     *   7. << >>
-     *   8. + -
-     *   9. * / %
-     *  10. unary prefix: + - ~ ! []
-     *  11. unary suffix: () [] .
+     *   0. {@code =}
+     *   1. {@code ||}
+     *   2. {@code &&}
+     *   3. {@code == != < <= > >=}
+     *   4. {@code |}
+     *   5. {@code ^}
+     *   6. {@code &}
+     *   7. {@code << >>}
+     *   8. {@code + -}
+     *   9. {@code * / %}
+     *  10. unary prefix: {@code + - ~ ! []}
+     *  11. unary suffix: {@code () [] .}
      * @return The parsed expression's ast, or null
      */
     private AstNode parseExpression() {
@@ -387,7 +387,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * assignment operation. i.e. =
+     * assignment operation. i.e. {@code =}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseAssignmentExpression() {
@@ -410,7 +410,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * boolean or operation. i.e. ||
+     * boolean or operation. i.e. {@code ||}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseLazyOrExpression() {
@@ -423,7 +423,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * boolean and operation. i.e. &&
+     * boolean and operation. i.e. {@code &&}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseLazyAndExpression() {
@@ -436,7 +436,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * comparison operations. i.e. == != < <= > >=
+     * comparison operations. i.e. {@code == != < <= > >=}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseComparisonExpression() {
@@ -454,7 +454,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * bitwise or operation. i.e. |
+     * bitwise or operation. i.e. {@code |}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseBitwiseOrExpression() {
@@ -467,7 +467,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * bitwise xor operation. i.e. ^
+     * bitwise xor operation. i.e. {@code ^}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseBitwiseXorExpression() {
@@ -480,7 +480,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * bitwise and operation. i.e. &
+     * bitwise and operation. i.e. {@code &}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseBitwiseAndExpression() {
@@ -493,7 +493,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * shift operations. i.e. << >>
+     * shift operations. i.e. {@code << >>}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseShiftExpression() {
@@ -507,7 +507,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * additive operations. i.e. + -
+     * additive operations. i.e. {@code + -}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseAdditiveExpression() {
@@ -521,7 +521,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * multiplication operation. i.e. * / %
+     * multiplication operation. i.e. {@code * / %}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseMultiplicativeExpression() {
@@ -536,7 +536,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * unary prefix operations. i.e. + - ~ ! []
+     * unary prefix operations. i.e. {@code + - ~ ! []}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseUnaryPrefixExpression() {
@@ -590,7 +590,7 @@ public class Parser {
 
     /**
      * Parses a expression containing only operations with a precedence equal or higher than the
-     * unary suffix operations. i.e. () [] .
+     * unary suffix operations. i.e. {@code () [] .}
      * @return The root node of the parsed ast tree
      */
     private AstNode parseUnarySuffixExpression() {
@@ -664,7 +664,7 @@ public class Parser {
 
     /**
      * This is a utility function that convets a string containing escaped characters with `\` into
-     * a string containing the actual characters. E.g. \\\" will be transformed into \"
+     * a string containing the actual characters. e.g. {@code \\\"} will be transformed into {@code \"}
      * @param input The string that should be converted
      * @return The converted string
      */
@@ -864,7 +864,7 @@ public class Parser {
     }
 
     /**
-     * Parses a initializer list. e.g. {{1, "Hello"}, { id = 2, text = "ok" }, null}
+     * Parses a initializer list. e.g. {@code {{1, "Hello"}, { id = 2, text = "ok" }, null}}
      * @return The root node of the parsed ast tree
      */
     private AstInitializer parseInitializer() {
