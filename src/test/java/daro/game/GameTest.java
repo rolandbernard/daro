@@ -1,4 +1,4 @@
-package daro.game.main;
+package daro.game;
 
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxAssert;

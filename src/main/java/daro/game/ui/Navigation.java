@@ -18,6 +18,10 @@ public class Navigation extends VBox {
 
     private LinkedHashMap<NavigationItem, Page> navItems;
 
+    /**
+     * <strong>UI: <em>Component</em></strong><br>
+     * The main navigation-sidebar for the game
+     */
     public Navigation() {
         this.setPrefHeight(Game.HEIGHT);
         this.setPrefWidth(WIDTH);
@@ -28,6 +32,10 @@ public class Navigation extends VBox {
         this.getChildren().addAll(getLogo(), getNavigation());
     }
 
+    /**
+     * Generates the logo for the top part of the navigation
+     * @return imageview containing the logo
+     */
     private ImageView getLogo() {
         ImageView logo = new ImageView(new Image("img/logo.png"));
         logo.setFitHeight(40);
@@ -36,6 +44,10 @@ public class Navigation extends VBox {
         return logo;
     }
 
+    /**
+     * Generates the navigation item and links them to the pages.
+     * @return a vertical box containing the links
+     */
     private VBox getNavigation() {
         navItems = new LinkedHashMap<>();
         Page defaultPage = new CoursePage();
@@ -52,6 +64,9 @@ public class Navigation extends VBox {
         return navigation;
     }
 
+    /**
+     * Links all navigation links in the navItems-Map to the pages they point to.
+     */
     private void linkNavLinks() {
         navItems.keySet().forEach(navItem -> {
             navItem.setOnMouseClicked(event -> {

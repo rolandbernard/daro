@@ -5,6 +5,10 @@ import daro.game.ui.Page;
 
 public class PlaygroundPage extends Page {
 
+    /**
+     * <strong>UI: <em>Page</em></strong><br>
+     * Work in progress
+     */
     public PlaygroundPage() {
         Heading heading = new Heading("Playground", "Work in Progress.");
         this.getChildren().add(heading);

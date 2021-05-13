@@ -15,6 +15,12 @@ public class LevelGroupItem extends VBox {
     public static double DIMENSION = 220, H_PADDING = 30, INNER_WIDTH = DIMENSION - H_PADDING * 2;
     private LevelGroup levelGroup;
 
+    /**
+     * <strong>UI: <em>Component</em></strong><br>
+     * A grid item that displays basic information about a level group (name, description,
+     * completed levels)
+     * @param levelGroup the level group that is displayed
+     */
     public LevelGroupItem(LevelGroup levelGroup) {
         this.levelGroup = levelGroup;
         this.setSpacing(20);
@@ -28,6 +34,10 @@ public class LevelGroupItem extends VBox {
         });
     }
 
+    /**
+     * The top part of the item, containing the name and the description of the level group
+     * @return a vertical box with the information
+     */
     private VBox getHeading() {
         Text heading = new Text(levelGroup.getName());
         heading.getStyleClass().addAll("heading", "small", "text");
@@ -41,6 +51,10 @@ public class LevelGroupItem extends VBox {
         return group;
     }
 
+    /**
+     * The bottom part of the item, containing information about the completion of a level group
+     * @return a vertical box containing a graph and a label
+     */
     private VBox getCompleted() {
         int completed = levelGroup.countCompletedLevels(),
                 allLevels = levelGroup.countLevels();
@@ -50,6 +64,11 @@ public class LevelGroupItem extends VBox {
         return group;
     }
 
+    /**
+     * Generates a bar graph
+     * @param percent percentage of completion (e.g. 0.5 for 50%)
+     * @return a stackpane containing the graph
+     */
     private StackPane getGraph(double percent) {
         Rectangle border = new Rectangle(INNER_WIDTH, 8, Color.web("200D56"));
         border.setArcHeight(8);
@@ -61,6 +80,12 @@ public class LevelGroupItem extends VBox {
         return new StackPane(border, bar);
     }
 
+    /**
+     * Generates a label containing how many levels are completed
+     * @param completed amount of completed levels
+     * @param allLevels amount of all levels
+     * @return a vbox containing the label
+     */
     private VBox getRatioLabel(int completed, int allLevels) {
         Text ratio = new Text(completed + "/" + allLevels);
         ratio.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-fill: #fff");

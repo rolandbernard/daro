@@ -1,6 +1,5 @@
 package daro.game.main;
 
-import daro.game.pages.CoursePage;
 import daro.game.ui.Container;
 import daro.game.ui.Navigation;
 import daro.game.ui.Page;
@@ -24,7 +23,7 @@ public class Game extends Application {
         Scene scene = new Scene(layout, WIDTH, HEIGHT);
 
         //load CSS
-        //TODO: check fonts
+        //TODO: check font paths
         scene.getStylesheets().add("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
         scene.getStylesheets().add("https://fonts.googleapis.com/icon?family=Material+Icons");
         scene.getStylesheets().add("styles/index.css");
@@ -35,8 +34,14 @@ public class Game extends Application {
         stage.show();
     }
 
-    public static void setContent(Page n) {
-        CONTENT.setContent(n);
+    /**
+     *
+     * Updates the main content of the Game to a given page.
+     * @param page The page the content should contain
+     *
+     */
+    public static void setContent(Page page) {
+        CONTENT.setContent(page);
     }
 
 }

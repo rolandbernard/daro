@@ -11,6 +11,18 @@
           "description": "Write a Test"
         }
       ]
+    },
+    {
+      "id": 2,
+      "name": "If and else",
+      "description_short": "Basic control structures",
+      "levels": [
+        {
+          "id": 1,
+          "name": "Test Level",
+          "description": "Write a Test"
+        }
+      ]
     }
   ]
 }

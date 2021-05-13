@@ -6,6 +6,10 @@ import javafx.scene.control.ScrollPane;
 
 public class Container extends ScrollPane {
 
+    /**
+     * <strong>UI: <em>Component</em></strong><br>
+     * A scrollable container for the main content of the game
+     */
     public Container() {
         this.setHeight(Game.HEIGHT);
         this.setPrefWidth(Game.WIDTH - Navigation.WIDTH);
