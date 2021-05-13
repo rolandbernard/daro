@@ -8,7 +8,7 @@ public class Container extends ScrollPane {
 
     /**
      * <strong>UI: <em>Component</em></strong><br>
-     * A scrollable container for the main content of the game
+     * A scrollable container used as a container for pages
      */
     public Container() {
         this.setHeight(Game.HEIGHT);

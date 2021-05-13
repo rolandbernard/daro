@@ -1,7 +1,7 @@
 package daro.game.views;
 
 import daro.game.main.Level;
-import daro.game.ui.Heading;
+import daro.game.ui.CodeEditor;
 
 public class LevelView extends View {
 
@@ -13,6 +13,6 @@ public class LevelView extends View {
      */
     public LevelView(Level level) {
         this.level = level;
-        this.getChildren().add(new Heading(level.getName(), level.getDescription()));
+        this.getChildren().addAll(new CodeEditor(""));
     }
 }
