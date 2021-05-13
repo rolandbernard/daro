@@ -24,6 +24,7 @@ public class Game extends Application {
         Scene scene = new Scene(layout, WIDTH, HEIGHT);
 
         //load CSS
+        //TODO: check fonts
         scene.getStylesheets().add("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
         scene.getStylesheets().add("https://fonts.googleapis.com/icon?family=Material+Icons");
         scene.getStylesheets().add("styles/index.css");

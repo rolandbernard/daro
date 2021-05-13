@@ -52,11 +52,10 @@ public class LevelGroup {
     }
 
     public static List<LevelGroup> parseLevels() {
-
         JSONParser parser = new JSONParser();
         List<LevelGroup> groupsList = new ArrayList<>();
         try {
-            //todo: check pathing
+            //TODO: check pathing
             Object object = parser.parse(new FileReader("src/main/resources/data/levels.json"));
             JSONObject jsonObject = (JSONObject) object;
 
@@ -64,7 +63,6 @@ public class LevelGroup {
 
             groups.forEach(group -> {
                 JSONObject groupJson = (JSONObject) group;
-                System.out.println(groupJson.get("name"));
                 JSONArray levels = (JSONArray) groupJson.get("levels");
                 List<Level> levelsList = new ArrayList<>();
                 levels.forEach(level -> {
@@ -73,7 +71,7 @@ public class LevelGroup {
                 });
                 groupsList.add(new LevelGroup(groupJson.get("name").toString(), groupJson.get("description_short").toString(), levelsList));
             });
-        } catch (Exception fe) {
+        } catch (Exception e) {
             System.out.println("There was an error with loading the levels.");
             return null;
         }
