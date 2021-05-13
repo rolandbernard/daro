@@ -289,16 +289,11 @@ public class Parser {
         if (scanner.hasNext(TokenKind.RETURN)) {
             Token returnToken = scanner.next();
             AstNode value = parseExpression();
-            if (value == null) {
-                throw new ParsingException(
-                    returnToken.getPosition(),
-                    "Expected en expression after `return`"
-                );
+            if (value != null) {
+                return new AstReturn(new Position(returnToken.getStart(), value.getEnd()), value);
+            } else {
+                return new AstReturn(returnToken.getPosition(), null);
             }
-            return new AstReturn(
-                new Position(returnToken.getStart(), value.getEnd()),
-                value
-            );
         } else {
             return null;
         }

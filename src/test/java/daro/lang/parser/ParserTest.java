@@ -646,9 +646,10 @@ public class ParserTest {
 
     @Test
     void missingReturnValue() {
-        assertThrows(ParsingException.class, () -> {
-            Parser.parseSourceCode("return ");
-        });
+        AstNode ast = Parser.parseSourceCode("return ");
+        assertEquals(new AstSequence(null, new AstNode[] {
+            new AstReturn(null, null)
+        }), ast);
     }
 
     @Test

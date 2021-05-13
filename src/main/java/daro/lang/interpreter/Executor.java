@@ -52,6 +52,9 @@ public class Executor implements Visitor<UserObject> {
                 } else {
                     throw error;
                 }
+            } catch (Exception error) {
+                // All other exceptions should be converted to {@link InterpreterException}
+                throw new InterpreterException(program.getPosition(), error.getMessage());
             }
         } else {
             return null;
