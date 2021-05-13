@@ -172,10 +172,14 @@ public class Parser {
             Token name = scanner.accept(TokenKind.IDENTIFIER);
             AstBlock body = parseCodeBlock();
             if (body == null) {
-                throw new ParsingException(
-                    new Position(token.getStart(), name.getEnd()),
-                    "Expected body after class name"
-                );
+                if (name != null) {
+                    throw new ParsingException(
+                        new Position(token.getStart(), name.getEnd()),
+                        "Expected body after class name"
+                    );
+                } else {
+                    throw new ParsingException(token.getPosition(), "Expected body or name after `class`");
+                }
             }
             return new AstClass(
                 new Position(token.getStart(), body.getEnd()),

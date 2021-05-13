@@ -748,6 +748,9 @@ public class ParserTest {
         assertThrows(ParsingException.class, () -> {
             Parser.parseSourceCode("class Foo ");
         });
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("class ");
+        });
     }
 
     @Test
