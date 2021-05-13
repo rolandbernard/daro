@@ -4,7 +4,7 @@ import daro.lang.ast.AstInitializer;
 import daro.lang.interpreter.Scope;
 
 /**
- * This class represents the type for a real object ({link UserReal}).
+ * This class represents the type for a real object ({@link UserReal}).
  * 
  * @author Roland Bernard
  */

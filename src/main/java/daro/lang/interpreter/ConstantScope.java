@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 public class ConstantScope implements Scope {
     private final Map<String, UserObject> variables;
 
-    public ConstantScope() {
-        variables = Map.of();
-    }
-
+    /**
+     * Creates a new constant scope filling it with the given variable mapping.
+     * @param mapping The parring from names to values to use
+     */
     public ConstantScope(Map<String, UserObject> mapping) {
         variables = Map.copyOf(mapping);
     }

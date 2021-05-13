@@ -5,7 +5,7 @@ import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 
 /**
- * This class represents the type for a null object ({link UserNull}).
+ * This class represents the type for a null object ({@link UserNull}).
  * 
  * @author Roland Bernard
  */

@@ -9,11 +9,20 @@ import java.util.Map;
  * @author Roland Bernard
  */
 public enum TokenKind {
+    /** A token that is not otherwise recognized by the scanner. */
     INVALID,
+    /**
+     * A token that represents an identifier. String of one or more characters starting with a
+     * letter or underscope and consisting only of letters, numbers or an underscore. e.g. {@code foo}
+     */
     IDENTIFIER,
+    /** A token that represents an integer. String of one or more numbers. e.g. {@code 42} */
     INTEGER,
+    /** A token that represents a real number. e.g. {@code 42.12e-2} */
     REAL,
+    /** A token that represents a string literal. e.g. {@code "Hello world"} */
     STRING,
+    /** A token that represents a character literal. e.g. {@code 'A'} */
     CHARACTER,
 
     FOR("for"),
@@ -60,7 +69,7 @@ public enum TokenKind {
     DOUBLE_AND("&&");
 
     /**
-     * This variable gets initialited with a map from fixed source string to {@link TokenType}.
+     * This variable gets initialited with a map from fixed source string to {@link TokenKind}.
      */
     private static final Map<String, TokenKind> reverseLookup;
     static {
