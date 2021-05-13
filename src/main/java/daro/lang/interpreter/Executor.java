@@ -464,12 +464,20 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstArray ast) {
-        UserObject value = require(ast.getOperand());
+        UserObject value = require(ast.getRight());
         if (value instanceof UserType) {
             UserType type = (UserType)value;
-            return new UserTypeStrictArray(type);
+            UserObject size = execute(ast.getLeft());
+            if (size == null) {
+                return new UserTypeStrictArray(type);
+            } else if (size instanceof UserInteger) {
+                UserInteger integer = (UserInteger)size;
+                return new UserTypeStrictArray(integer.getValue().intValue(), type);
+            } else {
+                throw new InterpreterException(ast.getLeft().getPosition(), "Size is not an integer");
+            }
         } else {
-            throw new InterpreterException(ast.getOperand().getPosition(), "Value is not a type");
+            throw new InterpreterException(ast.getRight().getPosition(), "Value is not a type");
         }
     }
 

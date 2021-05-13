@@ -17,7 +17,6 @@ public class RootScope implements Scope {
     static {
         variables = new HashMap<>();
         // Types
-        variables.put("nulltype", new UserTypeNull());
         variables.put("int", new UserTypeInteger());
         variables.put("real", new UserTypeReal());
         variables.put("bool", new UserTypeBoolean());

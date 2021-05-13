@@ -196,13 +196,14 @@ public class ParserTest {
 
     @Test
     void prefixOperations() {
-        AstNode ast = Parser.parseSourceCode("~1; !2; +3; -4; []5");
+        AstNode ast = Parser.parseSourceCode("~1; !2; +3; -4; []5; [6]7");
         assertEquals(new AstSequence(null, new AstNode[] {
             new AstBitwiseNot(null, new AstInteger(null, 1)),
             new AstNot(null, new AstInteger(null, 2)),
             new AstPositive(null, new AstInteger(null, 3)),
             new AstNegative(null, new AstInteger(null, 4)),
-            new AstArray(null, new AstInteger(null, 5)),
+            new AstArray(null, null, new AstInteger(null, 5)),
+            new AstArray(null, new AstInteger(null, 6), new AstInteger(null, 7)),
         }), ast);
     }
 
@@ -352,7 +353,7 @@ public class ParserTest {
         assertEquals(new AstSequence(null, new AstNode[] {
             new AstAddition(null, 
                 new AstNew(null,
-                    new AstArray(null, new AstSymbol(null, "test")),
+                    new AstArray(null, null, new AstSymbol(null, "test")),
                     null
                 ),
                 new AstNew(null,
@@ -375,7 +376,7 @@ public class ParserTest {
         AstNode ast = Parser.parseSourceCode("new []test{1, 2, {3, 4, { a = 5, b = 6, }}}");
         assertEquals(new AstSequence(null, new AstNode[] {
             new AstNew(null,
-                new AstArray(null, new AstSymbol(null, "test")),
+                new AstArray(null, null, new AstSymbol(null, "test")),
                 new AstInitializer(null, new AstNode[] {
                     new AstInteger(null, 1), new AstInteger(null, 2),
                     new AstInitializer(null, new AstNode[] {
@@ -401,7 +402,7 @@ public class ParserTest {
         AstNode ast = Parser.parseSourceCode("new []test{}");
         assertEquals(new AstSequence(null, new AstNode[] {
             new AstNew(null,
-                new AstArray(null, new AstSymbol(null, "test")),
+                new AstArray(null, null, new AstSymbol(null, "test")),
                 new AstInitializer(null, new AstNode[] {
                 })
             )

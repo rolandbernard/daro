@@ -14,10 +14,10 @@ import daro.lang.interpreter.Scope;
  * @author Roland Bernard
  */
 public class UserArray extends UserObject {
-    private final ArrayList<UserObject> values;
+    private final List<UserObject> values;
 
     public UserArray(List<UserObject> values) {
-        this.values = new ArrayList<>(values);
+        this.values = values;
     }
 
     public int getLength() {

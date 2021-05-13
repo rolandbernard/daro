@@ -1,6 +1,9 @@
 package daro.lang.values;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import daro.lang.ast.AstInitializer;
 import daro.lang.interpreter.Scope;
@@ -14,8 +17,23 @@ import daro.lang.interpreter.Scope;
  */
 public class UserTypeStrictArray extends UserType {
     private final UserType base;
+    private final Integer size;
 
+    /**
+     * Create a new {@link UserTypeStrictArray} for a given base type and undefined length.
+     * @param base The base type of the array
+     */
     public UserTypeStrictArray(UserType base) {
+        this(null, base);
+    }
+
+    /**
+     * Create a new {@link UserTypeStrictArray} for a given base type and the given length.
+     * @param size The length of the resulting array
+     * @param base The base type of the array
+     */
+    public UserTypeStrictArray(Integer size, UserType base) {
+        this.size = size;
         this.base = base;
     }
 
@@ -25,7 +43,15 @@ public class UserTypeStrictArray extends UserType {
 
     @Override
     public UserObject instantiate() {
-        return new UserArray(List.of());
+        if (size == null) {
+            return new UserArray(List.of());
+        } else {
+            return new UserArray(
+                Stream.generate(() -> base.instantiate())
+                    .limit(size)
+                    .collect(Collectors.toList())
+            );
+        }
     }
 
     @Override
@@ -36,14 +62,15 @@ public class UserTypeStrictArray extends UserType {
 
     @Override
     public int hashCode() {
-        return base.hashCode();
+        return (991 * base.hashCode()) ^ (971 * Objects.hashCode(size));
     }
 
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserTypeStrictArray) {
             UserTypeStrictArray array = (UserTypeStrictArray)object;
-            return base.equals(array.getBaseType());
+            return base.equals(array.getBaseType())
+                && Objects.equals(size, array.size);
         } else {
             return false;
         }
@@ -51,6 +78,10 @@ public class UserTypeStrictArray extends UserType {
 
     @Override
     public String toString() {
-        return "[]" + String.valueOf(base);
+        if (size == null) {
+            return "[]" + String.valueOf(base);
+        } else {
+            return "[" + size.toString() + "]" + String.valueOf(base);
+        }
     }
 }

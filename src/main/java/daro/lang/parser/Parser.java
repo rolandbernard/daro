@@ -570,6 +570,7 @@ public class Parser {
             return new AstNot(new Position(token.getStart(), operand.getEnd()), operand);
         } else if (scanner.hasNext(TokenKind.OPEN_BRACKET)) {
             Token token = scanner.next();
+            AstNode size = parseExpression();
             if (!scanner.hasNext(TokenKind.CLOSE_BRACKET)) {
                 throw new ParsingException(token.getPosition(), "Expected a closing `]` after opening `[`");
             }
@@ -581,7 +582,7 @@ public class Parser {
                     "Expected an expression after unary prefix `[]`"
                 );
             }
-            return new AstArray(new Position(token.getStart(), operand.getEnd()), operand);
+            return new AstArray(new Position(token.getStart(), operand.getEnd()), size, operand);
         } else {
             return parseUnarySuffixExpression();
         }

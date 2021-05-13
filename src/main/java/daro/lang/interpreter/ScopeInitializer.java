@@ -286,7 +286,7 @@ public class ScopeInitializer implements Visitor<Object> {
 
     @Override
     public Object visit(AstArray ast) {
-        initialize(ast.getOperand());
+        initializeBinary(ast);
         return null;
     }
 

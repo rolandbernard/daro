@@ -1,47 +1,37 @@
 package daro.lang.values;
 
-import daro.lang.interpreter.EmptyScope;
+import daro.lang.ast.AstInitializer;
+import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 
 /**
- * This {@link UserObject} represents a null value.
+ * This class represents both the null object and null type. This means that {@code typeof (null) == null}.
  * 
  * @author Roland Bernard
  */
-public class UserNull extends UserObject {
+public class UserNull extends UserType {
 
     @Override
     public UserType getType() {
-        return new UserTypeNull();
+        return new UserNull();
     }
 
     @Override
-    public Scope getMemberScope() {
-        // TODO: add methods
-        return new EmptyScope();
+    public UserObject instantiate() {
+        return this;
     }
 
     @Override
-    public int hashCode() {
-        return 12345678;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (object instanceof UserNull) {
-            return true; // All null objects are the same
+    public UserObject instantiate(Scope scope, AstInitializer initializer) {
+        if (initializer.getValues().length != 0) {
+            throw new InterpreterException(initializer.getPosition(), "Null type can not be initialized");
         } else {
-            return false;
+            return instantiate();
         }
     }
 
     @Override
     public String toString() {
         return "null";
-    }
-
-    @Override
-    public boolean isTrue() {
-        return false;
     }
 }
