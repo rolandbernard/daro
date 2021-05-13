@@ -25,6 +25,6 @@ public class UserTypeArray extends UserType {
 
     @Override
     public String toString() {
-        return "[]";
+        return "array";
     }
 }

@@ -48,7 +48,7 @@ public class UserClass extends UserObject {
     public boolean equals(Object object) {
         if (object instanceof UserClass) {
             UserClass classObject = (UserClass)object;
-            return scope.equals(classObject.scope)
+            return scope.getFinalLevel().equals(classObject.scope.getFinalLevel())
                 && classType.equals(classObject.classType);
         } else {
             return false;

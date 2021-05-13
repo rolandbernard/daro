@@ -2,6 +2,7 @@ package daro.lang.interpreter;
 
 import daro.lang.values.UserObject;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +60,8 @@ public class ConstantScope implements Scope {
     public boolean equals(Object object) {
         if (object instanceof ConstantScope) {
             ConstantScope scope = (ConstantScope)object;
-            return variables.equals(scope.variables);
+            return variables.equals(scope.variables)
+                && Objects.equals(parent, scope.parent);
         } else {
             return false;
         }

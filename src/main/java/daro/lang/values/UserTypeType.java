@@ -12,7 +12,7 @@ public class UserTypeType extends UserType {
 
     @Override
     public UserObject instantiate() {
-        return null;
+        return new UserTypeNull();
     }
 
     @Override

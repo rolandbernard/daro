@@ -3,6 +3,7 @@ package daro.lang.interpreter;
 import daro.lang.values.UserObject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -105,7 +106,7 @@ public class BlockScope implements Scope {
         if (object instanceof BlockScope) {
             BlockScope scope = (BlockScope)object;
             return variables.equals(scope.variables)
-                && parent.equals(scope.parent);
+                && Objects.equals(parent, scope.parent);
         } else {
             return false;
         }

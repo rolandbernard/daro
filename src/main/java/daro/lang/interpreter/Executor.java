@@ -179,7 +179,9 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstEqual ast) {
-        return executeBinary(ast, null, null,
+        return executeBinary(ast,
+            (a, b) -> new UserBoolean(a.equals(b)),
+            (a, b) -> new UserBoolean(a.doubleValue() == b.doubleValue()),
             (a, b) -> new UserBoolean(a.equals(b))
         );
     }
