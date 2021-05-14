@@ -3,6 +3,8 @@ package daro.lang.interpreter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import daro.lang.ast.AstInitializer;
+import daro.lang.ast.AstNode;
 import daro.lang.values.*;
 import java.math.BigInteger;
 
@@ -120,6 +122,13 @@ public class SimpleInterpreterTest {
     void undefinedAddition() {
         assertThrows(InterpreterException.class, () -> {
             interpreter.execute("() + ()");
+        });
+    }
+
+    @Test
+    void invalidAst() {
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute(new AstInitializer(null, new AstNode[0]));
         });
     }
 }

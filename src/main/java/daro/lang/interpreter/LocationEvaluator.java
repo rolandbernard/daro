@@ -200,7 +200,7 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     @Override
     public VariableLocation visit(AstAssignment ast) {
-        return execute(ast.getLeft());
+        return null;
     }
 
     @Override

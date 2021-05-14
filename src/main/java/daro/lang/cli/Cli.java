@@ -1,4 +1,4 @@
-package daro.lang;
+package daro.lang.cli;
 
 import java.util.Scanner;
 
@@ -22,7 +22,7 @@ public class Cli {
      * @param text The text the offset refers to
      * @return The line number of the offset
      */
-    private static int lineFromOffset(int offset, String text) {
+    public static int lineFromOffset(int offset, String text) {
         String[] lines = text.split("\n");
         int current = 0;
         int line = 0;
@@ -39,7 +39,7 @@ public class Cli {
      * @param text The text the offset refers to
      * @return The column number of the offset
      */
-    private static int columnFromOffset(int offset, String text) {
+    public static int columnFromOffset(int offset, String text) {
         String[] lines = text.split("\n");
         int current = 0;
         int line = 0;

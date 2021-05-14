@@ -551,7 +551,7 @@ public class ParserTest {
     @Test
     void missingIfCondition() {
         assertThrows(ParsingException.class, () -> {
-            Parser.parseSourceCode("if { }");
+            Parser.parseSourceCode("if ;");
         });
     }
 
@@ -589,7 +589,7 @@ public class ParserTest {
     @Test
     void missingForCondition() {
         assertThrows(ParsingException.class, () -> {
-            Parser.parseSourceCode("for {}");
+            Parser.parseSourceCode("for ;");
         });
     }
 

@@ -84,4 +84,62 @@ public class ArrayInterpreterTest {
             interpreter.execute("x.sort(5)");
         });
     }
+
+    @Test
+    void indexOutOfBounds() {
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[0]");
+        });
+    }
+
+    @Test
+    void negativeIndex() {
+        interpreter.execute("x = new array");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[-1]");
+        });
+    }
+
+    @Test
+    void indexNotAnInteger() {
+        interpreter.execute("x = new array");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[2.5]");
+        });
+    }
+
+    @Test
+    void indexedNotAnArray() {
+        interpreter.execute("x = 5");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[2]");
+        });
+    }
+
+    @Test
+    void indexOutOfBoundsWrite() {
+        interpreter.execute("x = new array");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[0] = 0");
+        });
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[-1] = 0");
+        });
+    }
+
+    @Test
+    void indexNotAnIntegerWrite() {
+        interpreter.execute("x = new array");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[2.5] = 0");
+        });
+    }
+
+    @Test
+    void indexedNotAnArrayWrite() {
+        interpreter.execute("x = 5");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[2] = 0");
+        });
+    }
 }

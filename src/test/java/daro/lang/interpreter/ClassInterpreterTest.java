@@ -52,10 +52,23 @@ public class ClassInterpreterTest {
 
     @Test
     void invalidClassMember() {
-        interpreter.execute("class test { x = 5.5; fn test() { this.x } }");
-        interpreter.execute("x = new test");
+        interpreter.execute("x = new class { }");
         assertThrows(InterpreterException.class, () -> {
             interpreter.execute("x.this");
+        });
+    }
+
+    @Test
+    void accessToUndefined() {
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("().this");
+        });
+    }
+
+    @Test
+    void accessToUndefinedWrite() {
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("().this = 0");
         });
     }
 }
