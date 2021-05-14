@@ -46,53 +46,58 @@
 
 /*Code editor*/
 .code-editor {
-    -fx-background-color: #1B1139;
+    -fx-background-color: #272D3F;
 }
+
 .code-editor .selection {
-    -fx-fill: #442899;
+    -fx-fill: #323B53;
+}
+
+.paragraph-box:has-caret {
+    -fx-background-color: #293247;
+}
+
+
+.syntax-keyword {
+    -fx-font-weight: bold;
+	-fx-fill: #FF76E1;
+}
+
+.syntax-symbol {
+    -fx-fill: #939393;
+}
+
+.syntax-control {
+    -fx-font-weight: bold;
+    -fx-fill: #FFBB56;
+}
+
+.syntax-function {
+    -fx-fill: #B6CAFF;
+}
+
+.syntax-comment {
+    -fx-fill: #595959;
+}
+
+.syntax-string {
+    -fx-fill: #61EA90;
+}
+
+.syntax-digit {
+    -fx-fill: #52C1FF;
+}
+
+.lineno {
+    -fx-pref-width: 50px;
+    -fx-font-size: 16px;
+    -fx-background-color: #1C202D;
 }
 
 .code-editor .text {
     -fx-font-family: "monospace" !important;
     -fx-font-weight: 500;
 }
-
-.syntax-keyword {
-    -fx-font-weight: bold;
-	-fx-fill: #A54AFF;
-}
-
-.syntax-symbol {
-    -fx-fill: #AA80D4;
-}
-
-.syntax-control {
-    -fx-font-weight: bold;
-    -fx-fill: #DEBDFF;
-}
-
-.syntax-function {
-    -fx-fill: #AF6EF1;
-}
-
-.syntax-comment {
-    -fx-fill: #656565;
-}
-
-.syntax-string {
-    -fx-fill: #139CFF;
-}
-
-.paragraph-box:has-caret {
-    -fx-background-color: #201444;
-}
-
-.lineno {
-    -fx-pref-width: 50px;
-    -fx-font-size: 16px;
-    -fx-background-color: #130A2E;
-}
-
 .caret {
     -fx-stroke: white;
 }

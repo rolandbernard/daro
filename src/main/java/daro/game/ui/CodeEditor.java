@@ -20,12 +20,13 @@ public class CodeEditor extends CodeArea {
      */
 
     //Regex for specific groups
-    private static final String[] KEYWORDS = {"fn", "return"};
-    private static final String[] CONTROLS = {"if", "else", "for", "=", ">", "<", ":"};
-    private static final String[] SYMBOLS = {"\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&"};
-    private static final String[] FUNCTIONS = {"(?<=(^|\\s))(.*)?(\\s)?(?=((\\s+)?\\())"};
+    private static final String[] KEYWORDS = {"fn", "return", "class"};
+    private static final String[] CONTROLS = {"if", "else", "for"};
+    private static final String[] SYMBOLS = {"\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "=", ">", "<"};
+    private static final String[] FUNCTIONS = {"([^\\s]+)?(\\s)?(?=((\\s+)?\\())"};
     private static final String[] COMMENTS = {"\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"};
     private static final String[] STRINGS = {"\\\".*?\\\"", "\\'.*?\\'"};
+    private static final String[] DIGITS = {"\\d+"};
     private static final String TAB = "    ";
 
     //Generate Pattern for specific groups
@@ -38,12 +39,13 @@ public class CodeEditor extends CodeArea {
     }
 
     private static final Pattern SYNTAX_PATTERN = Pattern.compile(
-            "(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")" +
+            "(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" +
+                    "|(?<COMMENT>" + generatePattern(COMMENTS) + ")" +
+                    "|(?<STRING>" + generatePattern(STRINGS) + ")" +
+                    "|(?<DIGIT>" + generatePattern(DIGITS) + ")" +
                     "|(?<CONTROL>" + generateBoundedPattern(CONTROLS) + ")" +
                     "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")" +
-                    "|(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" +
-                    "|(?<COMMENT>" + generatePattern(COMMENTS) + ")" +
-                    "|(?<STRING>" + generatePattern(STRINGS) + ")"
+                    "|(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")"
     );
 
     /**
@@ -53,7 +55,7 @@ public class CodeEditor extends CodeArea {
     private static final Character[] WHITESPACE_NL = {'{', '[', '('};
 
     //Workaround to ensure that autocompletions don't go into an infinite loop
-    private int lastTypePosition = -1;
+    private int lastTypePosition;
 
     /**
      * A full-fledged CodeEditor with syntax highlighting and basic features.
@@ -70,6 +72,7 @@ public class CodeEditor extends CodeArea {
         this.textProperty().addListener(this::handleTextChange);
         this.setOnKeyPressed(this::handleKeyPress);
         this.setStyleSpans(0, computeHighlighting(this.getText()));
+        this.lastTypePosition = -1;
     }
 
     /**
@@ -107,15 +110,37 @@ public class CodeEditor extends CodeArea {
      */
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int position = this.getCaretPosition();
-        if (lastTypePosition != position && oldValue.length() < newValue.length()) {
+        if (this.lastTypePosition != position && oldValue.length() < newValue.length()) {
             REPEATING_STRING.keySet().forEach(string -> {
-                if (position >= (string.length()) && newValue.substring(position - string.length(), position).equals(string)) {
-                    this.insertText(position , REPEATING_STRING.get(string));
-                    lastTypePosition = position;
+                try {
+                    if (newValue.substring(position - string.length(), position).equals(string)) {
+                        this.lastTypePosition = position + string.length();
+                        this.insertText(position, REPEATING_STRING.get(string));
+                    }
+                } catch (Exception ignored) {
+                    //ignored because if exception, there was no match anyways
+                }
+            });
+        } else if (oldValue.length() > newValue.length()) {
+            REPEATING_STRING.keySet().forEach(string -> {
+                try {
+                    String deletedCharacters = oldValue.substring(position, position + string.length());
+                    String restOfCombination = newValue.substring(position, position + string.length());
+                    if (deletedCharacters.equals(string)) {
+                        if (REPEATING_STRING.get(deletedCharacters).equals(restOfCombination)) {
+                            this.replaceText(position, position + string.length(), "");
+                        }
+                    }
+                } catch (Exception ignored) {
+                    //ignored because if exception, there was no match anyways
                 }
             });
         }
-        this.setStyleSpans(0, computeHighlighting(newValue));
+        try {
+            this.setStyleSpans(0, computeHighlighting(newValue));
+        } catch (Exception ignored) {
+
+        }
     }
 
     /**
@@ -142,6 +167,8 @@ public class CodeEditor extends CodeArea {
                 styleClass += "function";
             else if (matcher.group("STRING") != null)
                 styleClass += "string";
+            else if (matcher.group("DIGIT") != null)
+                styleClass += "digit";
 
             spansBuilder.add(Collections.singleton(styleClass.equals("syntax-") ? null : styleClass), matcher.end() - matcher.start());
             lastKwEnd = matcher.end();
@@ -159,7 +186,8 @@ public class CodeEditor extends CodeArea {
         REPEATING_STRING.put("[", "]");
         REPEATING_STRING.put("{", "}");
         REPEATING_STRING.put("<", ">");
+        REPEATING_STRING.put("\"", "\"");
+        REPEATING_STRING.put("'", "'");
         REPEATING_STRING.put("/*", "*/");
     }
-
 }
