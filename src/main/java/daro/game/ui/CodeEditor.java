@@ -18,6 +18,8 @@ public class CodeEditor extends CodeArea {
     /**
      * Basic constants for syntax highlighting
      */
+
+    //Regex for specific groups
     private static final String[] KEYWORDS = {"fn", "return"};
     private static final String[] CONTROLS = {"if", "else", "for", "=", ">", "<", ":"};
     private static final String[] SYMBOLS = {"\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&"};
@@ -26,6 +28,7 @@ public class CodeEditor extends CodeArea {
     private static final String[] STRINGS = {"\\\".*?\\\"", "\\'.*?\\'"};
     private static final String TAB = "    ";
 
+    //Generate Pattern for specific groups
     private static String generateBoundedPattern(String... pattern) {
         return "(\\b(" + String.join("|", pattern) + ")\\b)";
     }
@@ -49,6 +52,7 @@ public class CodeEditor extends CodeArea {
     private static final HashMap<String, String> REPEATING_STRING = new HashMap<>();
     private static final Character[] WHITESPACE_NL = {'{', '[', '('};
 
+    //Workaround to ensure that autocompletions don't go into an infinite loop
     private int lastTypePosition = -1;
 
     /**
@@ -58,18 +62,18 @@ public class CodeEditor extends CodeArea {
      */
     public CodeEditor(String defaultText) {
         super(defaultText);
+        initRepeatingStrings();
         this.getStyleClass().add("code-editor");
         this.setHeight(Game.HEIGHT);
         this.setPrefWidth(Game.WIDTH);
-        initFollowingCharacter();
         this.setParagraphGraphicFactory(LineNumberFactory.get(this));
         this.textProperty().addListener(this::handleTextChange);
-        this.snapSpaceX(10);
         this.setOnKeyPressed(this::handleKeyPress);
+        this.setStyleSpans(0, computeHighlighting(this.getText()));
     }
 
     /**
-     * EventHandler for key presses: automatic indentation and tab update
+     * EventHandler for key presses: automatic indentation and better TAB size
      */
     private void handleKeyPress(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ENTER) {
@@ -146,7 +150,11 @@ public class CodeEditor extends CodeArea {
         return spansBuilder.create();
     }
 
-    private static void initFollowingCharacter() {
+    /**
+     * Fills the repeating strings map
+     * Used to autocomplete that for example after ( immediately follows ).
+     */
+    private static void initRepeatingStrings() {
         REPEATING_STRING.put("(", ")");
         REPEATING_STRING.put("[", "]");
         REPEATING_STRING.put("{", "}");
