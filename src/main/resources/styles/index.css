@@ -43,3 +43,9 @@
 -heading-description {
     -fx-font-size: 20px;
 }
+
+
+.keyword {
+    -fx-font-weight: bold;
+	-fx-fill: teal;
+}
