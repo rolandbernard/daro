@@ -13,6 +13,6 @@ public class LevelView extends View {
      */
     public LevelView(Level level) {
         this.level = level;
-        this.getChildren().addAll(new CodeEditor(""));
+        this.getChildren().addAll(new CodeEditor());
     }
 }

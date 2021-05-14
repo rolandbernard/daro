@@ -20,9 +20,9 @@ public class CodeEditor extends CodeArea {
      */
 
     //Regex for specific groups
-    private static final String[] KEYWORDS = {"fn", "return", "class"};
+    private static final String[] KEYWORDS = {"fn", "return", "class", "true", "false"};
     private static final String[] CONTROLS = {"if", "else", "for"};
-    private static final String[] SYMBOLS = {"\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "=", ">", "<"};
+    private static final String[] SYMBOLS = {"\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!?=", ">", "<"};
     private static final String[] FUNCTIONS = {"([^\\s]+)?(\\s)?(?=((\\s+)?\\())"};
     private static final String[] COMMENTS = {"\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"};
     private static final String[] STRINGS = {"\\\".*?\\\"", "\\'.*?\\'"};
@@ -59,15 +59,42 @@ public class CodeEditor extends CodeArea {
 
     /**
      * A full-fledged CodeEditor with syntax highlighting and basic features.
-     *
+     */
+    public CodeEditor() {
+        initRepeatingStrings();
+        this.setHeight(Game.HEIGHT);
+        this.setPrefWidth(Game.WIDTH);
+        init();
+    }
+
+    /**
+     * A full-fledged CodeEditor with syntax highlighting and basic features.
      * @param defaultText the code which is rendered as default
      */
     public CodeEditor(String defaultText) {
         super(defaultText);
         initRepeatingStrings();
-        this.getStyleClass().add("code-editor");
-        this.setHeight(Game.HEIGHT);
+        this.setPrefHeight(Game.HEIGHT);
         this.setPrefWidth(Game.WIDTH);
+        init();
+    }
+
+    /**
+     * A full-fledged CodeEditor with syntax highlighting and basic features.
+     * @param defaultText the code which is rendered as default
+     * @param height height of the Code Editor
+     * @param width width of the Code Editor
+     */
+    public CodeEditor(String defaultText, double width, double height) {
+        super(defaultText);
+        initRepeatingStrings();
+        this.setPrefHeight(width);
+        this.setPrefWidth(height);
+        init();
+    }
+
+    private void init() {
+        this.getStyleClass().add("code-editor");
         this.setParagraphGraphicFactory(LineNumberFactory.get(this));
         this.textProperty().addListener(this::handleTextChange);
         this.setOnKeyPressed(this::handleKeyPress);
