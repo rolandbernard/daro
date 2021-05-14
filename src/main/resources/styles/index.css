@@ -44,17 +44,37 @@
     -fx-font-size: 20px;
 }
 
-
-.keyword {
-    -fx-font-weight: bold;
-	-fx-fill: #FF3D23;
-}
-
+/*Code editor*/
 .code-editor {
 }
 
 .code-editor .text {
         -fx-font-family: "monospace" !important;
+}
+
+.syntax-keyword {
+    -fx-font-weight: bold;
+	-fx-fill: #FF3D23;
+}
+
+.syntax-symbol {
+    -fx-fill: teal;
+}
+
+.syntax-control {
+    -fx-fill: red;
+}
+
+.syntax-function {
+    -fx-fill: lightgray;
+}
+
+.syntax-comment {
+    -fx-fill: gray;
+}
+
+.syntax-string {
+    -fx-fill: gray;
 }
 
 .paragraph-box:has-caret {

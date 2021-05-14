@@ -10,17 +10,48 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 public class CodeEditor extends CodeArea {
-    private static final String[] keywords = {"fn", "break"};
-    private static final Pattern SYNTAX_HIGHLIGHT = Pattern.compile("(?<KEYWORD>(" + Arrays.stream(keywords).map(keyword -> "(\\b" + keyword + "\\b)").collect(Collectors.joining("|")) + "))");
-    private static final HashSet<Character> lineBreakExtra = new HashSet<>(Set.of('{'));
-    private static final HashMap<Character, Character> followingCharacter = new HashMap<>();
+    /**
+     * Basic constants for syntax highlighting
+     */
+    private static final String[] KEYWORDS = {"fn", "return"};
+    private static final String[] CONTROLS = {"if", "else", "for", "=", ">", "<", ":"};
+    private static final String[] SYMBOLS = {"\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&"};
+    private static final String[] FUNCTIONS = {"(?<=(^|\\s))(.*)?(\\s)?(?=((\\s+)?\\())"};
+    private static final String[] COMMENTS = {"\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"};
+    private static final String[] STRINGS = {"\\\".*?\\\"", "\\'.*?\\'"};
+
+    private static String generateBoundedPattern(String... pattern) {
+        return "(\\b(" + String.join("|", pattern) + ")\\b)";
+    }
+
+    private static String generatePattern(String... pattern) {
+        return "(" + String.join("|", pattern) + ")";
+    }
+
+    private static final Pattern SYNTAX_PATTERN = Pattern.compile(
+            "(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")" +
+                    "|(?<CONTROL>" + generateBoundedPattern(CONTROLS) + ")" +
+                    "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")" +
+                    "|(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" +
+                    "|(?<COMMENT>" + generatePattern(COMMENTS) + ")" +
+                    "|(?<STRING>" + generatePattern(STRINGS) + ")"
+    );
+
+    /**
+     * Constants for Editor features
+     */
+    private static final HashMap<Character, Character> followingCharacter = new HashMap<>(){};
 
     private int lastTypePosition = -1;
 
+    /**
+     * A full-fledged CodeEditor with syntax highlighting and basic features.
+     *
+     * @param defaultText the code which is rendered as default
+     */
     public CodeEditor(String defaultText) {
         super(defaultText);
         this.getStyleClass().add("code-editor");
@@ -32,41 +63,55 @@ public class CodeEditor extends CodeArea {
         this.textProperty().addListener(this::handleTextChange);
     }
 
+    /**
+     * EventHandler for Text changes: updates syntax highlighting and enables
+     * autocompletion (e.g. "(" is immediately followed by ")")
+     */
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-        this.setStyleSpans(0, computeHighlighting(newValue));
         int position = this.getCaretPosition() - 1;
         if (position > 0 && oldValue.length() < newValue.length() && lastTypePosition != position) {
             char lastCharacter = newValue.charAt(position);
             lastTypePosition = position;
             if (followingCharacter.containsKey(lastCharacter)) {
                 this.insertText(position + 1, followingCharacter.get(lastCharacter).toString());
-            } else {
-                char preLastCharacter = newValue.charAt(position - 1);
-                //if (lastCharacter == '\n' && (position - 1) > 0 && lineBreakExtra.contains(preLastCharacter)) {
-                //    this.insertText(position, "\t\n");
-                //}
             }
         }
+        this.setStyleSpans(0, computeHighlighting(newValue));
     }
 
+    /**
+     * Parses the Code for syntax and sets CSS classes
+     * for further styling to enable syntax highlighting
+     */
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
-
-        Matcher matcher = SYNTAX_HIGHLIGHT.matcher(text);
+        Matcher matcher = SYNTAX_PATTERN.matcher(text);
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
         while (matcher.find()) {
-
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
-            if (matcher.group("KEYWORD") != null) {
-                spansBuilder.add(Collections.singleton("keyword"), matcher.end() - matcher.start());
-            }
+
+            String styleClass = "syntax-";
+            if (matcher.group("KEYWORD") != null)
+                styleClass += "keyword";
+            else if (matcher.group("SYMBOL") != null)
+                styleClass += "symbol";
+            else if (matcher.group("CONTROL") != null)
+                styleClass += "control";
+            else if (matcher.group("COMMENT") != null)
+                styleClass += "comment";
+            else if (matcher.group("FUNCTION") != null)
+                styleClass += "function";
+            else if (matcher.group("STRING") != null)
+                styleClass += "string";
+
+            spansBuilder.add(Collections.singleton(styleClass.equals("syntax-") ? null : styleClass), matcher.end() - matcher.start());
             lastKwEnd = matcher.end();
         }
         spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
         return spansBuilder.create();
     }
 
-    private void initFollowingCharacter() {
+    private static void initFollowingCharacter() {
         followingCharacter.put('(', ')');
         followingCharacter.put('[', ']');
         followingCharacter.put('{', '}');
