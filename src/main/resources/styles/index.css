@@ -47,5 +47,26 @@
 
 .keyword {
     -fx-font-weight: bold;
-	-fx-fill: teal;
+	-fx-fill: #FF3D23;
+}
+
+.code-editor {
+}
+
+.code-editor .text {
+        -fx-font-family: "monospace" !important;
+}
+
+.paragraph-box:has-caret {
+    -fx-background-color: #381A90;
+}
+
+.lineno {
+    -fx-pref-width: 50px;
+    -fx-font-size: 16px;
+    -fx-background-color: #1A0A47;
+}
+
+.caret {
+    -fx-stroke: white;
 }
