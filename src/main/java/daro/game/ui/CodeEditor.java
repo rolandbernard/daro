@@ -1,7 +1,6 @@
 package daro.game.ui;
 
 import daro.game.main.Game;
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -64,26 +63,29 @@ public class CodeEditor extends CodeArea {
         initFollowingCharacter();
         this.setParagraphGraphicFactory(LineNumberFactory.get(this));
         this.textProperty().addListener(this::handleTextChange);
+        this.snapSpaceX(10);
+        this.setOnKeyPressed(this::handleKeyPress);
+    }
 
-        // auto-indent: insert previous line's indents on enter
-        final Pattern whiteSpace = Pattern.compile("^\\s+");
-        this.addEventHandler(KeyEvent.KEY_PRESSED, KE ->
-        {
-            if (KE.getCode() == KeyCode.ENTER) {
-                int position = this.getCaretPosition();
-                int paragraph = this.getCurrentParagraph();
-                char lastCharacter = this.getText().charAt(position - 2);
-                if(lastCharacter == '{') {
-                    this.insertText(position, "\t ");
-                    this.insertText(position + 2, "\n");
-                    this.displaceCaret(position + 1);
-                }
-                Matcher whitespace = whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0));
-                if (whitespace.find())
-                    this.insertText(position, whitespace.group());
+    /**
+     * EventHandler for key presses: automatic indentation
+     */
+    private void handleKeyPress(KeyEvent keyEvent) {
+        Pattern whiteSpace = Pattern.compile("^\\s+");
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+            int position = this.getCaretPosition();
+            int paragraph = this.getCurrentParagraph();
+            char lastCharacter = this.getText().charAt(position - 2);
+            Matcher whitespace = whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0));
+            String additionalSpace = "";
+            if (whitespace.find())
+                additionalSpace = whitespace.group();
+            if(lastCharacter == '{') {
+                this.insertText(position, additionalSpace + "\t \n" + additionalSpace);
+                int anchor = position + 1 + additionalSpace.length();
+                this.selectRange(anchor, anchor);
             }
-        });
-
+        }
     }
 
     /**
