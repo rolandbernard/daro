@@ -1,8 +1,14 @@
 package daro.lang.values;
 
+import daro.lang.ast.AstAssignment;
 import daro.lang.ast.AstClass;
 import daro.lang.ast.AstInitializer;
+import daro.lang.ast.AstNode;
+import daro.lang.interpreter.Executor;
+import daro.lang.interpreter.InterpreterException;
+import daro.lang.interpreter.LocationEvaluator;
 import daro.lang.interpreter.Scope;
+import daro.lang.interpreter.VariableLocation;
 
 /**
  * This class represents the type for a class instance ({@link UserClass}). A class is always linked
@@ -39,8 +45,27 @@ public class UserTypeClass extends UserType {
 
     @Override
     public UserObject instantiate(Scope scope, AstInitializer initializer) {
-        // TODO: implement using executor
-        return null;
+        UserClass classObject = new UserClass(globalScope, this);
+        Scope classScope = classObject.getMemberScope();
+        for (AstNode value : initializer.getValues()) {
+            if (value instanceof AstAssignment) {
+                AstAssignment assignment = (AstAssignment)value;
+                VariableLocation location = LocationEvaluator.execute(classScope, assignment.getLeft());
+                if (location != null) {
+                    UserObject object = Executor.execute(scope, assignment.getRight());
+                    if (object == null) {
+                        throw new InterpreterException(assignment.getRight().getPosition(), "Value must not be undefined");
+                    } else {
+                        location.storeValue(object);
+                    }
+                } else {
+                    throw new InterpreterException(assignment.getLeft().getPosition(), "Expression can not be written to");
+                }
+            } else {
+                throw new InterpreterException(value.getPosition(), "Value must be an assignment");
+            }
+        }
+        return classObject;
     }
 
     @Override
@@ -61,6 +86,6 @@ public class UserTypeClass extends UserType {
 
     @Override
     public String toString() {
-        return definition.getName() != null ? definition.getName() : "class";
+        return definition.getName() != null ? definition.getName() : "";
     }
 }

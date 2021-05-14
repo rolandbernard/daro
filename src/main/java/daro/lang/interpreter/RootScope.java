@@ -87,4 +87,9 @@ public class RootScope implements Scope {
         ret.append("}");
         return ret.toString();
     }
+
+    @Override
+    public Map<String, UserObject> getCompleteMapping() {
+        return Map.copyOf(variables);
+    }
 }

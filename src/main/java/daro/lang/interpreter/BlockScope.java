@@ -45,12 +45,22 @@ public class BlockScope implements Scope {
     }
 
     /**
+     * Returns a {@link BlockScope} that only includes the last level of this scope and the given
+     * scope as its parent. This method is used inside classes as the member scope.
+     * @param parent The parent of 
+     * @return The last level scope
+     */
+    public BlockScope getFinalLevel(Scope parent) {
+        return new BlockScope(parent, variables);
+    }
+
+    /**
      * Returns a {@link BlockScope} that only includes the last level of this scope. This method is
-     * used inside classes as the member scope.
+     * used inside classes for printing to string.
      * @return The last level scope
      */
     public BlockScope getFinalLevel() {
-        return new BlockScope(null, variables);
+        return getFinalLevel(null);
     }
 
     /**
@@ -125,5 +135,19 @@ public class BlockScope implements Scope {
             .collect(Collectors.joining(", ")));
         ret.append("}");
         return ret.toString();
+    }
+
+    @Override
+    public Map<String, UserObject> getCompleteMapping() {
+        Map<String, UserObject> result;
+        if (parent != null) {
+            result = parent.getCompleteMapping();
+        } else {
+            result = Map.copyOf(Map.of());
+        }
+        for (Map.Entry<String, UserObject> entry : variables.entrySet()) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
     }
 }

@@ -1,8 +1,5 @@
 package daro.lang.values;
 
-import daro.lang.interpreter.EmptyScope;
-import daro.lang.interpreter.Scope;
-
 /**
  * This {@link UserObject} represents a boolean value.
  * 
@@ -30,12 +27,6 @@ public class UserBoolean extends UserObject {
     @Override
     public UserType getType() {
         return new UserTypeBoolean();
-    }
-
-    @Override
-    public Scope getMemberScope() {
-        // TODO: add methods
-        return new EmptyScope();
     }
 
     @Override

@@ -2,9 +2,6 @@ package daro.lang.values;
 
 import java.math.BigInteger;
 
-import daro.lang.interpreter.EmptyScope;
-import daro.lang.interpreter.Scope;
-
 /**
  * This {@link UserObject} represents an integer value.
  * 
@@ -32,12 +29,6 @@ public class UserInteger extends UserNumber {
     @Override
     public UserType getType() {
         return new UserTypeInteger();
-    }
-
-    @Override
-    public Scope getMemberScope() {
-        // TODO: add methods
-        return new EmptyScope();
     }
 
     @Override

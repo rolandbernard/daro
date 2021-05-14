@@ -22,6 +22,19 @@ public class ClassInterpreterTest {
     }
 
     @Test
+    void initializeClass() {
+        interpreter.execute("x = new class { x = 5.5 } { x = 3.3 }");
+        assertEquals(new UserReal(3.3), interpreter.execute("x.x"));
+    }
+
+    @Test
+    void wronglyInitializeClass() {
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("new class { } { 3.3 }");
+        });
+    }
+
+    @Test
     void writeClassVariable() {
         interpreter.execute("x = new class { x = 5.5 }");
         assertEquals(new UserReal(5.5), interpreter.execute("x.x"));

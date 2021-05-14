@@ -35,13 +35,17 @@ public class UserArray extends UserObject {
         Map<String, UserObject> variables = new HashMap<>();
         variables.put("push", new UserLambdaFunction(params -> {
             for (UserObject value : params) {
-                values.add(value);
+                pushValue(value);
             }
         }));
         variables.put("pop", new UserLambdaFunction(0, params -> {
-            UserObject ret = values.get(values.size() - 1);
-            values.remove(values.size() - 1);
-            return ret;
+            if (values.size() > 0) {
+                UserObject ret = values.get(values.size() - 1);
+                values.remove(values.size() - 1);
+                return ret;
+            } else {
+                return null;
+            }
         }));
         variables.put("sort", new UserLambdaFunction(1, params -> {
             if (params[0] instanceof UserFunction) {
@@ -68,7 +72,7 @@ public class UserArray extends UserObject {
             }
         }));
         // TODO: add methods
-        return new ConstantScope(variables);
+        return new ConstantScope(super.getMemberScope(), variables);
     }
 
     /**
@@ -95,6 +99,14 @@ public class UserArray extends UserObject {
      */
     public void putValueAt(int i, UserObject value) {
         values.set(i, value);
+    }
+
+    /**
+     * Adds a new element to the end of the array.
+     * @param value The value that should be added
+     */
+    public void pushValue(UserObject value) {
+        values.add(value);
     }
 
     @Override

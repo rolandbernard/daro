@@ -1,7 +1,6 @@
 package daro.lang.values;
 
 import daro.lang.ast.AstInitializer;
-import daro.lang.interpreter.EmptyScope;
 import daro.lang.interpreter.Scope;
 
 /**
@@ -15,12 +14,6 @@ public abstract class UserType extends UserObject {
     @Override
     public UserType getType() {
         return new UserTypeType();
-    }
-
-    @Override
-    public Scope getMemberScope() {
-        // TODO: add methods
-        return new EmptyScope();
     }
 
     /**

@@ -7,6 +7,7 @@ import daro.lang.values.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public class ArrayInterpreterTest {
@@ -25,6 +26,38 @@ public class ArrayInterpreterTest {
     @Test
     void filledArray() {
         assertEquals(new UserArray(List.of(new UserReal(0), new UserReal(0))), interpreter.execute("new [2]real"));
+    }
+
+    @Test
+    void untypedArray() {
+        assertEquals(
+            new UserArray(List.of(new UserReal(1.5), new UserInteger(BigInteger.valueOf(2)))),
+            interpreter.execute("new array{1.5, 2}")
+        );
+    }
+
+    @Test
+    void initializedArray() {
+        assertEquals(
+            new UserArray(List.of(new UserReal(1), new UserReal(2), new UserReal(0))),
+            interpreter.execute("new [3]real{1, 2}")
+        );
+    }
+
+    @Test
+    void autoSizedArray() {
+        assertEquals(
+            new UserArray(List.of(new UserReal(1), new UserReal(2))),
+            interpreter.execute("new []real{1, 2}")
+        );
+    }
+
+    @Test
+    void nestedInitializedArray() {
+        assertEquals(
+            new UserArray(List.of(new UserReal(1), new UserReal(2))),
+            interpreter.execute("new []real{{1}, {2}}")
+        );
     }
 
     @Test

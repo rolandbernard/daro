@@ -89,4 +89,11 @@ public class FunctionInterpreterTest {
             interpreter.execute("test(1, 2)");
         });
     }
+
+    @Test
+    void cantInitializeFunctions() {
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("new function { 5 }");
+        });
+    }
 }

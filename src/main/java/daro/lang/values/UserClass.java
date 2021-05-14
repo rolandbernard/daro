@@ -45,7 +45,7 @@ public class UserClass extends UserObject {
 
     @Override
     public Scope getMemberScope() {
-        return scope.getFinalLevel();
+        return scope.getFinalLevel(super.getMemberScope());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class UserClass extends UserObject {
 
     @Override
     public String toString() {
-        return classType.toString() + " " + scope.getFinalLevel().toString();
+        return (classType.toString() + " " + scope.getFinalLevel().toString()).trim();
     }
 
     @Override

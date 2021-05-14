@@ -22,6 +22,16 @@ public class IntegerInterpreterTest {
     }
 
     @Test
+    void defaultInteger() {
+        assertEquals(new UserInteger(BigInteger.valueOf(0)), interpreter.execute("new int"));
+    }
+
+    @Test
+    void integerFromReal() {
+        assertEquals(new UserInteger(BigInteger.valueOf(5)), interpreter.execute("new int { 5.5 }"));
+    }
+
+    @Test
     void addition() {
         assertEquals(new UserInteger(BigInteger.valueOf(42)), interpreter.execute("33 + 9"));
     }

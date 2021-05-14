@@ -21,6 +21,16 @@ public class RealInterpreterTest {
     }
 
     @Test
+    void defaultReal() {
+        assertEquals(new UserReal(0), interpreter.execute("new real"));
+    }
+
+    @Test
+    void realFromInteger() {
+        assertEquals(new UserReal(5), interpreter.execute("new real { 5 }"));
+    }
+
+    @Test
     void addition() {
         assertEquals(new UserReal(42.25), interpreter.execute("41.75 + 0.5"));
     }

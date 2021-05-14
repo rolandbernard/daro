@@ -1,8 +1,5 @@
 package daro.lang.values;
 
-import daro.lang.interpreter.EmptyScope;
-import daro.lang.interpreter.Scope;
-
 /**
  * This {@link UserObject} represents a real value.
  * 
@@ -30,12 +27,6 @@ public class UserReal extends UserNumber {
     @Override
     public UserType getType() {
         return new UserTypeReal();
-    }
-
-    @Override
-    public Scope getMemberScope() {
-        // TODO: add methods
-        return new EmptyScope();
     }
 
     @Override

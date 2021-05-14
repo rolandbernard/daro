@@ -21,6 +21,31 @@ public class StringInterpreterTest {
     }
 
     @Test
+    void defaultString() {
+        assertEquals(new UserString(""), interpreter.execute("new string"));
+    }
+
+    @Test
+    void stringFromInteger() {
+        assertEquals(new UserString("5"), interpreter.execute("new string { 5 }"));
+    }
+
+    @Test
+    void stringFromReal() {
+        assertEquals(new UserString("5.5"), interpreter.execute("new string { 5.5 }"));
+    }
+
+    @Test
+    void stringFromBoolean() {
+        assertEquals(new UserString("true"), interpreter.execute("new string { true }"));
+    }
+
+    @Test
+    void stringFromClass() {
+        assertEquals(new UserString("{x = 5}"), interpreter.execute("new string { new class { x = 5 } }"));
+    }
+
+    @Test
     void addition() {
         assertEquals(new UserString("Hello"), interpreter.execute("\"Hel\" + \"lo\""));
     }
