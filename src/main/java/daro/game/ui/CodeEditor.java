@@ -46,8 +46,8 @@ public class CodeEditor extends CodeArea {
     /**
      * Constants for Editor features
      */
-    private static final HashMap<Character, Character> followingCharacter = new HashMap<>() {
-    };
+    private static final HashMap<String, String> REPEATING_STRING = new HashMap<>();
+    private static final Character[] WHITESPACE_NL = {'{', '[', '('};
 
     private int lastTypePosition = -1;
 
@@ -82,7 +82,7 @@ public class CodeEditor extends CodeArea {
             String additionalSpace = "";
             if (whitespace.find())
                 additionalSpace = whitespace.group();
-            if (lastCharacter == '{') {
+            if (Arrays.stream(WHITESPACE_NL).anyMatch(c -> c == lastCharacter)) {
                 this.insertText(position, additionalSpace + TAB + "\n" + additionalSpace);
                 int anchor = position + TAB.length() + additionalSpace.length();
                 //workaround
@@ -102,13 +102,14 @@ public class CodeEditor extends CodeArea {
      * autocompletion (e.g. "(" is immediately followed by ")")
      */
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-        int position = this.getCaretPosition() - 1;
-        if (position > 0 && oldValue.length() < newValue.length() && lastTypePosition != position) {
-            char lastCharacter = newValue.charAt(position);
-            lastTypePosition = position;
-            if (followingCharacter.containsKey(lastCharacter)) {
-                this.insertText(position + 1, followingCharacter.get(lastCharacter).toString());
-            }
+        int position = this.getCaretPosition();
+        if (lastTypePosition != position && oldValue.length() < newValue.length()) {
+            REPEATING_STRING.keySet().forEach(string -> {
+                if (position >= (string.length()) && newValue.substring(position - string.length(), position).equals(string)) {
+                    this.insertText(position , REPEATING_STRING.get(string));
+                    lastTypePosition = position;
+                }
+            });
         }
         this.setStyleSpans(0, computeHighlighting(newValue));
     }
@@ -146,10 +147,11 @@ public class CodeEditor extends CodeArea {
     }
 
     private static void initFollowingCharacter() {
-        followingCharacter.put('(', ')');
-        followingCharacter.put('[', ']');
-        followingCharacter.put('{', '}');
-        followingCharacter.put('<', '>');
+        REPEATING_STRING.put("(", ")");
+        REPEATING_STRING.put("[", "]");
+        REPEATING_STRING.put("{", "}");
+        REPEATING_STRING.put("<", ">");
+        REPEATING_STRING.put("/*", "*/");
     }
 
 }
