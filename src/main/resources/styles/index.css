@@ -46,45 +46,48 @@
 
 /*Code editor*/
 .code-editor {
+    -fx-background-color: #1B1139;
 }
 
 .code-editor .text {
-        -fx-font-family: "monospace" !important;
+    -fx-font-family: "monospace" !important;
+    -fx-font-weight: 500;
 }
 
 .syntax-keyword {
     -fx-font-weight: bold;
-	-fx-fill: #FF3D23;
+	-fx-fill: #A54AFF;
 }
 
 .syntax-symbol {
-    -fx-fill: teal;
+    -fx-fill: #AA80D4;
 }
 
 .syntax-control {
-    -fx-fill: red;
+    -fx-font-weight: bold;
+    -fx-fill: #DEBDFF;
 }
 
 .syntax-function {
-    -fx-fill: lightgray;
+    -fx-fill: #AF6EF1;
 }
 
 .syntax-comment {
-    -fx-fill: gray;
+    -fx-fill: #656565;
 }
 
 .syntax-string {
-    -fx-fill: gray;
+    -fx-fill: #139CFF;
 }
 
 .paragraph-box:has-caret {
-    -fx-background-color: #381A90;
+    -fx-background-color: #201444;
 }
 
 .lineno {
     -fx-pref-width: 50px;
     -fx-font-size: 16px;
-    -fx-background-color: #1A0A47;
+    -fx-background-color: #130A2E;
 }
 
 .caret {

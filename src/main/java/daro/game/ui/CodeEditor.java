@@ -1,7 +1,10 @@
 package daro.game.ui;
 
 import daro.game.main.Game;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
@@ -43,7 +46,8 @@ public class CodeEditor extends CodeArea {
     /**
      * Constants for Editor features
      */
-    private static final HashMap<Character, Character> followingCharacter = new HashMap<>(){};
+    private static final HashMap<Character, Character> followingCharacter = new HashMap<>() {
+    };
 
     private int lastTypePosition = -1;
 
@@ -59,8 +63,27 @@ public class CodeEditor extends CodeArea {
         this.setPrefWidth(Game.WIDTH);
         initFollowingCharacter();
         this.setParagraphGraphicFactory(LineNumberFactory.get(this));
-        this.setStyle("-fx-background-color: #200D57;");
         this.textProperty().addListener(this::handleTextChange);
+
+        // auto-indent: insert previous line's indents on enter
+        final Pattern whiteSpace = Pattern.compile("^\\s+");
+        this.addEventHandler(KeyEvent.KEY_PRESSED, KE ->
+        {
+            if (KE.getCode() == KeyCode.ENTER) {
+                int position = this.getCaretPosition();
+                int paragraph = this.getCurrentParagraph();
+                char lastCharacter = this.getText().charAt(position - 2);
+                if(lastCharacter == '{') {
+                    this.insertText(position, "\t ");
+                    this.insertText(position + 2, "\n");
+                    this.displaceCaret(position + 1);
+                }
+                Matcher whitespace = whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0));
+                if (whitespace.find())
+                    this.insertText(position, whitespace.group());
+            }
+        });
+
     }
 
     /**
