@@ -48,6 +48,9 @@
 .code-editor {
     -fx-background-color: #1B1139;
 }
+.code-editor .selection {
+    -fx-fill: #442899;
+}
 
 .code-editor .text {
     -fx-font-family: "monospace" !important;

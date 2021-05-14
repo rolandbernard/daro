@@ -24,6 +24,7 @@ public class CodeEditor extends CodeArea {
     private static final String[] FUNCTIONS = {"(?<=(^|\\s))(.*)?(\\s)?(?=((\\s+)?\\())"};
     private static final String[] COMMENTS = {"\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"};
     private static final String[] STRINGS = {"\\\".*?\\\"", "\\'.*?\\'"};
+    private static final String TAB = "    ";
 
     private static String generateBoundedPattern(String... pattern) {
         return "(\\b(" + String.join("|", pattern) + ")\\b)";
@@ -68,25 +69,33 @@ public class CodeEditor extends CodeArea {
     }
 
     /**
-     * EventHandler for key presses: automatic indentation
+     * EventHandler for key presses: automatic indentation and tab update
      */
     private void handleKeyPress(KeyEvent keyEvent) {
-        Pattern whiteSpace = Pattern.compile("^\\s+");
         if (keyEvent.getCode() == KeyCode.ENTER) {
             int position = this.getCaretPosition();
             int paragraph = this.getCurrentParagraph();
             char lastCharacter = this.getText().charAt(position - 2);
+
+            Pattern whiteSpace = Pattern.compile("^\\s+");
             Matcher whitespace = whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0));
             String additionalSpace = "";
             if (whitespace.find())
                 additionalSpace = whitespace.group();
-            if(lastCharacter == '{') {
-                this.insertText(position, additionalSpace + "\t \n" + additionalSpace);
-                int anchor = position + 1 + additionalSpace.length();
+            if (lastCharacter == '{') {
+                this.insertText(position, additionalSpace + TAB + "\n" + additionalSpace);
+                int anchor = position + TAB.length() + additionalSpace.length();
+                //workaround
                 this.selectRange(anchor, anchor);
+            } else {
+                insertText(position, additionalSpace);
             }
+        } else if (keyEvent.getCode() == KeyCode.TAB) {
+            //Change TAB width
+            this.replaceText(this.getCaretPosition() - 1, this.getCaretPosition(), TAB);
         }
     }
+
 
     /**
      * EventHandler for Text changes: updates syntax highlighting and enables
