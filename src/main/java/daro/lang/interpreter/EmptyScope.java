@@ -1,5 +1,7 @@
 package daro.lang.interpreter;
 
+import java.util.Map;
+
 import daro.lang.values.UserObject;
 
 /**
@@ -42,5 +44,10 @@ public class EmptyScope implements Scope {
     @Override
     public String toString() {
         return "{}";
+    }
+
+    @Override
+    public Map<String, UserObject> getCompleteMapping() {
+        return Map.copyOf(Map.of());
     }
 }

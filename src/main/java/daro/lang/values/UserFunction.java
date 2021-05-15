@@ -1,8 +1,5 @@
 package daro.lang.values;
 
-import daro.lang.interpreter.EmptyScope;
-import daro.lang.interpreter.Scope;
-
 /**
  * This {@link UserObject} represents an instance of a function.
  * 
@@ -13,12 +10,6 @@ public abstract class UserFunction extends UserObject {
     @Override
     public UserType getType() {
         return new UserTypeFunction();
-    }
-
-    @Override
-    public Scope getMemberScope() {
-        // TODO: add methods
-        return new EmptyScope();
     }
 
     /**

@@ -1,5 +1,6 @@
 package daro.lang.values;
 
+import daro.lang.interpreter.EmptyScope;
 import daro.lang.interpreter.Scope;
 
 /**
@@ -16,10 +17,14 @@ public abstract class UserObject {
     public abstract UserType getType();
 
     /**
-     * This function should return the {@link Scope} that is used for member access.
+     * This function should return the {@link Scope} that is used for member access. Objects that
+     * have more variables should overwrite this method, but still keep the result from this as a
+     * parent scope.
      * @return The member scope of the object
      */
-    public abstract Scope getMemberScope();
+    public Scope getMemberScope() {
+        return new EmptyScope();
+    }
 
     /**
      * This function should return true if the value is considered true for the purpose of

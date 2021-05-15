@@ -1,16 +1,7 @@
 package daro.lang.values;
 
-import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import daro.lang.ast.AstFunction;
-import daro.lang.ast.AstSymbol;
-import daro.lang.interpreter.BlockScope;
-import daro.lang.interpreter.Executor;
-import daro.lang.interpreter.Scope;
 
 /**
  * This {@link UserObject} represents an instance of a function executing a {@link Function}. This
@@ -43,6 +34,26 @@ public class UserLambdaFunction extends UserFunction {
             function.accept(params);
             return null;
         };
+    }
+
+    /**
+     * Create a {@link UserFunction} from a {@link Function} that accepts a variable number of
+     * parameters.
+     * @param parameters The number of parameters the function accepts
+     * @param function The {@link Function} the fuction executes
+     */
+    public UserLambdaFunction(Function<UserObject[], UserObject> function) {
+        this(-1, function);
+    }
+
+    /**
+     * Create a {@link UserFunction} from a {@link Consumer} that accepts a variable number of
+     * parameters.
+     * @param parameters The number of parameters the function accepts
+     * @param function The {@link Consumer} the fuction executes
+     */
+    public UserLambdaFunction(Consumer<UserObject[]> function) {
+        this(-1, function);
     }
 
     @Override

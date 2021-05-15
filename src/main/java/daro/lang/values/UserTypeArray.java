@@ -1,8 +1,11 @@
 package daro.lang.values;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import daro.lang.ast.AstInitializer;
+import daro.lang.ast.AstNode;
+import daro.lang.interpreter.Executor;
+import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 
 /**
@@ -14,13 +17,21 @@ public class UserTypeArray extends UserType {
 
     @Override
     public UserObject instantiate() {
-        return new UserArray(List.of());
+        return new UserArray(new ArrayList<>());
     }
 
     @Override
     public UserObject instantiate(Scope scope, AstInitializer initializer) {
-        // TODO: implement using executor
-        return null;
+        UserArray array = (UserArray)instantiate();
+        for (AstNode value : initializer.getValues()) {
+            UserObject object = Executor.execute(scope, value);
+            if (object != null) {
+                array.pushValue(object);
+            } else {
+                throw new InterpreterException(value.getPosition(), "Value must not be undefined");
+            }
+        }
+        return array;
     }
 
     @Override

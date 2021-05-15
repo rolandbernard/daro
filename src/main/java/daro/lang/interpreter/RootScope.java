@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class RootScope implements Scope {
     private static final Map<String, UserObject> variables;
 
+    // Fill the variables mapping with the root variables.
     static {
         variables = new HashMap<>();
         // Types
@@ -33,12 +34,12 @@ public class RootScope implements Scope {
         variables.put("typeof", new UserLambdaFunction(1, params -> {
             return params[0].getType();
         }));
-        variables.put("print", new UserLambdaFunction(-1, params -> {
+        variables.put("print", new UserLambdaFunction(params -> {
             for (UserObject object : params) {
                 System.out.print(object.toString());
             }
         }));
-        variables.put("println", new UserLambdaFunction(-1, params -> {
+        variables.put("println", new UserLambdaFunction(params -> {
             for (UserObject object : params) {
                 System.out.print(object.toString());
             }
@@ -85,5 +86,10 @@ public class RootScope implements Scope {
             .collect(Collectors.joining(", ")));
         ret.append("}");
         return ret.toString();
+    }
+
+    @Override
+    public Map<String, UserObject> getCompleteMapping() {
+        return Map.copyOf(variables);
     }
 }

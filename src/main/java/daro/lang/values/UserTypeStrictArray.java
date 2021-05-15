@@ -1,11 +1,13 @@
 package daro.lang.values;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import daro.lang.ast.AstInitializer;
+import daro.lang.ast.AstNode;
+import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 
 /**
@@ -44,20 +46,35 @@ public class UserTypeStrictArray extends UserType {
     @Override
     public UserObject instantiate() {
         if (size == null) {
-            return new UserArray(List.of());
+            return new UserArray(new ArrayList<>());
         } else {
             return new UserArray(
                 Stream.generate(() -> base.instantiate())
                     .limit(size)
-                    .collect(Collectors.toList())
+                    .collect(Collectors.toCollection(() -> new ArrayList<>()))
             );
         }
     }
 
     @Override
     public UserObject instantiate(Scope scope, AstInitializer initializer) {
-        // TODO: implement using executor
-        return null;
+        ArrayList<UserObject> list = new ArrayList<>();
+        if (size != null && size < initializer.getValues().length) {
+            throw new InterpreterException(initializer.getPosition(), "Initializer is longer that the array");
+        }
+        for (AstNode value : initializer.getValues()) {
+            if (value instanceof AstInitializer) {
+                list.add(base.instantiate(scope, (AstInitializer)value));
+            } else {
+                list.add(base.instantiate(scope, new AstInitializer(value.getPosition(), new AstNode[] { value })));
+            }
+        }
+        if (size != null) {
+            for (int i = initializer.getValues().length; i < size; i++) {
+                list.add(base.instantiate());
+            }
+        }
+        return new UserArray(list);
     }
 
     @Override

@@ -13,6 +13,14 @@ public class InterpreterException extends IllegalArgumentException {
     private final Position position;
 
     /**
+     * Create a {@link InterpreterException} for the given message and without a position.
+     * @param message The message for the exception
+     */
+    public InterpreterException(String message) {
+        this(null, message);
+    }
+
+    /**
      * Create a {@link InterpreterException} for the given position and message.
      * @param position The {@link Position} that caused the exception
      * @param message The message for the exception

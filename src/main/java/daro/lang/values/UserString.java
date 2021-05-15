@@ -1,8 +1,5 @@
 package daro.lang.values;
 
-import daro.lang.interpreter.EmptyScope;
-import daro.lang.interpreter.Scope;
-
 /**
  * This {@link UserObject} represents a string value.
  * 
@@ -11,10 +8,18 @@ import daro.lang.interpreter.Scope;
 public class UserString extends UserObject {
     private final String value;
 
+    /**
+     * Create a new {@link UserString} from the given value.
+     * @param value The value the {@link UserString} should represent
+     */
     public UserString(String value) {
         this.value = value;
     }
 
+    /**
+     * Returns the value stored inside the {@link UserString} as a {@link String} object.
+     * @return The value stored in the object
+     */
     public String getValue() {
         return value;
     }
@@ -22,12 +27,6 @@ public class UserString extends UserObject {
     @Override
     public UserType getType() {
         return new UserTypeString();
-    }
-
-    @Override
-    public Scope getMemberScope() {
-        // TODO: add methods
-        return new EmptyScope();
     }
 
     @Override

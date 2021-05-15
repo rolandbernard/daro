@@ -1,5 +1,7 @@
 package daro.lang.interpreter;
 
+import java.util.Map;
+
 import daro.lang.values.UserObject;
 
 /**
@@ -33,4 +35,11 @@ public interface Scope {
      * @return A {@link VariableLocation} to store the variable at
      */
     public VariableLocation getVariableLocation(String name);
+
+    /**
+     * Returns the complete mapping of this scope. i.e. A map of every possible name that would return a
+     * non-null value from getVariableValue.
+     * @return The complete mapping
+     */
+    public Map<String, UserObject> getCompleteMapping();
 }

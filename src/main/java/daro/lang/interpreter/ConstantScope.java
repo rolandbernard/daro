@@ -88,4 +88,18 @@ public class ConstantScope implements Scope {
         ret.append("}");
         return ret.toString();
     }
+
+    @Override
+    public Map<String, UserObject> getCompleteMapping() {
+        Map<String, UserObject> result;
+        if (parent != null) {
+            result = parent.getCompleteMapping();
+        } else {
+            result = Map.copyOf(Map.of());
+        }
+        for (Map.Entry<String, UserObject> entry : variables.entrySet()) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
 }
