@@ -11,6 +11,7 @@ import daro.lang.values.*;
  */
 public class LocationEvaluator implements Visitor<VariableLocation> {
     private final Scope scope;
+    private static ExecutionObserver[] observers;
 
     /**
      * Create a new {@link LocationEvaluator} for execution in the given scope.
@@ -18,6 +19,14 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
      */
     public LocationEvaluator(Scope scope) {
         this.scope = scope;
+    }
+
+    /**
+     * This method will set the observers used during the execution of all operations.
+     * @param observers The observers to execute with
+     */
+    public static void setObservers(ExecutionObserver[] observers) {
+        LocationEvaluator.observers = observers;
     }
 
     /**
@@ -37,7 +46,18 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
      */
     public VariableLocation execute(AstNode program) {
         if (program != null) {
-            return program.accept(this);
+            if (observers == null) {
+                return program.accept(this);
+            } else {
+                for (ExecutionObserver observer : observers) {
+                    observer.beforeNodeLocalization(program, scope);
+                }
+                VariableLocation result = program.accept(this);
+                for (ExecutionObserver observer : observers) {
+                    observer.afterNodeLocalization(program, result, scope);
+                }
+                return result;
+            }
         } else {
             return null;
         }

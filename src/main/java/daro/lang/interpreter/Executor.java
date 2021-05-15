@@ -17,6 +17,7 @@ import daro.lang.values.*;
  */
 public class Executor implements Visitor<UserObject> {
     private final Scope scope;
+    private static ExecutionObserver[] observers;
 
     /**
      * Create a new {@link Executor} for execution in the given scope.
@@ -24,6 +25,14 @@ public class Executor implements Visitor<UserObject> {
      */
     public Executor(Scope scope) {
         this.scope = scope;
+    }
+
+    /**
+     * This method will set the observers used during the execution of all operations.
+     * @param observers The observers to execute with
+     */
+    public static void setObservers(ExecutionObserver[] observers) {
+        Executor.observers = observers;
     }
 
     /**
@@ -44,7 +53,18 @@ public class Executor implements Visitor<UserObject> {
     public UserObject execute(AstNode program) {
         if (program != null) {
             try {
-                return program.accept(this);
+                if (observers == null) {
+                    return program.accept(this);
+                } else {
+                    for (ExecutionObserver observer : observers) {
+                        observer.beforeNodeExecution(program, scope);
+                    }
+                    UserObject result = program.accept(this);
+                    for (ExecutionObserver observer : observers) {
+                        observer.afterNodeExecution(program, result, scope);
+                    }
+                    return result;
+                }
             } catch (InterpreterException error) {
                 if (error.getPosition() == null) {
                     // Some exceptions are thrown in locations without positional information.

@@ -13,31 +13,35 @@ import daro.lang.values.UserObject;
 public interface ExecutionObserver {
 
     /**
-     * This method is called before execution of a ast node.
+     * This method is called before execution of a {@link AstNode} inside the given {@link Scope}.
      * @param node The node that will be executed
+     * @param scope The scope the ast node will be executed in
      */
-    public void beforeNodeExecution(AstNode node);
+    public void beforeNodeExecution(AstNode node, Scope scope);
 
     /**
      * This method is called after successful execution of the given ast node. And gets called with
      * the value that was returned by the nodes execution.
      * @param node The node that was executed
      * @param value The value returned by node execution
+     * @param scope The scope the ast was executed in
      */
-    public void afterNodeExecution(AstNode node, UserObject value);
+    public void afterNodeExecution(AstNode node, UserObject value, Scope scope);
 
     /**
      * This method will be called before trying to find the {@link VariableLocation} corresponding
-     * to the given {@link AstNode}.
+     * to the given {@link AstNode} inside the given {@link Scope}.
      * @param node The node that will be executed
+     * @param scope The scope the ast node will be executed in
      */
-    public void beforeNodeLocalization(AstNode node);
+    public void beforeNodeLocalization(AstNode node, Scope scope);
 
     /**
      * This method will be called after having successfully found the {@link VariableLocation} for
      * the given {@link AstNode}.
      * @param node The ast node that was execited
      * @param location The {@link VariableLocation} that resulted from the ast node
+     * @param scope The scope the ast was executed in
      */
-    public void afterNodeLocalization(AstNode node, VariableLocation location);
+    public void afterNodeLocalization(AstNode node, VariableLocation location, Scope scope);
 }
