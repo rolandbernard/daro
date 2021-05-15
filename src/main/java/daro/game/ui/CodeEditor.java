@@ -104,6 +104,7 @@ public class CodeEditor extends CodeArea {
 
     /**
      * EventHandler for key presses: automatic indentation and better TAB size
+     * @param keyEvent TODO TOFIX
      */
     private void handleKeyPress(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ENTER) {
@@ -134,6 +135,9 @@ public class CodeEditor extends CodeArea {
     /**
      * EventHandler for Text changes: updates syntax highlighting and enables
      * autocompletion (e.g. "(" is immediately followed by ")")
+     * @param observableValue TODO TOFIX
+     * @param oldValue TODO TOFIX
+     * @param newValue TODO TOFIX
      */
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int position = this.getCaretPosition();
@@ -173,6 +177,8 @@ public class CodeEditor extends CodeArea {
     /**
      * Parses the Code for syntax and sets CSS classes
      * for further styling to enable syntax highlighting
+     * @param text TODO TOFIX
+     * @return TODO TOFIX
      */
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
         Matcher matcher = SYNTAX_PATTERN.matcher(text);

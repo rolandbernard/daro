@@ -10,6 +10,7 @@ public class LevelView extends View {
     /**
      * <strong>UI: <em>View</em></strong><br>
      * A view to display and solve levels.
+     * @param level TODO TOFIX
      */
     public LevelView(Level level) {
         this.level = level;

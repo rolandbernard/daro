@@ -48,6 +48,7 @@ public class Navigation extends VBox {
 
     /**
      * Generates the navigation item and links them to the pages.
+     * @param defaultPage TODO TOFIX
      * @return a vertical box containing the links
      */
     private VBox getNavigation(Page defaultPage) {

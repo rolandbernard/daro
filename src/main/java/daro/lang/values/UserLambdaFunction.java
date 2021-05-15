@@ -39,7 +39,6 @@ public class UserLambdaFunction extends UserFunction {
     /**
      * Create a {@link UserFunction} from a {@link Function} that accepts a variable number of
      * parameters.
-     * @param parameters The number of parameters the function accepts
      * @param function The {@link Function} the fuction executes
      */
     public UserLambdaFunction(Function<UserObject[], UserObject> function) {
@@ -49,7 +48,6 @@ public class UserLambdaFunction extends UserFunction {
     /**
      * Create a {@link UserFunction} from a {@link Consumer} that accepts a variable number of
      * parameters.
-     * @param parameters The number of parameters the function accepts
      * @param function The {@link Consumer} the fuction executes
      */
     public UserLambdaFunction(Consumer<UserObject[]> function) {
