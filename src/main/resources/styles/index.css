@@ -1,0 +1,103 @@
+/*General*/
+.text {
+    -fx-fill: #eee;
+    -fx-font-family: "Montserrat";
+    -fx-font-size: 16px;
+}
+
+.icon {
+    -fx-font-family: "Material Icons";
+    -fx-font-weight: normal;
+    -fx-fill: #fff;
+}
+
+/*Navigation*/
+.nav-item.active {
+    -fx-background-color: #FF3D23;
+}
+
+
+.track, .increment-button, .decrement-button {
+    -fx-background-color: #200D57;
+    -fx-border-color: #200D57;
+    -fx-stroke-color: #200D57;
+}
+
+.thumb {
+    -fx-background-color: #fff;
+}
+
+/*Heading*/
+.heading {
+    -fx-font-weight: bold;
+}
+
+.heading.large {
+    -fx-font-size: 48px;
+}
+
+.heading.small {
+    -fx-font-size: 24px;
+}
+
+-heading-description {
+    -fx-font-size: 20px;
+}
+
+/*Code editor*/
+.code-editor {
+    -fx-background-color: #272D3F;
+}
+
+.code-editor .selection {
+    -fx-fill: #323B53;
+}
+
+.paragraph-box:has-caret {
+    -fx-background-color: #293247;
+}
+
+
+.syntax-keyword {
+    -fx-font-weight: bold;
+	-fx-fill: #FF76E1;
+}
+
+.syntax-symbol {
+    -fx-fill: #939393;
+}
+
+.syntax-control {
+    -fx-font-weight: bold;
+    -fx-fill: #FFBB56;
+}
+
+.syntax-function {
+    -fx-fill: #B6CAFF;
+}
+
+.syntax-comment {
+    -fx-fill: #595959;
+}
+
+.syntax-string {
+    -fx-fill: #61EA90;
+}
+
+.syntax-digit {
+    -fx-fill: #52C1FF;
+}
+
+.lineno {
+    -fx-pref-width: 50px;
+    -fx-font-size: 16px;
+    -fx-background-color: #1C202D;
+}
+
+.code-editor .text {
+    -fx-font-family: "monospace" !important;
+    -fx-font-weight: 500;
+}
+.caret {
+    -fx-stroke: white;
+}
