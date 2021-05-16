@@ -5,7 +5,7 @@ import daro.lang.values.UserObject;
 
 /**
  * This interface can be implemented by classes that wish to observe the execution of a program
- * insode the daro interpreter. This interface can be used to implement breakpoint or profiling for
+ * inside the daro interpreter. This interface can be used to implement breakpoint or profiling for
  * the executed code.
  *
  * @author Roland Bernard

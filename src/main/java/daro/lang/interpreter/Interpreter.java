@@ -75,12 +75,7 @@ public class Interpreter {
      */
     public UserObject execute(AstNode ast, ExecutionObserver[] observers) {
         ScopeInitializer.initialize(globalScope, ast);
-        Executor.setObservers(observers);
-        LocationEvaluator.setObservers(observers);
-        UserObject result = Executor.execute(globalScope, ast);
-        LocationEvaluator.setObservers(null);
-        Executor.setObservers(null);
-        return result;
+        return Executor.execute(globalScope, observers, ast);
     }
 
     /**
@@ -89,6 +84,7 @@ public class Interpreter {
      * code will be accessible for subsequent execute calls. Also install the given
      * {@link ExecutionObserver}s before execution and uninstall them afterwards.
      * @param source The code that should be executed
+     * @param observers The observers to execute with
      * @return The result of the execution
      * @throws InterpreterException It the code causes an exception during execution
      * @throws ParsingException It the source cannot be parsed

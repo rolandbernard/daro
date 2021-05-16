@@ -1,5 +1,7 @@
 package daro.lang.values;
 
+import daro.lang.interpreter.ExecutionObserver;
+
 /**
  * This {@link UserObject} represents an instance of a function.
  * 
@@ -22,9 +24,20 @@ public abstract class UserFunction extends UserObject {
      * Execute the function with the given parameters. This must be called with the correct amount
      * of parameters otherwise the behavior is undefined.
      * @param params The params to call the function with
+     * @param observers The observers to execute with
      * @return The return value of the function
      */
-    public abstract UserObject execute(UserObject[] params);
+    public abstract UserObject execute(UserObject[] params, ExecutionObserver[] observers);
+
+    /**
+     * Execute the function with the given parameters. This must be called with the correct amount
+     * of parameters otherwise the behavior is undefined.
+     * @param params The params to call the function with
+     * @return The return value of the function
+     */
+    public UserObject execute(UserObject[] params) {
+        return execute(params, null);
+    }
 
     @Override
     public boolean isTrue() {

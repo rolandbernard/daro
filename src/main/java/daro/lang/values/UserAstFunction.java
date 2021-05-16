@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import daro.lang.ast.AstFunction;
 import daro.lang.ast.AstSymbol;
 import daro.lang.interpreter.BlockScope;
+import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.Executor;
 import daro.lang.interpreter.ReturnException;
 import daro.lang.interpreter.Scope;
@@ -36,14 +37,14 @@ public class UserAstFunction extends UserFunction {
     }
 
     @Override
-    public UserObject execute(UserObject[] params) {
+    public UserObject execute(UserObject[] params, ExecutionObserver[] observers) {
         BlockScope parameterScope = new BlockScope(scope);
         AstSymbol[] parameters = ast.getParameters();
         for (int i = 0; i < params.length && i < parameters.length; i++) {
             parameterScope.forceNewVariable(parameters[i].getName(), params[i]);
         }
         try {
-            return Executor.execute(parameterScope, ast.getBody());
+            return Executor.execute(parameterScope, observers, ast.getBody());
         } catch (ReturnException returned) {
             return returned.getReturnValue();
         }

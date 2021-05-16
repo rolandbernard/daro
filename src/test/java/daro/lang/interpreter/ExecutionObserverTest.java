@@ -68,6 +68,13 @@ public class ExecutionObserverTest {
     }
 
     @Test
+    void dontCountOtherExecutes() {
+        interpreter.execute("a = 1; b = 2; c = 3; d = 4;", observers);
+        interpreter.execute("a = 1; b = 2; c = 3; d = 4;");
+        assertEquals(8, observer.assignments);
+    }
+
+    @Test
     void countAssignmentsInBlock() {
         interpreter.execute("if true { a = 1; b = 2; c = 3 }", observers);
         assertEquals(6, observer.assignments);
@@ -97,6 +104,13 @@ public class ExecutionObserverTest {
         interpreter.execute("class Test { x = 0; y = 1 }");
         interpreter.execute("new [10]Test", observers);
         assertEquals(40, observer.assignments);
+    }
+
+    @Test
+    void countAssignmentsInitializingClass() {
+        interpreter.execute("class Test { x = 0; y = 1 }");
+        interpreter.execute("new Test { x = x = 5, y = y = 6, z = z = 7 }", observers);
+        assertEquals(10, observer.assignments);
     }
 
     @Test
@@ -135,6 +149,12 @@ public class ExecutionObserverTest {
     void countAdditionsFullOr() {
         interpreter.execute("0 == 1 + 1 || 2 == 1 + 1", observers);
         assertEquals(4, observer.additions);
+    }
+
+    @Test
+    void countInitializerAdditions() {
+        interpreter.execute("new int { 1 + 2 + 3 + 4 }", observers);
+        assertEquals(6, observer.additions);
     }
 
     @Test

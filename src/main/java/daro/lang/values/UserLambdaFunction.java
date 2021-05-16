@@ -1,7 +1,11 @@
 package daro.lang.values;
 
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import daro.lang.interpreter.ExecutionObserver;
 
 /**
  * This {@link UserObject} represents an instance of a function executing a {@link Function}. This
@@ -11,7 +15,7 @@ import java.util.function.Function;
  */
 public class UserLambdaFunction extends UserFunction {
     private final int parameters;
-    private final Function<UserObject[], UserObject> function;
+    private final BiFunction<UserObject[], ExecutionObserver[], UserObject> function;
 
     /**
      * Create a {@link UserFunction} from a parameter count and a {@link Function}.
@@ -19,6 +23,18 @@ public class UserLambdaFunction extends UserFunction {
      * @param function The {@link Function} the fuction executes
      */
     public UserLambdaFunction(int parameters, Function<UserObject[], UserObject> function) {
+        this.parameters = parameters;
+        this.function = (params, observers) -> {
+            return function.apply(params);
+        };
+    }
+
+    /**
+     * Create a {@link UserFunction} from a parameter count and a {@link Function}.
+     * @param parameters The number of parameters the function accepts
+     * @param function The {@link BiFunction} the fuction executes
+     */
+    public UserLambdaFunction(int parameters, BiFunction<UserObject[], ExecutionObserver[], UserObject> function) {
         this.parameters = parameters;
         this.function = function;
     }
@@ -30,8 +46,21 @@ public class UserLambdaFunction extends UserFunction {
      */
     public UserLambdaFunction(int parameters, Consumer<UserObject[]> function) {
         this.parameters = parameters;
-        this.function = params -> {
+        this.function = (params, observers) -> {
             function.accept(params);
+            return null;
+        };
+    }
+
+    /**
+     * Create a {@link UserFunction} from a parameter count and a {@link Consumer}.
+     * @param parameters The number of parameters the function accepts
+     * @param function The {@link BiConsumer} the fuction executes
+     */
+    public UserLambdaFunction(int parameters, BiConsumer<UserObject[], ExecutionObserver[]> function) {
+        this.parameters = parameters;
+        this.function = (params, observers) -> {
+            function.accept(params, observers);
             return null;
         };
     }
@@ -60,8 +89,8 @@ public class UserLambdaFunction extends UserFunction {
     }
 
     @Override
-    public UserObject execute(UserObject[] params) {
-        return function.apply(params);
+    public UserObject execute(UserObject[] params, ExecutionObserver[] observers) {
+        return function.apply(params, observers);
     }
 
     @Override
