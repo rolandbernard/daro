@@ -43,6 +43,7 @@ public class UserClass extends UserObject {
 
     /**
      * Initialize the class by running the code directly inside the body of the class definition.
+     * @param observers The observers for this execution
      */
     private void initialize(ExecutionObserver[] observers) {
         AstSequence sequence = classType.getDefinition().getBody().getSequence();
