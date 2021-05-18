@@ -27,7 +27,8 @@ public class LevelItem extends VBox {
         this.setStyle("-fx-background-radius: 25px; -fx-background-color: #381A90; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);");
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
-        this.setOnMouseClicked(event -> Game.setView(new LevelView(level)));
+        // TOOD: Can not reference non-static method!
+        // this.setOnMouseClicked(event -> Game.setView(new LevelView(level)));
     }
 
     /**
