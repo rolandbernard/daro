@@ -15,4 +15,3 @@ public final class AstBitwiseOr extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

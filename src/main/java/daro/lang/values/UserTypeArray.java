@@ -22,7 +22,7 @@ public class UserTypeArray extends UserType {
 
     @Override
     public UserObject instantiate(Scope scope, AstInitializer initializer) {
-        UserArray array = (UserArray)instantiate();
+        UserArray array = (UserArray) instantiate();
         for (AstNode value : initializer.getValues()) {
             UserObject object = Executor.execute(scope, value);
             if (object != null) {

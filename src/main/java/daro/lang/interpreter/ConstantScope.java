@@ -6,8 +6,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * This class implements a constant scope. It contains the predefined variables that can not be
- * changed again by the user.
+ * This class implements a constant scope. It contains the predefined variables that can not be changed again by the
+ * user.
  * 
  * @author Roland Bernard
  */
@@ -17,18 +17,22 @@ public class ConstantScope implements Scope {
 
     /**
      * Creates a new constant scope filling it with the given variable mapping.
-     * @param mapping The parring from names to values to use
+     * 
+     * @param mapping
+     *            The parring from names to values to use
      */
     public ConstantScope(Map<String, UserObject> mapping) {
         this(null, mapping);
     }
 
     /**
-     * Creates a new constant scope filling it with the given variable mapping, and pointing it to
-     * the given parent scope. The parent scope may change independently of the constant scope
-     * itself.
-     * @param parent The parent scope
-     * @param mapping The parring from names to values to use
+     * Creates a new constant scope filling it with the given variable mapping, and pointing it to the given parent
+     * scope. The parent scope may change independently of the constant scope itself.
+     * 
+     * @param parent
+     *            The parent scope
+     * @param mapping
+     *            The parring from names to values to use
      */
     public ConstantScope(Scope parent, Map<String, UserObject> mapping) {
         this.parent = parent;
@@ -70,9 +74,8 @@ public class ConstantScope implements Scope {
     @Override
     public boolean equals(Object object) {
         if (object instanceof ConstantScope) {
-            ConstantScope scope = (ConstantScope)object;
-            return variables.equals(scope.variables)
-                && Objects.equals(parent, scope.parent);
+            ConstantScope scope = (ConstantScope) object;
+            return variables.equals(scope.variables) && Objects.equals(parent, scope.parent);
         } else {
             return false;
         }
@@ -82,9 +85,8 @@ public class ConstantScope implements Scope {
     public String toString() {
         StringBuilder ret = new StringBuilder();
         ret.append("{");
-        ret.append(variables.entrySet().stream()
-            .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-            .collect(Collectors.joining(", ")));
+        ret.append(variables.entrySet().stream().map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
+                .collect(Collectors.joining(", ")));
         ret.append("}");
         return ret.toString();
     }

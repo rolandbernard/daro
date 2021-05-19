@@ -12,7 +12,9 @@ public class UserInteger extends UserNumber {
 
     /**
      * Create a new {@link UserInteger} from the given value.
-     * @param value The value to be stored in the {@link UserInteger}
+     * 
+     * @param value
+     *            The value to be stored in the {@link UserInteger}
      */
     public UserInteger(BigInteger value) {
         this.value = value;
@@ -20,6 +22,7 @@ public class UserInteger extends UserNumber {
 
     /**
      * Returns the value stored inside the {@link UserInteger}
+     * 
      * @return The value stored in this object
      */
     public BigInteger getValue() {
@@ -39,7 +42,7 @@ public class UserInteger extends UserNumber {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserInteger) {
-            UserInteger integer = (UserInteger)object;
+            UserInteger integer = (UserInteger) object;
             return value.equals(integer.getValue());
         } else {
             return false;

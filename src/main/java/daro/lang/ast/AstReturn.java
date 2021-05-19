@@ -15,4 +15,3 @@ public final class AstReturn extends AstUnaryNode {
         return visitor.visit(this);
     }
 }
-

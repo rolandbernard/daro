@@ -10,7 +10,9 @@ public class UserReal extends UserNumber {
 
     /**
      * Create a new {@link UserReal} from the given value.
-     * @param value The value that should be stored inside the object
+     * 
+     * @param value
+     *            The value that should be stored inside the object
      */
     public UserReal(double value) {
         this.value = value;
@@ -18,6 +20,7 @@ public class UserReal extends UserNumber {
 
     /**
      * Return the double value of this {@link UserReal}
+     * 
      * @return The value of the object
      */
     public double getValue() {
@@ -37,7 +40,7 @@ public class UserReal extends UserNumber {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserReal) {
-            UserReal real = (UserReal)object;
+            UserReal real = (UserReal) object;
             return value == real.getValue();
         } else {
             return false;

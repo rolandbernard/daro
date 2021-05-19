@@ -15,4 +15,3 @@ public final class AstMoreOrEqual extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

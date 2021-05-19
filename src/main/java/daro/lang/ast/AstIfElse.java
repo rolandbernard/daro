@@ -43,10 +43,9 @@ public final class AstIfElse extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstIfElse) {
-            AstIfElse node = (AstIfElse)obj;
-            return Objects.equals(condition, node.getCondition())
-                && Objects.equals(ifBlock, node.getIf())
-                && Objects.equals(elseBlock, node.getElse());
+            AstIfElse node = (AstIfElse) obj;
+            return Objects.equals(condition, node.getCondition()) && Objects.equals(ifBlock, node.getIf())
+                    && Objects.equals(elseBlock, node.getElse());
         } else {
             return false;
         }
@@ -57,4 +56,3 @@ public final class AstIfElse extends AstNode {
         return "(" + this.getClass().getSimpleName() + " " + condition + " " + ifBlock + " " + elseBlock + ")";
     }
 }
-

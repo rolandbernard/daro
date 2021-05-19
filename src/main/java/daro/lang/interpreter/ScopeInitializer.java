@@ -4,8 +4,8 @@ import daro.lang.ast.*;
 import daro.lang.values.*;
 
 /**
- * This class is used to initialize a scope with all the classes and function that it contains. This
- * is necessary to allow calling of functions before they are defined.
+ * This class is used to initialize a scope with all the classes and function that it contains. This is necessary to
+ * allow calling of functions before they are defined.
  * 
  * @author Roland Bernard
  */
@@ -14,7 +14,9 @@ public class ScopeInitializer implements Visitor<Object> {
 
     /**
      * Create a new {@link ScopeInitializer} for initializing the given scope.
-     * @param scope The scope to initialize
+     * 
+     * @param scope
+     *            The scope to initialize
      */
     public ScopeInitializer(Scope scope) {
         this.scope = scope;
@@ -22,8 +24,11 @@ public class ScopeInitializer implements Visitor<Object> {
 
     /**
      * Iniialize using the given {@link AstNode} the the given {@link Scope}.
-     * @param scope The scope to initialize
-     * @param program The {@link AstNode} to initialize with
+     * 
+     * @param scope
+     *            The scope to initialize
+     * @param program
+     *            The {@link AstNode} to initialize with
      */
     public static void initialize(Scope scope, AstNode program) {
         (new ScopeInitializer(scope)).initialize(program);
@@ -31,7 +36,9 @@ public class ScopeInitializer implements Visitor<Object> {
 
     /**
      * Iniialize using the given {@link AstNode}.
-     * @param program The {@link AstNode} to initialize with
+     * 
+     * @param program
+     *            The {@link AstNode} to initialize with
      */
     public void initialize(AstNode program) {
         if (program != null) {
@@ -61,7 +68,9 @@ public class ScopeInitializer implements Visitor<Object> {
 
     /**
      * Utility function to initialize a binary ast node.
-     * @param ast The ast to initialize with
+     * 
+     * @param ast
+     *            The ast to initialize with
      */
     public void initializeBinary(AstBinaryNode ast) {
         initialize(ast.getLeft());
@@ -211,9 +220,10 @@ public class ScopeInitializer implements Visitor<Object> {
         if (ast.getName() != null) {
             if (scope instanceof BlockScope) {
                 UserTypeClass value = new UserTypeClass(scope, ast);
-                ((BlockScope)scope).forceNewVariable(ast.getName(), value);
+                ((BlockScope) scope).forceNewVariable(ast.getName(), value);
             } else {
-                throw new InterpreterException(ast.getPosition(), "The surrounding scope does not support class definitions");
+                throw new InterpreterException(ast.getPosition(),
+                        "The surrounding scope does not support class definitions");
             }
         }
         return null;
@@ -224,9 +234,10 @@ public class ScopeInitializer implements Visitor<Object> {
         if (ast.getName() != null) {
             if (scope instanceof BlockScope) {
                 UserAstFunction value = new UserAstFunction(scope, ast);
-                ((BlockScope)scope).forceNewVariable(ast.getName(), value);
+                ((BlockScope) scope).forceNewVariable(ast.getName(), value);
             } else {
-                throw new InterpreterException(ast.getPosition(), "The surrounding scope does not support function definitions");
+                throw new InterpreterException(ast.getPosition(),
+                        "The surrounding scope does not support function definitions");
             }
         }
         return null;

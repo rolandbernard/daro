@@ -7,7 +7,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
 public class Game extends Application {
     public static final double HEIGHT = 720;
     public static final double WIDTH = 1280;
@@ -19,8 +18,8 @@ public class Game extends Application {
 
     @Override
     public void start(Stage stage) {
-        //load CSS
-        //TODO: check font paths
+        // load CSS
+        // TODO: check font paths
         MenuView root = new MenuView(new CoursePage());
 
         scene = new Scene(root, WIDTH, HEIGHT);
@@ -36,7 +35,9 @@ public class Game extends Application {
     /**
      *
      * Updates the view of the Game to a given page.
-     * @param view The view game displays
+     * 
+     * @param view
+     *            The view game displays
      *
      */
     public void setView(View view) {

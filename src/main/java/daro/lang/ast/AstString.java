@@ -31,7 +31,7 @@ public final class AstString extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstString) {
-            AstString node = (AstString)obj;
+            AstString node = (AstString) obj;
             return Objects.equals(value, node.getValue());
         } else {
             return false;
@@ -43,4 +43,3 @@ public final class AstString extends AstNode {
         return "\"" + value + "\"";
     }
 }
-

@@ -1,8 +1,7 @@
 package daro.lang.parser;
 
 /**
- * This class can be used to tokenize the input string into {@link Token}
- * objects for easier parsing afterwards.
+ * This class can be used to tokenize the input string into {@link Token} objects for easier parsing afterwards.
  *
  * @author Roland Bernard
  */
@@ -22,7 +21,9 @@ public class Scanner {
 
     /**
      * Create a scanner to operate on the given {@link String}.
-     * @param string The string to operate on
+     * 
+     * @param string
+     *            The string to operate on
      */
     public Scanner(String string) {
         this.string = string;
@@ -31,6 +32,7 @@ public class Scanner {
 
     /**
      * Skip the next whitespace character in the scanner and return if a whitespace was consumed.
+     * 
      * @return true if a character was consumed, otherwise false
      */
     private boolean skipWhitespace() {
@@ -44,6 +46,7 @@ public class Scanner {
 
     /**
      * Skip the next comment starting at offset and return if a comment was consumed.
+     * 
      * @return true if a comment was found, otherwise false
      */
     private boolean skipComments() {
@@ -54,7 +57,7 @@ public class Scanner {
             }
             offset++;
             if (offset > string.length()) {
-            	offset = string.length();
+                offset = string.length();
             }
             return true;
         } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("/*")) {
@@ -71,7 +74,7 @@ public class Scanner {
             }
             offset += 2;
             if (offset > string.length()) {
-            	offset = string.length();
+                offset = string.length();
             }
             return true;
         } else {
@@ -81,7 +84,10 @@ public class Scanner {
 
     /**
      * Return if the giver character is a hexadecimal digit or not.
-     * @param c The character to test
+     * 
+     * @param c
+     *            The character to test
+     * 
      * @return true is c is a hexadecimal digit, otherwise false
      */
     private static boolean isHexDigit(char c) {
@@ -98,11 +104,13 @@ public class Scanner {
 
     /**
      * Return the next {@link Token} starting from offset.
+     * 
      * @return The next {@link Token} or null of end of file
      */
     private Token determineNext() {
         // First skip all whitespaces and comments
-        while (skipWhitespace() || skipComments());
+        while (skipWhitespace() || skipComments())
+            ;
         int start = offset;
         if (offset < string.length()) {
             if (string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
@@ -137,7 +145,8 @@ public class Scanner {
                     if (offset < string.length() && string.charAt(offset) == '.') {
                         // Floating point number literal (e.g. 1.2)
                         offset++;
-                        while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
+                        while (offset < string.length() && string.charAt(offset) >= '0'
+                                && string.charAt(offset) <= '9') {
                             offset++;
                         }
                         isFloat = true;
@@ -145,10 +154,12 @@ public class Scanner {
                     if (offset < string.length() && string.charAt(offset) == 'e') {
                         // Exponent e.g. (1.2e+12)
                         offset++;
-                        if (offset < string.length() && (string.charAt(offset) == '+' || string.charAt(offset) == '-')) {
+                        if (offset < string.length()
+                                && (string.charAt(offset) == '+' || string.charAt(offset) == '-')) {
                             offset++;
                         }
-                        while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
+                        while (offset < string.length() && string.charAt(offset) >= '0'
+                                && string.charAt(offset) <= '9') {
                             offset++;
                         }
                         isFloat = true;
@@ -193,7 +204,8 @@ public class Scanner {
             } else if (Character.isLetter(string.charAt(offset)) || string.charAt(offset) == '_') {
                 // This is an identifier (e.g. main) or keyword (e.g. else)
                 offset++;
-                while (offset < string.length() && (Character.isLetterOrDigit(string.charAt(offset)) || string.charAt(offset) == '_')) {
+                while (offset < string.length()
+                        && (Character.isLetterOrDigit(string.charAt(offset)) || string.charAt(offset) == '_')) {
                     offset++;
                 }
                 String source = string.substring(start, offset);
@@ -238,6 +250,7 @@ public class Scanner {
 
     /**
      * Test if the scanner has a next {@link Token}.
+     * 
      * @return true if the is a next {@link Token}, otherwise false
      */
     public boolean hasNext() {
@@ -247,7 +260,10 @@ public class Scanner {
 
     /**
      * Test if the next {@link Token} is of the given {@link TokenKind}.
-     * @param kind The kind to look for
+     * 
+     * @param kind
+     *            The kind to look for
+     * 
      * @return true if the next {@link Token} has {@link TokenKind} kind, otherwise false
      */
     public boolean hasNext(TokenKind kind) {
@@ -256,7 +272,10 @@ public class Scanner {
 
     /**
      * Test if the next {@link Token} is of one of the given {@link TokenKind}s.
-     * @param kinds The kinds of token to look for
+     * 
+     * @param kinds
+     *            The kinds of token to look for
+     * 
      * @return true if the next {@link Token} has a kind inside kinds, otherwise false
      */
     public boolean hasNext(TokenKind[] kinds) {
@@ -270,6 +289,7 @@ public class Scanner {
 
     /**
      * Return the next {@link Token}.
+     * 
      * @return The next {@link Token}
      */
     public Token next() {
@@ -281,7 +301,9 @@ public class Scanner {
 
     /**
      * Returns the scanner state to before calling next, which returned the given token.
-     * @param token The {@link Token} to revert
+     * 
+     * @param token
+     *            The {@link Token} to revert
      */
     public void revert(Token token) {
         nextToken = token;
@@ -290,7 +312,10 @@ public class Scanner {
 
     /**
      * Return the next {@link Token} if is is of the given {@link TokenKind}.
-     * @param kind The kind to search for
+     * 
+     * @param kind
+     *            The kind to search for
+     * 
      * @return The {@link TokenKind} if the next {@link Token} hast the correct kind, otherwise null
      */
     public Token accept(TokenKind kind) {
@@ -302,8 +327,8 @@ public class Scanner {
     }
 
     /**
-     * Return the starting offset of the next token or the offset of the end if there is no next
-     * token.
+     * Return the starting offset of the next token or the offset of the end if there is no next token.
+     * 
      * @return The current offset
      */
     public int getOffset() {
@@ -315,4 +340,3 @@ public class Scanner {
         }
     }
 }
-

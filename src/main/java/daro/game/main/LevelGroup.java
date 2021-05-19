@@ -17,10 +17,14 @@ public class LevelGroup {
      *
      * A group of levels containing additional information
      *
-     * @param id the ID of the level group
-     * @param name the name of the level group
-     * @param description a short description of the level group
-     * @param levels a list of levels
+     * @param id
+     *            the ID of the level group
+     * @param name
+     *            the name of the level group
+     * @param description
+     *            a short description of the level group
+     * @param levels
+     *            a list of levels
      */
     public LevelGroup(long id, String name, String description, List<Level> levels) {
         this.name = name;
@@ -31,6 +35,7 @@ public class LevelGroup {
 
     /**
      * Get the ID of the level group
+     * 
      * @return ID of the level group
      */
     public long getId() {
@@ -39,6 +44,7 @@ public class LevelGroup {
 
     /**
      * Get the name of the level group
+     * 
      * @return Name of the level group
      */
     public String getName() {
@@ -47,6 +53,7 @@ public class LevelGroup {
 
     /**
      * Get a short description of the level group
+     * 
      * @return Description of the level group
      */
     public String getDescription() {
@@ -55,6 +62,7 @@ public class LevelGroup {
 
     /**
      * Get the list of levels the group contains
+     * 
      * @return a list of Levels
      */
     public List<Level> getLevels() {
@@ -63,6 +71,7 @@ public class LevelGroup {
 
     /**
      * Counts all the levels in the group
+     * 
      * @return the amount of levels the group contains
      */
     public int countLevels() {
@@ -71,6 +80,7 @@ public class LevelGroup {
 
     /**
      * Counts how many levels in a group are already completed
+     * 
      * @return the amount of completed levels
      */
     public int countCompletedLevels() {
@@ -79,13 +89,14 @@ public class LevelGroup {
 
     /**
      * Parses all the Levels and its groups from a JSON-File called levels.json
+     * 
      * @return A list of all the level groups
      */
     public static List<LevelGroup> parseLevels() {
         JSONParser parser = new JSONParser();
         List<LevelGroup> groupsList = new ArrayList<>();
         try {
-            //TODO: check pathing
+            // TODO: check pathing
             Object object = parser.parse(new FileReader("src/main/resources/data/levels.json"));
             JSONObject jsonObject = (JSONObject) object;
 
@@ -96,31 +107,21 @@ public class LevelGroup {
                     JSONObject groupJson = (JSONObject) group;
                     JSONArray levels = (JSONArray) groupJson.get("levels");
 
-                    //generate level list
+                    // generate level list
                     List<Level> levelsList = new ArrayList<>();
                     if (levels != null && levels.size() > 0) {
                         levels.forEach(level -> {
                             JSONObject levelJson = (JSONObject) level;
 
-                            //TODO: add make done dynamic
-                            levelsList.add(
-                                    new Level(
-                                            (long) levelJson.get("id"),
-                                            levelJson.get("name").toString(),
-                                            levelJson.get("description").toString(),
-                                            (boolean) levelJson.get("completed")
-                                    ));
+                            // TODO: add make done dynamic
+                            levelsList.add(new Level((long) levelJson.get("id"), levelJson.get("name").toString(),
+                                    levelJson.get("description").toString(), (boolean) levelJson.get("completed")));
                         });
                     }
 
-                    //add everything to group json
-                    groupsList.add(
-                            new LevelGroup(
-                                    (long) groupJson.get("id"),
-                                    groupJson.get("name").toString(),
-                                    groupJson.get("description_short").toString(),
-                                    levelsList
-                            ));
+                    // add everything to group json
+                    groupsList.add(new LevelGroup((long) groupJson.get("id"), groupJson.get("name").toString(),
+                            groupJson.get("description_short").toString(), levelsList));
                 });
             }
         } catch (Exception e) {

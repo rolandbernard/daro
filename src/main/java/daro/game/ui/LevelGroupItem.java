@@ -19,16 +19,18 @@ public class LevelGroupItem extends VBox {
 
     /**
      * <strong>UI: <em>Component</em></strong><br>
-     * A grid item that displays basic information about a level group (name, description,
-     * completed levels)
-     * When clicked it leads to the level group detail page
-     * @param levelGroup the level group that is displayed
+     * A grid item that displays basic information about a level group (name, description, completed levels) When
+     * clicked it leads to the level group detail page
+     * 
+     * @param levelGroup
+     *            the level group that is displayed
      */
     public LevelGroupItem(LevelGroup levelGroup) {
         this.levelGroup = levelGroup;
         this.setSpacing(20);
         this.setPrefSize(DIMENSION, DIMENSION);
-        this.setStyle("-fx-background-color: #381A90; -fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);");
+        this.setStyle(
+                "-fx-background-color: #381A90; -fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);");
         this.setPadding(new Insets(40, H_PADDING, 30, H_PADDING));
         this.setCursor(Cursor.HAND);
         this.getChildren().addAll(getHeading(), getCompleted());
@@ -39,6 +41,7 @@ public class LevelGroupItem extends VBox {
 
     /**
      * The top part of the item, containing the name and the description of the level group
+     * 
      * @return a vertical box with the information
      */
     private VBox getHeading() {
@@ -56,11 +59,11 @@ public class LevelGroupItem extends VBox {
 
     /**
      * The bottom part of the item, containing information about the completion of a level group
+     * 
      * @return a vertical box containing a graph and a label
      */
     private VBox getCompleted() {
-        int completed = levelGroup.countCompletedLevels(),
-                allLevels = levelGroup.countLevels();
+        int completed = levelGroup.countCompletedLevels(), allLevels = levelGroup.countLevels();
 
         VBox group = new VBox(getGraph((double) completed / allLevels), getRatioLabel(completed, allLevels));
         group.setSpacing(10);
@@ -69,7 +72,10 @@ public class LevelGroupItem extends VBox {
 
     /**
      * Generates a bar graph
-     * @param percent percentage of completion (e.g. 0.5 for 50%)
+     * 
+     * @param percent
+     *            percentage of completion (e.g. 0.5 for 50%)
+     * 
      * @return a stackpane containing the graph
      */
     private StackPane getGraph(double percent) {
@@ -87,8 +93,12 @@ public class LevelGroupItem extends VBox {
 
     /**
      * Generates a label containing how many levels are completed
-     * @param completed amount of completed levels
-     * @param allLevels amount of all levels
+     * 
+     * @param completed
+     *            amount of completed levels
+     * @param allLevels
+     *            amount of all levels
+     * 
      * @return a vbox containing the label
      */
     private VBox getRatioLabel(int completed, int allLevels) {

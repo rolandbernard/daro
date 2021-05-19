@@ -15,4 +15,3 @@ public final class AstBitwiseNot extends AstUnaryNode {
         return visitor.visit(this);
     }
 }
-

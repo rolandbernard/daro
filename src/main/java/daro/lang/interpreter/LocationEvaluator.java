@@ -4,8 +4,8 @@ import daro.lang.ast.*;
 import daro.lang.values.*;
 
 /**
- * This class is used to execute an ast inside a given scope and return the variable location that
- * corresponts to the ast.
+ * This class is used to execute an ast inside a given scope and return the variable location that corresponts to the
+ * ast.
  *
  * @author Roland Bernard
  */
@@ -14,7 +14,9 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     /**
      * Create a new {@link LocationEvaluator} for execution in the given scope.
-     * @param scope The scope to execute in
+     * 
+     * @param scope
+     *            The scope to execute in
      */
     public LocationEvaluator(Scope scope) {
         this.scope = scope;
@@ -22,8 +24,12 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     /**
      * Run the given {@link AstNode} in the given {@link Scope}.
-     * @param scope The scope to execute in
-     * @param program The {@link AstNode} to execute
+     * 
+     * @param scope
+     *            The scope to execute in
+     * @param program
+     *            The {@link AstNode} to execute
+     * 
      * @return The result of the execution
      */
     public static VariableLocation execute(Scope scope, AstNode program) {
@@ -32,7 +38,10 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     /**
      * Run the {@link AstNode} in the scope of the {@link LocationEvaluator}
-     * @param program The {@link AstNode} to execute
+     * 
+     * @param program
+     *            The {@link AstNode} to execute
+     * 
      * @return The result of the execution
      */
     public VariableLocation execute(AstNode program) {
@@ -229,8 +238,8 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
         if (left instanceof UserArray) {
             UserObject right = Executor.execute(scope, ast.getRight());
             if (right instanceof UserInteger) {
-                UserArray array = (UserArray)left;
-                int index = ((UserInteger)right).getValue().intValue();
+                UserArray array = (UserArray) left;
+                int index = ((UserInteger) right).getValue().intValue();
                 return value -> {
                     if (index < 0 || index >= array.getLength()) {
                         throw new InterpreterException(ast.getPosition(), "Index out of bounds");

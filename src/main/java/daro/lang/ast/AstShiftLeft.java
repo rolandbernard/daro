@@ -15,4 +15,3 @@ public final class AstShiftLeft extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

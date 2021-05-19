@@ -32,8 +32,8 @@ public class UserTypeInteger extends UserType {
             if (object instanceof UserInteger) {
                 return object;
             } else if (object instanceof UserNumber) {
-                UserNumber number = (UserNumber)object;
-                return new UserInteger(BigInteger.valueOf((long)number.doubleValue()));
+                UserNumber number = (UserNumber) object;
+                return new UserInteger(BigInteger.valueOf((long) number.doubleValue()));
             } else if (object != null) {
                 throw new InterpreterException(value.getPosition(), "Value can not be converted to an integer");
             } else {

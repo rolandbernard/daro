@@ -5,8 +5,7 @@ import java.util.Map;
 import daro.lang.values.UserObject;
 
 /**
- * This class implements an empty scope that does not contain any variables, and can not be written
- * to in any way.
+ * This class implements an empty scope that does not contain any variables, and can not be written to in any way.
  * 
  * @author Roland Bernard
  */

@@ -10,7 +10,9 @@ public class UserBoolean extends UserObject {
 
     /**
      * Create a new boolean value from the given value.
-     * @param value The value the {@link UserBoolean} represents
+     * 
+     * @param value
+     *            The value the {@link UserBoolean} represents
      */
     public UserBoolean(boolean value) {
         this.value = value;
@@ -18,6 +20,7 @@ public class UserBoolean extends UserObject {
 
     /**
      * Returns the value of this boolean.
+     * 
      * @return The value the {@link UserBoolean} represents
      */
     public boolean getValue() {
@@ -37,7 +40,7 @@ public class UserBoolean extends UserObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserBoolean) {
-            UserBoolean bool = (UserBoolean)object;
+            UserBoolean bool = (UserBoolean) object;
             return value == bool.getValue();
         } else {
             return false;

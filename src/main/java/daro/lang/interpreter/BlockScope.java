@@ -7,9 +7,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * This class implements a simple scope. A scope is a collection of variables (with names and
- * values). A scope also has a parent which will be inspected if a variable is not found in the
- * current scope.
+ * This class implements a simple scope. A scope is a collection of variables (with names and values). A scope also has
+ * a parent which will be inspected if a variable is not found in the current scope.
  * 
  * @author Roland Bernard
  */
@@ -26,7 +25,9 @@ public class BlockScope implements Scope {
 
     /**
      * Creates a new {@link BlockScope} with the given parent.
-     * @param parent The parent scope
+     * 
+     * @param parent
+     *            The parent scope
      */
     public BlockScope(Scope parent) {
         this.parent = parent;
@@ -34,10 +35,13 @@ public class BlockScope implements Scope {
     }
 
     /**
-     * Creates a new {@link BlockScope} with the given parent and internal map. This constructor is only to be
-     * used internaly by this class.
-     * @param parent The parent scope
-     * @param variables The interal variables map
+     * Creates a new {@link BlockScope} with the given parent and internal map. This constructor is only to be used
+     * internaly by this class.
+     * 
+     * @param parent
+     *            The parent scope
+     * @param variables
+     *            The interal variables map
      */
     private BlockScope(Scope parent, Map<String, UserObject> variables) {
         this.parent = parent;
@@ -45,9 +49,12 @@ public class BlockScope implements Scope {
     }
 
     /**
-     * Returns a {@link BlockScope} that only includes the last level of this scope and the given
-     * scope as its parent. This method is used inside classes as the member scope.
-     * @param parent The parent of 
+     * Returns a {@link BlockScope} that only includes the last level of this scope and the given scope as its parent.
+     * This method is used inside classes as the member scope.
+     * 
+     * @param parent
+     *            The parent of
+     * 
      * @return The last level scope
      */
     public BlockScope getFinalLevel(Scope parent) {
@@ -55,8 +62,9 @@ public class BlockScope implements Scope {
     }
 
     /**
-     * Returns a {@link BlockScope} that only includes the last level of this scope. This method is
-     * used inside classes for printing to string.
+     * Returns a {@link BlockScope} that only includes the last level of this scope. This method is used inside classes
+     * for printing to string.
+     * 
      * @return The last level scope
      */
     public BlockScope getFinalLevel() {
@@ -64,11 +72,13 @@ public class BlockScope implements Scope {
     }
 
     /**
-     * Create a new variable that will shadow variables that might already exist in a parent scope.
-     * This is to be used when executing functions to set the parameters or for inserting function
-     * and class values into the scope.
-     * @param name The name of the variable
-     * @param value The value it should be set to
+     * Create a new variable that will shadow variables that might already exist in a parent scope. This is to be used
+     * when executing functions to set the parameters or for inserting function and class values into the scope.
+     * 
+     * @param name
+     *            The name of the variable
+     * @param value
+     *            The value it should be set to
      */
     public void forceNewVariable(String name, UserObject value) {
         variables.put(name, value);
@@ -115,9 +125,8 @@ public class BlockScope implements Scope {
     @Override
     public boolean equals(Object object) {
         if (object instanceof BlockScope) {
-            BlockScope scope = (BlockScope)object;
-            return variables.equals(scope.variables)
-                && Objects.equals(parent, scope.parent);
+            BlockScope scope = (BlockScope) object;
+            return variables.equals(scope.variables) && Objects.equals(parent, scope.parent);
         } else {
             return false;
         }
@@ -130,9 +139,8 @@ public class BlockScope implements Scope {
         if (parent != null) {
             ret.append(parent.toString());
         }
-        ret.append(variables.entrySet().stream()
-            .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-            .collect(Collectors.joining(", ")));
+        ret.append(variables.entrySet().stream().map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
+                .collect(Collectors.joining(", ")));
         ret.append("}");
         return ret.toString();
     }

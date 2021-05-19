@@ -15,4 +15,3 @@ public final class AstDivide extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

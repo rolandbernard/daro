@@ -33,9 +33,8 @@ public abstract class AstBinaryNode extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
-            AstBinaryNode node = (AstBinaryNode)obj;
-            return Objects.equals(left, node.getLeft())
-                && Objects.equals(right, node.getRight());
+            AstBinaryNode node = (AstBinaryNode) obj;
+            return Objects.equals(left, node.getLeft()) && Objects.equals(right, node.getRight());
         } else {
             return false;
         }
@@ -46,4 +45,3 @@ public abstract class AstBinaryNode extends AstNode {
         return "(" + this.getClass().getSimpleName() + " " + left + " " + right + ")";
     }
 }
-

@@ -15,16 +15,19 @@ public class LevelItem extends VBox {
 
     /**
      * <strong>UI: <em>Component</em></strong><br>
-     * An overview item, containing basic information about the level.
-     * When clicked it changes the scene to the LevelView
-     * @param level the level displayed
+     * An overview item, containing basic information about the level. When clicked it changes the scene to the
+     * LevelView
+     * 
+     * @param level
+     *            the level displayed
      */
     public LevelItem(Level level) {
         this.level = level;
         this.setCursor(Cursor.HAND);
         this.setWidth(Page.INNER_WIDTH);
         this.setMinHeight(200);
-        this.setStyle("-fx-background-radius: 25px; -fx-background-color: #381A90; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);");
+        this.setStyle(
+                "-fx-background-radius: 25px; -fx-background-color: #381A90; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);");
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
         // TOOD: Can not reference non-static method!
@@ -33,6 +36,7 @@ public class LevelItem extends VBox {
 
     /**
      * Generates the the heading for the level item
+     * 
      * @return a vertical box containing the heading and its description
      */
     private VBox getHeading() {

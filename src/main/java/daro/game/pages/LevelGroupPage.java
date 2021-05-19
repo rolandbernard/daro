@@ -13,7 +13,9 @@ public class LevelGroupPage extends Page {
     /**
      * <strong>UI: <em>Page</em></strong><br>
      * A detail page for a level group containing a list of the levels.
-     * @param levelGroup the level group the page displays
+     * 
+     * @param levelGroup
+     *            the level group the page displays
      */
     public LevelGroupPage(LevelGroup levelGroup) {
         this.levelGroup = levelGroup;
@@ -23,12 +25,13 @@ public class LevelGroupPage extends Page {
 
     /**
      * Generates the list of links to the levels
+     * 
      * @return a vertical box containing the levels
      */
     private VBox getLevelList() {
         VBox list = new VBox();
         list.setSpacing(20);
-        if(levelGroup.getLevels() != null && levelGroup.getLevels().size() > 0) {
+        if (levelGroup.getLevels() != null && levelGroup.getLevels().size() > 0) {
             levelGroup.getLevels().forEach(level -> list.getChildren().add(new LevelItem(level)));
         } else {
             Text errorText = new Text("There was an error with loading the levels.");

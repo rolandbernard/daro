@@ -15,4 +15,3 @@ public final class AstNegative extends AstUnaryNode {
         return visitor.visit(this);
     }
 }
-

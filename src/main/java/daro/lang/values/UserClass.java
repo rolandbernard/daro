@@ -16,10 +16,13 @@ public class UserClass extends UserObject {
     private final BlockScope scope;
 
     /**
-     * Create a new instance of a user defined class. The class is defined in the given scope and
-     * references the given type.
-     * @param globalScope The scope the class should be instantiated in
-     * @param classType The type of the class
+     * Create a new instance of a user defined class. The class is defined in the given scope and references the given
+     * type.
+     * 
+     * @param globalScope
+     *            The scope the class should be instantiated in
+     * @param classType
+     *            The type of the class
      */
     public UserClass(Scope globalScope, UserTypeClass classType) {
         this.classType = classType;
@@ -56,9 +59,9 @@ public class UserClass extends UserObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserClass) {
-            UserClass classObject = (UserClass)object;
+            UserClass classObject = (UserClass) object;
             return scope.getFinalLevel().equals(classObject.scope.getFinalLevel())
-                && classType.equals(classObject.classType);
+                    && classType.equals(classObject.classType);
         } else {
             return false;
         }

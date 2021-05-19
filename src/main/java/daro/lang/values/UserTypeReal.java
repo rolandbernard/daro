@@ -28,7 +28,7 @@ public class UserTypeReal extends UserType {
             AstNode value = initializer.getValues()[0];
             UserObject object = Executor.execute(scope, value);
             if (object instanceof UserNumber) {
-                UserNumber number = (UserNumber)object;
+                UserNumber number = (UserNumber) object;
                 return new UserReal(number.doubleValue());
             } else if (object != null) {
                 throw new InterpreterException(value.getPosition(), "Value can not be converted to a real number");

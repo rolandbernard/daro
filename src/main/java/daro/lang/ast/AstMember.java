@@ -37,9 +37,8 @@ public final class AstMember extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstMember) {
-            AstMember node = (AstMember)obj;
-            return Objects.equals(name, node.getName())
-                && Objects.equals(operand, node.getOperand());
+            AstMember node = (AstMember) obj;
+            return Objects.equals(name, node.getName()) && Objects.equals(operand, node.getOperand());
         } else {
             return false;
         }
@@ -50,4 +49,3 @@ public final class AstMember extends AstNode {
         return "(" + this.getClass().getSimpleName() + " " + operand + " " + name + ")";
     }
 }
-

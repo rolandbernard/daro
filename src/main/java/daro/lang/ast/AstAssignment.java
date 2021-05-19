@@ -15,4 +15,3 @@ public final class AstAssignment extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

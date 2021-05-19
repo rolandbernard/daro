@@ -17,8 +17,11 @@ public class Position {
 
     /**
      * Create a source {@link Position} from the start position and length.
-     * @param start The starting position
-     * @param end The end position
+     * 
+     * @param start
+     *            The starting position
+     * @param end
+     *            The end position
      */
     public Position(int start, int end) {
         if (start < 0) {
@@ -33,6 +36,7 @@ public class Position {
 
     /**
      * Returns the starting position of the source code {@link Position}
+     * 
      * @return The start position
      */
     public int getStart() {
@@ -41,6 +45,7 @@ public class Position {
 
     /**
      * Returns the ending position (exclusive) of the source code {@link Position}
+     * 
      * @return The end position
      */
     public int getEnd() {
@@ -49,6 +54,7 @@ public class Position {
 
     /**
      * Returns the length of the source code {@link Position}
+     * 
      * @return The length position
      */
     public int getLength() {
@@ -63,7 +69,7 @@ public class Position {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Position) {
-            Position position = (Position)obj;
+            Position position = (Position) obj;
             return (start == position.getStart() && end == position.getEnd());
         } else {
             return false;

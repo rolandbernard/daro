@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This class implements the root scope of the program. It contains the predefined methods and
- * types in the Daro language.
+ * This class implements the root scope of the program. It contains the predefined methods and types in the Daro
+ * language.
  * 
  * @author Roland Bernard
  */
@@ -81,9 +81,8 @@ public class RootScope implements Scope {
     public String toString() {
         StringBuilder ret = new StringBuilder();
         ret.append("{");
-        ret.append(variables.entrySet().stream()
-            .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-            .collect(Collectors.joining(", ")));
+        ret.append(variables.entrySet().stream().map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
+                .collect(Collectors.joining(", ")));
         ret.append("}");
         return ret.toString();
     }

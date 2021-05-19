@@ -10,7 +10,9 @@ public class UserString extends UserObject {
 
     /**
      * Create a new {@link UserString} from the given value.
-     * @param value The value the {@link UserString} should represent
+     * 
+     * @param value
+     *            The value the {@link UserString} should represent
      */
     public UserString(String value) {
         this.value = value;
@@ -18,6 +20,7 @@ public class UserString extends UserObject {
 
     /**
      * Returns the value stored inside the {@link UserString} as a {@link String} object.
+     * 
      * @return The value stored in the object
      */
     public String getValue() {
@@ -37,7 +40,7 @@ public class UserString extends UserObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserString) {
-            UserString integer = (UserString)object;
+            UserString integer = (UserString) object;
             return value.equals(integer.getValue());
         } else {
             return false;
