@@ -17,10 +17,25 @@ etc.
 ## Getting Started
 <!-- TODO -->
 
+### How to Test
+
+To run all the tests for this application, execute the maven command `mvn test`. This will
+automatically run all the defined test using jUnit.
+
 ### How to Build
+
+The project can be build using the maven command `mvn package`. This will create two runnable jars
+in the `target` directory:
+* `target/daro-1.0.0-game.jar` when executed will launch our game
+* `target/daro-1.0.0-cli.jar` when executed will launch a small REPL (Read-Eval-Print-Loop) program
 <!-- TODO -->
 
 ### How to Run
+
+You can run the generated jar files using the Java VM by executing for example `java -jar
+target/daro-1.0.0-game.jar` after having executed `mvn package`. If you just want to execute the
+application withoud first packaging it, you can execute `mvn javafx:run` to execute the game and
+`mvn exec:java` to execute the REPL program.
 <!-- TODO -->
 
 ### How to Use
