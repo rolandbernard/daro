@@ -7,6 +7,7 @@ import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class LevelGroup {
     private final long id;
@@ -97,7 +98,9 @@ public class LevelGroup {
         List<LevelGroup> groupsList = new ArrayList<>();
         try {
             // TODO: check pathing
-            Object object = parser.parse(new FileReader("src/main/resources/data/levels.json"));
+            Scanner scanner = new Scanner(LevelGroup.class.getResourceAsStream("/data/levels.json"));
+            scanner.useDelimiter("\\Z");
+            Object object = parser.parse(scanner.next());
             JSONObject jsonObject = (JSONObject) object;
 
             JSONArray groups = (JSONArray) jsonObject.get("groups");
@@ -125,8 +128,8 @@ public class LevelGroup {
                 });
             }
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println("There was an error with loading the levels.");
+            e.printStackTrace();
             return null;
         }
         return groupsList;

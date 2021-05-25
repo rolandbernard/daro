@@ -5,6 +5,7 @@ import daro.game.views.MenuView;
 import daro.game.views.View;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Game extends Application {
@@ -12,20 +13,29 @@ public class Game extends Application {
     public static final double WIDTH = 1280;
     private Scene scene;
 
-    public static void main(String[] args) {
+    public static void init(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage stage) {
-        // load CSS
-        // TODO: check font paths
-        MenuView root = new MenuView(new CoursePage());
+        //load fonts from resources
+        Font.loadFont(Main.class.getResourceAsStream("/fonts/Montserrat-Regular.ttf"), 16);
+        Font.loadFont(Main.class.getResourceAsStream("/fonts/Montserrat-Italic.ttf"), 16);
+        Font.loadFont(Main.class.getResourceAsStream("/fonts/Montserrat-Bold.ttf"), 16);
+        Font.loadFont(Main.class.getResourceAsStream("/fonts/Montserrat-BoldItalic.ttf"), 16);
+        Font.loadFont(Main.class.getResourceAsStream("/fonts/MaterialIcons-Regular.ttf"), 16);
 
+        //generate start page
+        MenuView root = new MenuView(new CoursePage());
         scene = new Scene(root, WIDTH, HEIGHT);
-        scene.getStylesheets().add("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
-        scene.getStylesheets().add("https://fonts.googleapis.com/icon?family=Material+Icons");
-        scene.getStylesheets().add("styles/index.css");
+
+        // load CSS
+        try {
+            scene.getStylesheets().add(this.getClass().getResource("/styles/index.css").toExternalForm());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
 
         stage.setTitle("Learn programming with daro!");
         stage.setScene(scene);
