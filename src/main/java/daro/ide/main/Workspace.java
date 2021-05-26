@@ -14,6 +14,6 @@ public class Workspace extends SplitPane {
     }
 
     public void openNewFile(Path file) {
-        
+        System.out.println(file.toString());
     }
 }

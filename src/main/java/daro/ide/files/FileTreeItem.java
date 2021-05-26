@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
@@ -35,19 +36,53 @@ public class FileTreeItem extends TreeItem<String> {
         return file;
     }
 
+    public void reload() {
+        Map<String, TreeItem<String>> children = super.getChildren().stream()
+            .collect(Collectors.toMap(item -> item.getValue(), item -> item));
+        try {
+            Map<String, Path> files = Files.list(file)
+                .collect(Collectors.toMap(file -> file.getFileName().toString(), file -> file));
+            super.getChildren().removeIf(item -> !files.containsKey(item.getValue()));
+            super.getChildren().addAll(
+                files.entrySet().stream()
+                    .filter(entry -> !children.containsKey(entry.getKey()))
+                    .map(entry -> new FileTreeItem(entry.getValue()))
+                    .collect(Collectors.toList())
+            );
+            super.getChildren().sort((itemA, itemB) -> {
+                Path a = ((FileTreeItem)itemA).getFile();
+                Path b = ((FileTreeItem)itemB).getFile();
+                int directory = Boolean.compare(Files.isDirectory(b), Files.isDirectory(a));
+                if (directory != 0) {
+                    return directory;
+                } else {
+                    return a.getFileName().toString().compareTo(b.getFileName().toString());
+                }
+            });
+        } catch (IOException e) { }
+    }
+
     @Override
     public ObservableList<TreeItem<String>> getChildren() {
         if (!loaded) {
+            loaded = true;
             List<TreeItem<String>> children;
             try {
                 children = Files.list(file)
+                    .sorted((a, b) -> {
+                        int directory = Boolean.compare(Files.isDirectory(b), Files.isDirectory(a));
+                        if (directory != 0) {
+                            return directory;
+                        } else {
+                            return a.getFileName().toString().compareTo(b.getFileName().toString());
+                        }
+                    })
                     .map(child -> new FileTreeItem(child))
                     .collect(Collectors.toList());
             } catch (IOException e) {
                 children = List.of();
             }
             super.getChildren().addAll(children);
-            loaded = true ;
         }
         return super.getChildren();
     }

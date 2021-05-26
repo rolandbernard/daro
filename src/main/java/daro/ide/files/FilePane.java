@@ -1,6 +1,7 @@
 package daro.ide.files;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
@@ -15,19 +16,25 @@ public class FilePane extends BorderPane {
         setRoot(null);
     }
 
-    public void setRoot(Path file) {
-        if (file != null) {
-            FileTree view = new FileTree(file);
-            view.setOnFileOpen(onFileOpen);
+    public void setRoot(Path root) {
+        if (root != null) {
+            FileTree view = new FileTree(root);
+            view.setOnFileOpen(file -> {
+                if (Files.isDirectory(file)) {
+                    setRoot(file);
+                } else {
+                    onFileOpen.accept(file);
+                }
+            });
             setCenter(view);
         } else {
             Button open = new Button("Open folder");
             open.setOnAction(event -> {
                 DirectoryChooser chooser = new DirectoryChooser();
                 chooser.setTitle("Select a folder");
-                File newFile = chooser.showDialog(null);
-                if (newFile != null) {
-                    setRoot(Path.of(newFile.getAbsolutePath()));
+                File file = chooser.showDialog(null);
+                if (file != null) {
+                    setRoot(Path.of(file.getAbsolutePath()));
                 }
             });
             setCenter(open);
