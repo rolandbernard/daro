@@ -1,10 +1,6 @@
 package daro.ide.main;
 
-import java.nio.file.Paths;
-
-import daro.ide.files.FileTree;
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -17,8 +13,7 @@ public class IDE extends Application {
 
     @Override
     public void start(Stage stage) {
-        Group root = new Group(new FileTree(Paths.get(System.getProperty("user.home"))));
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(new Explorer());
 
         stage.setWidth(1000);
         stage.setHeight(700);
