@@ -1,6 +1,7 @@
 package daro.lang.values;
 
 import daro.lang.ast.AstInitializer;
+import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.Scope;
 
 /**
@@ -19,9 +20,38 @@ public abstract class UserType extends UserObject {
      * Instantiates a {@link UserObject} of the type represented by this object and initializes it with it's default
      * values.
      * 
+     * @param observers
+     *            The {@link ExecutionObserver}s for this initialization
+     * 
      * @return The instantiated object
      */
-    public abstract UserObject instantiate();
+    public abstract UserObject instantiate(ExecutionObserver[] observers);
+
+    /**
+     * Instantiates a {@link UserObject} of the type represented by this object and initializes it with it's default
+     * values.
+     * 
+     * @return The instantiated object
+     */
+    public UserObject instantiate() {
+        return instantiate(null);
+    }
+
+    /**
+     * Instantiates a {@link UserObject} of the type represented by this object and initializes it with the values in
+     * the given initializer. The initializer is executed in the given scope, but the resulting object must not be
+     * linked to the scope in any other way. The given observers will observe the execution of the initializer.
+     * 
+     * @param scope
+     *            The scope to initialize in
+     * @param observers
+     *            The {@link ExecutionObserver}s for this initialization
+     * @param initializer
+     *            The initializer to initialize the {@link UserObject} with
+     * 
+     * @return The instantiated object
+     */
+    public abstract UserObject instantiate(Scope scope, ExecutionObserver[] observers, AstInitializer initializer);
 
     /**
      * Instantiates a {@link UserObject} of the type represented by this object and initializes it with the values in
@@ -35,7 +65,9 @@ public abstract class UserType extends UserObject {
      * 
      * @return The instantiated object
      */
-    public abstract UserObject instantiate(Scope scope, AstInitializer initializer);
+    public UserObject instantiate(Scope scope, AstInitializer initializer) {
+        return instantiate(scope, null, initializer);
+    }
 
     @Override
     public int hashCode() {

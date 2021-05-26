@@ -16,6 +16,21 @@ import daro.lang.values.*;
  */
 public class Executor implements Visitor<UserObject> {
     private final Scope scope;
+    private final ExecutionObserver[] observers;
+
+    /**
+     * Create a new {@link Executor} for execution in the given scope and observed by the given
+     * {@link ExecutionObserver}s.
+     * 
+     * @param scope
+     *            The scope to execute in
+     * @param observers
+     *            The observers for this execution
+     */
+    public Executor(Scope scope, ExecutionObserver[] observers) {
+        this.scope = scope;
+        this.observers = observers;
+    }
 
     /**
      * Create a new {@link Executor} for execution in the given scope.
@@ -24,7 +39,24 @@ public class Executor implements Visitor<UserObject> {
      *            The scope to execute in
      */
     public Executor(Scope scope) {
-        this.scope = scope;
+        this(scope, null);
+    }
+
+    /**
+     * Run the given {@link AstNode} in the given {@link Scope} and observe it with the given
+     * {@link ExecutionObserver}s.
+     * 
+     * @param scope
+     *            The scope to execute in
+     * @param observers
+     *            The observers for this execution
+     * @param program
+     *            The {@link AstNode} to execute
+     * 
+     * @return The result of the execution
+     */
+    public static UserObject execute(Scope scope, ExecutionObserver[] observers, AstNode program) {
+        return (new Executor(scope, observers)).execute(program);
     }
 
     /**
@@ -52,7 +84,18 @@ public class Executor implements Visitor<UserObject> {
     public UserObject execute(AstNode program) {
         if (program != null) {
             try {
-                return program.accept(this);
+                if (observers == null) {
+                    return program.accept(this);
+                } else {
+                    for (ExecutionObserver observer : observers) {
+                        observer.beforeNodeExecution(program, scope);
+                    }
+                    UserObject result = program.accept(this);
+                    for (ExecutionObserver observer : observers) {
+                        observer.afterNodeExecution(program, result, scope);
+                    }
+                    return result;
+                }
             } catch (InterpreterException error) {
                 if (error.getPosition() == null) {
                     // Some exceptions are thrown in locations without positional information.
@@ -344,7 +387,7 @@ public class Executor implements Visitor<UserObject> {
         BlockScope innerScope = new BlockScope(scope);
         AstSequence sequence = ast.getSequence();
         ScopeInitializer.initialize(innerScope, sequence);
-        return execute(innerScope, sequence);
+        return execute(innerScope, observers, sequence);
     }
 
     @Override
@@ -358,7 +401,7 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstAssignment ast) {
-        VariableLocation location = LocationEvaluator.execute(scope, ast.getLeft());
+        VariableLocation location = LocationEvaluator.execute(scope, observers, ast.getLeft());
         if (location != null) {
             UserObject value = require(ast.getRight());
             location.storeValue(value);
@@ -402,7 +445,7 @@ public class Executor implements Visitor<UserObject> {
                 for (int i = 0; i < parameters.length; i++) {
                     parameterValues[i] = require(parameters[i]);
                 }
-                return function.execute(parameterValues);
+                return function.execute(parameterValues, observers);
             }
         } else {
             throw new InterpreterException(ast.getFunction().getPosition(), "Value is not a function");
@@ -436,9 +479,9 @@ public class Executor implements Visitor<UserObject> {
         if (kind instanceof UserType) {
             UserType type = (UserType) kind;
             if (ast.getInitialzer() != null) {
-                return type.instantiate(scope, ast.getInitialzer());
+                return type.instantiate(scope, observers, ast.getInitialzer());
             } else {
-                return type.instantiate();
+                return type.instantiate(observers);
             }
         } else {
             throw new InterpreterException(ast.getType().getPosition(), "Value is not a type");
@@ -492,7 +535,7 @@ public class Executor implements Visitor<UserObject> {
             for (int i = 0; i < array.getLength(); i++) {
                 UserObject item = array.getValueAt(i);
                 innerScope.forceNewVariable(ast.getVariable().getName(), item);
-                ret = execute(innerScope, ast.getBody());
+                ret = execute(innerScope, observers, ast.getBody());
             }
             return ret;
         } else {

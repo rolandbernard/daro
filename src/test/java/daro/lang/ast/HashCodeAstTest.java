@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HasoCodeAstTest {
+public class HashCodeAstTest {
 
     @Test
     void hashCodeBinaryAst() {

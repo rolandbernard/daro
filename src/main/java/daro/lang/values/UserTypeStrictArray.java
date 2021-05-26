@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 import daro.lang.ast.AstInitializer;
 import daro.lang.ast.AstNode;
+import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 
@@ -49,31 +50,32 @@ public class UserTypeStrictArray extends UserType {
     }
 
     @Override
-    public UserObject instantiate() {
+    public UserObject instantiate(ExecutionObserver[] observers) {
         if (size == null) {
             return new UserArray(new ArrayList<>());
         } else {
-            return new UserArray(Stream.generate(() -> base.instantiate()).limit(size)
+            return new UserArray(Stream.generate(() -> base.instantiate(observers)).limit(size)
                     .collect(Collectors.toCollection(() -> new ArrayList<>())));
         }
     }
 
     @Override
-    public UserObject instantiate(Scope scope, AstInitializer initializer) {
+    public UserObject instantiate(Scope scope, ExecutionObserver[] observers, AstInitializer initializer) {
         ArrayList<UserObject> list = new ArrayList<>();
         if (size != null && size < initializer.getValues().length) {
             throw new InterpreterException(initializer.getPosition(), "Initializer is longer that the array");
         }
         for (AstNode value : initializer.getValues()) {
             if (value instanceof AstInitializer) {
-                list.add(base.instantiate(scope, (AstInitializer) value));
+                list.add(base.instantiate(scope, observers, (AstInitializer) value));
             } else {
-                list.add(base.instantiate(scope, new AstInitializer(value.getPosition(), new AstNode[] { value })));
+                list.add(base.instantiate(scope, observers,
+                        new AstInitializer(value.getPosition(), new AstNode[] { value })));
             }
         }
         if (size != null) {
             for (int i = initializer.getValues().length; i < size; i++) {
-                list.add(base.instantiate());
+                list.add(base.instantiate(observers));
             }
         }
         return new UserArray(list);
