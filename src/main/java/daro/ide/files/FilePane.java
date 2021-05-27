@@ -5,8 +5,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.stage.DirectoryChooser;
 
 public class FilePane extends BorderPane {
@@ -17,6 +24,15 @@ public class FilePane extends BorderPane {
     }
 
     public void setRoot(Path root) {
+        Button open = new Button("Open folder");
+        open.setOnAction(event -> {
+            DirectoryChooser chooser = new DirectoryChooser();
+            chooser.setTitle("Select a folder");
+            File file = chooser.showDialog(null);
+            if (file != null) {
+                setRoot(Path.of(file.getAbsolutePath()));
+            }
+        });
         if (root != null) {
             FileTree view = new FileTree(root);
             view.setOnFileOpen(file -> {
@@ -26,17 +42,23 @@ public class FilePane extends BorderPane {
                     onFileOpen.accept(file);
                 }
             });
+            Image image = new Image(FileTreeItem.class.getResourceAsStream("refresh.png"));
+            ImageView icon = new ImageView(image);
+            icon.setFitWidth(20);
+            icon.setFitHeight(20);
+            Button refresh = new Button();
+            refresh.setGraphic(icon);
+            refresh.setOnAction(event -> {
+                view.reload();
+            });
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+            HBox navigation = new HBox(open, spacer, refresh);
+            navigation.setPadding(new Insets(2, 5, 2, 5));
+            navigation.setAlignment(Pos.CENTER);
+            setTop(navigation);
             setCenter(view);
         } else {
-            Button open = new Button("Open folder");
-            open.setOnAction(event -> {
-                DirectoryChooser chooser = new DirectoryChooser();
-                chooser.setTitle("Select a folder");
-                File file = chooser.showDialog(null);
-                if (file != null) {
-                    setRoot(Path.of(file.getAbsolutePath()));
-                }
-            });
             setCenter(open);
         }
     }

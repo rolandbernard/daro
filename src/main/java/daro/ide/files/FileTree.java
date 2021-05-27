@@ -26,6 +26,10 @@ public class FileTree extends TreeView<String> {
         });
     }
 
+    public void reload() {
+        ((FileTreeItem)getRoot()).reload(true);
+    }
+
     private void openContextMenu(FileTreeItem item, double x, double y) { 
         if (item == null) {
             menu.setContext(null, ((FileTreeItem)getRoot()).getFile(), (FileTreeItem)getRoot(), onFileOpen);
