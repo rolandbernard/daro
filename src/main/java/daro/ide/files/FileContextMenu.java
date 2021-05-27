@@ -19,7 +19,7 @@ public class FileContextMenu extends ContextMenu {
             dialog.showAndWait().ifPresent(name -> {
                 try {
                     Files.createFile(Path.of(parent.toString(), name));
-                    toReload.reload();
+                    toReload.reload(false);
                 } catch (IOException e) { }
             });
         });
@@ -29,7 +29,7 @@ public class FileContextMenu extends ContextMenu {
             dialog.showAndWait().ifPresent(name -> {
                 try {
                     Files.createDirectory(Path.of(parent.toString(), name));
-                    toReload.reload();
+                    toReload.reload(false);
                 } catch (IOException e) { }
             });
         });
@@ -39,7 +39,7 @@ public class FileContextMenu extends ContextMenu {
             delete.setOnAction(event -> {
                 try {
                     Files.delete(file);
-                    toReload.reload();
+                    toReload.reload(false);
                 } catch (IOException e) { }
             });
             MenuItem rename = new MenuItem("Rename");
@@ -48,7 +48,7 @@ public class FileContextMenu extends ContextMenu {
                 dialog.showAndWait().ifPresent(name -> {
                     try {
                         Files.move(file, Path.of(parent.toString(), name));
-                        toReload.reload();
+                        toReload.reload(false);
                     } catch (IOException e) { }
                 });
             });

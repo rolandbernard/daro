@@ -36,35 +36,45 @@ public class FileTreeItem extends TreeItem<String> {
         return file;
     }
 
-    public void reload() {
-        Map<String, TreeItem<String>> children = super.getChildren().stream()
-            .collect(Collectors.toMap(item -> item.getValue(), item -> item));
-        try {
-            Map<String, Path> files = Files.list(file)
-                .collect(Collectors.toMap(file -> file.getFileName().toString(), file -> file));
-            super.getChildren().removeIf(item -> !files.containsKey(item.getValue()));
-            super.getChildren().addAll(
-                files.entrySet().stream()
-                    .filter(entry -> !children.containsKey(entry.getKey()))
-                    .map(entry -> new FileTreeItem(entry.getValue()))
-                    .collect(Collectors.toList())
-            );
-            super.getChildren().sort((itemA, itemB) -> {
-                Path a = ((FileTreeItem)itemA).getFile();
-                Path b = ((FileTreeItem)itemB).getFile();
-                int directory = Boolean.compare(Files.isDirectory(b), Files.isDirectory(a));
-                if (directory != 0) {
-                    return directory;
-                } else {
-                    return a.getFileName().toString().compareTo(b.getFileName().toString());
-                }
-            });
-        } catch (IOException e) { }
+    public void reload(boolean recursive) {
+        if (loaded && !isLeaf()) {
+            if (isExpanded()) {
+                Map<String, TreeItem<String>> children = super.getChildren().stream()
+                    .collect(Collectors.toMap(item -> item.getValue(), item -> item));
+                try {
+                    Map<String, Path> files = Files.list(file)
+                        .collect(Collectors.toMap(file -> file.getFileName().toString(), file -> file));
+                    super.getChildren().removeIf(item -> !files.containsKey(item.getValue()));
+                    super.getChildren().addAll(
+                        files.entrySet().stream()
+                            .filter(entry -> !children.containsKey(entry.getKey()))
+                            .map(entry -> new FileTreeItem(entry.getValue()))
+                            .collect(Collectors.toList())
+                    );
+                    super.getChildren().sort((itemA, itemB) -> {
+                        Path a = ((FileTreeItem)itemA).getFile();
+                        Path b = ((FileTreeItem)itemB).getFile();
+                        int directory = Boolean.compare(Files.isDirectory(b), Files.isDirectory(a));
+                        if (directory != 0) {
+                            return directory;
+                        } else {
+                            return a.getFileName().toString().compareTo(b.getFileName().toString());
+                        }
+                    });
+                    if (recursive) {
+                        super.getChildren().forEach(item -> ((FileTreeItem)item).reload(true));
+                    }
+                } catch (IOException e) { }
+            } else {
+                loaded = false;
+                super.getChildren().clear();
+            }
+        }
     }
 
     @Override
     public ObservableList<TreeItem<String>> getChildren() {
-        if (!loaded) {
+        if (!loaded && !isLeaf()) {
             loaded = true;
             List<TreeItem<String>> children;
             try {
