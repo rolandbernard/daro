@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author Roland Bernard
  */
 public class ConstantScope implements Scope {
-    private final Map<String, UserObject> variables;
+    protected final Map<String, UserObject> variables;
     private final Scope parent;
 
     /**

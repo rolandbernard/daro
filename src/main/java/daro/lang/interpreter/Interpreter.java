@@ -1,5 +1,7 @@
 package daro.lang.interpreter;
 
+import java.io.PrintStream;
+
 import daro.lang.ast.*;
 import daro.lang.parser.*;
 import daro.lang.values.UserObject;
@@ -22,6 +24,17 @@ public class Interpreter {
      */
     public Interpreter(Scope globalScope) {
         this.globalScope = globalScope;
+    }
+
+    /**
+     * Create a new {@link Interpreter} using the given {@link PrintStream} as an output for print functions instead of
+     * the default System.out.
+     * 
+     * @param output
+     *            The output stream for print functions
+     */
+    public Interpreter(PrintStream output) {
+        this(new BlockScope(new RootScope(output)));
     }
 
     /**
