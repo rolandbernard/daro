@@ -15,4 +15,3 @@ public final class AstMultiply extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

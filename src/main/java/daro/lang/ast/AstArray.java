@@ -15,4 +15,3 @@ public final class AstArray extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

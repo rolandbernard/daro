@@ -15,4 +15,3 @@ public final class AstMoreThan extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

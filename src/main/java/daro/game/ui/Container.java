@@ -3,7 +3,6 @@ package daro.game.ui;
 import daro.game.main.Game;
 import javafx.scene.control.ScrollPane;
 
-
 public class Container extends ScrollPane {
 
     /**

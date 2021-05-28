@@ -31,7 +31,7 @@ public final class AstSymbol extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstSymbol) {
-            AstSymbol node = (AstSymbol)obj;
+            AstSymbol node = (AstSymbol) obj;
             return Objects.equals(name, node.getName());
         } else {
             return false;
@@ -43,4 +43,3 @@ public final class AstSymbol extends AstNode {
         return name;
     }
 }
-

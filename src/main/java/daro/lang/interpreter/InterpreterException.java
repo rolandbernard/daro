@@ -3,8 +3,8 @@ package daro.lang.interpreter;
 import daro.lang.ast.Position;
 
 /**
- * This class represents an error thrown during the interpreter execution. It includes a reference
- * to the position where the exception was thrown.
+ * This class represents an error thrown during the interpreter execution. It includes a reference to the position where
+ * the exception was thrown.
  *
  * @author Roland Bernard
  */
@@ -14,7 +14,9 @@ public class InterpreterException extends IllegalArgumentException {
 
     /**
      * Create a {@link InterpreterException} for the given message and without a position.
-     * @param message The message for the exception
+     * 
+     * @param message
+     *            The message for the exception
      */
     public InterpreterException(String message) {
         this(null, message);
@@ -22,8 +24,11 @@ public class InterpreterException extends IllegalArgumentException {
 
     /**
      * Create a {@link InterpreterException} for the given position and message.
-     * @param position The {@link Position} that caused the exception
-     * @param message The message for the exception
+     * 
+     * @param position
+     *            The {@link Position} that caused the exception
+     * @param message
+     *            The message for the exception
      */
     public InterpreterException(Position position, String message) {
         super(message);
@@ -32,6 +37,7 @@ public class InterpreterException extends IllegalArgumentException {
 
     /**
      * Returns the position the exception applies to.
+     * 
      * @return The position that caused the exception
      */
     public Position getPosition() {
@@ -40,6 +46,7 @@ public class InterpreterException extends IllegalArgumentException {
 
     /**
      * Return the starting offset of the position of the error.
+     * 
      * @return The start of the error
      */
     public int getStart() {
@@ -48,6 +55,7 @@ public class InterpreterException extends IllegalArgumentException {
 
     /**
      * Return the end offset of the position of the error.
+     * 
      * @return The end of the error
      */
     public int getEnd() {
@@ -56,6 +64,7 @@ public class InterpreterException extends IllegalArgumentException {
 
     /**
      * Return the length offset of the position of the error.
+     * 
      * @return The length of the error
      */
     public int getLength() {

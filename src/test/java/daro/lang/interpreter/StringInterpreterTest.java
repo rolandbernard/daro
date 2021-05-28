@@ -42,7 +42,7 @@ public class StringInterpreterTest {
 
     @Test
     void stringFromClass() {
-        assertEquals(new UserString("{x = 5}"), interpreter.execute("new string { new class { x = 5 } }"));
+        assertEquals(new UserString("class [anonymous] {x = 5}"), interpreter.execute("new string { new class { x = 5 } }"));
     }
 
     @Test

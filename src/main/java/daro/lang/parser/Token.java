@@ -19,32 +19,34 @@ public class Token {
     /**
      * This variable stores the source position of the {@link Token}.
      */
-    private final int position;
+    private final Position position;
 
     /**
-     * Create a {@link Token} from the given {@link TokenKind}. The token type must
-     * be a kind with a fixed source value, otherwise a
-     * {@link IllegalArgumentException} will be thrown.
+     * Create a {@link Token} from the given {@link TokenKind}. The token type must be a kind with a fixed source value,
+     * otherwise a {@link IllegalArgumentException} will be thrown.
      * 
-     * @param kind The kind of token you want to create
-     * @param position The position the token was found at
+     * @param kind
+     *            The kind of token you want to create
+     * @param position
+     *            The position the token was found at
      */
-    public Token(TokenKind kind, int position) {
+    public Token(TokenKind kind, Position position) {
         this(kind, position, kind.getFixedSource());
     }
 
     /**
      * Create a {@link Token} from the give {@link TokenKind} and source string.
      * 
-     * @param kind   The kind of token you want to create
-     * @param position The position the token was found at
-     * @param source The source string for the token
+     * @param kind
+     *            The kind of token you want to create
+     * @param position
+     *            The position the token was found at
+     * @param source
+     *            The source string for the token
      */
-    public Token(TokenKind kind, int position, String source) {
+    public Token(TokenKind kind, Position position, String source) {
         if (source == null) {
             throw new IllegalArgumentException("Source string is null");
-        } else if (position < 0) {
-            throw new IllegalArgumentException("Position must be positive");
         } else {
             this.kind = kind;
             this.position = position;
@@ -71,31 +73,11 @@ public class Token {
     }
 
     /**
-     * Get the source position start for this token.
-     * 
-     * @return The source position start of this token
-     */
-    public int getStart() {
-        return position;
-    }
-
-    /**
      * Get the source position for this token.
      * 
      * @return The source position of this token
      */
     public Position getPosition() {
-        return new Position(position, position + source.length());
-    }
-
-    /**
-     * Get the source position end for this token.
-     * 
-     * @return The source position start of this token
-     */
-    public int getEnd() {
-        return position + source.length();
+        return position;
     }
 }
-
-

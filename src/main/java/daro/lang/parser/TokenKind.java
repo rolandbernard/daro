@@ -12,8 +12,8 @@ public enum TokenKind {
     /** A token that is not otherwise recognized by the scanner. */
     INVALID,
     /**
-     * A token that represents an identifier. String of one or more characters starting with a
-     * letter or underscope and consisting only of letters, numbers or an underscore. e.g. {@code foo}
+     * A token that represents an identifier. String of one or more characters starting with a letter or underscope and
+     * consisting only of letters, numbers or an underscore. e.g. {@code foo}
      */
     IDENTIFIER,
     /** A token that represents an integer. String of one or more numbers. e.g. {@code 42} */
@@ -25,8 +25,9 @@ public enum TokenKind {
     /** A token that represents a character literal. e.g. {@code 'A'} */
     CHARACTER,
 
-    FOR("for"), IN("in"), MATCH("match"), // TODO: implement ast
-    IF("if"), ELSE("else"), NEW("new"), FN("fn"), IMPORT("import"), // TODO: implement ast
+     // TODO: implement match and import
+
+    FOR("for"), IN("in"), MATCH("match"), IF("if"), ELSE("else"), NEW("new"), FN("fn"), IMPORT("import"),
     CLASS("class"), RETURN("return"), COLON(":"), SEMICOLON(";"), COMMA(","), DOT("."), OPEN_PAREN("("),
     CLOSE_PAREN(")"), OPEN_BRACKET("["), CLOSE_BRACKET("]"), OPEN_BRACE("{"), CLOSE_BRACE("}"), DEFINE(":="),
     ASSIGN("="), EQUAL("=="), UNEQUAL("!="), LESS("<"), MORE(">"), LESS_EQUAL("<="), MORE_EQUAL(">="), SHIFT_LEFT("<<"),
@@ -61,7 +62,8 @@ public enum TokenKind {
     /**
      * Create a {@link TokenKind} with a fixed source string value.
      * 
-     * @param value The fixed source value.
+     * @param value
+     *            The fixed source value.
      */
     private TokenKind(String value) {
         this.value = value;
@@ -77,9 +79,8 @@ public enum TokenKind {
     }
 
     /**
-     * Returns the fixed source string value of this kind of token. If this token
-     * kind does not have a fixed source string value, a
-     * {@link IllegalArgumentException} will be thrown.
+     * Returns the fixed source string value of this kind of token. If this token kind does not have a fixed source
+     * string value, a {@link IllegalArgumentException} will be thrown.
      * 
      * @return The fixed source string
      */
@@ -93,11 +94,13 @@ public enum TokenKind {
 
     /**
      * Finds the {@link TokenKind} with the specified fixed source string.
-     * @param string The string to serch with
+     * 
+     * @param string
+     *            The string to serch with
+     * 
      * @return The {@link TokenKind} withe the specified source string, or null if none exists
      */
     public static TokenKind findForFixedSource(String string) {
         return reverseLookup.get(string);
     }
 }
-

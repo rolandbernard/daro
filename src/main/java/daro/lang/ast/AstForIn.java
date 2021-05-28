@@ -43,10 +43,9 @@ public final class AstForIn extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstForIn) {
-            AstForIn node = (AstForIn)obj;
-            return Objects.equals(variable, node.getVariable())
-                && Objects.equals(list, node.getList())
-                && Objects.equals(body, node.getBody());
+            AstForIn node = (AstForIn) obj;
+            return Objects.equals(variable, node.getVariable()) && Objects.equals(list, node.getList())
+                    && Objects.equals(body, node.getBody());
         } else {
             return false;
         }
@@ -57,4 +56,3 @@ public final class AstForIn extends AstNode {
         return "(" + this.getClass().getSimpleName() + " " + variable + " " + list + " " + body + ")";
     }
 }
-

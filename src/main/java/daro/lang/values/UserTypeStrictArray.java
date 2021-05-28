@@ -12,9 +12,9 @@ import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 
 /**
- * This class represents the type for a array object that has a single type of child ({@link UserArray}).
- * This type can be constructed and instantiated, but the resulting object will not enforce the
- * single type. It is mainly for initialization.
+ * This class represents the type for a array object that has a single type of child ({@link UserArray}). This type can
+ * be constructed and instantiated, but the resulting object will not enforce the single type. It is mainly for
+ * initialization.
  * 
  * @author Roland Bernard
  */
@@ -24,7 +24,9 @@ public class UserTypeStrictArray extends UserType {
 
     /**
      * Create a new {@link UserTypeStrictArray} for a given base type and undefined length.
-     * @param base The base type of the array
+     * 
+     * @param base
+     *            The base type of the array
      */
     public UserTypeStrictArray(UserType base) {
         this(null, base);
@@ -32,8 +34,11 @@ public class UserTypeStrictArray extends UserType {
 
     /**
      * Create a new {@link UserTypeStrictArray} for a given base type and the given length.
-     * @param size The length of the resulting array
-     * @param base The base type of the array
+     * 
+     * @param size
+     *            The length of the resulting array
+     * @param base
+     *            The base type of the array
      */
     public UserTypeStrictArray(Integer size, UserType base) {
         this.size = size;
@@ -49,11 +54,8 @@ public class UserTypeStrictArray extends UserType {
         if (size == null) {
             return new UserArray(new ArrayList<>());
         } else {
-            return new UserArray(
-                Stream.generate(() -> base.instantiate(observers))
-                    .limit(size)
-                    .collect(Collectors.toCollection(() -> new ArrayList<>()))
-            );
+            return new UserArray(Stream.generate(() -> base.instantiate(observers)).limit(size)
+                    .collect(Collectors.toCollection(() -> new ArrayList<>())));
         }
     }
 
@@ -65,9 +67,10 @@ public class UserTypeStrictArray extends UserType {
         }
         for (AstNode value : initializer.getValues()) {
             if (value instanceof AstInitializer) {
-                list.add(base.instantiate(scope, observers, (AstInitializer)value));
+                list.add(base.instantiate(scope, observers, (AstInitializer) value));
             } else {
-                list.add(base.instantiate(scope, observers, new AstInitializer(value.getPosition(), new AstNode[] { value })));
+                list.add(base.instantiate(scope, observers,
+                        new AstInitializer(value.getPosition(), new AstNode[] { value })));
             }
         }
         if (size != null) {
@@ -86,9 +89,8 @@ public class UserTypeStrictArray extends UserType {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserTypeStrictArray) {
-            UserTypeStrictArray array = (UserTypeStrictArray)object;
-            return base.equals(array.getBaseType())
-                && Objects.equals(size, array.size);
+            UserTypeStrictArray array = (UserTypeStrictArray) object;
+            return base.equals(array.getBaseType()) && Objects.equals(size, array.size);
         } else {
             return false;
         }

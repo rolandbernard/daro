@@ -15,4 +15,3 @@ public final class AstAddition extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

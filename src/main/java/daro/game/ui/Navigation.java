@@ -12,7 +12,6 @@ import javafx.scene.layout.VBox;
 
 import java.util.LinkedHashMap;
 
-
 public class Navigation extends VBox {
 
     public static final double WIDTH = 320;
@@ -22,7 +21,9 @@ public class Navigation extends VBox {
     /**
      * <strong>UI: <em>Component</em></strong><br>
      * The main navigation-sidebar for the game
-     * @param defaultPage The default active page
+     * 
+     * @param defaultPage
+     *            The default active page
      */
     public Navigation(Page defaultPage) {
         this.setPrefHeight(Game.HEIGHT);
@@ -36,6 +37,7 @@ public class Navigation extends VBox {
 
     /**
      * Generates the logo for the top part of the navigation
+     * 
      * @return imageview containing the logo
      */
     private ImageView getLogo() {
@@ -48,7 +50,10 @@ public class Navigation extends VBox {
 
     /**
      * Generates the navigation item and links them to the pages.
-     * @param defaultPage TODO TOFIX
+     * 
+     * @param defaultPage
+     *            TODO TOFIX
+     * 
      * @return a vertical box containing the links
      */
     private VBox getNavigation(Page defaultPage) {

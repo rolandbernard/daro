@@ -15,4 +15,3 @@ public final class AstRemainder extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

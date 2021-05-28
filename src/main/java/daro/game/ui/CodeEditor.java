@@ -13,23 +13,23 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class CodeEditor extends CodeArea {
     /**
      * Basic constants for syntax highlighting
      */
 
-    //Regex for specific groups
-    private static final String[] KEYWORDS = {"fn", "return", "class", "true", "false"};
-    private static final String[] CONTROLS = {"if", "else", "for"};
-    private static final String[] SYMBOLS = {"\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!?=", ">", "<"};
-    private static final String[] FUNCTIONS = {"([^\\s]+)?(\\s)?(?=((\\s+)?\\())"};
-    private static final String[] COMMENTS = {"\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"};
-    private static final String[] STRINGS = {"\\\".*?\\\"", "\\'.*?\\'"};
-    private static final String[] DIGITS = {"\\d+"};
+    // Regex for specific groups
+    private static final String[] KEYWORDS = { "fn", "return", "class", "true", "false" };
+    private static final String[] CONTROLS = { "if", "else", "for" };
+    private static final String[] SYMBOLS = { "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&",
+            "\\;", "!?=", ">", "<" };
+    private static final String[] FUNCTIONS = { "([^\\s]+)?(\\s)?(?=((\\s+)?\\())" };
+    private static final String[] COMMENTS = { "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/" };
+    private static final String[] STRINGS = { "\\\".*?\\\"", "\\'.*?\\'" };
+    private static final String[] DIGITS = { "\\d+" };
     private static final String TAB = "    ";
 
-    //Generate Pattern for specific groups
+    // Generate Pattern for specific groups
     private static String generateBoundedPattern(String... pattern) {
         return "(\\b(" + String.join("|", pattern) + ")\\b)";
     }
@@ -38,23 +38,19 @@ public class CodeEditor extends CodeArea {
         return "(" + String.join("|", pattern) + ")";
     }
 
-    private static final Pattern SYNTAX_PATTERN = Pattern.compile(
-            "(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" +
-                    "|(?<COMMENT>" + generatePattern(COMMENTS) + ")" +
-                    "|(?<STRING>" + generatePattern(STRINGS) + ")" +
-                    "|(?<DIGIT>" + generatePattern(DIGITS) + ")" +
-                    "|(?<CONTROL>" + generateBoundedPattern(CONTROLS) + ")" +
-                    "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")" +
-                    "|(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")"
-    );
+    private static final Pattern SYNTAX_PATTERN = Pattern.compile("(?<SYMBOL>" + generatePattern(SYMBOLS) + ")"
+            + "|(?<COMMENT>" + generatePattern(COMMENTS) + ")" + "|(?<STRING>" + generatePattern(STRINGS) + ")"
+            + "|(?<DIGIT>" + generatePattern(DIGITS) + ")" + "|(?<CONTROL>" + generateBoundedPattern(CONTROLS) + ")"
+            + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")" + "|(?<KEYWORD>"
+            + generateBoundedPattern(KEYWORDS) + ")");
 
     /**
      * Constants for Editor features
      */
     private static final HashMap<String, String> REPEATING_STRING = new HashMap<>();
-    private static final Character[] WHITESPACE_NL = {'{', '[', '('};
+    private static final Character[] WHITESPACE_NL = { '{', '[', '(' };
 
-    //Workaround to ensure that autocompletions don't go into an infinite loop
+    // Workaround to ensure that autocompletions don't go into an infinite loop
     private int lastTypePosition;
 
     /**
@@ -69,7 +65,9 @@ public class CodeEditor extends CodeArea {
 
     /**
      * A full-fledged CodeEditor with syntax highlighting and basic features.
-     * @param defaultText the code which is rendered as default
+     * 
+     * @param defaultText
+     *            the code which is rendered as default
      */
     public CodeEditor(String defaultText) {
         super(defaultText);
@@ -81,9 +79,13 @@ public class CodeEditor extends CodeArea {
 
     /**
      * A full-fledged CodeEditor with syntax highlighting and basic features.
-     * @param defaultText the code which is rendered as default
-     * @param height height of the Code Editor
-     * @param width width of the Code Editor
+     * 
+     * @param defaultText
+     *            the code which is rendered as default
+     * @param height
+     *            height of the Code Editor
+     * @param width
+     *            width of the Code Editor
      */
     public CodeEditor(String defaultText, double width, double height) {
         super(defaultText);
@@ -104,7 +106,9 @@ public class CodeEditor extends CodeArea {
 
     /**
      * EventHandler for key presses: automatic indentation and better TAB size
-     * @param keyEvent TODO TOFIX
+     * 
+     * @param keyEvent
+     *            TODO TOFIX
      */
     private void handleKeyPress(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ENTER) {
@@ -120,24 +124,27 @@ public class CodeEditor extends CodeArea {
             if (Arrays.stream(WHITESPACE_NL).anyMatch(c -> c == lastCharacter)) {
                 this.insertText(position, additionalSpace + TAB + "\n" + additionalSpace);
                 int anchor = position + TAB.length() + additionalSpace.length();
-                //workaround
+                // workaround
                 this.selectRange(anchor, anchor);
             } else {
                 insertText(position, additionalSpace);
             }
         } else if (keyEvent.getCode() == KeyCode.TAB) {
-            //Change TAB width
+            // Change TAB width
             this.replaceText(this.getCaretPosition() - 1, this.getCaretPosition(), TAB);
         }
     }
 
-
     /**
-     * EventHandler for Text changes: updates syntax highlighting and enables
-     * autocompletion (e.g. "(" is immediately followed by ")")
-     * @param observableValue TODO TOFIX
-     * @param oldValue TODO TOFIX
-     * @param newValue TODO TOFIX
+     * EventHandler for Text changes: updates syntax highlighting and enables autocompletion (e.g. "(" is immediately
+     * followed by ")")
+     * 
+     * @param observableValue
+     *            TODO TOFIX
+     * @param oldValue
+     *            TODO TOFIX
+     * @param newValue
+     *            TODO TOFIX
      */
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int position = this.getCaretPosition();
@@ -149,7 +156,7 @@ public class CodeEditor extends CodeArea {
                         this.insertText(position, REPEATING_STRING.get(string));
                     }
                 } catch (Exception ignored) {
-                    //ignored because if exception, there was no match anyways
+                    // ignored because if exception, there was no match anyways
                 }
             });
         } else if (oldValue.length() > newValue.length()) {
@@ -163,7 +170,7 @@ public class CodeEditor extends CodeArea {
                         }
                     }
                 } catch (Exception ignored) {
-                    //ignored because if exception, there was no match anyways
+                    // ignored because if exception, there was no match anyways
                 }
             });
         }
@@ -175,9 +182,11 @@ public class CodeEditor extends CodeArea {
     }
 
     /**
-     * Parses the Code for syntax and sets CSS classes
-     * for further styling to enable syntax highlighting
-     * @param text TODO TOFIX
+     * Parses the Code for syntax and sets CSS classes for further styling to enable syntax highlighting
+     * 
+     * @param text
+     *            TODO TOFIX
+     * 
      * @return TODO TOFIX
      */
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
@@ -203,7 +212,8 @@ public class CodeEditor extends CodeArea {
             else if (matcher.group("DIGIT") != null)
                 styleClass += "digit";
 
-            spansBuilder.add(Collections.singleton(styleClass.equals("syntax-") ? null : styleClass), matcher.end() - matcher.start());
+            spansBuilder.add(Collections.singleton(styleClass.equals("syntax-") ? null : styleClass),
+                    matcher.end() - matcher.start());
             lastKwEnd = matcher.end();
         }
         spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
@@ -211,8 +221,7 @@ public class CodeEditor extends CodeArea {
     }
 
     /**
-     * Fills the repeating strings map
-     * Used to autocomplete that for example after ( immediately follows ).
+     * Fills the repeating strings map Used to autocomplete that for example after ( immediately follows ).
      */
     private static void initRepeatingStrings() {
         REPEATING_STRING.put("(", ")");

@@ -32,7 +32,7 @@ public class AstSequence extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstSequence && getClass() == obj.getClass()) {
-            AstSequence node = (AstSequence)obj;
+            AstSequence node = (AstSequence) obj;
             return Arrays.equals(statements, node.getStatemens());
         } else {
             return false;
@@ -41,10 +41,7 @@ public class AstSequence extends AstNode {
 
     @Override
     public String toString() {
-        return "("
-            + this.getClass().getSimpleName() + " "
-            + Arrays.stream(statements).map(String::valueOf).collect(Collectors.joining(" "))
-            + ")";
+        return "(" + this.getClass().getSimpleName() + " "
+                + Arrays.stream(statements).map(String::valueOf).collect(Collectors.joining(" ")) + ")";
     }
 }
-

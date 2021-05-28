@@ -15,4 +15,3 @@ public final class AstAnd extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

@@ -35,7 +35,7 @@ public final class AstInteger extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstInteger) {
-            AstInteger node = (AstInteger)obj;
+            AstInteger node = (AstInteger) obj;
             return value.equals(node.getValue());
         } else {
             return false;
@@ -47,4 +47,3 @@ public final class AstInteger extends AstNode {
         return String.valueOf(value);
     }
 }
-

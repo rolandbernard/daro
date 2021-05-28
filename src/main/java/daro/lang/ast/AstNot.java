@@ -15,4 +15,3 @@ public final class AstNot extends AstUnaryNode {
         return visitor.visit(this);
     }
 }
-

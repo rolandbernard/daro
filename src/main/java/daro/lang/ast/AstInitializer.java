@@ -32,7 +32,7 @@ public final class AstInitializer extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstInitializer) {
-            AstInitializer node = (AstInitializer)obj;
+            AstInitializer node = (AstInitializer) obj;
             return Arrays.equals(values, node.getValues());
         } else {
             return false;
@@ -41,10 +41,7 @@ public final class AstInitializer extends AstNode {
 
     @Override
     public String toString() {
-        return "("
-            + this.getClass().getSimpleName() + " "
-            + Arrays.stream(values).map(String::valueOf).collect(Collectors.joining(" "))
-            + ")";
+        return "(" + this.getClass().getSimpleName() + " "
+                + Arrays.stream(values).map(String::valueOf).collect(Collectors.joining(" ")) + ")";
     }
 }
-

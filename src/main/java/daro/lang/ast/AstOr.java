@@ -15,4 +15,3 @@ public final class AstOr extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

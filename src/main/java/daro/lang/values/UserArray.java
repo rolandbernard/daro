@@ -20,7 +20,9 @@ public class UserArray extends UserObject {
 
     /**
      * Create a new {@link UserArray} with the values inside the given list.
-     * @param values The values of the array
+     * 
+     * @param values
+     *            The values of the array
      */
     public UserArray(List<UserObject> values) {
         this.values = values;
@@ -29,6 +31,7 @@ public class UserArray extends UserObject {
 
     /**
      * Build the member scope for this array.
+     * 
      * @return The member scope
      */
     private Scope buildMemberScope() {
@@ -49,7 +52,7 @@ public class UserArray extends UserObject {
         }));
         variables.put("sort", new UserLambdaFunction(1, (params, observers) -> {
             if (params[0] instanceof UserFunction) {
-                UserFunction function = (UserFunction)params[0];
+                UserFunction function = (UserFunction) params[0];
                 if (function.getParamCount() >= 0 && function.getParamCount() != 2) {
                     throw new InterpreterException("Sorting function must accept two arguments");
                 } else {
@@ -77,6 +80,7 @@ public class UserArray extends UserObject {
 
     /**
      * Returns the length of the array.
+     * 
      * @return The length of the array
      */
     public int getLength() {
@@ -85,7 +89,10 @@ public class UserArray extends UserObject {
 
     /**
      * Returns the value inside the array at index i.
-     * @param i The index to query
+     * 
+     * @param i
+     *            The index to query
+     * 
      * @return The value at index i
      */
     public UserObject getValueAt(int i) {
@@ -94,8 +101,11 @@ public class UserArray extends UserObject {
 
     /**
      * Put the given value inside the array at the given index.
-     * @param i The index to write to
-     * @param value The value that should be written
+     * 
+     * @param i
+     *            The index to write to
+     * @param value
+     *            The value that should be written
      */
     public void putValueAt(int i, UserObject value) {
         values.set(i, value);
@@ -103,7 +113,9 @@ public class UserArray extends UserObject {
 
     /**
      * Adds a new element to the end of the array.
-     * @param value The value that should be added
+     * 
+     * @param value
+     *            The value that should be added
      */
     public void pushValue(UserObject value) {
         values.add(value);
@@ -127,7 +139,7 @@ public class UserArray extends UserObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserArray) {
-            UserArray array = (UserArray)object;
+            UserArray array = (UserArray) object;
             return values.equals(array.values);
         } else {
             return false;
@@ -136,9 +148,7 @@ public class UserArray extends UserObject {
 
     @Override
     public String toString() {
-        return values.stream()
-            .map(String::valueOf)
-            .collect(Collectors.joining(", ", "[", "]"));
+        return values.stream().map(String::valueOf).collect(Collectors.joining(", ", "[", "]"));
     }
 
     @Override

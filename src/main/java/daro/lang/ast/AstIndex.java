@@ -15,4 +15,3 @@ public final class AstIndex extends AstBinaryNode {
         return visitor.visit(this);
     }
 }
-

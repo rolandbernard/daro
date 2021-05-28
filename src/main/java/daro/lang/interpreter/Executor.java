@@ -10,8 +10,7 @@ import daro.lang.ast.*;
 import daro.lang.values.*;
 
 /**
- * This class is used to execute an ast inside a given scope. It is implemented as a tree walking
- * interpreter.
+ * This class is used to execute an ast inside a given scope. It is implemented as a tree walking interpreter.
  * 
  * @author Roland Bernard
  */
@@ -22,8 +21,11 @@ public class Executor implements Visitor<UserObject> {
     /**
      * Create a new {@link Executor} for execution in the given scope and observed by the given
      * {@link ExecutionObserver}s.
-     * @param scope The scope to execute in
-     * @param observers The observers for this execution
+     * 
+     * @param scope
+     *            The scope to execute in
+     * @param observers
+     *            The observers for this execution
      */
     public Executor(Scope scope, ExecutionObserver[] observers) {
         this.scope = scope;
@@ -32,7 +34,9 @@ public class Executor implements Visitor<UserObject> {
 
     /**
      * Create a new {@link Executor} for execution in the given scope.
-     * @param scope The scope to execute in
+     * 
+     * @param scope
+     *            The scope to execute in
      */
     public Executor(Scope scope) {
         this(scope, null);
@@ -41,9 +45,14 @@ public class Executor implements Visitor<UserObject> {
     /**
      * Run the given {@link AstNode} in the given {@link Scope} and observe it with the given
      * {@link ExecutionObserver}s.
-     * @param scope The scope to execute in
-     * @param observers The observers for this execution
-     * @param program The {@link AstNode} to execute
+     * 
+     * @param scope
+     *            The scope to execute in
+     * @param observers
+     *            The observers for this execution
+     * @param program
+     *            The {@link AstNode} to execute
+     * 
      * @return The result of the execution
      */
     public static UserObject execute(Scope scope, ExecutionObserver[] observers, AstNode program) {
@@ -52,8 +61,12 @@ public class Executor implements Visitor<UserObject> {
 
     /**
      * Run the given {@link AstNode} in the given {@link Scope}.
-     * @param scope The scope to execute in
-     * @param program The {@link AstNode} to execute
+     * 
+     * @param scope
+     *            The scope to execute in
+     * @param program
+     *            The {@link AstNode} to execute
+     * 
      * @return The result of the execution
      */
     public static UserObject execute(Scope scope, AstNode program) {
@@ -62,7 +75,10 @@ public class Executor implements Visitor<UserObject> {
 
     /**
      * Run the {@link AstNode} in the scope of the {@link Executor}
-     * @param program The {@link AstNode} to execute
+     * 
+     * @param program
+     *            The {@link AstNode} to execute
+     * 
      * @return The result of the execution
      */
     public UserObject execute(AstNode program) {
@@ -97,9 +113,12 @@ public class Executor implements Visitor<UserObject> {
     }
 
     /**
-     * This is a utility function that executes the {@link AstNode} and throws a
-     * {@link InterpreterException} if the returned value is undefined.
-     * @param program The {@link AstNode} to execute
+     * This is a utility function that executes the {@link AstNode} and throws a {@link InterpreterException} if the
+     * returned value is undefined.
+     * 
+     * @param program
+     *            The {@link AstNode} to execute
+     * 
      * @return The result of the execution
      */
     private UserObject require(AstNode program) {
@@ -128,178 +147,139 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstCharacter ast) {
-        return new UserInteger(BigInteger.valueOf((long)ast.getValue()));
+        return new UserInteger(BigInteger.valueOf((long) ast.getValue()));
     }
 
-    /** 
-     * This is a utility function for execution of binary functions with different operations for
-     * different types of objects.
-     * @param ast The ast to execute
-     * @param integer The function to execute for integers
-     * @param number The function to execute for numbers
-     * @param all The function to execute for all other objects
+    /**
+     * This is a utility function for execution of binary functions with different operations for different types of
+     * objects.
+     * 
+     * @param ast
+     *            The ast to execute
+     * @param integer
+     *            The function to execute for integers
+     * @param number
+     *            The function to execute for numbers
+     * @param all
+     *            The function to execute for all other objects
+     * 
      * @return The result of the operation
      */
-    private UserObject executeBinary(
-        AstBinaryNode ast, BiFunction<UserInteger, UserInteger, UserObject> integer,
-        BiFunction<UserNumber, UserNumber, UserObject> number, BinaryOperator<UserObject> all
-    ) {
+    private UserObject executeBinary(AstBinaryNode ast, BiFunction<UserInteger, UserInteger, UserObject> integer,
+            BiFunction<UserNumber, UserNumber, UserObject> number, BinaryOperator<UserObject> all) {
         UserObject left = require(ast.getLeft());
         UserObject right = require(ast.getRight());
         if (integer != null && left instanceof UserInteger && right instanceof UserInteger) {
-            UserInteger a = (UserInteger)left;
-            UserInteger b = (UserInteger)right;
+            UserInteger a = (UserInteger) left;
+            UserInteger b = (UserInteger) right;
             return integer.apply(a, b);
         } else if (number != null && left instanceof UserNumber && right instanceof UserNumber) {
-            UserNumber a = (UserNumber)left;
-            UserNumber b = (UserNumber)right;
+            UserNumber a = (UserNumber) left;
+            UserNumber b = (UserNumber) right;
             return number.apply(a, b);
         } else if (all != null) {
             return all.apply(left, right);
         } else {
-            throw new InterpreterException(
-                ast.getPosition(),
-                "Objects of types `" + left.getType().toString() + "` and `"
-                + right.getType().toString() + "` do not support this operation."
-            );
+            throw new InterpreterException(ast.getPosition(), "Objects of types `" + left.getType().toString()
+                    + "` and `" + right.getType().toString() + "` do not support this operation.");
         }
     }
 
     @Override
     public UserObject visit(AstAddition ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserInteger(a.getValue().add(b.getValue())),
-            (a, b) -> new UserReal(a.doubleValue() + b.doubleValue()),
-            (a, b) -> new UserString(a.toString() + b.toString())
-        );
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().add(b.getValue())),
+                (a, b) -> new UserReal(a.doubleValue() + b.doubleValue()),
+                (a, b) -> new UserString(a.toString() + b.toString()));
     }
 
     @Override
     public UserObject visit(AstSubtract ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserInteger(a.getValue().subtract(b.getValue())),
-            (a, b) -> new UserReal(a.doubleValue() - b.doubleValue()),
-            null
-        );
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().subtract(b.getValue())),
+                (a, b) -> new UserReal(a.doubleValue() - b.doubleValue()), null);
     }
 
     @Override
     public UserObject visit(AstMultiply ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserInteger(a.getValue().multiply(b.getValue())),
-            (a, b) -> new UserReal(a.doubleValue() * b.doubleValue()),
-            null
-        );
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().multiply(b.getValue())),
+                (a, b) -> new UserReal(a.doubleValue() * b.doubleValue()), null);
     }
 
     @Override
     public UserObject visit(AstDivide ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserInteger(a.getValue().divide(b.getValue())),
-            (a, b) -> new UserReal(a.doubleValue() / b.doubleValue()),
-            null
-        );
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().divide(b.getValue())),
+                (a, b) -> new UserReal(a.doubleValue() / b.doubleValue()), null);
     }
 
     @Override
     public UserObject visit(AstRemainder ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserInteger(a.getValue().remainder(b.getValue())),
-            (a, b) -> new UserReal(a.doubleValue() % b.doubleValue()),
-            null
-        );
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().remainder(b.getValue())),
+                (a, b) -> new UserReal(a.doubleValue() % b.doubleValue()), null);
     }
 
     @Override
     public UserObject visit(AstShiftLeft ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserInteger(a.getValue().shiftLeft(b.getValue().intValue())),
-            null, null
-        );
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().shiftLeft(b.getValue().intValue())), null,
+                null);
     }
 
     @Override
     public UserObject visit(AstShiftRight ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserInteger(a.getValue().shiftRight(b.getValue().intValue())),
-            null, null
-        );
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().shiftRight(b.getValue().intValue())), null,
+                null);
     }
 
     @Override
     public UserObject visit(AstEqual ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserBoolean(a.equals(b)),
-            (a, b) -> new UserBoolean(a.doubleValue() == b.doubleValue()),
-            (a, b) -> new UserBoolean(a.equals(b))
-        );
+        return executeBinary(ast, (a, b) -> new UserBoolean(a.equals(b)),
+                (a, b) -> new UserBoolean(a.doubleValue() == b.doubleValue()), (a, b) -> new UserBoolean(a.equals(b)));
     }
 
     @Override
     public UserObject visit(AstNotEqual ast) {
-        return executeBinary(ast, null, null,
-            (a, b) -> new UserBoolean(!a.equals(b))
-        );
+        return executeBinary(ast, null, null, (a, b) -> new UserBoolean(!a.equals(b)));
     }
 
     @Override
     public UserObject visit(AstLessThan ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) < 0),
-            (a, b) -> new UserBoolean(a.doubleValue() < b.doubleValue()),
-            (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) < 0)
-        );
+        return executeBinary(ast, (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) < 0),
+                (a, b) -> new UserBoolean(a.doubleValue() < b.doubleValue()),
+                (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) < 0));
     }
 
     @Override
     public UserObject visit(AstLessOrEqual ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) <= 0),
-            (a, b) -> new UserBoolean(a.doubleValue() <= b.doubleValue()),
-            (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) <= 0)
-        );
+        return executeBinary(ast, (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) <= 0),
+                (a, b) -> new UserBoolean(a.doubleValue() <= b.doubleValue()),
+                (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) <= 0));
     }
 
     @Override
     public UserObject visit(AstMoreThan ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) > 0),
-            (a, b) -> new UserBoolean(a.doubleValue() > b.doubleValue()),
-            (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) > 0)
-        );
+        return executeBinary(ast, (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) > 0),
+                (a, b) -> new UserBoolean(a.doubleValue() > b.doubleValue()),
+                (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) > 0));
     }
 
     @Override
     public UserObject visit(AstMoreOrEqual ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) >= 0),
-            (a, b) -> new UserBoolean(a.doubleValue() >= b.doubleValue()),
-            (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) >= 0)
-        );
+        return executeBinary(ast, (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) >= 0),
+                (a, b) -> new UserBoolean(a.doubleValue() >= b.doubleValue()),
+                (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) >= 0));
     }
 
     @Override
     public UserObject visit(AstBitwiseAnd ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserInteger(a.getValue().and(b.getValue())),
-            null, null
-        );
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().and(b.getValue())), null, null);
     }
 
     @Override
     public UserObject visit(AstBitwiseOr ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserInteger(a.getValue().or(b.getValue())),
-            null, null
-        );
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().or(b.getValue())), null, null);
     }
 
     @Override
     public UserObject visit(AstBitwiseXor ast) {
-        return executeBinary(ast,
-            (a, b) -> new UserInteger(a.getValue().xor(b.getValue())),
-            null, null
-        );
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().xor(b.getValue())), null, null);
     }
 
     @Override
@@ -312,33 +292,35 @@ public class Executor implements Visitor<UserObject> {
         return new UserBoolean(require(ast.getLeft()).isTrue() || require(ast.getRight()).isTrue());
     }
 
-    /** 
-     * This is a utility function for execution of unary functions with different operations for
-     * different types of objects.
-     * @param ast The ast to execute
-     * @param integer The function to execute for integers
-     * @param number The function to execute for numbers
-     * @param all The function to execute for all other objects
+    /**
+     * This is a utility function for execution of unary functions with different operations for different types of
+     * objects.
+     * 
+     * @param ast
+     *            The ast to execute
+     * @param integer
+     *            The function to execute for integers
+     * @param number
+     *            The function to execute for numbers
+     * @param all
+     *            The function to execute for all other objects
+     * 
      * @return The result of the operation
      */
-    private UserObject executeUnary(
-        AstUnaryNode ast, Function<UserInteger, ? extends UserObject> integer,
-        Function<UserNumber, ? extends UserObject> number, UnaryOperator<UserObject> all
-    ) {
+    private UserObject executeUnary(AstUnaryNode ast, Function<UserInteger, ? extends UserObject> integer,
+            Function<UserNumber, ? extends UserObject> number, UnaryOperator<UserObject> all) {
         UserObject value = require(ast.getOperand());
         if (integer != null && value instanceof UserInteger) {
-            UserInteger a = (UserInteger)value;
+            UserInteger a = (UserInteger) value;
             return integer.apply(a);
         } else if (number != null && value instanceof UserNumber) {
-            UserNumber a = (UserNumber)value;
+            UserNumber a = (UserNumber) value;
             return number.apply(a);
         } else if (all != null) {
             return all.apply(value);
         } else {
-            throw new InterpreterException(
-                ast.getPosition(),
-                "Objects of type `" + value.getType().toString() + "` do not support this operation."
-            );
+            throw new InterpreterException(ast.getPosition(),
+                    "Objects of type `" + value.getType().toString() + "` do not support this operation.");
         }
     }
 
@@ -349,26 +331,18 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstNegative ast) {
-        return executeUnary(ast,
-            a -> new UserInteger(a.getValue().negate()),
-            a -> new UserReal(-a.doubleValue()),
-            null
-        );
+        return executeUnary(ast, a -> new UserInteger(a.getValue().negate()), a -> new UserReal(-a.doubleValue()),
+                null);
     }
 
     @Override
     public UserObject visit(AstBitwiseNot ast) {
-        return executeUnary(ast,
-            a -> new UserInteger(a.getValue().not()),
-            null, null
-        );
+        return executeUnary(ast, a -> new UserInteger(a.getValue().not()), null, null);
     }
 
     @Override
     public UserObject visit(AstNot ast) {
-        return executeUnary(ast, null, null,
-            a -> new UserBoolean(!a.isTrue())
-        );
+        return executeUnary(ast, null, null, a -> new UserBoolean(!a.isTrue()));
     }
 
     @Override
@@ -385,9 +359,10 @@ public class Executor implements Visitor<UserObject> {
         UserTypeClass value = new UserTypeClass(scope, ast);
         if (ast.getName() != null) {
             if (scope instanceof BlockScope) {
-                ((BlockScope)scope).forceNewVariable(ast.getName(), value);
+                ((BlockScope) scope).forceNewVariable(ast.getName(), value);
             } else {
-                throw new InterpreterException(ast.getPosition(), "The surrounding scope does not support class definitions");
+                throw new InterpreterException(ast.getPosition(),
+                        "The surrounding scope does not support class definitions");
             }
         }
         return value;
@@ -398,9 +373,10 @@ public class Executor implements Visitor<UserObject> {
         UserAstFunction value = new UserAstFunction(scope, ast);
         if (ast.getName() != null) {
             if (scope instanceof BlockScope) {
-                ((BlockScope)scope).forceNewVariable(ast.getName(), value);
+                ((BlockScope) scope).forceNewVariable(ast.getName(), value);
             } else {
-                throw new InterpreterException(ast.getPosition(), "The surrounding scope does not support function definitions");
+                throw new InterpreterException(ast.getPosition(),
+                        "The surrounding scope does not support function definitions");
             }
         }
         return value;
@@ -460,7 +436,7 @@ public class Executor implements Visitor<UserObject> {
     public UserObject visit(AstCall ast) {
         UserObject left = require(ast.getFunction());
         if (left instanceof UserFunction) {
-            UserFunction function = (UserFunction)left;
+            UserFunction function = (UserFunction) left;
             AstNode[] parameters = ast.getParameters();
             if (function.getParamCount() >= 0 && function.getParamCount() != parameters.length) {
                 throw new InterpreterException(ast.getFunction().getPosition(), "Worng number of parameters");
@@ -482,8 +458,8 @@ public class Executor implements Visitor<UserObject> {
         if (left instanceof UserArray) {
             UserObject right = require(ast.getRight());
             if (right instanceof UserInteger) {
-                UserArray array = (UserArray)left;
-                int index = ((UserInteger)right).getValue().intValue();
+                UserArray array = (UserArray) left;
+                int index = ((UserInteger) right).getValue().intValue();
                 if (index < 0 || index >= array.getLength()) {
                     throw new InterpreterException(ast.getPosition(), "Index out of bounds");
                 } else {
@@ -501,7 +477,7 @@ public class Executor implements Visitor<UserObject> {
     public UserObject visit(AstNew ast) {
         UserObject kind = require(ast.getType());
         if (kind instanceof UserType) {
-            UserType type = (UserType)kind;
+            UserType type = (UserType) kind;
             if (ast.getInitialzer() != null) {
                 return type.instantiate(scope, observers, ast.getInitialzer());
             } else {
@@ -516,12 +492,12 @@ public class Executor implements Visitor<UserObject> {
     public UserObject visit(AstArray ast) {
         UserObject value = require(ast.getRight());
         if (value instanceof UserType) {
-            UserType type = (UserType)value;
+            UserType type = (UserType) value;
             UserObject size = execute(ast.getLeft());
             if (size == null) {
                 return new UserTypeStrictArray(type);
             } else if (size instanceof UserInteger) {
-                UserInteger integer = (UserInteger)size;
+                UserInteger integer = (UserInteger) size;
                 return new UserTypeStrictArray(integer.getValue().intValue(), type);
             } else {
                 throw new InterpreterException(ast.getLeft().getPosition(), "Size is not an integer");
@@ -555,7 +531,7 @@ public class Executor implements Visitor<UserObject> {
         UserObject value = require(ast.getList());
         if (value instanceof UserArray) {
             UserObject ret = null;
-            UserArray array = (UserArray)value;
+            UserArray array = (UserArray) value;
             for (int i = 0; i < array.getLength(); i++) {
                 UserObject item = array.getValueAt(i);
                 innerScope.forceNewVariable(ast.getVariable().getName(), item);

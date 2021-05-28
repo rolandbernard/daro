@@ -37,9 +37,8 @@ public final class AstNew extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstNew) {
-            AstNew node = (AstNew)obj;
-            return Objects.equals(type, node.getType())
-                && Objects.equals(initializer, node.getInitialzer());
+            AstNew node = (AstNew) obj;
+            return Objects.equals(type, node.getType()) && Objects.equals(initializer, node.getInitialzer());
         } else {
             return false;
         }
@@ -50,4 +49,3 @@ public final class AstNew extends AstNode {
         return "(" + this.getClass().getSimpleName() + " " + type + " " + initializer + ")";
     }
 }
-

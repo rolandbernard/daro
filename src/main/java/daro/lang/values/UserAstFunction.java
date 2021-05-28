@@ -21,10 +21,13 @@ public class UserAstFunction extends UserFunction {
     private final AstFunction ast;
 
     /**
-     * Create a new function from a scope and ast. The function will normally be executed either in
-     * the global scope or in a class scope.
-     * @param scope The scope to execute the function in
-     * @param ast The ast that represents the function
+     * Create a new function from a scope and ast. The function will normally be executed either in the global scope or
+     * in a class scope.
+     * 
+     * @param scope
+     *            The scope to execute the function in
+     * @param ast
+     *            The ast that represents the function
      */
     public UserAstFunction(Scope scope, AstFunction ast) {
         this.scope = scope;
@@ -58,9 +61,8 @@ public class UserAstFunction extends UserFunction {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserAstFunction) {
-            UserAstFunction function = (UserAstFunction)object;
-            return scope.equals(function.scope)
-                && ast.equals(function.ast);
+            UserAstFunction function = (UserAstFunction) object;
+            return scope.equals(function.scope) && ast.equals(function.ast);
         } else {
             return false;
         }
@@ -68,10 +70,7 @@ public class UserAstFunction extends UserFunction {
 
     @Override
     public String toString() {
-        return "function "
-            + (ast.getName() != null ? ast.getName() : "")
-            + Arrays.stream(ast.getParameters())
-                .map(AstSymbol::getName)
-                .collect(Collectors.joining(", ", "(", ")"));
+        return "fn " + (ast.getName() != null ? ast.getName() : "[anonymous]") + Arrays.stream(ast.getParameters())
+                .map(AstSymbol::getName).collect(Collectors.joining(", ", "(", ")"));
     }
 }

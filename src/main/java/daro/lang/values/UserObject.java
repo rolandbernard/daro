@@ -12,14 +12,15 @@ public abstract class UserObject {
 
     /**
      * This function should return the {@link UserType} of the {@link UserObject} it is called on.
+     * 
      * @return The type of the {@link UserObject}
      */
     public abstract UserType getType();
 
     /**
-     * This function should return the {@link Scope} that is used for member access. Objects that
-     * have more variables should overwrite this method, but still keep the result from this as a
-     * parent scope.
+     * This function should return the {@link Scope} that is used for member access. Objects that have more variables
+     * should overwrite this method, but still keep the result from this as a parent scope.
+     * 
      * @return The member scope of the object
      */
     public Scope getMemberScope() {
@@ -27,9 +28,10 @@ public abstract class UserObject {
     }
 
     /**
-     * This function should return true if the value is considered true for the purpose of
-     * conditions in conditional statements. Object that return true for this function do not
-     * necessarily have to be equal to the {@link UserBoolean} of value true.
+     * This function should return true if the value is considered true for the purpose of conditions in conditional
+     * statements. Object that return true for this function do not necessarily have to be equal to the
+     * {@link UserBoolean} of value true.
+     * 
      * @return It the object is 'true'
      */
     public abstract boolean isTrue();

@@ -39,18 +39,15 @@ public final class AstFunction extends AstNode {
 
     @Override
     public int hashCode() {
-        return (997 * name.hashCode())
-            ^ (877 * Arrays.hashCode(parameters))
-            ^ (953 * body.hashCode());
+        return (997 * name.hashCode()) ^ (877 * Arrays.hashCode(parameters)) ^ (953 * body.hashCode());
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstFunction) {
-            AstFunction node = (AstFunction)obj;
-            return Objects.equals(name, node.getName())
-                && Arrays.equals(parameters, node.getParameters())
-                && Objects.equals(body, node.getBody());
+            AstFunction node = (AstFunction) obj;
+            return Objects.equals(name, node.getName()) && Arrays.equals(parameters, node.getParameters())
+                    && Objects.equals(body, node.getBody());
         } else {
             return false;
         }
@@ -58,10 +55,7 @@ public final class AstFunction extends AstNode {
 
     @Override
     public String toString() {
-        return "("
-            + this.getClass().getSimpleName() + " " + name + " ("
-            + Arrays.stream(parameters).map(String::valueOf).collect(Collectors.joining(" "))
-            + ") " + body + ")";
+        return "(" + this.getClass().getSimpleName() + " " + name + " ("
+                + Arrays.stream(parameters).map(String::valueOf).collect(Collectors.joining(" ")) + ") " + body + ")";
     }
 }
-

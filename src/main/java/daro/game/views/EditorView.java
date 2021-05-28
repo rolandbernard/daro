@@ -10,6 +10,6 @@ public class EditorView extends View {
      * A view showing a CodeEditor and a Terminal
      */
     public EditorView() {
-        this.getChildren().addAll(new CodeEditor("", 960, Game.HEIGHT), new Terminal( 390, Game.HEIGHT));
+        this.getChildren().addAll(new CodeEditor("", 960, Game.HEIGHT), new Terminal(390, Game.HEIGHT));
     }
 }

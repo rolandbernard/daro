@@ -13,8 +13,11 @@ public class ParsingException extends IllegalArgumentException {
 
     /**
      * Creates a new parser error for the given position and with the given message.
-     * @param position The position of the error
-     * @param message The message of the message
+     * 
+     * @param position
+     *            The position of the error
+     * @param message
+     *            The message of the message
      */
     public ParsingException(Position position, String message) {
         super(message);
@@ -23,6 +26,7 @@ public class ParsingException extends IllegalArgumentException {
 
     /**
      * Get the position of the error.
+     * 
      * @return The position of the error
      */
     public Position getPosition() {
@@ -31,6 +35,7 @@ public class ParsingException extends IllegalArgumentException {
 
     /**
      * Return the starting offset of the position of the error.
+     * 
      * @return The start of the error
      */
     public int getStart() {
@@ -39,6 +44,7 @@ public class ParsingException extends IllegalArgumentException {
 
     /**
      * Return the end offset of the position of the error.
+     * 
      * @return The end of the error
      */
     public int getEnd() {
@@ -47,6 +53,7 @@ public class ParsingException extends IllegalArgumentException {
 
     /**
      * Return the length offset of the position of the error.
+     * 
      * @return The length of the error
      */
     public int getLength() {

@@ -23,7 +23,7 @@ public class UserTypeArray extends UserType {
 
     @Override
     public UserObject instantiate(Scope scope, ExecutionObserver[] observers, AstInitializer initializer) {
-        UserArray array = (UserArray)instantiate(observers);
+        UserArray array = (UserArray) instantiate(observers);
         for (AstNode value : initializer.getValues()) {
             UserObject object = Executor.execute(scope, observers, value);
             if (object != null) {

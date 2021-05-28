@@ -27,7 +27,7 @@ public abstract class AstUnaryNode extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
-            AstUnaryNode node = (AstUnaryNode)obj;
+            AstUnaryNode node = (AstUnaryNode) obj;
             return Objects.equals(operand, node.getOperand());
         } else {
             return false;
@@ -39,4 +39,3 @@ public abstract class AstUnaryNode extends AstNode {
         return "(" + this.getClass().getSimpleName() + " " + operand + ")";
     }
 }
-

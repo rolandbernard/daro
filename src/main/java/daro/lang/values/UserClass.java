@@ -17,11 +17,15 @@ public class UserClass extends UserObject {
     private final BlockScope scope;
 
     /**
-     * Create a new instance of a user defined class. The class is defined in the given scope and
-     * references the given type.
-     * @param globalScope The scope the class should be instantiated in
-     * @param classType The type of the class
-     * @param observers The observers observing the creating
+     * Create a new instance of a user defined class. The class is defined in the given scope and references the given
+     * type.
+     * 
+     * @param globalScope
+     *            The scope the class should be instantiated in
+     * @param observers
+     *            The observer observing the initialization of the class
+     * @param classType
+     *            The type of the class
      */
     public UserClass(Scope globalScope, ExecutionObserver[] observers, UserTypeClass classType) {
         this.classType = classType;
@@ -32,10 +36,13 @@ public class UserClass extends UserObject {
     }
 
     /**
-     * Create a new instance of a user defined class. The class is defined in the given scope and
-     * references the given type.
-     * @param globalScope The scope the class should be instantiated in
-     * @param classType The type of the class
+     * Create a new instance of a user defined class. The class is defined in the given scope and references the given
+     * type.
+     * 
+     * @param globalScope
+     *            The scope the class should be instantiated in
+     * @param classType
+     *            The type of the class
      */
     public UserClass(Scope globalScope, UserTypeClass classType) {
         this(globalScope, null, classType);
@@ -43,7 +50,9 @@ public class UserClass extends UserObject {
 
     /**
      * Initialize the class by running the code directly inside the body of the class definition.
-     * @param observers The observers for this execution
+     * 
+     * @param observers
+     *            The observers for this execution
      */
     private void initialize(ExecutionObserver[] observers) {
         AstSequence sequence = classType.getDefinition().getBody().getSequence();
@@ -69,9 +78,9 @@ public class UserClass extends UserObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserClass) {
-            UserClass classObject = (UserClass)object;
+            UserClass classObject = (UserClass) object;
             return scope.getFinalLevel().equals(classObject.scope.getFinalLevel())
-                && classType.equals(classObject.classType);
+                    && classType.equals(classObject.classType);
         } else {
             return false;
         }
