@@ -204,7 +204,7 @@ public class Scanner {
                     return new Token(TokenKind.IDENTIFIER, start, string.substring(start, offset));
                 }
             } else {
-                // This is eighter invalid or an operator (e.g. +)
+                // This is either invalid or an operator (e.g. +)
                 TokenKind kind = null;
                 if (offset + 1 < string.length()) {
                     kind = TokenKind.findForFixedSource(string.substring(offset, offset + 2));

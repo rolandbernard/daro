@@ -92,5 +92,7 @@ public interface Visitor<T> {
     public T visit(AstForIn ast);
 
     public T visit(AstInitializer ast);
+
+    public T visit(AstPower ast);
 }
 

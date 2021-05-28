@@ -25,48 +25,13 @@ public enum TokenKind {
     /** A token that represents a character literal. e.g. {@code 'A'} */
     CHARACTER,
 
-    FOR("for"),
-    IN("in"),
-    MATCH("match"), // TODO: implement ast
-    IF("if"),
-    ELSE("else"),
-    NEW("new"),
-    FN("fn"),
-    IMPORT("import"), // TODO: implement ast
-    CLASS("class"),
-    RETURN("return"),
-    COLON(":"),
-    SEMICOLON(";"),
-    COMMA(","),
-    DOT("."),
-    OPEN_PAREN("("),
-    CLOSE_PAREN(")"),
-    OPEN_BRACKET("["),
-    CLOSE_BRACKET("]"),
-    OPEN_BRACE("{"),
-    CLOSE_BRACE("}"),
-    DEFINE(":="),
-    ASSIGN("="),
-    EQUAL("=="),
-    UNEQUAL("!="),
-    LESS("<"),
-    MORE(">"),
-    LESS_EQUAL("<="),
-    MORE_EQUAL(">="),
-    SHIFT_LEFT("<<"),
-    SHIFT_RIGHT(">>"),
-    PLUS("+"),
-    MINUS("-"),
-    ASTERIX("*"),
-    SLASH("/"),
-    PERCENT("%"),
-    BANG("!"),
-    TILDE("~"),
-    PIPE("|"),
-    AND("&"),
-    CARET("^"),
-    DOUBLE_PIPE("||"),
-    DOUBLE_AND("&&");
+    FOR("for"), IN("in"), MATCH("match"), // TODO: implement ast
+    IF("if"), ELSE("else"), NEW("new"), FN("fn"), IMPORT("import"), // TODO: implement ast
+    CLASS("class"), RETURN("return"), COLON(":"), SEMICOLON(";"), COMMA(","), DOT("."), OPEN_PAREN("("),
+    CLOSE_PAREN(")"), OPEN_BRACKET("["), CLOSE_BRACKET("]"), OPEN_BRACE("{"), CLOSE_BRACE("}"), DEFINE(":="),
+    ASSIGN("="), EQUAL("=="), UNEQUAL("!="), LESS("<"), MORE(">"), LESS_EQUAL("<="), MORE_EQUAL(">="), SHIFT_LEFT("<<"),
+    SHIFT_RIGHT(">>"), PLUS("+"), MINUS("-"), ASTERIX("*"), SLASH("/"), PERCENT("%"), BANG("!"), TILDE("~"), PIPE("|"),
+    AND("&"), CARET("^"), DOUBLE_PIPE("||"), DOUBLE_AND("&&"), DOUBLEASTERIX("**");
 
     /**
      * This variable gets initialited with a map from fixed source string to {@link TokenKind}.

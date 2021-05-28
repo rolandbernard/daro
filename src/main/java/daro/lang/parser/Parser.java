@@ -520,18 +520,29 @@ public class Parser {
      * @return The root node of the parsed ast tree
      */
     private AstNode parseMultiplicativeExpression() {
-        return parseBinaryExpression(
-            this::parseUnaryPrefixExpression,
-            new TokenKind[]{ TokenKind.ASTERIX, TokenKind.SLASH, TokenKind.PERCENT },
-            (left, right) -> new AstMultiply(new Position(left.getStart(), right.getEnd()), left, right),
-            (left, right) -> new AstDivide(new Position(left.getStart(), right.getEnd()), left, right),
-            (left, right) -> new AstRemainder(new Position(left.getStart(), right.getEnd()), left, right)
-        );
+        return parseBinaryExpression(this::parsePowerExpression,
+                new TokenKind[] { TokenKind.ASTERIX, TokenKind.SLASH, TokenKind.PERCENT },
+                (left, right) -> new AstMultiply(new Position(left.getStart(), right.getEnd()), left, right),
+                (left, right) -> new AstDivide(new Position(left.getStart(), right.getEnd()), left, right),
+                (left, right) -> new AstRemainder(new Position(left.getStart(), right.getEnd()), left, right));
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the
-     * unary prefix operations. i.e. {@code + - ~ ! []}
+     * Parses a expression containing only operations with a precedence equal or higher than the power
+     * operation. i.e. {@code **}
+     *
+     * @return The root node of the parsed ast tree
+     */
+    private AstNode parsePowerExpression() {
+        return parseBinaryExpression(this::parseUnaryPrefixExpression,
+                new TokenKind[] { TokenKind.DOUBLEASTERIX },
+                (left, right) -> new AstPower(new Position(left.getStart(), right.getEnd()), left, right));
+    }
+
+    /**
+     * Parses a expression containing only operations with a precedence equal or higher than the unary prefix
+     * operations. i.e. {@code + - ~ ! []}
+     * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseUnaryPrefixExpression() {
