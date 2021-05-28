@@ -332,4 +332,10 @@ public class ScopeInitializer implements Visitor<Object> {
         }
         return null;
     }
+
+    @Override
+    public Object visit(AstPower ast) {
+        initializeBinary(ast);
+        return null;
+    }
 }

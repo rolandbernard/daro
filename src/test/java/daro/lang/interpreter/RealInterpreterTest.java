@@ -46,13 +46,18 @@ public class RealInterpreterTest {
     }
 
     @Test
-    void divition() {
+    void division() {
         assertEquals(new UserReal(0.1875), interpreter.execute("12.0 / 64.0"));
     }
 
     @Test
     void remainder() {
         assertEquals(new UserReal(2.25), interpreter.execute("42.25 % 2.5"));
+    }
+
+    @Test
+    void power() {
+        assertEquals(new UserReal(0.16493848884661177), interpreter.execute("0.5**2.6"));
     }
 
     @Test
@@ -149,4 +154,5 @@ public class RealInterpreterTest {
     void realType() {
         assertEquals(new UserTypeReal(), interpreter.execute("typeof(42.12)"));
     }
+
 }

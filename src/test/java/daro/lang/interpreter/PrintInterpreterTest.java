@@ -27,7 +27,7 @@ public class PrintInterpreterTest {
     @Test
     void emptyPrintln() {
         interpreter.execute("println()");
-        assertEquals("\n", stream.toString());
+        assertEquals("\n", stream.toString().replace("\r\n", "\n"));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class PrintInterpreterTest {
     @Test
     void printlnInteger() {
         interpreter.execute("println(5)");
-        assertEquals("5\n", stream.toString());
+        assertEquals("5\n", stream.toString().replace("\r\n", "\n"));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class PrintInterpreterTest {
     @Test
     void printlnReal() {
         interpreter.execute("println(4.2)");
-        assertEquals("4.2\n", stream.toString());
+        assertEquals("4.2\n", stream.toString().replace("\r\n", "\n"));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class PrintInterpreterTest {
     @Test
     void printlnString() {
         interpreter.execute("println(\"Hello\")");
-        assertEquals("Hello\n", stream.toString());
+        assertEquals("Hello\n", stream.toString().replace("\r\n", "\n"));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class PrintInterpreterTest {
     @Test
     void printlnArray() {
         interpreter.execute("println(new array { 1, 2, 3 })");
-        assertEquals("[1, 2, 3]\n", stream.toString());
+        assertEquals("[1, 2, 3]\n", stream.toString().replace("\r\n", "\n"));
     }
 
     @Test
@@ -87,6 +87,6 @@ public class PrintInterpreterTest {
     @Test
     void printlnMultiple() {
         interpreter.execute("println(new array { 1, 2, 3 }, 1, 5.5, \"Hello\")");
-        assertEquals("[1, 2, 3]15.5Hello\n", stream.toString());
+        assertEquals("[1, 2, 3]15.5Hello\n", stream.toString().replace("\r\n", "\n"));
     }
 }

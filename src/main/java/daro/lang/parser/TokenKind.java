@@ -32,7 +32,7 @@ public enum TokenKind {
     CLOSE_PAREN(")"), OPEN_BRACKET("["), CLOSE_BRACKET("]"), OPEN_BRACE("{"), CLOSE_BRACE("}"), DEFINE(":="),
     ASSIGN("="), EQUAL("=="), UNEQUAL("!="), LESS("<"), MORE(">"), LESS_EQUAL("<="), MORE_EQUAL(">="), SHIFT_LEFT("<<"),
     SHIFT_RIGHT(">>"), PLUS("+"), MINUS("-"), ASTERIX("*"), SLASH("/"), PERCENT("%"), BANG("!"), TILDE("~"), PIPE("|"),
-    AND("&"), CARET("^"), DOUBLE_PIPE("||"), DOUBLE_AND("&&");
+    AND("&"), CARET("^"), DOUBLE_PIPE("||"), DOUBLE_AND("&&"), DOUBLEASTERIX("**");
 
     /**
      * This variable gets initialited with a map from fixed source string to {@link TokenKind}.

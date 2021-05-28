@@ -297,4 +297,9 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
     public VariableLocation visit(AstInitializer ast) {
         return null;
     }
+
+    @Override
+    public VariableLocation visit(AstPower ast) {
+        return null;
+    }
 }

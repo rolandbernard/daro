@@ -519,4 +519,10 @@ public class Executor implements Visitor<UserObject> {
     public UserObject visit(AstInitializer ast) {
         throw new InterpreterException(ast.getPosition(), "Execution error");
     }
+
+    @Override
+    public UserObject visit(AstPower ast) {
+        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().pow(b.getValue().intValue())),
+                (a, b) -> new UserReal(Math.pow(a.doubleValue(), b.doubleValue())), null);
+    }
 }
