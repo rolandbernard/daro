@@ -7,9 +7,8 @@ import java.util.stream.Stream;
 
 import daro.lang.ast.AstInitializer;
 import daro.lang.ast.AstNode;
-import daro.lang.interpreter.ExecutionObserver;
+import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.InterpreterException;
-import daro.lang.interpreter.Scope;
 
 /**
  * This class represents the type for a array object that has a single type of child ({@link UserArray}). This type can
@@ -50,32 +49,31 @@ public class UserTypeStrictArray extends UserType {
     }
 
     @Override
-    public UserObject instantiate(ExecutionObserver[] observers) {
+    public UserObject instantiate(ExecutionContext context) {
         if (size == null) {
             return new UserArray(new ArrayList<>());
         } else {
-            return new UserArray(Stream.generate(() -> base.instantiate(observers)).limit(size)
+            return new UserArray(Stream.generate(() -> base.instantiate(context)).limit(size)
                     .collect(Collectors.toCollection(() -> new ArrayList<>())));
         }
     }
 
     @Override
-    public UserObject instantiate(Scope scope, ExecutionObserver[] observers, AstInitializer initializer) {
+    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
         ArrayList<UserObject> list = new ArrayList<>();
         if (size != null && size < initializer.getValues().length) {
             throw new InterpreterException(initializer.getPosition(), "Initializer is longer that the array");
         }
         for (AstNode value : initializer.getValues()) {
             if (value instanceof AstInitializer) {
-                list.add(base.instantiate(scope, observers, (AstInitializer) value));
+                list.add(base.instantiate(context, (AstInitializer) value));
             } else {
-                list.add(base.instantiate(scope, observers,
-                        new AstInitializer(value.getPosition(), new AstNode[] { value })));
+                list.add(base.instantiate(context, new AstInitializer(value.getPosition(), new AstNode[] { value })));
             }
         }
         if (size != null) {
             for (int i = initializer.getValues().length; i < size; i++) {
-                list.add(base.instantiate(observers));
+                list.add(base.instantiate(context));
             }
         }
         return new UserArray(list);

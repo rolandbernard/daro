@@ -1,8 +1,11 @@
 package daro.lang.values;
 
+import java.util.Map;
+
 import daro.lang.ast.AstSequence;
 import daro.lang.interpreter.BlockScope;
-import daro.lang.interpreter.ExecutionObserver;
+import daro.lang.interpreter.ConstantScope;
+import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.Executor;
 import daro.lang.interpreter.Scope;
 import daro.lang.interpreter.ScopeInitializer;
@@ -27,12 +30,11 @@ public class UserClass extends UserObject {
      * @param classType
      *            The type of the class
      */
-    public UserClass(Scope globalScope, ExecutionObserver[] observers, UserTypeClass classType) {
+    public UserClass(Scope globalScope, ExecutionContext context, UserTypeClass classType) {
         this.classType = classType;
-        BlockScope thisScope = new BlockScope(globalScope);
-        thisScope.forceNewVariable("this", this);
+        Scope thisScope = new ConstantScope(globalScope, Map.of("this", this));
         this.scope = new BlockScope(thisScope);
-        initialize(observers);
+        initialize(context);
     }
 
     /**
@@ -54,10 +56,10 @@ public class UserClass extends UserObject {
      * @param observers
      *            The observers for this execution
      */
-    private void initialize(ExecutionObserver[] observers) {
+    private void initialize(ExecutionContext context) {
         AstSequence sequence = classType.getDefinition().getBody().getSequence();
         ScopeInitializer.initialize(scope, sequence);
-        Executor.execute(scope, observers, sequence);
+        Executor.execute(context.forScope(scope), sequence);
     }
 
     @Override

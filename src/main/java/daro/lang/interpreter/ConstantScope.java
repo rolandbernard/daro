@@ -65,7 +65,11 @@ public class ConstantScope implements Scope {
 
     @Override
     public VariableLocation getVariableLocation(String name) {
-        return null;
+        if (variables.containsKey(name) || parent == null) {
+            return null;
+        } else {
+            return parent.getVariableLocation(name);
+        }
     }
 
     @Override

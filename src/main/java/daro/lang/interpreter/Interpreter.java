@@ -40,7 +40,7 @@ public class Interpreter {
 
     /**
      * Create a new {@link Interpreter}. Each interpreter has it's own context in which every execute method will
-     * execute. This method will initialize the interpreter with a default gloabl scope.
+     * execute. This method will initialize the interpreter with a default global scope.
      */
     public Interpreter() {
         this(new BlockScope(new RootScope()));
@@ -68,7 +68,7 @@ public class Interpreter {
      */
     public UserObject execute(AstNode ast) {
         ScopeInitializer.initialize(globalScope, ast);
-        return Executor.execute(globalScope, ast);
+        return Executor.execute(new ExecutionContext(globalScope), ast);
     }
 
     /**
@@ -128,7 +128,7 @@ public class Interpreter {
      */
     public UserObject execute(AstNode ast, ExecutionObserver[] observers) {
         ScopeInitializer.initialize(globalScope, ast);
-        return Executor.execute(globalScope, observers, ast);
+        return Executor.execute(new ExecutionContext(globalScope, observers), ast);
     }
 
     /**

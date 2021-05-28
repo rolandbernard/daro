@@ -74,7 +74,6 @@ public class UserArray extends UserObject {
                 throw new InterpreterException("Sorting comparison must be a function");
             }
         }));
-        // TODO: add methods
         return new ConstantScope(super.getMemberScope(), variables);
     }
 

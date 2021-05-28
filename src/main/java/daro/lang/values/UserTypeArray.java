@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 import daro.lang.ast.AstInitializer;
 import daro.lang.ast.AstNode;
-import daro.lang.interpreter.ExecutionObserver;
+import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.Executor;
 import daro.lang.interpreter.InterpreterException;
-import daro.lang.interpreter.Scope;
 
 /**
  * This class represents the type for a array object ({@link UserArray}).
@@ -17,15 +16,15 @@ import daro.lang.interpreter.Scope;
 public class UserTypeArray extends UserType {
 
     @Override
-    public UserObject instantiate(ExecutionObserver[] observers) {
+    public UserObject instantiate(ExecutionContext context) {
         return new UserArray(new ArrayList<>());
     }
 
     @Override
-    public UserObject instantiate(Scope scope, ExecutionObserver[] observers, AstInitializer initializer) {
-        UserArray array = (UserArray) instantiate(observers);
+    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
+        UserArray array = (UserArray) instantiate(context);
         for (AstNode value : initializer.getValues()) {
-            UserObject object = Executor.execute(scope, observers, value);
+            UserObject object = Executor.execute(context, value);
             if (object != null) {
                 array.pushValue(object);
             } else {

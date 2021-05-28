@@ -15,62 +15,32 @@ import daro.lang.values.*;
  * @author Roland Bernard
  */
 public class Executor implements Visitor<UserObject> {
-    private final Scope scope;
-    private final ExecutionObserver[] observers;
+    private final ExecutionContext context;
 
     /**
      * Create a new {@link Executor} for execution in the given scope and observed by the given
      * {@link ExecutionObserver}s.
      * 
-     * @param scope
-     *            The scope to execute in
-     * @param observers
-     *            The observers for this execution
+     * @param context
+     *            The context to execute in
      */
-    public Executor(Scope scope, ExecutionObserver[] observers) {
-        this.scope = scope;
-        this.observers = observers;
-    }
-
-    /**
-     * Create a new {@link Executor} for execution in the given scope.
-     * 
-     * @param scope
-     *            The scope to execute in
-     */
-    public Executor(Scope scope) {
-        this(scope, null);
+    public Executor(ExecutionContext context) {
+        this.context = context;
     }
 
     /**
      * Run the given {@link AstNode} in the given {@link Scope} and observe it with the given
      * {@link ExecutionObserver}s.
      * 
-     * @param scope
-     *            The scope to execute in
-     * @param observers
-     *            The observers for this execution
+     * @param context
+     *            The context to execute in
      * @param program
      *            The {@link AstNode} to execute
      * 
      * @return The result of the execution
      */
-    public static UserObject execute(Scope scope, ExecutionObserver[] observers, AstNode program) {
-        return (new Executor(scope, observers)).execute(program);
-    }
-
-    /**
-     * Run the given {@link AstNode} in the given {@link Scope}.
-     * 
-     * @param scope
-     *            The scope to execute in
-     * @param program
-     *            The {@link AstNode} to execute
-     * 
-     * @return The result of the execution
-     */
-    public static UserObject execute(Scope scope, AstNode program) {
-        return (new Executor(scope)).execute(program);
+    public static UserObject execute(ExecutionContext context, AstNode program) {
+        return (new Executor(context)).execute(program);
     }
 
     /**
@@ -84,9 +54,11 @@ public class Executor implements Visitor<UserObject> {
     public UserObject execute(AstNode program) {
         if (program != null) {
             try {
+                ExecutionObserver[] observers = context.getObservers();
                 if (observers == null) {
                     return program.accept(this);
                 } else {
+                    Scope scope = context.getScope();
                     for (ExecutionObserver observer : observers) {
                         observer.beforeNodeExecution(program, scope);
                     }
@@ -356,10 +328,10 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstClass ast) {
-        UserTypeClass value = new UserTypeClass(scope, ast);
+        UserTypeClass value = new UserTypeClass(context.getScope(), ast);
         if (ast.getName() != null) {
-            if (scope instanceof BlockScope) {
-                ((BlockScope) scope).forceNewVariable(ast.getName(), value);
+            if (context.getScope() instanceof BlockScope) {
+                ((BlockScope) context.getScope()).forceNewVariable(ast.getName(), value);
             } else {
                 throw new InterpreterException(ast.getPosition(),
                         "The surrounding scope does not support class definitions");
@@ -370,10 +342,10 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstFunction ast) {
-        UserAstFunction value = new UserAstFunction(scope, ast);
+        UserAstFunction value = new UserAstFunction(context.getScope(), ast);
         if (ast.getName() != null) {
-            if (scope instanceof BlockScope) {
-                ((BlockScope) scope).forceNewVariable(ast.getName(), value);
+            if (context.getScope() instanceof BlockScope) {
+                ((BlockScope) context.getScope()).forceNewVariable(ast.getName(), value);
             } else {
                 throw new InterpreterException(ast.getPosition(),
                         "The surrounding scope does not support function definitions");
@@ -384,10 +356,10 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstBlock ast) {
-        BlockScope innerScope = new BlockScope(scope);
+        BlockScope innerScope = new BlockScope(context.getScope());
         AstSequence sequence = ast.getSequence();
         ScopeInitializer.initialize(innerScope, sequence);
-        return execute(innerScope, observers, sequence);
+        return execute(context.forScope(innerScope), sequence);
     }
 
     @Override
@@ -401,7 +373,7 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstAssignment ast) {
-        VariableLocation location = LocationEvaluator.execute(scope, observers, ast.getLeft());
+        VariableLocation location = LocationEvaluator.execute(context, ast.getLeft());
         if (location != null) {
             UserObject value = require(ast.getRight());
             location.storeValue(value);
@@ -413,7 +385,7 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstSymbol ast) {
-        UserObject value = scope.getVariableValue(ast.getName());
+        UserObject value = context.getScope().getVariableValue(ast.getName());
         if (value == null) {
             throw new InterpreterException(ast.getPosition(), "Variable is undefined");
         } else {
@@ -439,13 +411,13 @@ public class Executor implements Visitor<UserObject> {
             UserFunction function = (UserFunction) left;
             AstNode[] parameters = ast.getParameters();
             if (function.getParamCount() >= 0 && function.getParamCount() != parameters.length) {
-                throw new InterpreterException(ast.getFunction().getPosition(), "Worng number of parameters");
+                throw new InterpreterException(ast.getFunction().getPosition(), "Wrong number of parameters");
             } else {
                 UserObject[] parameterValues = new UserObject[parameters.length];
                 for (int i = 0; i < parameters.length; i++) {
                     parameterValues[i] = require(parameters[i]);
                 }
-                return function.execute(parameterValues, observers);
+                return function.execute(parameterValues, context);
             }
         } else {
             throw new InterpreterException(ast.getFunction().getPosition(), "Value is not a function");
@@ -479,9 +451,9 @@ public class Executor implements Visitor<UserObject> {
         if (kind instanceof UserType) {
             UserType type = (UserType) kind;
             if (ast.getInitialzer() != null) {
-                return type.instantiate(scope, observers, ast.getInitialzer());
+                return type.instantiate(context, ast.getInitialzer());
             } else {
-                return type.instantiate(observers);
+                return type.instantiate(context);
             }
         } else {
             throw new InterpreterException(ast.getType().getPosition(), "Value is not a type");
@@ -527,7 +499,7 @@ public class Executor implements Visitor<UserObject> {
 
     @Override
     public UserObject visit(AstForIn ast) {
-        BlockScope innerScope = new BlockScope(scope);
+        BlockScope innerScope = new BlockScope(context.getScope());
         UserObject value = require(ast.getList());
         if (value instanceof UserArray) {
             UserObject ret = null;
@@ -535,7 +507,7 @@ public class Executor implements Visitor<UserObject> {
             for (int i = 0; i < array.getLength(); i++) {
                 UserObject item = array.getValueAt(i);
                 innerScope.forceNewVariable(ast.getVariable().getName(), item);
-                ret = execute(innerScope, observers, ast.getBody());
+                ret = execute(context.forScope(innerScope), ast.getBody());
             }
             return ret;
         } else {

@@ -36,12 +36,12 @@ public class BlockScope implements Scope {
 
     /**
      * Creates a new {@link BlockScope} with the given parent and internal map. This constructor is only to be used
-     * internaly by this class.
+     * internally by this class.
      * 
      * @param parent
      *            The parent scope
      * @param variables
-     *            The interal variables map
+     *            The internal variables map
      */
     private BlockScope(Scope parent, Map<String, UserObject> variables) {
         this.parent = parent;
@@ -108,7 +108,7 @@ public class BlockScope implements Scope {
 
     @Override
     public VariableLocation getVariableLocation(String name) {
-        if (!variables.containsKey(name) && containsVariable(name)) {
+        if (!variables.containsKey(name) && parent != null && parent.containsVariable(name)) {
             return parent.getVariableLocation(name);
         } else {
             return value -> {

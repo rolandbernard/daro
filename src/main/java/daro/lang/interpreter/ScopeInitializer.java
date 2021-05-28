@@ -23,7 +23,7 @@ public class ScopeInitializer implements Visitor<Object> {
     }
 
     /**
-     * Iniialize using the given {@link AstNode} the the given {@link Scope}.
+     * Initialize using the given {@link AstNode} the the given {@link Scope}.
      * 
      * @param scope
      *            The scope to initialize
@@ -35,7 +35,7 @@ public class ScopeInitializer implements Visitor<Object> {
     }
 
     /**
-     * Iniialize using the given {@link AstNode}.
+     * Initialize using the given {@link AstNode}.
      * 
      * @param program
      *            The {@link AstNode} to initialize with
