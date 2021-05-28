@@ -22,6 +22,8 @@ public class UserClass extends UserObject {
      * 
      * @param globalScope
      *            The scope the class should be instantiated in
+     * @param observers
+     *            The observer observing the initialization of the class
      * @param classType
      *            The type of the class
      */

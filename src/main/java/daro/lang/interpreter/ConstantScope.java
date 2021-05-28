@@ -1,6 +1,8 @@
 package daro.lang.interpreter;
 
 import daro.lang.values.UserObject;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -67,6 +69,23 @@ public class ConstantScope implements Scope {
     }
 
     @Override
+    public Map<String, UserObject> getCompleteMapping() {
+        Map<String, UserObject> result;
+        if (parent != null) {
+            result = parent.getCompleteMapping();
+        } else {
+            result = new HashMap<>();
+        }
+        result.putAll(variables);
+        return result;
+    }
+
+    @Override
+    public void reset() {
+        // The scope can not change
+    }
+
+    @Override
     public int hashCode() {
         return variables.hashCode();
     }
@@ -83,25 +102,8 @@ public class ConstantScope implements Scope {
 
     @Override
     public String toString() {
-        StringBuilder ret = new StringBuilder();
-        ret.append("{");
-        ret.append(variables.entrySet().stream().map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-                .collect(Collectors.joining(", ")));
-        ret.append("}");
-        return ret.toString();
-    }
-
-    @Override
-    public Map<String, UserObject> getCompleteMapping() {
-        Map<String, UserObject> result;
-        if (parent != null) {
-            result = parent.getCompleteMapping();
-        } else {
-            result = Map.copyOf(Map.of());
-        }
-        for (Map.Entry<String, UserObject> entry : variables.entrySet()) {
-            result.put(entry.getKey(), entry.getValue());
-        }
-        return result;
+        return getCompleteMapping().entrySet().stream()
+                .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
+                .collect(Collectors.joining(", ", "{", "}"));
     }
 }

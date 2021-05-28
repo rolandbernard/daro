@@ -5,7 +5,6 @@ import daro.lang.values.*;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * This class implements the root scope of the program. It contains the predefined methods and types in the Daro
@@ -13,8 +12,7 @@ import java.util.stream.Collectors;
  * 
  * @author Roland Bernard
  */
-public class RootScope implements Scope {
-    protected final Map<String, UserObject> variables;
+public class RootScope extends ConstantScope {
 
     /**
      * Creates a new {@link RootScope}. The created scope will use the given System.out as a target for the print
@@ -32,7 +30,20 @@ public class RootScope implements Scope {
      *            The output stream for print functions
      */
     public RootScope(PrintStream output) {
-        variables = new HashMap<>();
+        super(buildRootVariables(output));
+    }
+
+    /**
+     * This function generates a mapping between {@link String}s and {@link UserObject}s that represent all the
+     * variables in the root scope of a daro program.
+     * 
+     * @param output
+     *            The stream to use for print functions
+     * 
+     * @return The mapping of the root scope
+     */
+    private static Map<String, UserObject> buildRootVariables(PrintStream output) {
+        Map<String, UserObject> variables = new HashMap<>();
         // Types
         variables.put("int", new UserTypeInteger());
         variables.put("real", new UserTypeReal());
@@ -61,26 +72,7 @@ public class RootScope implements Scope {
             }
             output.println();
         }));
-    }
-
-    @Override
-    public boolean containsVariable(String name) {
-        return variables.containsKey(name);
-    }
-
-    @Override
-    public UserObject getVariableValue(String name) {
-        return variables.get(name);
-    }
-
-    @Override
-    public VariableLocation getVariableLocation(String name) {
-        return null;
-    }
-
-    @Override
-    public int hashCode() {
-        return variables.hashCode();
+        return variables;
     }
 
     @Override
@@ -90,20 +82,5 @@ public class RootScope implements Scope {
         } else {
             return false;
         }
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder ret = new StringBuilder();
-        ret.append("{");
-        ret.append(variables.entrySet().stream().map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-                .collect(Collectors.joining(", ")));
-        ret.append("}");
-        return ret.toString();
-    }
-
-    @Override
-    public Map<String, UserObject> getCompleteMapping() {
-        return Map.copyOf(variables);
     }
 }

@@ -52,4 +52,9 @@ public interface Scope {
      * @return The complete mapping
      */
     public Map<String, UserObject> getCompleteMapping();
+
+    /**
+     * Resets the scope to its default state.
+     */
+    public void reset();
 }

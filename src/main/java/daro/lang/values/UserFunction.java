@@ -27,6 +27,8 @@ public abstract class UserFunction extends UserObject {
      * 
      * @param params
      *            The params to call the function with
+     * @param observers
+     *            The observer observing execution of the function
      * 
      * @return The return value of the function
      */

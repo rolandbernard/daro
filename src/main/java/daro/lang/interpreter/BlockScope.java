@@ -118,6 +118,24 @@ public class BlockScope implements Scope {
     }
 
     @Override
+    public Map<String, UserObject> getCompleteMapping() {
+        Map<String, UserObject> result;
+        if (parent != null) {
+            result = parent.getCompleteMapping();
+        } else {
+            result = new HashMap<>();
+        }
+        result.putAll(variables);
+        return result;
+    }
+
+    @Override
+    public void reset() {
+        parent.reset();
+        variables.clear();
+    }
+
+    @Override
     public int hashCode() {
         return (971 * variables.hashCode()) ^ (991 * parent.hashCode());
     }
@@ -134,28 +152,8 @@ public class BlockScope implements Scope {
 
     @Override
     public String toString() {
-        StringBuilder ret = new StringBuilder();
-        ret.append("{");
-        if (parent != null) {
-            ret.append(parent.toString());
-        }
-        ret.append(variables.entrySet().stream().map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-                .collect(Collectors.joining(", ")));
-        ret.append("}");
-        return ret.toString();
-    }
-
-    @Override
-    public Map<String, UserObject> getCompleteMapping() {
-        Map<String, UserObject> result;
-        if (parent != null) {
-            result = parent.getCompleteMapping();
-        } else {
-            result = Map.copyOf(Map.of());
-        }
-        for (Map.Entry<String, UserObject> entry : variables.entrySet()) {
-            result.put(entry.getKey(), entry.getValue());
-        }
-        return result;
+        return getCompleteMapping().entrySet().stream()
+                .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
+                .collect(Collectors.joining(", ", "{", "}"));
     }
 }
