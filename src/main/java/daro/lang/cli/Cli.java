@@ -1,9 +1,8 @@
 package daro.lang.cli;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 import daro.lang.ast.Position;
@@ -21,97 +20,17 @@ import daro.lang.values.UserObject;
 public class Cli {
 
     /**
-     * This method computes the line number from a offset into the given text.
-     * 
-     * @param offset
-     *            The offset to check the line number of
-     * @param text
-     *            The text the offset refers to
-     * 
-     * @return The line number of the offset
-     */
-    public static int lineFromOffset(int offset, String text) {
-        String[] lines = text.split("\n");
-        int current = 0;
-        int line = 0;
-        while (line < lines.length && current <= offset) {
-            current += lines[line].length() + 1;
-            line++;
-        }
-        return line;
-    }
-
-    /**
-     * This method computes the column number from a offset into the given text.
-     * 
-     * @param offset
-     *            The offset to check the column number of
-     * @param text
-     *            The text the offset refers to
-     * 
-     * @return The column number of the offset
-     */
-    public static int columnFromOffset(int offset, String text) {
-        String[] lines = text.split("\n");
-        int current = 0;
-        int line = 0;
-        while (line < lines.length && current <= offset) {
-            current += lines[line].length() + 1;
-            line++;
-        }
-        line--;
-        current -= lines[line].length() + 1;
-        return offset - current + 1;
-    }
-
-    /**
      * This method prints a error onto System.out.err,
      * 
      * @param type
      *            The type of error. e.g Syntax error, Runtime error, ...
      * @param position
      *            The position the error occurred at
-     * @param program
-     *            The source code of the program that was run
      * @param message
      *            The message the error contains
      */
-    private static void printError(String type, Position position, String program, String message) {
-        System.err.println(type + " at " + lineFromOffset(position.getStart(), program) + ":"
-                + columnFromOffset(position.getStart(), program) + ": " + message);
-    }
-
-    /**
-     * This method prints a error onto System.out.err,
-     * 
-     * @param type
-     *            The type of error. e.g Syntax error, Runtime error, ...
-     * @param file
-     *            The file the error occurred in
-     * @param position
-     *            The position the error occurred at
-     * @param program
-     *            The source code of the program that was run
-     * @param message
-     *            The message the error contains
-     */
-    private static void printError(String type, String file, Position position, String program, String message) {
-        System.err.println(type + " at " + file + ":" + lineFromOffset(position.getStart(), program) + ":"
-                + columnFromOffset(position.getStart(), program) + ": " + message);
-    }
-
-    /**
-     * This method prints a error onto System.out.err,
-     * 
-     * @param type
-     *            The type of error. e.g Syntax error, Runtime error, ...
-     * @param file
-     *            The file the error occurred in
-     * @param message
-     *            The message the error contains
-     */
-    private static void printError(String type, String file, String message) {
-        System.err.println(type + " in " + file + ": " + message);
+    private static void printError(String type, Position position, String message) {
+        System.err.println(type + " at " + position + ": " + message);
     }
 
     /**
@@ -122,20 +41,17 @@ public class Cli {
      */
     public static void executeFiles(String[] files) {
         Interpreter interpreter = new Interpreter();
-        String lastSource = "";
-        String lastFile = "";
-        try {
-            for (String file : files) {
-                lastFile = file;
-                lastSource = new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8);
-                interpreter.execute(lastSource);
+        for (String file : files) {
+            try {
+                    String source = Files.readString(Path.of(file));
+                    interpreter.execute(source);
+            } catch (InterpreterException error) {
+                printError("Runtime error", error.getPosition(), error.getMessage());
+            } catch (ParsingException error) {
+                printError("Syntax error", error.getPosition(),  error.getMessage());
+            } catch (IOException e) {
+                printError("File error", new Position(Path.of(file)), "Failed to open file");
             }
-        } catch (InterpreterException error) {
-            printError("Runtime error", lastFile, error.getPosition(), lastSource, error.getMessage());
-        } catch (ParsingException error) {
-            printError("Syntax error", lastFile, error.getPosition(), lastSource, error.getMessage());
-        } catch (IOException e) {
-            printError("File error", lastFile, "Failed to open file");
         }
     }
 
@@ -163,12 +79,12 @@ public class Cli {
                 code.setLength(0);
                 System.out.print("> ");
             } catch (InterpreterException error) {
-                printError("Runtime error", error.getPosition(), program, error.getMessage());
+                printError("Runtime error", error.getPosition(), error.getMessage());
                 code.setLength(0);
                 System.out.print("> ");
             } catch (ParsingException error) {
                 if (line.isEmpty()) {
-                    printError("Syntax error", error.getPosition(), program, error.getMessage());
+                    printError("Syntax error", error.getPosition(), error.getMessage());
                     code.setLength(0);
                     System.out.print("> ");
                 } else {

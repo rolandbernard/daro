@@ -1,6 +1,7 @@
 package daro.lang.interpreter;
 
 import java.io.PrintStream;
+import java.nio.file.Path;
 
 import daro.lang.ast.*;
 import daro.lang.parser.*;
@@ -91,6 +92,28 @@ public class Interpreter {
     }
 
     /**
+     * Parses and executes the code inside the given source. All statements in the source will be executed in the global
+     * scope of the interpreter and functions, class and variables in the code will be accessible for subsequent execute
+     * calls.
+     * 
+     * @param source
+     *            The code that should be executed
+     * @param file
+     *            The file for error message positions
+     * 
+     * @return The result of the execution
+     * 
+     * @throws InterpreterException
+     *             It the code causes an exception during execution
+     * @throws ParsingException
+     *             It the source cannot be parsed
+     */
+    public UserObject execute(String source, Path file) {
+        AstSequence ast = Parser.parseSourceCode(source, file);
+        return execute(ast);
+    }
+
+    /**
      * Execute the given {@link AstNode} inside the {@link Interpreter} with the given {@link ExecutionObserver}s.
      * 
      * @param ast
@@ -127,6 +150,30 @@ public class Interpreter {
      */
     public UserObject execute(String source, ExecutionObserver[] observers) {
         AstSequence ast = Parser.parseSourceCode(source);
+        return execute(ast, observers);
+    }
+
+    /**
+     * Parses and executes the code inside the given source. All statements in the source will be executed in the global
+     * scope of the interpreter and functions, class and variables in the code will be accessible for subsequent execute
+     * calls. Also install the given {@link ExecutionObserver}s before execution and uninstall them afterwards.
+     * 
+     * @param source
+     *            The code that should be executed
+     * @param file
+     *            The file for error message positions
+     * @param observers
+     *            The observers to execute with
+     * 
+     * @return The result of the execution
+     * 
+     * @throws InterpreterException
+     *             It the code causes an exception during execution
+     * @throws ParsingException
+     *             It the source cannot be parsed
+     */
+    public UserObject execute(String source, Path file, ExecutionObserver[] observers) {
+        AstSequence ast = Parser.parseSourceCode(source, file);
         return execute(ast, observers);
     }
 
