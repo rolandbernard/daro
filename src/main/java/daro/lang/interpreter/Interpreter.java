@@ -129,4 +129,11 @@ public class Interpreter {
         AstSequence ast = Parser.parseSourceCode(source);
         return execute(ast, observers);
     }
+
+    /**
+     * Reset the global scope of this interpreter, clearing all variables.
+     */
+    public void reset() {
+        globalScope.reset();
+    }
 }

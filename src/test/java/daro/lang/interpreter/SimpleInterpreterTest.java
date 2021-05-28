@@ -131,4 +131,13 @@ public class SimpleInterpreterTest {
             interpreter.execute(new AstInitializer(null, new AstNode[0]));
         });
     }
+
+    @Test
+    void interpreterReset() {
+        interpreter.execute("x = 1; y = 2");
+        interpreter.reset();
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x");
+        });
+    }
 }
