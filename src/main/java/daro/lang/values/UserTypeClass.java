@@ -55,7 +55,8 @@ public class UserTypeClass extends UserType {
         for (AstNode value : initializer.getValues()) {
             if (value instanceof AstAssignment) {
                 AstAssignment assignment = (AstAssignment) value;
-                VariableLocation location = LocationEvaluator.execute(context.forScope(classScope), assignment.getLeft());
+                VariableLocation location = LocationEvaluator.execute(context.forScope(classScope),
+                        assignment.getLeft());
                 if (location != null) {
                     UserObject object = Executor.execute(context, assignment.getRight());
                     if (object == null) {

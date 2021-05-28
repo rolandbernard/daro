@@ -25,8 +25,8 @@ public class UserClass extends UserObject {
      * 
      * @param globalScope
      *            The scope the class should be instantiated in
-     * @param observers
-     *            The observer observing the initialization of the class
+     * @param context
+     *            The surrounding context for this execution
      * @param classType
      *            The type of the class
      */
@@ -53,8 +53,8 @@ public class UserClass extends UserObject {
     /**
      * Initialize the class by running the code directly inside the body of the class definition.
      * 
-     * @param observers
-     *            The observers for this execution
+     * @param context
+     *            The surrounding context for this execution
      */
     private void initialize(ExecutionContext context) {
         AstSequence sequence = classType.getDefinition().getBody().getSequence();

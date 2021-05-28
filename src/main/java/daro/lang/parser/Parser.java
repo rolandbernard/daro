@@ -196,8 +196,8 @@ public class Parser {
                     throw new ParsingException(token.getPosition(), "Expected body or name after `class`");
                 }
             }
-            return new AstClass(new Position(token.getPosition(), body.getPosition()), name != null ? name.getSource() : null,
-                    body);
+            return new AstClass(new Position(token.getPosition(), body.getPosition()),
+                    name != null ? name.getSource() : null, body);
         } else {
             return null;
         }
@@ -226,7 +226,8 @@ public class Parser {
                 if (elseBody == null) {
                     throw new ParsingException(elseToken.getPosition(), "Expected body after `else`");
                 }
-                return new AstIfElse(new Position(ifToken.getPosition(), elseBody.getPosition()), condition, body, elseBody);
+                return new AstIfElse(new Position(ifToken.getPosition(), elseBody.getPosition()), condition, body,
+                        elseBody);
             } else {
                 return new AstIfElse(new Position(ifToken.getPosition(), body.getPosition()), condition, body, null);
             }
@@ -261,7 +262,8 @@ public class Parser {
                     throw new ParsingException(new Position(forToken.getPosition(), first.getPosition()),
                             "Expected body after `for`-`in`");
                 }
-                return new AstForIn(new Position(forToken.getPosition(), body.getPosition()), (AstSymbol) first, list, body);
+                return new AstForIn(new Position(forToken.getPosition(), body.getPosition()), (AstSymbol) first, list,
+                        body);
             } else {
                 AstNode body = parserStatement();
                 if (body == null) {
@@ -422,7 +424,8 @@ public class Parser {
                 (left, right) -> new AstLessThan(new Position(left.getPosition(), right.getPosition()), left, right),
                 (left, right) -> new AstLessOrEqual(new Position(left.getPosition(), right.getPosition()), left, right),
                 (left, right) -> new AstMoreThan(new Position(left.getPosition(), right.getPosition()), left, right),
-                (left, right) -> new AstMoreOrEqual(new Position(left.getPosition(), right.getPosition()), left, right));
+                (left, right) -> new AstMoreOrEqual(new Position(left.getPosition(), right.getPosition()), left,
+                        right));
     }
 
     /**
@@ -499,14 +502,13 @@ public class Parser {
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the power
-     * operation. i.e. {@code **}
+     * Parses a expression containing only operations with a precedence equal or higher than the power operation. i.e.
+     * {@code **}
      *
      * @return The root node of the parsed ast tree
      */
     private AstNode parsePowerExpression() {
-        return parseBinaryExpression(this::parseUnaryPrefixExpression,
-                new TokenKind[] { TokenKind.DOUBLEASTERIX },
+        return parseBinaryExpression(this::parseUnaryPrefixExpression, new TokenKind[] { TokenKind.DOUBLEASTERIX },
                 (left, right) -> new AstPower(new Position(left.getPosition(), right.getPosition()), left, right));
     }
 
@@ -589,7 +591,8 @@ public class Parser {
                         if (parameters.isEmpty()) {
                             position = open.getPosition();
                         } else {
-                            position = new Position(open.getPosition(), parameters.get(parameters.size() - 1).getPosition());
+                            position = new Position(open.getPosition(),
+                                    parameters.get(parameters.size() - 1).getPosition());
                         }
                         throw new ParsingException(position, "Expected a closing `)` after opening `(`");
                     }
@@ -715,9 +718,8 @@ public class Parser {
                 throw new ParsingException(token.getPosition(), "Expected an expression after `new`");
             }
             AstInitializer initializer = parseInitializer();
-            return new AstNew(
-                    new Position(token.getPosition(), initializer == null ? type.getPosition() : initializer.getPosition()), type,
-                    initializer);
+            return new AstNew(new Position(token.getPosition(),
+                    initializer == null ? type.getPosition() : initializer.getPosition()), type, initializer);
         } else {
             return null;
         }

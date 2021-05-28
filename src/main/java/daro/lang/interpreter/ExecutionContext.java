@@ -42,6 +42,7 @@ public class ExecutionContext {
 
     /**
      * Return the Scope associated with this context.
+     * 
      * @return The associated scope
      */
     public Scope getScope() {
@@ -50,6 +51,7 @@ public class ExecutionContext {
 
     /**
      * Return the {@link ExecutionObserver} for this context.
+     * 
      * @return The observers for this context
      */
     public ExecutionObserver[] getObservers() {
@@ -58,6 +60,10 @@ public class ExecutionContext {
 
     /**
      * Create a new context that uses the same data as this, but has a different scope.
+     *
+     * @param scope
+     *            The new scope for the resulting context
+     * 
      * @return The new {@link ExecutionContext}
      */
     public ExecutionContext forScope(Scope scope) {

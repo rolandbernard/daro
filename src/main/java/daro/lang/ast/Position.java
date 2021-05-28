@@ -26,8 +26,9 @@ public class Position {
     private final String text;
 
     /**
-     * Create a position which only specifies a {@link Path}. This should be uses if the source of
-     * the file can not be read for example.
+     * Create a position which only specifies a {@link Path}. This should be uses if the source of the file can not be
+     * read for example.
+     * 
      * @param file
      *            The file the position is in
      */
@@ -100,10 +101,13 @@ public class Position {
     }
 
     /**
-     * Create a new position that covers the area defined by the two extreme positions. This
-     * function can only be used for positions that describe an exact position.
-     * @param start The position to start at
-     * @param end The position to end at
+     * Create a new position that covers the area defined by the two extreme positions. This function can only be used
+     * for positions that describe an exact position.
+     * 
+     * @param start
+     *            The position to start at
+     * @param end
+     *            The position to end at
      */
     public Position(Position start, Position end) {
         this(start.getStart(), end.getEnd(), start.getText(), start.getFile());
@@ -154,8 +158,8 @@ public class Position {
     }
 
     /**
-     * Returns the starting position of the source code {@link Position}. The value will be negative
-     * if no exact position is associated with the position.
+     * Returns the starting position of the source code {@link Position}. The value will be negative if no exact
+     * position is associated with the position.
      * 
      * @return The start position
      */
@@ -164,8 +168,8 @@ public class Position {
     }
 
     /**
-     * Returns the ending position (exclusive) of the source code {@link Position}. The value will be negative
-     * if no exact position is associated with the position.
+     * Returns the ending position (exclusive) of the source code {@link Position}. The value will be negative if no
+     * exact position is associated with the position.
      * 
      * @return The end position
      */

@@ -43,12 +43,12 @@ public class Cli {
         Interpreter interpreter = new Interpreter();
         for (String file : files) {
             try {
-                    String source = Files.readString(Path.of(file));
-                    interpreter.execute(source);
+                String source = Files.readString(Path.of(file));
+                interpreter.execute(source);
             } catch (InterpreterException error) {
                 printError("Runtime error", error.getPosition(), error.getMessage());
             } catch (ParsingException error) {
-                printError("Syntax error", error.getPosition(),  error.getMessage());
+                printError("Syntax error", error.getPosition(), error.getMessage());
             } catch (IOException e) {
                 printError("File error", new Position(Path.of(file)), "Failed to open file");
             }

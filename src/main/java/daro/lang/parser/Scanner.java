@@ -15,8 +15,8 @@ public class Scanner {
      */
     private final String string;
     /**
-     * This variable stores the file on which the scanner will operate. This value is only used to
-     * generate the positional information of the tokens that is later used for error messages.
+     * This variable stores the file on which the scanner will operate. This value is only used to generate the
+     * positional information of the tokens that is later used for error messages.
      */
     private final Path file;
     /**
