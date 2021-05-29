@@ -50,7 +50,7 @@ public interface ExecutionObserver {
      * {@link AstNode}.
      * 
      * @param node
-     *            The ast node that was execited
+     *            The ast node that was executed
      * @param location
      *            The {@link VariableLocation} that resulted from the ast node
      * @param scope

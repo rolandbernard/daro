@@ -400,7 +400,7 @@ public class Executor implements Visitor<UserObject> {
         if (left instanceof UserFunction) {
             UserFunction function = (UserFunction) left;
             AstNode[] parameters = ast.getParameters();
-            if (function.getParamCount() >= 0 && function.getParamCount() != parameters.length) {
+            if (!function.allowsParamCount(parameters.length)) {
                 throw new InterpreterException(ast.getFunction().getPosition(), "Wrong number of parameters");
             } else {
                 UserObject[] parameterValues = new UserObject[parameters.length];

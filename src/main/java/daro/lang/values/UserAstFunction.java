@@ -35,8 +35,8 @@ public class UserAstFunction extends UserFunction {
     }
 
     @Override
-    public int getParamCount() {
-        return ast.getParameters().length;
+    public boolean allowsParamCount(int count) {
+        return ast.getParameters().length == count;
     }
 
     @Override

@@ -1,9 +1,11 @@
 package daro.lang.values;
 
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import daro.lang.interpreter.ExecutionContext;
 
@@ -14,8 +16,22 @@ import daro.lang.interpreter.ExecutionContext;
  * @author Roland Bernard
  */
 public class UserLambdaFunction extends UserFunction {
-    private final int parameters;
+    private final Predicate<Integer> parameters;
     private final BiFunction<UserObject[], ExecutionContext, UserObject> function;
+
+    /**
+     * Create a {@link UserFunction} from a parameter checking function and a {@link Function}.
+     * 
+     * @param parameters
+     *            A {@link Predicate} checking if the function accepts the given number of
+     *            parameters
+     * @param function
+     *            The {@link Function} the function executes
+     */
+    public UserLambdaFunction(Predicate<Integer> parameters, BiFunction<UserObject[], ExecutionContext, UserObject> function) {
+        this.parameters = parameters;
+        this.function = function;
+    }
 
     /**
      * Create a {@link UserFunction} from a parameter count and a {@link Function}.
@@ -26,10 +42,9 @@ public class UserLambdaFunction extends UserFunction {
      *            The {@link Function} the function executes
      */
     public UserLambdaFunction(int parameters, Function<UserObject[], UserObject> function) {
-        this.parameters = parameters;
-        this.function = (params, observers) -> {
+        this(count -> count == parameters, (params, context) -> {
             return function.apply(params);
-        };
+        });
     }
 
     /**
@@ -41,8 +56,7 @@ public class UserLambdaFunction extends UserFunction {
      *            The {@link BiFunction} the function executes
      */
     public UserLambdaFunction(int parameters, BiFunction<UserObject[], ExecutionContext, UserObject> function) {
-        this.parameters = parameters;
-        this.function = function;
+        this(count -> count == parameters, function);
     }
 
     /**
@@ -54,11 +68,10 @@ public class UserLambdaFunction extends UserFunction {
      *            The {@link Consumer} the function executes
      */
     public UserLambdaFunction(int parameters, Consumer<UserObject[]> function) {
-        this.parameters = parameters;
-        this.function = (params, observers) -> {
+        this(count -> count == parameters, (params, context) -> {
             function.accept(params);
             return null;
-        };
+        });
     }
 
     /**
@@ -70,11 +83,10 @@ public class UserLambdaFunction extends UserFunction {
      *            The {@link BiConsumer} the function executes
      */
     public UserLambdaFunction(int parameters, BiConsumer<UserObject[], ExecutionContext> function) {
-        this.parameters = parameters;
-        this.function = (params, observers) -> {
-            function.accept(params, observers);
+        this(count -> count == parameters, (params, context) -> {
+            function.accept(params, context);
             return null;
-        };
+        });
     }
 
     /**
@@ -84,7 +96,9 @@ public class UserLambdaFunction extends UserFunction {
      *            The {@link Function} the function executes
      */
     public UserLambdaFunction(Function<UserObject[], UserObject> function) {
-        this(-1, function);
+        this(count -> true, (params, context) -> {
+            return function.apply(params);
+        });
     }
 
     /**
@@ -94,12 +108,15 @@ public class UserLambdaFunction extends UserFunction {
      *            The {@link Consumer} the function executes
      */
     public UserLambdaFunction(Consumer<UserObject[]> function) {
-        this(-1, function);
+        this(count -> true, (params, context) -> {
+            function.accept(params);
+            return null;
+        });
     }
 
     @Override
-    public int getParamCount() {
-        return parameters;
+    public boolean allowsParamCount(int count) {
+        return parameters.test(count);
     }
 
     @Override
@@ -109,14 +126,14 @@ public class UserLambdaFunction extends UserFunction {
 
     @Override
     public int hashCode() {
-        return (971 * function.hashCode()) ^ (991 * Integer.hashCode(parameters));
+        return (971 * function.hashCode()) ^ (991 * Objects.hashCode(parameters));
     }
 
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserLambdaFunction) {
             UserLambdaFunction func = (UserLambdaFunction) object;
-            return function.equals(func.function) && parameters == func.parameters;
+            return Objects.equals(function, func.function) && Objects.equals(parameters, func.parameters);
         } else {
             return false;
         }
@@ -124,10 +141,6 @@ public class UserLambdaFunction extends UserFunction {
 
     @Override
     public String toString() {
-        if (parameters >= 0) {
-            return "[native function] (" + String.valueOf(parameters) + ")";
-        } else {
-            return "[native function] (...)";
-        }
+        return "[native function]";
     }
 }

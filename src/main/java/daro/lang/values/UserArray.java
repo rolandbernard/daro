@@ -53,7 +53,7 @@ public class UserArray extends UserObject {
         variables.put("sort", new UserLambdaFunction(1, (params, observers) -> {
             if (params[0] instanceof UserFunction) {
                 UserFunction function = (UserFunction) params[0];
-                if (function.getParamCount() >= 0 && function.getParamCount() != 2) {
+                if (!function.allowsParamCount(2)) {
                     throw new InterpreterException("Sorting function must accept two arguments");
                 } else {
                     values.sort((a, b) -> {

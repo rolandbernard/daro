@@ -15,11 +15,11 @@ public abstract class UserFunction extends UserObject {
     }
 
     /**
-     * Get the number of parameters that this function can be called with.
+     * Check if the function accepts the given number of parameters.
      * 
-     * @return The number of parameters, or a negative integer if there is no limit (i.e. varargs)
+     * @return true if the function accepts the given number of parameters, false otherwise
      */
-    public abstract int getParamCount();
+    public abstract boolean allowsParamCount(int count);
 
     /**
      * Execute the function with the given parameters. This must be called with the correct amount of parameters
