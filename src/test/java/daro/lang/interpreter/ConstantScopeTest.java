@@ -59,7 +59,7 @@ public class ConstantScopeTest {
     }
 
     @Test
-    void variablesReturnTheContaindValue() {
+    void variablesReturnTheContainsValue() {
         assertEquals(new UserNull(), thirdScope.getVariableValue("test"));
         assertEquals(new UserReal(2.5), thirdScope.getVariableValue("foo"));
     }

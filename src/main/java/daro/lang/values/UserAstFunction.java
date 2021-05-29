@@ -44,7 +44,7 @@ public class UserAstFunction extends UserFunction {
         BlockScope parameterScope = new BlockScope(scope);
         AstSymbol[] parameters = ast.getParameters();
         for (int i = 0; i < params.length && i < parameters.length; i++) {
-            parameterScope.forceNewVariable(parameters[i].getName(), params[i]);
+            parameterScope.newVariableInFinal(parameters[i].getName(), params[i]);
         }
         try {
             return Executor.execute(context.forScope(parameterScope), ast.getBody());

@@ -218,13 +218,8 @@ public class ScopeInitializer implements Visitor<Object> {
     @Override
     public Object visit(AstClass ast) {
         if (ast.getName() != null) {
-            if (scope instanceof BlockScope) {
-                UserTypeClass value = new UserTypeClass(scope, ast);
-                ((BlockScope) scope).forceNewVariable(ast.getName(), value);
-            } else {
-                throw new InterpreterException(ast.getPosition(),
-                        "The surrounding scope does not support class definitions");
-            }
+            UserTypeClass value = new UserTypeClass(scope, ast);
+            scope.newVariableInFinal(ast.getName(), value);
         }
         return null;
     }
@@ -232,13 +227,8 @@ public class ScopeInitializer implements Visitor<Object> {
     @Override
     public Object visit(AstFunction ast) {
         if (ast.getName() != null) {
-            if (scope instanceof BlockScope) {
-                UserAstFunction value = new UserAstFunction(scope, ast);
-                ((BlockScope) scope).forceNewVariable(ast.getName(), value);
-            } else {
-                throw new InterpreterException(ast.getPosition(),
-                        "The surrounding scope does not support function definitions");
-            }
+            UserAstFunction value = new UserAstFunction(scope, ast);
+            scope.newVariableInFinal(ast.getName(), value);
         }
         return null;
     }

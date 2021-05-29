@@ -330,12 +330,7 @@ public class Executor implements Visitor<UserObject> {
     public UserObject visit(AstClass ast) {
         UserTypeClass value = new UserTypeClass(context.getScope(), ast);
         if (ast.getName() != null) {
-            if (context.getScope() instanceof BlockScope) {
-                ((BlockScope) context.getScope()).forceNewVariable(ast.getName(), value);
-            } else {
-                throw new InterpreterException(ast.getPosition(),
-                        "The surrounding scope does not support class definitions");
-            }
+            context.getScope().newVariableInFinal(ast.getName(), value);
         }
         return value;
     }
@@ -344,12 +339,7 @@ public class Executor implements Visitor<UserObject> {
     public UserObject visit(AstFunction ast) {
         UserAstFunction value = new UserAstFunction(context.getScope(), ast);
         if (ast.getName() != null) {
-            if (context.getScope() instanceof BlockScope) {
-                ((BlockScope) context.getScope()).forceNewVariable(ast.getName(), value);
-            } else {
-                throw new InterpreterException(ast.getPosition(),
-                        "The surrounding scope does not support function definitions");
-            }
+            context.getScope().newVariableInFinal(ast.getName(), value);
         }
         return value;
     }
@@ -506,7 +496,7 @@ public class Executor implements Visitor<UserObject> {
             UserArray array = (UserArray) value;
             for (int i = 0; i < array.getLength(); i++) {
                 UserObject item = array.getValueAt(i);
-                innerScope.forceNewVariable(ast.getVariable().getName(), item);
+                innerScope.newVariableInFinal(ast.getVariable().getName(), item);
                 ret = execute(context.forScope(innerScope), ast.getBody());
             }
             return ret;
