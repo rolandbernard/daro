@@ -84,8 +84,8 @@ public abstract class AbstractScope implements Scope {
     @Override
     public Map<String, DaroObject> getCompleteMapping() {
         Map<String, DaroObject> result = new HashMap<>();
-        for (Scope parent : parents) {
-            result.putAll(parent.getCompleteMapping());
+        for (int i = parents.length - 1; i >= 0; i--) {
+            result.putAll(parents[i].getCompleteMapping());
         }
         result.putAll(variables);
         return result;

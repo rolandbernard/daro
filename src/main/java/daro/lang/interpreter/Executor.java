@@ -1,12 +1,17 @@
 package daro.lang.interpreter;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import daro.lang.ast.*;
+import daro.lang.parser.Parser;
 import daro.lang.values.*;
 
 /**
@@ -514,5 +519,44 @@ public class Executor implements Visitor<DaroObject> {
     public DaroObject visit(AstPower ast) {
         return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().pow(b.getValue().intValue())),
                 (a, b) -> new DaroReal(Math.pow(a.doubleValue(), b.doubleValue())), null);
+    }
+
+    @Override
+    public DaroObject visit(AstUse ast) {
+        DaroObject value = require(ast.getOperand());
+        Scope scope = context.getScope();
+        if (scope instanceof AbstractScope) {
+            AbstractScope cast = (AbstractScope)scope;
+            cast.addParent(value.getMemberScope());
+            return null;
+        } else {
+            throw new InterpreterException(ast.getPosition(), "Use can not be used in the surrounding context");
+        }
+    }
+
+    @Override
+    public DaroObject visit(AstFrom ast) {
+        DaroObject value = require(ast.getOperand());
+        if (value instanceof DaroString) {
+            DaroString string = (DaroString)value;
+            Path path = Path.of(string.getValue()).toAbsolutePath();
+            Map<Path, DaroPackage> modules = context.getModules();
+            if (!modules.containsKey(path)) {
+                Scope scope = new BlockScope(new RootScope());
+                String content;
+                try {
+                    content = Files.readString(path);
+                } catch (IOException e) {
+                    throw new InterpreterException(new Position(path), "Failed to load file");
+                }
+                AstNode program = Parser.parseSourceCode(content, path);
+                execute(context.forScope(scope), program);
+                DaroPackage pack = new DaroPackage(scope);
+                modules.put(path, pack);
+            }
+            return modules.get(path);
+        } else {
+            throw new InterpreterException(ast.getPosition(), "Expected a string object");
+        }
     }
 }

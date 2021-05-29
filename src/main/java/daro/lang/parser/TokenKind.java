@@ -28,15 +28,14 @@ public enum TokenKind {
     // TODO: implement match
 
     FOR("for"), IN("in"), MATCH("match"), IF("if"), ELSE("else"), NEW("new"), FN("fn"), IMPORT("import"),
-    CLASS("class"), RETURN("return"), COLON(":"), SEMICOLON(";"), COMMA(","), DOT("."), OPEN_PAREN("("),
-    CLOSE_PAREN(")"), OPEN_BRACKET("["), CLOSE_BRACKET("]"), OPEN_BRACE("{"), CLOSE_BRACE("}"), DEFINE(":="),
-    ASSIGN("="), EQUAL("=="), UNEQUAL("!="), LESS("<"), MORE(">"), LESS_EQUAL("<="), MORE_EQUAL(">="), SHIFT_LEFT("<<"),
-    SHIFT_RIGHT(">>"), PLUS("+"), MINUS("-"), ASTERISK("*"), SLASH("/"), PERCENT("%"), BANG("!"), TILDE("~"), PIPE("|"),
-    AND("&"), CARET("^"), DOUBLE_PIPE("||"), DOUBLE_AND("&&"), DOUBLE_ASTERISK("**"), SHIFT_LEFT_ASSIGN("<<="),
-    SHIFT_RIGHT_ASSIGN(">>="), PLUS_ASSIGN("+="), MINUS_ASSIGN("-="), ASTERISK_ASSIGN("*="), SLASH_ASSIGN("/="),
-    PERCENT_ASSIGN("%="), PIPE_ASSIGN("|="), AND_ASSIGN("&="), CARET_ASSIGN("^="), DOUBLE_PIPE_ASSIGN("||="),
-    DOUBLE_AND_ASSIGN("&&=");
-
+    CLASS("class"), RETURN("return"), USE("use"), FROM("from"), COLON(":"), SEMICOLON(";"), COMMA(","), DOT("."),
+    OPEN_PAREN("("), CLOSE_PAREN(")"), OPEN_BRACKET("["), CLOSE_BRACKET("]"), OPEN_BRACE("{"), CLOSE_BRACE("}"),
+    DEFINE(":="), ASSIGN("="), EQUAL("=="), UNEQUAL("!="), LESS("<"), MORE(">"), LESS_EQUAL("<="), MORE_EQUAL(">="),
+    SHIFT_LEFT("<<"), SHIFT_RIGHT(">>"), PLUS("+"), MINUS("-"), ASTERISK("*"), SLASH("/"), PERCENT("%"), BANG("!"),
+    TILDE("~"), PIPE("|"), AND("&"), CARET("^"), DOUBLE_PIPE("||"), DOUBLE_AND("&&"), DOUBLE_ASTERISK("**"),
+    SHIFT_LEFT_ASSIGN("<<="), SHIFT_RIGHT_ASSIGN(">>="), PLUS_ASSIGN("+="), MINUS_ASSIGN("-="), ASTERISK_ASSIGN("*="),
+    SLASH_ASSIGN("/="), PERCENT_ASSIGN("%="), PIPE_ASSIGN("|="), AND_ASSIGN("&="), CARET_ASSIGN("^="),
+    DOUBLE_PIPE_ASSIGN("||="), DOUBLE_AND_ASSIGN("&&=");
 
     /**
      * This variable gets initialized with a map from fixed source string to {@link TokenKind}.

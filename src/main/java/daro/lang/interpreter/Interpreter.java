@@ -15,16 +15,16 @@ import daro.lang.values.DaroObject;
  * @author Roland Bernard
  */
 public class Interpreter {
-    private final Scope globalScope;
+    private final ExecutionContext context;
 
     /**
      * Creates a new interpreter for execution in the given {@link Scope}.
      * 
-     * @param globalScope
-     *            The scope to execute in
+     * @param context
+     *            The context to execute in
      */
-    public Interpreter(Scope globalScope) {
-        this.globalScope = globalScope;
+    public Interpreter(ExecutionContext context) {
+        this.context = context;
     }
 
     /**
@@ -35,7 +35,7 @@ public class Interpreter {
      *            The output stream for print functions
      */
     public Interpreter(PrintStream output) {
-        this(new BlockScope(new RootScope(output)));
+        this(new ExecutionContext(new BlockScope(new RootScope()), output));
     }
 
     /**
@@ -43,16 +43,16 @@ public class Interpreter {
      * execute. This method will initialize the interpreter with a default global scope.
      */
     public Interpreter() {
-        this(new BlockScope(new RootScope()));
+        this(System.out);
     }
 
     /**
-     * Returns the global scope of this {@link Interpreter} instance.
+     * Returns the {@link ExecutionContext} of this {@link Interpreter} instance.
      * 
-     * @return The global scope
+     * @return The execution context
      */
-    public Scope getGlobalScope() {
-        return globalScope;
+    public ExecutionContext getContext() {
+        return context;
     }
 
     /**
@@ -67,8 +67,8 @@ public class Interpreter {
      *             It the code causes an exception during execution
      */
     public DaroObject execute(AstNode ast) {
-        ScopeInitializer.initialize(globalScope, ast);
-        return Executor.execute(new ExecutionContext(globalScope), ast);
+        ScopeInitializer.initialize(context.getScope(), ast);
+        return Executor.execute(context, ast);
     }
 
     /**
@@ -126,9 +126,9 @@ public class Interpreter {
      * @throws InterpreterException
      *             It the code causes an exception during execution
      */
-    public DaroObject execute(AstNode ast, ExecutionObserver[] observers) {
-        ScopeInitializer.initialize(globalScope, ast);
-        return Executor.execute(new ExecutionContext(globalScope, observers), ast);
+    public DaroObject execute(AstNode ast, ExecutionObserver ...observers) {
+        ScopeInitializer.initialize(context.getScope(), ast);
+        return Executor.execute(context.withObservers(observers), ast);
     }
 
     /**
@@ -181,6 +181,6 @@ public class Interpreter {
      * Reset the global scope of this interpreter, clearing all variables.
      */
     public void reset() {
-        globalScope.reset();
+        context.getScope().reset();
     }
 }

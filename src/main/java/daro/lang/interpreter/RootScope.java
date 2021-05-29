@@ -2,7 +2,6 @@ package daro.lang.interpreter;
 
 import daro.lang.values.*;
 
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,22 +14,10 @@ import java.util.Map;
 public class RootScope extends ConstantScope {
 
     /**
-     * Creates a new {@link RootScope}. The created scope will use the given System.out as a target for the print
-     * functions.
+     * Creates a new {@link RootScope}.
      */
     public RootScope() {
-        this(System.out);
-    }
-
-    /**
-     * Creates a new {@link RootScope}. The created scope will use the given output stream as a target for the print
-     * functions.
-     * 
-     * @param output
-     *            The output stream for print functions
-     */
-    public RootScope(PrintStream output) {
-        super(buildRootVariables(output));
+        super(buildRootVariables());
     }
 
     /**
@@ -42,7 +29,7 @@ public class RootScope extends ConstantScope {
      * 
      * @return The mapping of the root scope
      */
-    private static Map<String, DaroObject> buildRootVariables(PrintStream output) {
+    private static Map<String, DaroObject> buildRootVariables() {
         Map<String, DaroObject> variables = new HashMap<>();
         // Types
         variables.put("int", new DaroTypeInteger());
@@ -63,16 +50,16 @@ public class RootScope extends ConstantScope {
         variables.put("typeof", new DaroLambdaFunction(1, params -> {
             return params[0].getType();
         }));
-        variables.put("print", new DaroLambdaFunction(params -> {
+        variables.put("print", new DaroLambdaFunction((params, context) -> {
             for (DaroObject object : params) {
-                output.print(object.toString());
+                context.getOutput().print(object.toString());
             }
         }));
-        variables.put("println", new DaroLambdaFunction(params -> {
+        variables.put("println", new DaroLambdaFunction((params, context) -> {
             for (DaroObject object : params) {
-                output.print(object.toString());
+                context.getOutput().print(object.toString());
             }
-            output.println();
+            context.getOutput().println();
         }));
         return variables;
     }

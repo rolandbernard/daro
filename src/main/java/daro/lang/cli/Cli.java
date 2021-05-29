@@ -42,15 +42,19 @@ public class Cli {
     public static void executeFiles(String[] files) {
         Interpreter interpreter = new Interpreter();
         for (String file : files) {
+            Path path = Path.of(file);
             try {
-                String source = Files.readString(Path.of(file));
-                interpreter.execute(source);
+                String source = Files.readString(path);
+                interpreter.execute(source, path);
             } catch (InterpreterException error) {
                 printError("Runtime error", error.getPosition(), error.getMessage());
+                break;
             } catch (ParsingException error) {
                 printError("Syntax error", error.getPosition(), error.getMessage());
+                break;
             } catch (IOException e) {
-                printError("File error", new Position(Path.of(file)), "Failed to open file");
+                printError("File error", new Position(path), "Failed to open file");
+                break;
             }
         }
     }

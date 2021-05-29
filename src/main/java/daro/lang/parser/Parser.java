@@ -131,7 +131,7 @@ public class Parser {
      * @return The parsed statement's ast, or null
      */
     private AstNode parserStatement() {
-        return firstNonNull(this::parseReturn, this::parseExpression);
+        return firstNonNull(this::parseReturn, this::parseUse, this::parseExpression);
     }
 
     /**
@@ -291,6 +291,24 @@ public class Parser {
             } else {
                 return new AstReturn(returnToken.getPosition(), null);
             }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Parse a {@code use} statement.
+     * 
+     * @return The parsed statement's ast, or null
+     */
+    private AstNode parseUse() {
+        if (scanner.hasNext(TokenKind.USE)) {
+            Token token = scanner.next();
+            AstNode value = parseExpression();
+            if (value == null) {
+                throw new ParsingException(token.getPosition(), "Expected an expression after `from`");
+            }
+            return new AstUse(new Position(token.getPosition(), value.getPosition()), value);
         } else {
             return null;
         }
@@ -603,6 +621,13 @@ public class Parser {
                         "Expected an expression after unary prefix `[]`");
             }
             return new AstArray(new Position(token.getPosition(), operand.getPosition()), size, operand);
+        } else if (scanner.hasNext(TokenKind.FROM)) {
+            Token token = scanner.next();
+            AstNode operand = parseUnaryPrefixExpression();
+            if (operand == null) {
+                throw new ParsingException(token.getPosition(), "Expected an expression after `from`");
+            }
+            return new AstFrom(new Position(token.getPosition(), operand.getPosition()), operand);
         } else {
             return parseUnarySuffixExpression();
         }

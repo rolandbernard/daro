@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import daro.lang.values.*;
@@ -266,7 +265,7 @@ public class NativeScope implements Scope {
     @Override
     public Map<String, DaroObject> getCompleteMapping() {
         Map<String, DaroObject> result = new HashMap<>();
-        Set<String> keys = methods.keySet();
+        List<String> keys = new ArrayList<>(methods.keySet());
         keys.addAll(fields.keySet());
         for (String key : keys) {
             if (containsVariable(key)) {

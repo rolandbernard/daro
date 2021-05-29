@@ -23,18 +23,14 @@ public class DaroPackage extends DaroObject {
         this.scope = scope;
     }
 
-    /**
-     * Returns the scope of this package.
-     * 
-     * @return The value the {@link DaroPackage} represents
-     */
-    public Scope getScope() {
+    @Override
+    public Scope getMemberScope() {
         return scope;
     }
 
     @Override
     public DaroType getType() {
-        return new DaroTypeBoolean();
+        return new DaroTypePackage();
     }
 
     @Override
@@ -46,7 +42,7 @@ public class DaroPackage extends DaroObject {
     public boolean equals(Object object) {
         if (object instanceof DaroPackage) {
             DaroPackage pack = (DaroPackage) object;
-            return Objects.equals(scope, pack.getScope());
+            return Objects.equals(scope, pack.getMemberScope());
         } else {
             return false;
         }

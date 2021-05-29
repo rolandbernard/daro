@@ -33,7 +33,7 @@ public abstract class DaroType extends DaroObject {
      * @return The instantiated object
      */
     public DaroObject instantiate() {
-        return instantiate(new ExecutionContext());
+        return instantiate(null);
     }
 
     /**

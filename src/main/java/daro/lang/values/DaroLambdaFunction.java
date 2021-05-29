@@ -48,33 +48,6 @@ public class DaroLambdaFunction extends DaroFunction {
     }
 
     /**
-     * Create a {@link DaroFunction} from a parameter count and a {@link Function}.
-     * 
-     * @param parameters
-     *            The number of parameters the function accepts
-     * @param function
-     *            The {@link BiFunction} the function executes
-     */
-    public DaroLambdaFunction(int parameters, BiFunction<DaroObject[], ExecutionContext, DaroObject> function) {
-        this(count -> count == parameters, function);
-    }
-
-    /**
-     * Create a {@link DaroFunction} from a parameter count and a {@link Consumer}.
-     * 
-     * @param parameters
-     *            The number of parameters the function accepts
-     * @param function
-     *            The {@link Consumer} the function executes
-     */
-    public DaroLambdaFunction(int parameters, Consumer<DaroObject[]> function) {
-        this(count -> count == parameters, (params, context) -> {
-            function.accept(params);
-            return null;
-        });
-    }
-
-    /**
      * Create a {@link DaroFunction} from a parameter count and a {@link Consumer}.
      * 
      * @param parameters
@@ -90,18 +63,6 @@ public class DaroLambdaFunction extends DaroFunction {
     }
 
     /**
-     * Create a {@link DaroFunction} from a {@link Function} that accepts a variable number of parameters.
-     * 
-     * @param function
-     *            The {@link Function} the function executes
-     */
-    public DaroLambdaFunction(Function<DaroObject[], DaroObject> function) {
-        this(count -> true, (params, context) -> {
-            return function.apply(params);
-        });
-    }
-
-    /**
      * Create a {@link DaroFunction} from a {@link Consumer} that accepts a variable number of parameters.
      * 
      * @param function
@@ -110,6 +71,19 @@ public class DaroLambdaFunction extends DaroFunction {
     public DaroLambdaFunction(Consumer<DaroObject[]> function) {
         this(count -> true, (params, context) -> {
             function.accept(params);
+            return null;
+        });
+    }
+
+    /**
+     * Create a {@link DaroFunction} from a {@link BiConsumer} that accepts a variable number of parameters.
+     * 
+     * @param function
+     *            The {@link BiConsumer} the function executes
+     */
+    public DaroLambdaFunction(BiConsumer<DaroObject[], ExecutionContext> function) {
+        this(count -> true, (params, context) -> {
+            function.accept(params, context);
             return null;
         });
     }
