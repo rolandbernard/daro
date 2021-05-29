@@ -74,7 +74,7 @@ public class DaroArray extends DaroObject {
                 throw new InterpreterException("Sorting comparison must be a function");
             }
         }));
-        return new ConstantScope(super.getMemberScope(), variables);
+        return new ConstantScope(variables, super.getMemberScope());
     }
 
     /**

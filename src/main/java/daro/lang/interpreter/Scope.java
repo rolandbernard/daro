@@ -12,25 +12,12 @@ import daro.lang.values.DaroObject;
 public interface Scope {
 
     /**
-     * Returns a {@link Scope} that only includes the last level of this scope and the given scope as its parent. This
-     * method is used inside classes as the member scope.
-     * 
-     * @param parent
-     *            The parent of
-     * 
-     * @return The last level scope
-     */
-    public Scope getFinalLevel(Scope parent);
-
-    /**
      * Returns a {@link Scope} that only includes the last level of this scope. This method is used inside classes as
      * the member scope.
      * 
      * @return The last level scope
      */
-    default public Scope getFinalLevel() {
-        return getFinalLevel(null);
-    }
+    public Scope getFinalLevel();
 
     /**
      * Creates a new variable in the last level of the scope if possible, otherwise throw a

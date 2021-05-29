@@ -3,6 +3,7 @@ package daro.lang.values;
 import java.util.Map;
 
 import daro.lang.ast.AstSequence;
+import daro.lang.interpreter.AbstractScope;
 import daro.lang.interpreter.BlockScope;
 import daro.lang.interpreter.ConstantScope;
 import daro.lang.interpreter.ExecutionContext;
@@ -32,7 +33,7 @@ public class DaroClass extends DaroObject {
      */
     public DaroClass(Scope globalScope, ExecutionContext context, DaroTypeClass classType) {
         this.classType = classType;
-        Scope thisScope = new ConstantScope(globalScope, Map.of("this", this));
+        Scope thisScope = new ConstantScope(Map.of("this", this), globalScope);
         this.scope = new BlockScope(thisScope);
         initialize(context);
     }
@@ -69,7 +70,9 @@ public class DaroClass extends DaroObject {
 
     @Override
     public Scope getMemberScope() {
-        return scope.getFinalLevel(super.getMemberScope());
+        AbstractScope result = (AbstractScope)scope.getFinalLevel();
+        result.addParent(super.getMemberScope());
+        return result;
     }
 
     @Override

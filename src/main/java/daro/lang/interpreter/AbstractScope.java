@@ -1,5 +1,6 @@
 package daro.lang.interpreter;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -13,15 +14,8 @@ import daro.lang.values.DaroObject;
  * @author Roland Bernard
  */
 public abstract class AbstractScope implements Scope {
-    protected final Scope parent;
     protected final Map<String, DaroObject> variables;
-
-    /**
-     * Create a new {@link Scope} without a parent.
-     */
-    public AbstractScope() {
-        this(null);
-    }
+    protected Scope[] parents;
 
     /**
      * Creates a new {@link Scope} with the given parent.
@@ -29,8 +23,8 @@ public abstract class AbstractScope implements Scope {
      * @param parent
      *            The parent scope
      */
-    public AbstractScope(Scope parent) {
-        this.parent = parent;
+    public AbstractScope(Scope ...parent) {
+        this.parents = parent;
         this.variables = new HashMap<>();
     }
 
@@ -38,26 +32,37 @@ public abstract class AbstractScope implements Scope {
      * Creates a new {@link Scope} with the given parent and internal map. This constructor is only to be used
      * internally by this class.
      * 
-     * @param parent
-     *            The parent scope
      * @param variables
      *            The internal variables map
+     * @param parent
+     *            The parent scope
      */
-    protected AbstractScope(Scope parent, Map<String, DaroObject> variables) {
-        this.parent = parent;
+    protected AbstractScope(Map<String, DaroObject> variables, Scope[] parent) {
+        this.parents = parent;
         this.variables = variables;
     }
 
+    public void addParent(Scope ...parent) {
+        Scope[] newParents = Arrays.copyOf(parents, parents.length + parent.length);
+        for (int i = 0; i < parent.length; i++) {
+            newParents[parents.length + i] = parent[i];
+        }
+        parents = newParents;
+    }
+
     @Override
-    abstract public Scope getFinalLevel(Scope parent);
+    abstract public Scope getFinalLevel();
 
     @Override
     public boolean containsVariable(String name) {
         if (variables.containsKey(name)) {
             return true;
-        } else if (parent != null) {
-            return parent.containsVariable(name);
         } else {
+            for (Scope parent : parents) {
+                if (parent.containsVariable(name)) {
+                    return true;
+                }
+            }
             return false;
         }
     }
@@ -66,20 +71,21 @@ public abstract class AbstractScope implements Scope {
     public DaroObject getVariableValue(String name) {
         if (variables.containsKey(name)) {
             return variables.get(name);
-        } else if (parent != null) {
-            return parent.getVariableValue(name);
         } else {
+            for (Scope parent : parents) {
+                if (parent.containsVariable(name)) {
+                    return parent.getVariableValue(name);
+                }
+            }
             return null;
         }
     }
 
     @Override
     public Map<String, DaroObject> getCompleteMapping() {
-        Map<String, DaroObject> result;
-        if (parent != null) {
-            result = parent.getCompleteMapping();
-        } else {
-            result = new HashMap<>();
+        Map<String, DaroObject> result = new HashMap<>();
+        for (Scope parent : parents) {
+            result.putAll(parent.getCompleteMapping());
         }
         result.putAll(variables);
         return result;
@@ -87,14 +93,14 @@ public abstract class AbstractScope implements Scope {
 
     @Override
     public int hashCode() {
-        return (971 * Objects.hashCode(variables)) ^ (991 * Objects.hashCode(parent));
+        return (971 * Objects.hashCode(variables)) ^ (991 * Arrays.hashCode(parents));
     }
 
     @Override
     public boolean equals(Object object) {
         if (object instanceof AbstractScope) {
             AbstractScope scope = (AbstractScope) object;
-            return Objects.equals(variables, scope.variables) && Objects.equals(parent, scope.parent);
+            return Objects.equals(variables, scope.variables) && Arrays.equals(parents, scope.parents);
         } else {
             return false;
         }

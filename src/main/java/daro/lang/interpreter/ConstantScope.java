@@ -13,34 +13,29 @@ import java.util.Map;
 public class ConstantScope extends AbstractScope {
 
     /**
-     * Creates a new constant scope filling it with the given variable mapping.
-     * 
-     * @param mapping
-     *            The parring from names to values to use
-     */
-    public ConstantScope(Map<String, DaroObject> mapping) {
-        this(null, mapping);
-    }
-
-    /**
      * Creates a new constant scope filling it with the given variable mapping, and pointing it to the given parent
      * scope. The parent scope may change independently of the constant scope itself.
      * 
-     * @param parent
-     *            The parent scope
      * @param mapping
      *            The parring from names to values to use
+     * @param parent
+     *            The parent scope
      */
-    public ConstantScope(Scope parent, Map<String, DaroObject> mapping) {
-        super(parent, mapping);
+    public ConstantScope(Map<String, DaroObject> mapping, Scope ...parent) {
+        super(mapping, parent);
     }
 
     @Override
     public VariableLocation getVariableLocation(String name) {
-        if (variables.containsKey(name) || parent == null) {
+        if (variables.containsKey(name)) {
             return null;
         } else {
-            return parent.getVariableLocation(name);
+            for (Scope parent : parents) {
+                if (parent.containsVariable(name)) {
+                    return parent.getVariableLocation(name);
+                }
+            }
+            return null;
         }
     }
 
@@ -50,7 +45,7 @@ public class ConstantScope extends AbstractScope {
     }
 
     @Override
-    public Scope getFinalLevel(Scope parent) {
-        return new ConstantScope(parent, variables);
+    public Scope getFinalLevel() {
+        return new ConstantScope(variables);
     }
 }

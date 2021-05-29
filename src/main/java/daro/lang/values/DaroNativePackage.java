@@ -31,10 +31,7 @@ public class DaroNativePackage extends DaroObject {
      *            The name for this package
      */
     public DaroNativePackage(DaroNativePackage parent, String name) {
-        this.name = new String[parent.name.length + 1];
-        for (int i = 0; i < parent.name.length; i++) {
-            this.name[i] = parent.name[i];
-        }
+        this.name = Arrays.copyOf(parent.name, parent.name.length + 1);
         this.name[this.name.length - 1] = name;
     }
 

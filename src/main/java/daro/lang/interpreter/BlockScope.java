@@ -32,34 +32,37 @@ public class BlockScope extends AbstractScope {
      * Creates a new {@link BlockScope} with the given parent and internal map. This constructor is only to be used
      * internally by this class.
      * 
-     * @param parent
-     *            The parent scope
      * @param variables
      *            The internal variables map
+     * @param parent
+     *            The parent scope
      */
-    private BlockScope(Scope parent, Map<String, DaroObject> variables) {
-        super(parent, variables);
+    private BlockScope(Map<String, DaroObject> variables, Scope ...parent) {
+        super(variables, parent);
     }
 
     @Override
-    public Scope getFinalLevel(Scope parent) {
-        return new BlockScope(parent, variables);
+    public Scope getFinalLevel() {
+        return new BlockScope(variables);
     }
 
     @Override
     public VariableLocation getVariableLocation(String name) {
-        if (!variables.containsKey(name) && parent != null && parent.containsVariable(name)) {
-            return parent.getVariableLocation(name);
-        } else {
-            return value -> {
-                variables.put(name, value);
-            };
+        for (Scope parent : parents) {
+            if (parent.containsVariable(name)) {
+                return parent.getVariableLocation(name);
+            }
         }
+        return value -> {
+            variables.put(name, value);
+        };
     }
 
     @Override
     public void reset() {
-        parent.reset();
+        for (Scope parent : parents) {
+            parent.reset();
+        }
         variables.clear();
     }
 

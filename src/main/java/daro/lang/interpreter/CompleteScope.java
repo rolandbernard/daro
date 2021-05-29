@@ -26,7 +26,7 @@ public class CompleteScope implements Scope {
     }
 
     @Override
-    public Scope getFinalLevel(Scope parent) {
+    public Scope getFinalLevel() {
         return this;
     }
 
