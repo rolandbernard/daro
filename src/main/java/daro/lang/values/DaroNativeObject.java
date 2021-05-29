@@ -5,12 +5,12 @@ import java.util.Objects;
 import daro.lang.interpreter.Scope;
 
 /**
- * This {@link UserObject} represents a native Java object in daro.
+ * This {@link DaroObject} represents a native Java object in daro.
  * 
  * @author Roland Bernard
  */
-public class UserNativeObject extends UserObject {
-    private final UserNativeClass type;
+public class DaroNativeObject extends DaroObject {
+    private final DaroNativeClass type;
     private final Object value;
     private final Scope instanceScope;
 
@@ -18,11 +18,11 @@ public class UserNativeObject extends UserObject {
      * Create a new native object value from the given value and specify its type.
      * 
      * @param type
-     *            The type the {@link UserNativeObject} represents
+     *            The type the {@link DaroNativeObject} represents
      * @param value
-     *            The value the {@link UserNativeObject} represents
+     *            The value the {@link DaroNativeObject} represents
      */
-    public UserNativeObject(UserNativeClass type, Object value) {
+    public DaroNativeObject(DaroNativeClass type, Object value) {
         this.type = type;
         this.value = value;
         this.instanceScope = type.getInstanceScope(value);
@@ -32,23 +32,23 @@ public class UserNativeObject extends UserObject {
      * Create a new native object value from the given value.
      * 
      * @param value
-     *            The value the {@link UserNativeObject} represents
+     *            The value the {@link DaroNativeObject} represents
      */
-    public UserNativeObject(Object value) {
-        this(new UserNativeClass(value.getClass()), value);
+    public DaroNativeObject(Object value) {
+        this(new DaroNativeClass(value.getClass()), value);
     }
 
     /**
      * Returns the value of this object.
      * 
-     * @return The value the {@link UserNativeObject} represents
+     * @return The value the {@link DaroNativeObject} represents
      */
     public Object getValue() {
         return value;
     }
 
     @Override
-    public UserType getType() {
+    public DaroType getType() {
         return type;
     }
 
@@ -69,8 +69,8 @@ public class UserNativeObject extends UserObject {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserNativeObject) {
-            UserNativeObject userObject = (UserNativeObject) object;
+        if (object instanceof DaroNativeObject) {
+            DaroNativeObject userObject = (DaroNativeObject) object;
             return Objects.equals(value, userObject.getValue());
         } else {
             return false;

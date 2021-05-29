@@ -17,37 +17,37 @@ public class StringInterpreterTest {
 
     @Test
     void singleString() {
-        assertEquals(new UserString("Hello"), interpreter.execute("\"Hello\""));
+        assertEquals(new DaroString("Hello"), interpreter.execute("\"Hello\""));
     }
 
     @Test
     void defaultString() {
-        assertEquals(new UserString(""), interpreter.execute("new string"));
+        assertEquals(new DaroString(""), interpreter.execute("new string"));
     }
 
     @Test
     void stringFromInteger() {
-        assertEquals(new UserString("5"), interpreter.execute("new string { 5 }"));
+        assertEquals(new DaroString("5"), interpreter.execute("new string { 5 }"));
     }
 
     @Test
     void stringFromReal() {
-        assertEquals(new UserString("5.5"), interpreter.execute("new string { 5.5 }"));
+        assertEquals(new DaroString("5.5"), interpreter.execute("new string { 5.5 }"));
     }
 
     @Test
     void stringFromBoolean() {
-        assertEquals(new UserString("true"), interpreter.execute("new string { true }"));
+        assertEquals(new DaroString("true"), interpreter.execute("new string { true }"));
     }
 
     @Test
     void stringFromClass() {
-        assertEquals(new UserString("class [anonymous] {x = 5}"), interpreter.execute("new string { new class { x = 5 } }"));
+        assertEquals(new DaroString("class [anonymous] {x = 5}"), interpreter.execute("new string { new class { x = 5 } }"));
     }
 
     @Test
     void addition() {
-        assertEquals(new UserString("Hello"), interpreter.execute("\"Hel\" + \"lo\""));
+        assertEquals(new DaroString("Hello"), interpreter.execute("\"Hel\" + \"lo\""));
     }
 
     @Test
@@ -136,50 +136,50 @@ public class StringInterpreterTest {
 
     @Test
     void equals() {
-        assertEquals(new UserBoolean(true), interpreter.execute("\"Hello\" == \"Hello\""));
-        assertEquals(new UserBoolean(false), interpreter.execute("\"Hel\" == \"lo\""));
+        assertEquals(new DaroBoolean(true), interpreter.execute("\"Hello\" == \"Hello\""));
+        assertEquals(new DaroBoolean(false), interpreter.execute("\"Hel\" == \"lo\""));
     }
 
     @Test
     void notEquals() {
-        assertEquals(new UserBoolean(true), interpreter.execute("\"Hel\" != \"lo\""));
-        assertEquals(new UserBoolean(false), interpreter.execute("\"Hello\" != \"Hello\""));
+        assertEquals(new DaroBoolean(true), interpreter.execute("\"Hel\" != \"lo\""));
+        assertEquals(new DaroBoolean(false), interpreter.execute("\"Hello\" != \"Hello\""));
     }
 
     @Test
     void lessThan() {
-        assertEquals(new UserBoolean(true), interpreter.execute("\"A\" < \"B\""));
-        assertEquals(new UserBoolean(false), interpreter.execute("\"A\" < \"A\""));
+        assertEquals(new DaroBoolean(true), interpreter.execute("\"A\" < \"B\""));
+        assertEquals(new DaroBoolean(false), interpreter.execute("\"A\" < \"A\""));
     }
 
     @Test
     void lessOrEqual() {
-        assertEquals(new UserBoolean(true), interpreter.execute("\"A\" <= \"B\""));
-        assertEquals(new UserBoolean(true), interpreter.execute("\"A\" <= \"A\""));
-        assertEquals(new UserBoolean(false), interpreter.execute("\"B\" <= \"A\""));
+        assertEquals(new DaroBoolean(true), interpreter.execute("\"A\" <= \"B\""));
+        assertEquals(new DaroBoolean(true), interpreter.execute("\"A\" <= \"A\""));
+        assertEquals(new DaroBoolean(false), interpreter.execute("\"B\" <= \"A\""));
     }
 
     @Test
     void moreThan() {
-        assertEquals(new UserBoolean(true), interpreter.execute("\"B\" > \"A\""));
-        assertEquals(new UserBoolean(false), interpreter.execute("\"A\" > \"A\""));
+        assertEquals(new DaroBoolean(true), interpreter.execute("\"B\" > \"A\""));
+        assertEquals(new DaroBoolean(false), interpreter.execute("\"A\" > \"A\""));
     }
 
     @Test
     void moreOrEqual() {
-        assertEquals(new UserBoolean(true), interpreter.execute("\"B\" >= \"A\""));
-        assertEquals(new UserBoolean(true), interpreter.execute("\"A\" >= \"A\""));
-        assertEquals(new UserBoolean(false), interpreter.execute("\"A\" >= \"B\""));
+        assertEquals(new DaroBoolean(true), interpreter.execute("\"B\" >= \"A\""));
+        assertEquals(new DaroBoolean(true), interpreter.execute("\"A\" >= \"A\""));
+        assertEquals(new DaroBoolean(false), interpreter.execute("\"A\" >= \"B\""));
     }
 
     @Test
     void stringType() {
-        assertEquals(new UserTypeString(), interpreter.execute("typeof(\"Hello\")"));
+        assertEquals(new DaroTypeString(), interpreter.execute("typeof(\"Hello\")"));
     }
 
     @Test
     void addAssign() {
         interpreter.execute("x = \"Hello\"; x += \" world\"");
-        assertEquals(new UserString("Hello world"), interpreter.execute("x"));
+        assertEquals(new DaroString("Hello world"), interpreter.execute("x"));
     }
 }

@@ -10,17 +10,17 @@ import java.util.function.Predicate;
 import daro.lang.interpreter.ExecutionContext;
 
 /**
- * This {@link UserObject} represents an instance of a function executing a {@link Function}. This is used for build in
+ * This {@link DaroObject} represents an instance of a function executing a {@link Function}. This is used for build in
  * functions that are not created by the user.
  * 
  * @author Roland Bernard
  */
-public class UserLambdaFunction extends UserFunction {
+public class DaroLambdaFunction extends DaroFunction {
     private final Predicate<Integer> parameters;
-    private final BiFunction<UserObject[], ExecutionContext, UserObject> function;
+    private final BiFunction<DaroObject[], ExecutionContext, DaroObject> function;
 
     /**
-     * Create a {@link UserFunction} from a parameter checking function and a {@link Function}.
+     * Create a {@link DaroFunction} from a parameter checking function and a {@link Function}.
      * 
      * @param parameters
      *            A {@link Predicate} checking if the function accepts the given number of
@@ -28,46 +28,46 @@ public class UserLambdaFunction extends UserFunction {
      * @param function
      *            The {@link Function} the function executes
      */
-    public UserLambdaFunction(Predicate<Integer> parameters, BiFunction<UserObject[], ExecutionContext, UserObject> function) {
+    public DaroLambdaFunction(Predicate<Integer> parameters, BiFunction<DaroObject[], ExecutionContext, DaroObject> function) {
         this.parameters = parameters;
         this.function = function;
     }
 
     /**
-     * Create a {@link UserFunction} from a parameter count and a {@link Function}.
+     * Create a {@link DaroFunction} from a parameter count and a {@link Function}.
      * 
      * @param parameters
      *            The number of parameters the function accepts
      * @param function
      *            The {@link Function} the function executes
      */
-    public UserLambdaFunction(int parameters, Function<UserObject[], UserObject> function) {
+    public DaroLambdaFunction(int parameters, Function<DaroObject[], DaroObject> function) {
         this(count -> count == parameters, (params, context) -> {
             return function.apply(params);
         });
     }
 
     /**
-     * Create a {@link UserFunction} from a parameter count and a {@link Function}.
+     * Create a {@link DaroFunction} from a parameter count and a {@link Function}.
      * 
      * @param parameters
      *            The number of parameters the function accepts
      * @param function
      *            The {@link BiFunction} the function executes
      */
-    public UserLambdaFunction(int parameters, BiFunction<UserObject[], ExecutionContext, UserObject> function) {
+    public DaroLambdaFunction(int parameters, BiFunction<DaroObject[], ExecutionContext, DaroObject> function) {
         this(count -> count == parameters, function);
     }
 
     /**
-     * Create a {@link UserFunction} from a parameter count and a {@link Consumer}.
+     * Create a {@link DaroFunction} from a parameter count and a {@link Consumer}.
      * 
      * @param parameters
      *            The number of parameters the function accepts
      * @param function
      *            The {@link Consumer} the function executes
      */
-    public UserLambdaFunction(int parameters, Consumer<UserObject[]> function) {
+    public DaroLambdaFunction(int parameters, Consumer<DaroObject[]> function) {
         this(count -> count == parameters, (params, context) -> {
             function.accept(params);
             return null;
@@ -75,14 +75,14 @@ public class UserLambdaFunction extends UserFunction {
     }
 
     /**
-     * Create a {@link UserFunction} from a parameter count and a {@link Consumer}.
+     * Create a {@link DaroFunction} from a parameter count and a {@link Consumer}.
      * 
      * @param parameters
      *            The number of parameters the function accepts
      * @param function
      *            The {@link BiConsumer} the function executes
      */
-    public UserLambdaFunction(int parameters, BiConsumer<UserObject[], ExecutionContext> function) {
+    public DaroLambdaFunction(int parameters, BiConsumer<DaroObject[], ExecutionContext> function) {
         this(count -> count == parameters, (params, context) -> {
             function.accept(params, context);
             return null;
@@ -90,24 +90,24 @@ public class UserLambdaFunction extends UserFunction {
     }
 
     /**
-     * Create a {@link UserFunction} from a {@link Function} that accepts a variable number of parameters.
+     * Create a {@link DaroFunction} from a {@link Function} that accepts a variable number of parameters.
      * 
      * @param function
      *            The {@link Function} the function executes
      */
-    public UserLambdaFunction(Function<UserObject[], UserObject> function) {
+    public DaroLambdaFunction(Function<DaroObject[], DaroObject> function) {
         this(count -> true, (params, context) -> {
             return function.apply(params);
         });
     }
 
     /**
-     * Create a {@link UserFunction} from a {@link Consumer} that accepts a variable number of parameters.
+     * Create a {@link DaroFunction} from a {@link Consumer} that accepts a variable number of parameters.
      * 
      * @param function
      *            The {@link Consumer} the function executes
      */
-    public UserLambdaFunction(Consumer<UserObject[]> function) {
+    public DaroLambdaFunction(Consumer<DaroObject[]> function) {
         this(count -> true, (params, context) -> {
             function.accept(params);
             return null;
@@ -120,7 +120,7 @@ public class UserLambdaFunction extends UserFunction {
     }
 
     @Override
-    public UserObject execute(UserObject[] params, ExecutionContext context) {
+    public DaroObject execute(DaroObject[] params, ExecutionContext context) {
         return function.apply(params, context);
     }
 
@@ -131,8 +131,8 @@ public class UserLambdaFunction extends UserFunction {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserLambdaFunction) {
-            UserLambdaFunction func = (UserLambdaFunction) object;
+        if (object instanceof DaroLambdaFunction) {
+            DaroLambdaFunction func = (DaroLambdaFunction) object;
             return Objects.equals(function, func.function) && Objects.equals(parameters, func.parameters);
         } else {
             return false;

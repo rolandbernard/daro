@@ -17,7 +17,7 @@ import daro.lang.interpreter.Scope;
  * 
  * @author Roland Bernard
  */
-public class UserNativeClass extends UserType {
+public class DaroNativeClass extends DaroType {
     private final Class<?> nativeClass;
     private final NativeScope staticScope;
 
@@ -26,7 +26,7 @@ public class UserNativeClass extends UserType {
      *
      * @param nativeClass The class this type will refer to
      */
-    public UserNativeClass(Class<?> nativeClass) {
+    public DaroNativeClass(Class<?> nativeClass) {
         this.nativeClass = nativeClass;
         this.staticScope = new NativeScope(nativeClass);
     }
@@ -34,7 +34,7 @@ public class UserNativeClass extends UserType {
     /**
      * Returns the Java class represented by this object.
      * 
-     * @return The Java class for this {@link UserNativeClass}
+     * @return The Java class for this {@link DaroNativeClass}
      */
     public Class<?> getNativeClass() {
         return nativeClass;
@@ -50,10 +50,10 @@ public class UserNativeClass extends UserType {
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context) {
+    public DaroObject instantiate(ExecutionContext context) {
         try {
             Constructor<?> constructor = nativeClass.getConstructor();
-            return new UserNativeObject(this, constructor.newInstance());
+            return new DaroNativeObject(this, constructor.newInstance());
         } catch (NoSuchMethodException e) {
             throw new InterpreterException("Java class is missing an no-args constructor");
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -62,8 +62,8 @@ public class UserNativeClass extends UserType {
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
-        UserObject[] params = new UserObject[initializer.getValues().length];
+    public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
+        DaroObject[] params = new DaroObject[initializer.getValues().length];
         for (int i = 0; i < params.length; i++) {
             AstNode value = initializer.getValues()[i];
             params[i] = Executor.execute(context, value);
@@ -80,7 +80,7 @@ public class UserNativeClass extends UserType {
                     for (int i = 0; i < params.length; i++) {
                         arguments[i] = NativeScope.tryToCast(params[i], paramTypes[i]);
                     }
-                    return new UserNativeObject(this, constructor.newInstance(arguments));
+                    return new DaroNativeObject(this, constructor.newInstance(arguments));
                 }
             } catch (InterpreterException e) {
                 // Ignore exceptions caused by impossible casting
@@ -108,8 +108,8 @@ public class UserNativeClass extends UserType {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserNativeClass) {
-            UserNativeClass classType = (UserNativeClass) object;
+        if (object instanceof DaroNativeClass) {
+            DaroNativeClass classType = (DaroNativeClass) object;
             return Objects.equals(nativeClass, classType.getNativeClass());
         } else {
             return false;

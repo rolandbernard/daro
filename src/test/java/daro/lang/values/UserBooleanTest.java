@@ -8,58 +8,58 @@ public class UserBooleanTest {
 
     @Test
     void sameEqual() {
-        UserBoolean object = new UserBoolean(true);
+        DaroBoolean object = new DaroBoolean(true);
         assertEquals(object, object);
     }
 
     @Test
     void trueEqual() {
-        assertEquals(new UserBoolean(true), new UserBoolean(true));
+        assertEquals(new DaroBoolean(true), new DaroBoolean(true));
     }
 
     @Test
     void falseEqual() {
-        assertEquals(new UserBoolean(false), new UserBoolean(false));
+        assertEquals(new DaroBoolean(false), new DaroBoolean(false));
     }
 
     @Test
     void notEqual() {
-        assertNotEquals(new UserBoolean(true), new UserBoolean(false));
-        assertNotEquals(new UserBoolean(false), new UserBoolean(true));
+        assertNotEquals(new DaroBoolean(true), new DaroBoolean(false));
+        assertNotEquals(new DaroBoolean(false), new DaroBoolean(true));
     }
 
     @Test
     void notEqualTypes() {
-        assertNotEquals(new UserBoolean(true), new UserReal(1));
+        assertNotEquals(new DaroBoolean(true), new DaroReal(1));
     }
 
     @Test
     void getType() {
-        UserBoolean object = new UserBoolean(true);
-        assertEquals(new UserTypeBoolean(), object.getType());
+        DaroBoolean object = new DaroBoolean(true);
+        assertEquals(new DaroTypeBoolean(), object.getType());
     }
 
     @Test
     void isTrue() {
-        UserBoolean object = new UserBoolean(true);
+        DaroBoolean object = new DaroBoolean(true);
         assertTrue(object.isTrue());
     }
 
     @Test
     void isNotTrue() {
-        UserBoolean object = new UserBoolean(false);
+        DaroBoolean object = new DaroBoolean(false);
         assertFalse(object.isTrue());
     }
 
     @Test
     void falseToString() {
-        UserBoolean object = new UserBoolean(false);
+        DaroBoolean object = new DaroBoolean(false);
         assertEquals("false", object.toString());
     }
 
     @Test
     void trueToString() {
-        UserBoolean object = new UserBoolean(true);
+        DaroBoolean object = new DaroBoolean(true);
         assertEquals("true", object.toString());
     }
 }

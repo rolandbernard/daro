@@ -10,21 +10,21 @@ import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 
 /**
- * This {@link UserObject} represents an array value.
+ * This {@link DaroObject} represents an array value.
  * 
  * @author Roland Bernard
  */
-public class UserArray extends UserObject {
-    private final List<UserObject> values;
+public class DaroArray extends DaroObject {
+    private final List<DaroObject> values;
     private final Scope memberScope;
 
     /**
-     * Create a new {@link UserArray} with the values inside the given list.
+     * Create a new {@link DaroArray} with the values inside the given list.
      * 
      * @param values
      *            The values of the array
      */
-    public UserArray(List<UserObject> values) {
+    public DaroArray(List<DaroObject> values) {
         this.values = values;
         this.memberScope = buildMemberScope();
     }
@@ -35,30 +35,30 @@ public class UserArray extends UserObject {
      * @return The member scope
      */
     private Scope buildMemberScope() {
-        Map<String, UserObject> variables = new HashMap<>();
-        variables.put("push", new UserLambdaFunction(params -> {
-            for (UserObject value : params) {
+        Map<String, DaroObject> variables = new HashMap<>();
+        variables.put("push", new DaroLambdaFunction(params -> {
+            for (DaroObject value : params) {
                 pushValue(value);
             }
         }));
-        variables.put("pop", new UserLambdaFunction(0, params -> {
+        variables.put("pop", new DaroLambdaFunction(0, params -> {
             if (values.size() > 0) {
-                UserObject ret = values.get(values.size() - 1);
+                DaroObject ret = values.get(values.size() - 1);
                 values.remove(values.size() - 1);
                 return ret;
             } else {
                 return null;
             }
         }));
-        variables.put("sort", new UserLambdaFunction(1, (params, observers) -> {
-            if (params[0] instanceof UserFunction) {
-                UserFunction function = (UserFunction) params[0];
+        variables.put("sort", new DaroLambdaFunction(1, (params, observers) -> {
+            if (params[0] instanceof DaroFunction) {
+                DaroFunction function = (DaroFunction) params[0];
                 if (!function.allowsParamCount(2)) {
                     throw new InterpreterException("Sorting function must accept two arguments");
                 } else {
                     values.sort((a, b) -> {
-                        UserObject less = function.execute(new UserObject[] { a, b }, observers);
-                        UserObject more = function.execute(new UserObject[] { b, a }, observers);
+                        DaroObject less = function.execute(new DaroObject[] { a, b }, observers);
+                        DaroObject more = function.execute(new DaroObject[] { b, a }, observers);
                         if (less != null && less.isTrue() && more != null && more.isTrue()) {
                             return 0;
                         } else if (less != null && less.isTrue()) {
@@ -91,7 +91,7 @@ public class UserArray extends UserObject {
      *
      * @return The values in the array
      */
-    public List<UserObject> getValues() {
+    public List<DaroObject> getValues() {
         return values;
     }
 
@@ -103,7 +103,7 @@ public class UserArray extends UserObject {
      * 
      * @return The value at index i
      */
-    public UserObject getValueAt(int i) {
+    public DaroObject getValueAt(int i) {
         return values.get(i);
     }
 
@@ -115,7 +115,7 @@ public class UserArray extends UserObject {
      * @param value
      *            The value that should be written
      */
-    public void putValueAt(int i, UserObject value) {
+    public void putValueAt(int i, DaroObject value) {
         values.set(i, value);
     }
 
@@ -125,13 +125,13 @@ public class UserArray extends UserObject {
      * @param value
      *            The value that should be added
      */
-    public void pushValue(UserObject value) {
+    public void pushValue(DaroObject value) {
         values.add(value);
     }
 
     @Override
-    public UserType getType() {
-        return new UserTypeArray();
+    public DaroType getType() {
+        return new DaroTypeArray();
     }
 
     @Override
@@ -146,8 +146,8 @@ public class UserArray extends UserObject {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserArray) {
-            UserArray array = (UserArray) object;
+        if (object instanceof DaroArray) {
+            DaroArray array = (DaroArray) object;
             return values.equals(array.values);
         } else {
             return false;

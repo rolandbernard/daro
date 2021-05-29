@@ -1,25 +1,25 @@
 package daro.lang.values;
 
 /**
- * This {@link UserObject} represents a real value.
+ * This {@link DaroObject} represents a real value.
  * 
  * @author Roland Bernard
  */
-public class UserReal extends UserNumber {
+public class DaroReal extends DaroNumber {
     private final double value;
 
     /**
-     * Create a new {@link UserReal} from the given value.
+     * Create a new {@link DaroReal} from the given value.
      * 
      * @param value
      *            The value that should be stored inside the object
      */
-    public UserReal(double value) {
+    public DaroReal(double value) {
         this.value = value;
     }
 
     /**
-     * Return the double value of this {@link UserReal}
+     * Return the double value of this {@link DaroReal}
      * 
      * @return The value of the object
      */
@@ -28,8 +28,8 @@ public class UserReal extends UserNumber {
     }
 
     @Override
-    public UserType getType() {
-        return new UserTypeReal();
+    public DaroType getType() {
+        return new DaroTypeReal();
     }
 
     @Override
@@ -39,8 +39,8 @@ public class UserReal extends UserNumber {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserReal) {
-            UserReal real = (UserReal) object;
+        if (object instanceof DaroReal) {
+            DaroReal real = (DaroReal) object;
             return value == real.getValue();
         } else {
             return false;

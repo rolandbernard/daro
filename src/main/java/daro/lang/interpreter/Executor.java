@@ -14,7 +14,7 @@ import daro.lang.values.*;
  * 
  * @author Roland Bernard
  */
-public class Executor implements Visitor<UserObject> {
+public class Executor implements Visitor<DaroObject> {
     private final ExecutionContext context;
 
     /**
@@ -39,7 +39,7 @@ public class Executor implements Visitor<UserObject> {
      * 
      * @return The result of the execution
      */
-    public static UserObject execute(ExecutionContext context, AstNode program) {
+    public static DaroObject execute(ExecutionContext context, AstNode program) {
         return (new Executor(context)).execute(program);
     }
 
@@ -51,7 +51,7 @@ public class Executor implements Visitor<UserObject> {
      * 
      * @return The result of the execution
      */
-    public UserObject execute(AstNode program) {
+    public DaroObject execute(AstNode program) {
         if (program != null) {
             try {
                 ExecutionObserver[] observers = context.getObservers();
@@ -62,7 +62,7 @@ public class Executor implements Visitor<UserObject> {
                     for (ExecutionObserver observer : observers) {
                         observer.beforeNodeExecution(program, scope);
                     }
-                    UserObject result = program.accept(this);
+                    DaroObject result = program.accept(this);
                     for (ExecutionObserver observer : observers) {
                         observer.afterNodeExecution(program, result, scope);
                     }
@@ -93,8 +93,8 @@ public class Executor implements Visitor<UserObject> {
      * 
      * @return The result of the execution
      */
-    private UserObject require(AstNode program) {
-        UserObject value = execute(program);
+    private DaroObject require(AstNode program) {
+        DaroObject value = execute(program);
         if (value != null) {
             return value;
         } else {
@@ -103,23 +103,23 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstInteger ast) {
-        return new UserInteger(ast.getValue());
+    public DaroObject visit(AstInteger ast) {
+        return new DaroInteger(ast.getValue());
     }
 
     @Override
-    public UserObject visit(AstReal ast) {
-        return new UserReal(ast.getValue());
+    public DaroObject visit(AstReal ast) {
+        return new DaroReal(ast.getValue());
     }
 
     @Override
-    public UserObject visit(AstString ast) {
-        return new UserString(ast.getValue());
+    public DaroObject visit(AstString ast) {
+        return new DaroString(ast.getValue());
     }
 
     @Override
-    public UserObject visit(AstCharacter ast) {
-        return new UserInteger(BigInteger.valueOf((long) ast.getValue()));
+    public DaroObject visit(AstCharacter ast) {
+        return new DaroInteger(BigInteger.valueOf((long) ast.getValue()));
     }
 
     /**
@@ -137,17 +137,17 @@ public class Executor implements Visitor<UserObject> {
      * 
      * @return The result of the operation
      */
-    private UserObject executeBinary(AstBinaryNode ast, BiFunction<UserInteger, UserInteger, UserObject> integer,
-            BiFunction<UserNumber, UserNumber, UserObject> number, BinaryOperator<UserObject> all) {
-        UserObject left = require(ast.getLeft());
-        UserObject right = require(ast.getRight());
-        if (integer != null && left instanceof UserInteger && right instanceof UserInteger) {
-            UserInteger a = (UserInteger) left;
-            UserInteger b = (UserInteger) right;
+    private DaroObject executeBinary(AstBinaryNode ast, BiFunction<DaroInteger, DaroInteger, DaroObject> integer,
+            BiFunction<DaroNumber, DaroNumber, DaroObject> number, BinaryOperator<DaroObject> all) {
+        DaroObject left = require(ast.getLeft());
+        DaroObject right = require(ast.getRight());
+        if (integer != null && left instanceof DaroInteger && right instanceof DaroInteger) {
+            DaroInteger a = (DaroInteger) left;
+            DaroInteger b = (DaroInteger) right;
             return integer.apply(a, b);
-        } else if (number != null && left instanceof UserNumber && right instanceof UserNumber) {
-            UserNumber a = (UserNumber) left;
-            UserNumber b = (UserNumber) right;
+        } else if (number != null && left instanceof DaroNumber && right instanceof DaroNumber) {
+            DaroNumber a = (DaroNumber) left;
+            DaroNumber b = (DaroNumber) right;
             return number.apply(a, b);
         } else if (all != null) {
             return all.apply(left, right);
@@ -158,110 +158,110 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstAddition ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().add(b.getValue())),
-                (a, b) -> new UserReal(a.doubleValue() + b.doubleValue()),
-                (a, b) -> new UserString(a.toString() + b.toString()));
+    public DaroObject visit(AstAddition ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().add(b.getValue())),
+                (a, b) -> new DaroReal(a.doubleValue() + b.doubleValue()),
+                (a, b) -> new DaroString(a.toString() + b.toString()));
     }
 
     @Override
-    public UserObject visit(AstSubtract ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().subtract(b.getValue())),
-                (a, b) -> new UserReal(a.doubleValue() - b.doubleValue()), null);
+    public DaroObject visit(AstSubtract ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().subtract(b.getValue())),
+                (a, b) -> new DaroReal(a.doubleValue() - b.doubleValue()), null);
     }
 
     @Override
-    public UserObject visit(AstMultiply ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().multiply(b.getValue())),
-                (a, b) -> new UserReal(a.doubleValue() * b.doubleValue()), null);
+    public DaroObject visit(AstMultiply ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().multiply(b.getValue())),
+                (a, b) -> new DaroReal(a.doubleValue() * b.doubleValue()), null);
     }
 
     @Override
-    public UserObject visit(AstDivide ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().divide(b.getValue())),
-                (a, b) -> new UserReal(a.doubleValue() / b.doubleValue()), null);
+    public DaroObject visit(AstDivide ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().divide(b.getValue())),
+                (a, b) -> new DaroReal(a.doubleValue() / b.doubleValue()), null);
     }
 
     @Override
-    public UserObject visit(AstRemainder ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().remainder(b.getValue())),
-                (a, b) -> new UserReal(a.doubleValue() % b.doubleValue()), null);
+    public DaroObject visit(AstRemainder ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().remainder(b.getValue())),
+                (a, b) -> new DaroReal(a.doubleValue() % b.doubleValue()), null);
     }
 
     @Override
-    public UserObject visit(AstShiftLeft ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().shiftLeft(b.getValue().intValue())), null,
+    public DaroObject visit(AstShiftLeft ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().shiftLeft(b.getValue().intValue())), null,
                 null);
     }
 
     @Override
-    public UserObject visit(AstShiftRight ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().shiftRight(b.getValue().intValue())), null,
+    public DaroObject visit(AstShiftRight ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().shiftRight(b.getValue().intValue())), null,
                 null);
     }
 
     @Override
-    public UserObject visit(AstEqual ast) {
-        return executeBinary(ast, (a, b) -> new UserBoolean(a.equals(b)),
-                (a, b) -> new UserBoolean(a.doubleValue() == b.doubleValue()), (a, b) -> new UserBoolean(a.equals(b)));
+    public DaroObject visit(AstEqual ast) {
+        return executeBinary(ast, (a, b) -> new DaroBoolean(a.equals(b)),
+                (a, b) -> new DaroBoolean(a.doubleValue() == b.doubleValue()), (a, b) -> new DaroBoolean(a.equals(b)));
     }
 
     @Override
-    public UserObject visit(AstNotEqual ast) {
-        return executeBinary(ast, null, null, (a, b) -> new UserBoolean(!a.equals(b)));
+    public DaroObject visit(AstNotEqual ast) {
+        return executeBinary(ast, null, null, (a, b) -> new DaroBoolean(!a.equals(b)));
     }
 
     @Override
-    public UserObject visit(AstLessThan ast) {
-        return executeBinary(ast, (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) < 0),
-                (a, b) -> new UserBoolean(a.doubleValue() < b.doubleValue()),
-                (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) < 0));
+    public DaroObject visit(AstLessThan ast) {
+        return executeBinary(ast, (a, b) -> new DaroBoolean(a.getValue().compareTo(b.getValue()) < 0),
+                (a, b) -> new DaroBoolean(a.doubleValue() < b.doubleValue()),
+                (a, b) -> new DaroBoolean(a.toString().compareTo(b.toString()) < 0));
     }
 
     @Override
-    public UserObject visit(AstLessOrEqual ast) {
-        return executeBinary(ast, (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) <= 0),
-                (a, b) -> new UserBoolean(a.doubleValue() <= b.doubleValue()),
-                (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) <= 0));
+    public DaroObject visit(AstLessOrEqual ast) {
+        return executeBinary(ast, (a, b) -> new DaroBoolean(a.getValue().compareTo(b.getValue()) <= 0),
+                (a, b) -> new DaroBoolean(a.doubleValue() <= b.doubleValue()),
+                (a, b) -> new DaroBoolean(a.toString().compareTo(b.toString()) <= 0));
     }
 
     @Override
-    public UserObject visit(AstMoreThan ast) {
-        return executeBinary(ast, (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) > 0),
-                (a, b) -> new UserBoolean(a.doubleValue() > b.doubleValue()),
-                (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) > 0));
+    public DaroObject visit(AstMoreThan ast) {
+        return executeBinary(ast, (a, b) -> new DaroBoolean(a.getValue().compareTo(b.getValue()) > 0),
+                (a, b) -> new DaroBoolean(a.doubleValue() > b.doubleValue()),
+                (a, b) -> new DaroBoolean(a.toString().compareTo(b.toString()) > 0));
     }
 
     @Override
-    public UserObject visit(AstMoreOrEqual ast) {
-        return executeBinary(ast, (a, b) -> new UserBoolean(a.getValue().compareTo(b.getValue()) >= 0),
-                (a, b) -> new UserBoolean(a.doubleValue() >= b.doubleValue()),
-                (a, b) -> new UserBoolean(a.toString().compareTo(b.toString()) >= 0));
+    public DaroObject visit(AstMoreOrEqual ast) {
+        return executeBinary(ast, (a, b) -> new DaroBoolean(a.getValue().compareTo(b.getValue()) >= 0),
+                (a, b) -> new DaroBoolean(a.doubleValue() >= b.doubleValue()),
+                (a, b) -> new DaroBoolean(a.toString().compareTo(b.toString()) >= 0));
     }
 
     @Override
-    public UserObject visit(AstBitwiseAnd ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().and(b.getValue())), null, null);
+    public DaroObject visit(AstBitwiseAnd ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().and(b.getValue())), null, null);
     }
 
     @Override
-    public UserObject visit(AstBitwiseOr ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().or(b.getValue())), null, null);
+    public DaroObject visit(AstBitwiseOr ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().or(b.getValue())), null, null);
     }
 
     @Override
-    public UserObject visit(AstBitwiseXor ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().xor(b.getValue())), null, null);
+    public DaroObject visit(AstBitwiseXor ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().xor(b.getValue())), null, null);
     }
 
     @Override
-    public UserObject visit(AstAnd ast) {
-        return new UserBoolean(require(ast.getLeft()).isTrue() && require(ast.getRight()).isTrue());
+    public DaroObject visit(AstAnd ast) {
+        return new DaroBoolean(require(ast.getLeft()).isTrue() && require(ast.getRight()).isTrue());
     }
 
     @Override
-    public UserObject visit(AstOr ast) {
-        return new UserBoolean(require(ast.getLeft()).isTrue() || require(ast.getRight()).isTrue());
+    public DaroObject visit(AstOr ast) {
+        return new DaroBoolean(require(ast.getLeft()).isTrue() || require(ast.getRight()).isTrue());
     }
 
     /**
@@ -279,14 +279,14 @@ public class Executor implements Visitor<UserObject> {
      * 
      * @return The result of the operation
      */
-    private UserObject executeUnary(AstUnaryNode ast, Function<UserInteger, ? extends UserObject> integer,
-            Function<UserNumber, ? extends UserObject> number, UnaryOperator<UserObject> all) {
-        UserObject value = require(ast.getOperand());
-        if (integer != null && value instanceof UserInteger) {
-            UserInteger a = (UserInteger) value;
+    private DaroObject executeUnary(AstUnaryNode ast, Function<DaroInteger, ? extends DaroObject> integer,
+            Function<DaroNumber, ? extends DaroObject> number, UnaryOperator<DaroObject> all) {
+        DaroObject value = require(ast.getOperand());
+        if (integer != null && value instanceof DaroInteger) {
+            DaroInteger a = (DaroInteger) value;
             return integer.apply(a);
-        } else if (number != null && value instanceof UserNumber) {
-            UserNumber a = (UserNumber) value;
+        } else if (number != null && value instanceof DaroNumber) {
+            DaroNumber a = (DaroNumber) value;
             return number.apply(a);
         } else if (all != null) {
             return all.apply(value);
@@ -297,28 +297,28 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstPositive ast) {
+    public DaroObject visit(AstPositive ast) {
         return executeUnary(ast, Function.identity(), Function.identity(), null);
     }
 
     @Override
-    public UserObject visit(AstNegative ast) {
-        return executeUnary(ast, a -> new UserInteger(a.getValue().negate()), a -> new UserReal(-a.doubleValue()),
+    public DaroObject visit(AstNegative ast) {
+        return executeUnary(ast, a -> new DaroInteger(a.getValue().negate()), a -> new DaroReal(-a.doubleValue()),
                 null);
     }
 
     @Override
-    public UserObject visit(AstBitwiseNot ast) {
-        return executeUnary(ast, a -> new UserInteger(a.getValue().not()), null, null);
+    public DaroObject visit(AstBitwiseNot ast) {
+        return executeUnary(ast, a -> new DaroInteger(a.getValue().not()), null, null);
     }
 
     @Override
-    public UserObject visit(AstNot ast) {
-        return executeUnary(ast, null, null, a -> new UserBoolean(!a.isTrue()));
+    public DaroObject visit(AstNot ast) {
+        return executeUnary(ast, null, null, a -> new DaroBoolean(!a.isTrue()));
     }
 
     @Override
-    public UserObject visit(AstReturn ast) {
+    public DaroObject visit(AstReturn ast) {
         if (ast.getOperand() == null) {
             throw new ReturnException(ast.getPosition(), null);
         } else {
@@ -327,8 +327,8 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstClass ast) {
-        UserTypeClass value = new UserTypeClass(context.getScope(), ast);
+    public DaroObject visit(AstClass ast) {
+        DaroTypeClass value = new DaroTypeClass(context.getScope(), ast);
         if (ast.getName() != null) {
             context.getScope().newVariableInFinal(ast.getName(), value);
         }
@@ -336,8 +336,8 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstFunction ast) {
-        UserAstFunction value = new UserAstFunction(context.getScope(), ast);
+    public DaroObject visit(AstFunction ast) {
+        DaroAstFunction value = new DaroAstFunction(context.getScope(), ast);
         if (ast.getName() != null) {
             context.getScope().newVariableInFinal(ast.getName(), value);
         }
@@ -345,7 +345,7 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstBlock ast) {
+    public DaroObject visit(AstBlock ast) {
         BlockScope innerScope = new BlockScope(context.getScope());
         AstSequence sequence = ast.getSequence();
         ScopeInitializer.initialize(innerScope, sequence);
@@ -353,8 +353,8 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstSequence ast) {
-        UserObject value = null;
+    public DaroObject visit(AstSequence ast) {
+        DaroObject value = null;
         for (AstNode statement : ast.getStatemens()) {
             value = execute(statement);
         }
@@ -362,10 +362,10 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstAssignment ast) {
+    public DaroObject visit(AstAssignment ast) {
         VariableLocation location = LocationEvaluator.execute(context, ast.getLeft());
         if (location != null) {
-            UserObject value = require(ast.getRight());
+            DaroObject value = require(ast.getRight());
             location.storeValue(value);
             return value;
         } else {
@@ -374,8 +374,8 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstSymbol ast) {
-        UserObject value = context.getScope().getVariableValue(ast.getName());
+    public DaroObject visit(AstSymbol ast) {
+        DaroObject value = context.getScope().getVariableValue(ast.getName());
         if (value == null) {
             throw new InterpreterException(ast.getPosition(), "Variable is undefined");
         } else {
@@ -384,9 +384,9 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstMember ast) {
-        UserObject left = require(ast.getOperand());
-        UserObject value = left.getMemberScope().getVariableValue(ast.getName());
+    public DaroObject visit(AstMember ast) {
+        DaroObject left = require(ast.getOperand());
+        DaroObject value = left.getMemberScope().getVariableValue(ast.getName());
         if (value == null) {
             throw new InterpreterException(ast.getPosition(), "Member variable is undefined");
         } else {
@@ -395,15 +395,15 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstCall ast) {
-        UserObject left = require(ast.getFunction());
-        if (left instanceof UserFunction) {
-            UserFunction function = (UserFunction) left;
+    public DaroObject visit(AstCall ast) {
+        DaroObject left = require(ast.getFunction());
+        if (left instanceof DaroFunction) {
+            DaroFunction function = (DaroFunction) left;
             AstNode[] parameters = ast.getParameters();
             if (!function.allowsParamCount(parameters.length)) {
                 throw new InterpreterException(ast.getFunction().getPosition(), "Wrong number of parameters");
             } else {
-                UserObject[] parameterValues = new UserObject[parameters.length];
+                DaroObject[] parameterValues = new DaroObject[parameters.length];
                 for (int i = 0; i < parameters.length; i++) {
                     parameterValues[i] = require(parameters[i]);
                 }
@@ -415,13 +415,13 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstIndex ast) {
-        UserObject left = require(ast.getLeft());
-        if (left instanceof UserArray) {
-            UserObject right = require(ast.getRight());
-            if (right instanceof UserInteger) {
-                UserArray array = (UserArray) left;
-                int index = ((UserInteger) right).getValue().intValue();
+    public DaroObject visit(AstIndex ast) {
+        DaroObject left = require(ast.getLeft());
+        if (left instanceof DaroArray) {
+            DaroObject right = require(ast.getRight());
+            if (right instanceof DaroInteger) {
+                DaroArray array = (DaroArray) left;
+                int index = ((DaroInteger) right).getValue().intValue();
                 if (index < 0 || index >= array.getLength()) {
                     throw new InterpreterException(ast.getPosition(), "Index out of bounds");
                 } else {
@@ -436,10 +436,10 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstNew ast) {
-        UserObject kind = require(ast.getType());
-        if (kind instanceof UserType) {
-            UserType type = (UserType) kind;
+    public DaroObject visit(AstNew ast) {
+        DaroObject kind = require(ast.getType());
+        if (kind instanceof DaroType) {
+            DaroType type = (DaroType) kind;
             if (ast.getInitialzer() != null) {
                 return type.instantiate(context, ast.getInitialzer());
             } else {
@@ -451,16 +451,16 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstArray ast) {
-        UserObject value = require(ast.getRight());
-        if (value instanceof UserType) {
-            UserType type = (UserType) value;
-            UserObject size = execute(ast.getLeft());
+    public DaroObject visit(AstArray ast) {
+        DaroObject value = require(ast.getRight());
+        if (value instanceof DaroType) {
+            DaroType type = (DaroType) value;
+            DaroObject size = execute(ast.getLeft());
             if (size == null) {
-                return new UserTypeStrictArray(type);
-            } else if (size instanceof UserInteger) {
-                UserInteger integer = (UserInteger) size;
-                return new UserTypeStrictArray(integer.getValue().intValue(), type);
+                return new DaroTypeStrictArray(type);
+            } else if (size instanceof DaroInteger) {
+                DaroInteger integer = (DaroInteger) size;
+                return new DaroTypeStrictArray(integer.getValue().intValue(), type);
             } else {
                 throw new InterpreterException(ast.getLeft().getPosition(), "Size is not an integer");
             }
@@ -470,7 +470,7 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstIfElse ast) {
+    public DaroObject visit(AstIfElse ast) {
         if (require(ast.getCondition()).isTrue()) {
             return execute(ast.getIf());
         } else {
@@ -479,8 +479,8 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstFor ast) {
-        UserObject value = null;
+    public DaroObject visit(AstFor ast) {
+        DaroObject value = null;
         while (require(ast.getCondition()).isTrue()) {
             value = execute(ast.getBody());
         }
@@ -488,14 +488,14 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstForIn ast) {
+    public DaroObject visit(AstForIn ast) {
         BlockScope innerScope = new BlockScope(context.getScope());
-        UserObject value = require(ast.getList());
-        if (value instanceof UserArray) {
-            UserObject ret = null;
-            UserArray array = (UserArray) value;
+        DaroObject value = require(ast.getList());
+        if (value instanceof DaroArray) {
+            DaroObject ret = null;
+            DaroArray array = (DaroArray) value;
             for (int i = 0; i < array.getLength(); i++) {
-                UserObject item = array.getValueAt(i);
+                DaroObject item = array.getValueAt(i);
                 innerScope.newVariableInFinal(ast.getVariable().getName(), item);
                 ret = execute(context.forScope(innerScope), ast.getBody());
             }
@@ -506,13 +506,13 @@ public class Executor implements Visitor<UserObject> {
     }
 
     @Override
-    public UserObject visit(AstInitializer ast) {
+    public DaroObject visit(AstInitializer ast) {
         throw new InterpreterException(ast.getPosition(), "Execution error");
     }
 
     @Override
-    public UserObject visit(AstPower ast) {
-        return executeBinary(ast, (a, b) -> new UserInteger(a.getValue().pow(b.getValue().intValue())),
-                (a, b) -> new UserReal(Math.pow(a.doubleValue(), b.doubleValue())), null);
+    public DaroObject visit(AstPower ast) {
+        return executeBinary(ast, (a, b) -> new DaroInteger(a.getValue().pow(b.getValue().intValue())),
+                (a, b) -> new DaroReal(Math.pow(a.doubleValue(), b.doubleValue())), null);
     }
 }

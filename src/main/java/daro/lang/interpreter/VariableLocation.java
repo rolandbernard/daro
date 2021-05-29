@@ -1,6 +1,6 @@
 package daro.lang.interpreter;
 
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroObject;
 
 /**
  * This interface should be implemented by objects that are used for storing variables at by an assignment statement.
@@ -16,5 +16,5 @@ public interface VariableLocation {
      * @param value
      *            The value that should be written
      */
-    public void storeValue(UserObject value);
+    public void storeValue(DaroObject value);
 }

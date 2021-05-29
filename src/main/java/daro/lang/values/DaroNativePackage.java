@@ -6,12 +6,12 @@ import daro.lang.interpreter.CompleteScope;
 import daro.lang.interpreter.Scope;
 
 /**
- * This {@link UserObject} represents a native Java package. In reality it does not actually specify
+ * This {@link DaroObject} represents a native Java package. In reality it does not actually specify
  * a package but only a unresolved name prefix that might be a package name.
  * 
  * @author Roland Bernard
  */
-public class UserNativePackage extends UserObject {
+public class DaroNativePackage extends DaroObject {
     private final String[] name;
 
     /**
@@ -20,7 +20,7 @@ public class UserNativePackage extends UserObject {
      * @param name
      *            The name for this package
      */
-    public UserNativePackage(String ...name) {
+    public DaroNativePackage(String ...name) {
         this.name = name;
     }
 
@@ -30,7 +30,7 @@ public class UserNativePackage extends UserObject {
      * @param name
      *            The name for this package
      */
-    public UserNativePackage(UserNativePackage parent, String name) {
+    public DaroNativePackage(DaroNativePackage parent, String name) {
         this.name = new String[parent.name.length + 1];
         for (int i = 0; i < parent.name.length; i++) {
             this.name[i] = parent.name[i];
@@ -48,16 +48,16 @@ public class UserNativePackage extends UserObject {
     }
 
     @Override
-    public UserType getType() {
-        return new UserTypeNativePackage();
+    public DaroType getType() {
+        return new DaroTypeNativePackage();
     }
 
     @Override
     public Scope getMemberScope() {
         return new CompleteScope(variable -> {
-            UserNativePackage pack = new UserNativePackage(this, variable);
+            DaroNativePackage pack = new DaroNativePackage(this, variable);
             try {
-                return new UserNativeClass(ClassLoader.getSystemClassLoader().loadClass(pack.getJavaName()));
+                return new DaroNativeClass(ClassLoader.getSystemClassLoader().loadClass(pack.getJavaName()));
             } catch (ClassNotFoundException e) {
                 return pack;
             }
@@ -76,8 +76,8 @@ public class UserNativePackage extends UserObject {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserNativePackage) {
-            UserNativePackage pack = (UserNativePackage) object;
+        if (object instanceof DaroNativePackage) {
+            DaroNativePackage pack = (DaroNativePackage) object;
             return Arrays.equals(name, pack.name);
         } else {
             return false;

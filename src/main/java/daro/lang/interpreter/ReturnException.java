@@ -1,7 +1,7 @@
 package daro.lang.interpreter;
 
 import daro.lang.ast.Position;
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroObject;
 
 /**
  * This represents an exception that is thrown if a return is encountered by the {@link Executor}. This simplifies the
@@ -12,7 +12,7 @@ import daro.lang.values.UserObject;
  */
 public class ReturnException extends InterpreterException {
     private static final long serialVersionUID = 1L;
-    private final UserObject value;
+    private final DaroObject value;
 
     /**
      * Create a {@link ReturnException} for the given position and return value.
@@ -22,7 +22,7 @@ public class ReturnException extends InterpreterException {
      * @param value
      *            The value that was returned
      */
-    public ReturnException(Position position, UserObject value) {
+    public ReturnException(Position position, DaroObject value) {
         super(position, "Unexpected return statement");
         this.value = value;
     }
@@ -32,7 +32,7 @@ public class ReturnException extends InterpreterException {
      * 
      * @return The returned value
      */
-    public UserObject getReturnValue() {
+    public DaroObject getReturnValue() {
         return value;
     }
 }

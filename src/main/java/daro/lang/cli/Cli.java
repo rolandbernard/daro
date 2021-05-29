@@ -9,7 +9,7 @@ import daro.lang.ast.Position;
 import daro.lang.interpreter.Interpreter;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.parser.ParsingException;
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroObject;
 
 /**
  * This is a small REPL (Read-Eval-Print Loop) cli interface into the interpreter designed for testing and demonstration
@@ -68,7 +68,7 @@ public class Cli {
             code.append(line + "\n");
             String program = code.toString();
             try {
-                UserObject value = interpreter.execute(program);
+                DaroObject value = interpreter.execute(program);
                 if (value != null) {
                     try {
                         System.out.println(value);

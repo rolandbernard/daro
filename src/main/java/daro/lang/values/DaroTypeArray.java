@@ -9,22 +9,22 @@ import daro.lang.interpreter.Executor;
 import daro.lang.interpreter.InterpreterException;
 
 /**
- * This class represents the type for a array object ({@link UserArray}).
+ * This class represents the type for a array object ({@link DaroArray}).
  * 
  * @author Roland Bernard
  */
-public class UserTypeArray extends UserType {
+public class DaroTypeArray extends DaroType {
 
     @Override
-    public UserObject instantiate(ExecutionContext context) {
-        return new UserArray(new ArrayList<>());
+    public DaroObject instantiate(ExecutionContext context) {
+        return new DaroArray(new ArrayList<>());
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
-        UserArray array = (UserArray) instantiate(context);
+    public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
+        DaroArray array = (DaroArray) instantiate(context);
         for (AstNode value : initializer.getValues()) {
-            UserObject object = Executor.execute(context, value);
+            DaroObject object = Executor.execute(context, value);
             if (object != null) {
                 array.pushValue(object);
             } else {

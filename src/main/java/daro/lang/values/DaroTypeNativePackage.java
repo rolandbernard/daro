@@ -5,19 +5,19 @@ import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.InterpreterException;
 
 /**
- * This class represents the type for a package object ({@link UserNativePackage}).
+ * This class represents the type for a package object ({@link DaroNativePackage}).
  * 
  * @author Roland Bernard
  */
-public class UserTypeNativePackage extends UserType {
+public class DaroTypeNativePackage extends DaroType {
 
     @Override
-    public UserObject instantiate(ExecutionContext context) {
-        return new UserNativePackage("java");
+    public DaroObject instantiate(ExecutionContext context) {
+        return new DaroNativePackage("java");
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
+    public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
         if (initializer.getValues().length != 0) {
             throw new InterpreterException(initializer.getPosition(), "Native package type can not be initialized");
         } else {

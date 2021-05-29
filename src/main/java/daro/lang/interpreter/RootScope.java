@@ -34,7 +34,7 @@ public class RootScope extends ConstantScope {
     }
 
     /**
-     * This function generates a mapping between {@link String}s and {@link UserObject}s that represent all the
+     * This function generates a mapping between {@link String}s and {@link DaroObject}s that represent all the
      * variables in the root scope of a daro program.
      * 
      * @param output
@@ -42,33 +42,33 @@ public class RootScope extends ConstantScope {
      * 
      * @return The mapping of the root scope
      */
-    private static Map<String, UserObject> buildRootVariables(PrintStream output) {
-        Map<String, UserObject> variables = new HashMap<>();
+    private static Map<String, DaroObject> buildRootVariables(PrintStream output) {
+        Map<String, DaroObject> variables = new HashMap<>();
         // Types
-        variables.put("int", new UserTypeInteger());
-        variables.put("real", new UserTypeReal());
-        variables.put("bool", new UserTypeBoolean());
-        variables.put("string", new UserTypeString());
-        variables.put("type", new UserTypeType());
-        variables.put("function", new UserTypeFunction());
-        variables.put("array", new UserTypeArray());
-        variables.put("array", new UserTypeArray());
+        variables.put("int", new DaroTypeInteger());
+        variables.put("real", new DaroTypeReal());
+        variables.put("bool", new DaroTypeBoolean());
+        variables.put("string", new DaroTypeString());
+        variables.put("type", new DaroTypeType());
+        variables.put("function", new DaroTypeFunction());
+        variables.put("array", new DaroTypeArray());
+        variables.put("array", new DaroTypeArray());
         // Values
-        variables.put("null", new UserNull());
-        variables.put("true", new UserBoolean(true));
-        variables.put("false", new UserBoolean(false));
-        variables.put("java", new UserNativePackage("java"));
+        variables.put("null", new DaroNull());
+        variables.put("true", new DaroBoolean(true));
+        variables.put("false", new DaroBoolean(false));
+        variables.put("java", new DaroNativePackage("java"));
         // Functions
-        variables.put("typeof", new UserLambdaFunction(1, params -> {
+        variables.put("typeof", new DaroLambdaFunction(1, params -> {
             return params[0].getType();
         }));
-        variables.put("print", new UserLambdaFunction(params -> {
-            for (UserObject object : params) {
+        variables.put("print", new DaroLambdaFunction(params -> {
+            for (DaroObject object : params) {
                 output.print(object.toString());
             }
         }));
-        variables.put("println", new UserLambdaFunction(params -> {
-            for (UserObject object : params) {
+        variables.put("println", new DaroLambdaFunction(params -> {
+            for (DaroObject object : params) {
                 output.print(object.toString());
             }
             output.println();

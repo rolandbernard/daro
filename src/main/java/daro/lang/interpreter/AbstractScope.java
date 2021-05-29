@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroObject;
 
 /**
  * This is the superclass of most scopes. A scope is a collection of variables (with names and values).
@@ -14,7 +14,7 @@ import daro.lang.values.UserObject;
  */
 public abstract class AbstractScope implements Scope {
     protected final Scope parent;
-    protected final Map<String, UserObject> variables;
+    protected final Map<String, DaroObject> variables;
 
     /**
      * Create a new {@link Scope} without a parent.
@@ -43,7 +43,7 @@ public abstract class AbstractScope implements Scope {
      * @param variables
      *            The internal variables map
      */
-    protected AbstractScope(Scope parent, Map<String, UserObject> variables) {
+    protected AbstractScope(Scope parent, Map<String, DaroObject> variables) {
         this.parent = parent;
         this.variables = variables;
     }
@@ -63,7 +63,7 @@ public abstract class AbstractScope implements Scope {
     }
 
     @Override
-    public UserObject getVariableValue(String name) {
+    public DaroObject getVariableValue(String name) {
         if (variables.containsKey(name)) {
             return variables.get(name);
         } else if (parent != null) {
@@ -74,8 +74,8 @@ public abstract class AbstractScope implements Scope {
     }
 
     @Override
-    public Map<String, UserObject> getCompleteMapping() {
-        Map<String, UserObject> result;
+    public Map<String, DaroObject> getCompleteMapping() {
+        Map<String, DaroObject> result;
         if (parent != null) {
             result = parent.getCompleteMapping();
         } else {

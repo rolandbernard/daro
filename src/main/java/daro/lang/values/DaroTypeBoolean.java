@@ -7,28 +7,28 @@ import daro.lang.interpreter.Executor;
 import daro.lang.interpreter.InterpreterException;
 
 /**
- * This class represents the type for a integer object ({@link UserInteger}).
+ * This class represents the type for a integer object ({@link DaroInteger}).
  * 
  * @author Roland Bernard
  */
-public class UserTypeBoolean extends UserType {
+public class DaroTypeBoolean extends DaroType {
 
     @Override
-    public UserObject instantiate(ExecutionContext context) {
-        return new UserBoolean(false);
+    public DaroObject instantiate(ExecutionContext context) {
+        return new DaroBoolean(false);
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
+    public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
         if (initializer.getValues().length == 0) {
             return instantiate(context);
         } else if (initializer.getValues().length != 1) {
             throw new InterpreterException(initializer.getPosition(), "Booleans must be initialized with one value");
         } else {
             AstNode value = initializer.getValues()[0];
-            UserObject object = Executor.execute(context, value);
+            DaroObject object = Executor.execute(context, value);
             if (object != null) {
-                return new UserBoolean(object.isTrue());
+                return new DaroBoolean(object.isTrue());
             } else {
                 throw new InterpreterException(value.getPosition(), "Value must not be undefined");
             }

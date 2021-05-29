@@ -2,7 +2,7 @@ package daro.lang.interpreter;
 
 import java.util.Map;
 
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroObject;
 
 /**
  * This interface should be implement by all scopes. A scope is a collection of variables (with names and values).
@@ -41,7 +41,7 @@ public interface Scope {
      * @param object
      *            The object to store into the new variable
      */
-    default public void newVariableInFinal(String name, UserObject object) {
+    default public void newVariableInFinal(String name, DaroObject object) {
         VariableLocation location = getFinalLevel().getVariableLocation(name);
         if (location == null) {
             throw new InterpreterException("The surrounding scope does not support function or class definitions");
@@ -67,9 +67,9 @@ public interface Scope {
      * @param name
      *            The name to search for
      * 
-     * @return The {@link UserObject} stored in the variable if it exists, null otherwise
+     * @return The {@link DaroObject} stored in the variable if it exists, null otherwise
      */
-    public UserObject getVariableValue(String name);
+    public DaroObject getVariableValue(String name);
 
     /**
      * Returns the complete mapping of this scope. i.e. A map of every possible name that would return a non-null value
@@ -77,7 +77,7 @@ public interface Scope {
      * 
      * @return The complete mapping
      */
-    public Map<String, UserObject> getCompleteMapping();
+    public Map<String, DaroObject> getCompleteMapping();
 
     /**
      * Returns a {@link VariableLocation} to store a variable of the given name. If the variable does not exist in this

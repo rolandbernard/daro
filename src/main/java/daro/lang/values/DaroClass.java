@@ -11,12 +11,12 @@ import daro.lang.interpreter.Scope;
 import daro.lang.interpreter.ScopeInitializer;
 
 /**
- * This {@link UserObject} represents an instance of a class.
+ * This {@link DaroObject} represents an instance of a class.
  * 
  * @author Roland Bernard
  */
-public class UserClass extends UserObject {
-    private final UserTypeClass classType;
+public class DaroClass extends DaroObject {
+    private final DaroTypeClass classType;
     private final BlockScope scope;
 
     /**
@@ -30,7 +30,7 @@ public class UserClass extends UserObject {
      * @param classType
      *            The type of the class
      */
-    public UserClass(Scope globalScope, ExecutionContext context, UserTypeClass classType) {
+    public DaroClass(Scope globalScope, ExecutionContext context, DaroTypeClass classType) {
         this.classType = classType;
         Scope thisScope = new ConstantScope(globalScope, Map.of("this", this));
         this.scope = new BlockScope(thisScope);
@@ -46,7 +46,7 @@ public class UserClass extends UserObject {
      * @param classType
      *            The type of the class
      */
-    public UserClass(Scope globalScope, UserTypeClass classType) {
+    public DaroClass(Scope globalScope, DaroTypeClass classType) {
         this(globalScope, null, classType);
     }
 
@@ -63,7 +63,7 @@ public class UserClass extends UserObject {
     }
 
     @Override
-    public UserType getType() {
+    public DaroType getType() {
         return classType;
     }
 
@@ -79,8 +79,8 @@ public class UserClass extends UserObject {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserClass) {
-            UserClass classObject = (UserClass) object;
+        if (object instanceof DaroClass) {
+            DaroClass classObject = (DaroClass) object;
             return scope.getFinalLevel().equals(classObject.scope.getFinalLevel())
                     && classType.equals(classObject.classType);
         } else {

@@ -1,6 +1,6 @@
 package daro.lang.interpreter;
 
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroObject;
 import java.util.Map;
 
 /**
@@ -37,7 +37,7 @@ public class BlockScope extends AbstractScope {
      * @param variables
      *            The internal variables map
      */
-    private BlockScope(Scope parent, Map<String, UserObject> variables) {
+    private BlockScope(Scope parent, Map<String, DaroObject> variables) {
         super(parent, variables);
     }
 

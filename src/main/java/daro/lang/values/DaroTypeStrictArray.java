@@ -11,56 +11,56 @@ import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.InterpreterException;
 
 /**
- * This class represents the type for a array object that has a single type of child ({@link UserArray}). This type can
+ * This class represents the type for a array object that has a single type of child ({@link DaroArray}). This type can
  * be constructed and instantiated, but the resulting object will not enforce the single type. It is mainly for
  * initialization.
  * 
  * @author Roland Bernard
  */
-public class UserTypeStrictArray extends UserType {
-    private final UserType base;
+public class DaroTypeStrictArray extends DaroType {
+    private final DaroType base;
     private final Integer size;
 
     /**
-     * Create a new {@link UserTypeStrictArray} for a given base type and undefined length.
+     * Create a new {@link DaroTypeStrictArray} for a given base type and undefined length.
      * 
      * @param base
      *            The base type of the array
      */
-    public UserTypeStrictArray(UserType base) {
+    public DaroTypeStrictArray(DaroType base) {
         this(null, base);
     }
 
     /**
-     * Create a new {@link UserTypeStrictArray} for a given base type and the given length.
+     * Create a new {@link DaroTypeStrictArray} for a given base type and the given length.
      * 
      * @param size
      *            The length of the resulting array
      * @param base
      *            The base type of the array
      */
-    public UserTypeStrictArray(Integer size, UserType base) {
+    public DaroTypeStrictArray(Integer size, DaroType base) {
         this.size = size;
         this.base = base;
     }
 
-    public UserType getBaseType() {
+    public DaroType getBaseType() {
         return base;
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context) {
+    public DaroObject instantiate(ExecutionContext context) {
         if (size == null) {
-            return new UserArray(new ArrayList<>());
+            return new DaroArray(new ArrayList<>());
         } else {
-            return new UserArray(Stream.generate(() -> base.instantiate(context)).limit(size)
+            return new DaroArray(Stream.generate(() -> base.instantiate(context)).limit(size)
                     .collect(Collectors.toCollection(() -> new ArrayList<>())));
         }
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
-        ArrayList<UserObject> list = new ArrayList<>();
+    public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
+        ArrayList<DaroObject> list = new ArrayList<>();
         if (size != null && size < initializer.getValues().length) {
             throw new InterpreterException(initializer.getPosition(), "Initializer is longer that the array");
         }
@@ -76,7 +76,7 @@ public class UserTypeStrictArray extends UserType {
                 list.add(base.instantiate(context));
             }
         }
-        return new UserArray(list);
+        return new DaroArray(list);
     }
 
     @Override
@@ -86,8 +86,8 @@ public class UserTypeStrictArray extends UserType {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserTypeStrictArray) {
-            UserTypeStrictArray array = (UserTypeStrictArray) object;
+        if (object instanceof DaroTypeStrictArray) {
+            DaroTypeStrictArray array = (DaroTypeStrictArray) object;
             return base.equals(array.getBaseType()) && Objects.equals(size, array.size);
         } else {
             return false;

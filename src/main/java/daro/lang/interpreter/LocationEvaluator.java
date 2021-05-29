@@ -232,7 +232,7 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     @Override
     public VariableLocation visit(AstMember ast) {
-        UserObject left = Executor.execute(context, ast.getOperand());
+        DaroObject left = Executor.execute(context, ast.getOperand());
         if (left == null) {
             throw new InterpreterException(ast.getOperand().getPosition(), "Can not access member of undefined");
         } else {
@@ -247,12 +247,12 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     @Override
     public VariableLocation visit(AstIndex ast) {
-        UserObject left = Executor.execute(context, ast.getLeft());
-        if (left instanceof UserArray) {
-            UserObject right = Executor.execute(context, ast.getRight());
-            if (right instanceof UserInteger) {
-                UserArray array = (UserArray) left;
-                int index = ((UserInteger) right).getValue().intValue();
+        DaroObject left = Executor.execute(context, ast.getLeft());
+        if (left instanceof DaroArray) {
+            DaroObject right = Executor.execute(context, ast.getRight());
+            if (right instanceof DaroInteger) {
+                DaroArray array = (DaroArray) left;
+                int index = ((DaroInteger) right).getValue().intValue();
                 return value -> {
                     if (index < 0 || index >= array.getLength()) {
                         throw new InterpreterException(ast.getPosition(), "Index out of bounds");

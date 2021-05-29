@@ -218,7 +218,7 @@ public class ScopeInitializer implements Visitor<Object> {
     @Override
     public Object visit(AstClass ast) {
         if (ast.getName() != null) {
-            UserTypeClass value = new UserTypeClass(scope, ast);
+            DaroTypeClass value = new DaroTypeClass(scope, ast);
             scope.newVariableInFinal(ast.getName(), value);
         }
         return null;
@@ -227,7 +227,7 @@ public class ScopeInitializer implements Visitor<Object> {
     @Override
     public Object visit(AstFunction ast) {
         if (ast.getName() != null) {
-            UserAstFunction value = new UserAstFunction(scope, ast);
+            DaroAstFunction value = new DaroAstFunction(scope, ast);
             scope.newVariableInFinal(ast.getName(), value);
         }
         return null;

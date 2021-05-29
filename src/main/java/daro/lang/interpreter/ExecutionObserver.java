@@ -1,7 +1,7 @@
 package daro.lang.interpreter;
 
 import daro.lang.ast.AstNode;
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroObject;
 
 /**
  * This interface can be implemented by classes that wish to observe the execution of a program inside the daro
@@ -32,7 +32,7 @@ public interface ExecutionObserver {
      * @param scope
      *            The scope the ast was executed in
      */
-    public void afterNodeExecution(AstNode node, UserObject value, Scope scope);
+    public void afterNodeExecution(AstNode node, DaroObject value, Scope scope);
 
     /**
      * This method will be called before trying to find the {@link VariableLocation} corresponding to the given

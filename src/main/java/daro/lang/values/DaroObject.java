@@ -8,14 +8,14 @@ import daro.lang.interpreter.Scope;
  * 
  * @author Roland Bernard
  */
-public abstract class UserObject {
+public abstract class DaroObject {
 
     /**
-     * This function should return the {@link UserType} of the {@link UserObject} it is called on.
+     * This function should return the {@link DaroType} of the {@link DaroObject} it is called on.
      * 
-     * @return The type of the {@link UserObject}
+     * @return The type of the {@link DaroObject}
      */
-    public abstract UserType getType();
+    public abstract DaroType getType();
 
     /**
      * This function should return the {@link Scope} that is used for member access. Objects that have more variables
@@ -30,7 +30,7 @@ public abstract class UserObject {
     /**
      * This function should return true if the value is considered true for the purpose of conditions in conditional
      * statements. Object that return true for this function do not necessarily have to be equal to the
-     * {@link UserBoolean} of value true.
+     * {@link DaroBoolean} of value true.
      * 
      * @return It the object is 'true'
      */

@@ -3,25 +3,25 @@ package daro.lang.values;
 import java.math.BigInteger;
 
 /**
- * This {@link UserObject} represents an integer value.
+ * This {@link DaroObject} represents an integer value.
  * 
  * @author Roland Bernard
  */
-public class UserInteger extends UserNumber {
+public class DaroInteger extends DaroNumber {
     private final BigInteger value;
 
     /**
-     * Create a new {@link UserInteger} from the given value.
+     * Create a new {@link DaroInteger} from the given value.
      * 
      * @param value
-     *            The value to be stored in the {@link UserInteger}
+     *            The value to be stored in the {@link DaroInteger}
      */
-    public UserInteger(BigInteger value) {
+    public DaroInteger(BigInteger value) {
         this.value = value;
     }
 
     /**
-     * Returns the value stored inside the {@link UserInteger}
+     * Returns the value stored inside the {@link DaroInteger}
      * 
      * @return The value stored in this object
      */
@@ -30,8 +30,8 @@ public class UserInteger extends UserNumber {
     }
 
     @Override
-    public UserType getType() {
-        return new UserTypeInteger();
+    public DaroType getType() {
+        return new DaroTypeInteger();
     }
 
     @Override
@@ -41,8 +41,8 @@ public class UserInteger extends UserNumber {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserInteger) {
-            UserInteger integer = (UserInteger) object;
+        if (object instanceof DaroInteger) {
+            DaroInteger integer = (DaroInteger) object;
             return value.equals(integer.getValue());
         } else {
             return false;

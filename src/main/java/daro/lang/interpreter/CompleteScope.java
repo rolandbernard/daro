@@ -13,7 +13,7 @@ import daro.lang.values.*;
  * @author Roland Bernard
  */
 public class CompleteScope implements Scope {
-    private final Function<String, UserObject> mapping;
+    private final Function<String, DaroObject> mapping;
 
     /**
      * Creates a new complete scope using the given mapping;
@@ -21,7 +21,7 @@ public class CompleteScope implements Scope {
      * @param mapping
      *            The function to use for mapping variable names onto values
      */
-    public CompleteScope(Function<String, UserObject> mapping) {
+    public CompleteScope(Function<String, DaroObject> mapping) {
         this.mapping = mapping;
     }
 
@@ -36,12 +36,12 @@ public class CompleteScope implements Scope {
     }
 
     @Override
-    public UserObject getVariableValue(String name) {
+    public DaroObject getVariableValue(String name) {
         return mapping.apply(name);
     }
 
     @Override
-    public Map<String, UserObject> getCompleteMapping() {
+    public Map<String, DaroObject> getCompleteMapping() {
         throw new InterpreterException("Scope can not be iterated over");
     }
 

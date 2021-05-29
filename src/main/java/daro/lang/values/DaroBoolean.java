@@ -1,35 +1,35 @@
 package daro.lang.values;
 
 /**
- * This {@link UserObject} represents a boolean value.
+ * This {@link DaroObject} represents a boolean value.
  * 
  * @author Roland Bernard
  */
-public class UserBoolean extends UserObject {
+public class DaroBoolean extends DaroObject {
     private final boolean value;
 
     /**
      * Create a new boolean value from the given value.
      * 
      * @param value
-     *            The value the {@link UserBoolean} represents
+     *            The value the {@link DaroBoolean} represents
      */
-    public UserBoolean(boolean value) {
+    public DaroBoolean(boolean value) {
         this.value = value;
     }
 
     /**
      * Returns the value of this boolean.
      * 
-     * @return The value the {@link UserBoolean} represents
+     * @return The value the {@link DaroBoolean} represents
      */
     public boolean getValue() {
         return value;
     }
 
     @Override
-    public UserType getType() {
-        return new UserTypeBoolean();
+    public DaroType getType() {
+        return new DaroTypeBoolean();
     }
 
     @Override
@@ -39,8 +39,8 @@ public class UserBoolean extends UserObject {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserBoolean) {
-            UserBoolean bool = (UserBoolean) object;
+        if (object instanceof DaroBoolean) {
+            DaroBoolean bool = (DaroBoolean) object;
             return value == bool.getValue();
         } else {
             return false;

@@ -3,15 +3,15 @@ package daro.lang.values;
 import daro.lang.interpreter.ExecutionContext;
 
 /**
- * This {@link UserObject} represents an instance of a function.
+ * This {@link DaroObject} represents an instance of a function.
  * 
  * @author Roland Bernard
  */
-public abstract class UserFunction extends UserObject {
+public abstract class DaroFunction extends DaroObject {
 
     @Override
-    public UserType getType() {
-        return new UserTypeFunction();
+    public DaroType getType() {
+        return new DaroTypeFunction();
     }
 
     /**
@@ -32,7 +32,7 @@ public abstract class UserFunction extends UserObject {
      * 
      * @return The return value of the function
      */
-    public abstract UserObject execute(UserObject[] params, ExecutionContext context);
+    public abstract DaroObject execute(DaroObject[] params, ExecutionContext context);
 
     @Override
     public boolean isTrue() {

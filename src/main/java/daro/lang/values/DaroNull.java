@@ -9,20 +9,20 @@ import daro.lang.interpreter.InterpreterException;
  * 
  * @author Roland Bernard
  */
-public class UserNull extends UserType {
+public class DaroNull extends DaroType {
 
     @Override
-    public UserType getType() {
-        return new UserNull();
+    public DaroType getType() {
+        return new DaroNull();
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context) {
+    public DaroObject instantiate(ExecutionContext context) {
         return this;
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
+    public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
         if (initializer.getValues().length != 0) {
             throw new InterpreterException(initializer.getPosition(), "Null type can not be initialized");
         } else {

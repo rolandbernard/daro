@@ -1,6 +1,6 @@
 package daro.lang.interpreter;
 
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroObject;
 
 import java.util.Map;
 
@@ -18,7 +18,7 @@ public class ConstantScope extends AbstractScope {
      * @param mapping
      *            The parring from names to values to use
      */
-    public ConstantScope(Map<String, UserObject> mapping) {
+    public ConstantScope(Map<String, DaroObject> mapping) {
         this(null, mapping);
     }
 
@@ -31,7 +31,7 @@ public class ConstantScope extends AbstractScope {
      * @param mapping
      *            The parring from names to values to use
      */
-    public ConstantScope(Scope parent, Map<String, UserObject> mapping) {
+    public ConstantScope(Scope parent, Map<String, DaroObject> mapping) {
         super(parent, mapping);
     }
 

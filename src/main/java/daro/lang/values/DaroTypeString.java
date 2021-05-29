@@ -7,30 +7,28 @@ import daro.lang.interpreter.Executor;
 import daro.lang.interpreter.InterpreterException;
 
 /**
- * This class represents the type for a type object ({@link UserType}).
+ * This class represents the type for a string object ({@link DaroString}).
  * 
  * @author Roland Bernard
  */
-public class UserTypeType extends UserType {
+public class DaroTypeString extends DaroType {
 
     @Override
-    public UserObject instantiate(ExecutionContext context) {
-        return new UserNull();
+    public DaroObject instantiate(ExecutionContext context) {
+        return new DaroString("");
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
+    public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
         if (initializer.getValues().length == 0) {
             return instantiate(context);
         } else if (initializer.getValues().length != 1) {
-            throw new InterpreterException(initializer.getPosition(), "Type must be initialized with one value");
+            throw new InterpreterException(initializer.getPosition(), "String must be initialized with one value");
         } else {
             AstNode value = initializer.getValues()[0];
-            UserObject object = Executor.execute(context, value);
-            if (object instanceof UserType) {
-                return object;
-            } else if (object != null) {
-                return object.getType();
+            DaroObject object = Executor.execute(context, value);
+            if (object != null) {
+                return new DaroString(object.toString());
             } else {
                 throw new InterpreterException(value.getPosition(), "Value must not be undefined");
             }
@@ -39,6 +37,6 @@ public class UserTypeType extends UserType {
 
     @Override
     public String toString() {
-        return "type";
+        return "string";
     }
 }

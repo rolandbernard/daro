@@ -79,27 +79,27 @@ public class NativeScope implements Scope {
     }
 
     /**
-     * Try to cast a {@link UserObject} into a Java object of the given type. If this is not
+     * Try to cast a {@link DaroObject} into a Java object of the given type. If this is not
      * possible throw an interpreter exception.
      *
      * @param object The object that should be cast
      * @param expected The java class that should be cast to
      * @return The cast version of the object
      */
-    public static Object tryToCast(UserObject object, Class<?> expected) {
-        if (object instanceof UserNull) {
+    public static Object tryToCast(DaroObject object, Class<?> expected) {
+        if (object instanceof DaroNull) {
             return null;
-        } else if (object instanceof UserNativeClass) {
+        } else if (object instanceof DaroNativeClass) {
             if (expected.isAssignableFrom(Class.class)) {
-                return ((UserNativeClass)object).getNativeClass();
+                return ((DaroNativeClass)object).getNativeClass();
             }
-        } else if (object instanceof UserNativeObject) {
-            UserNativeObject obj = (UserNativeObject)object;
+        } else if (object instanceof DaroNativeObject) {
+            DaroNativeObject obj = (DaroNativeObject)object;
             if (expected.isInstance(obj.getValue())) {
                 return obj.getValue();
             }
-        } else if (object instanceof UserInteger) {
-            UserInteger integer = (UserInteger)object;
+        } else if (object instanceof DaroInteger) {
+            DaroInteger integer = (DaroInteger)object;
             if (expected.isInstance(integer.getValue())) {
                 return integer.getValue();
             } else if (expected.isAssignableFrom(Long.TYPE)) {
@@ -115,15 +115,15 @@ public class NativeScope implements Scope {
             } else if (expected.isAssignableFrom(Float.TYPE)) {
                 return (char)integer.getValue().floatValue();
             }
-        } else if (object instanceof UserReal) {
-            UserReal real = (UserReal)object;
+        } else if (object instanceof DaroReal) {
+            DaroReal real = (DaroReal)object;
             if (expected.isInstance(real.getValue())) {
                 return real.getValue();
             } else if (expected.isAssignableFrom(Float.TYPE)) {
                 return (float)real.getValue();
             }
-        } else if (object instanceof UserArray) {
-            UserArray array = (UserArray)object;
+        } else if (object instanceof DaroArray) {
+            DaroArray array = (DaroArray)object;
             if (expected.isInstance(array.getValues())) {
                 return array.getValues();
             } else if (expected.isArray()) {
@@ -134,13 +134,13 @@ public class NativeScope implements Scope {
                 }
                 return result;
             }
-        } else if (object instanceof UserBoolean) {
-            UserBoolean bool = (UserBoolean)object;
+        } else if (object instanceof DaroBoolean) {
+            DaroBoolean bool = (DaroBoolean)object;
             if (expected.isInstance(bool.getValue())) {
                 return bool.getValue();
             }
-        } else if (object instanceof UserString) {
-            UserString string = (UserString)object;
+        } else if (object instanceof DaroString) {
+            DaroString string = (DaroString)object;
             if (expected.isInstance(string.getValue())) {
                 return string.getValue();
             }
@@ -153,52 +153,52 @@ public class NativeScope implements Scope {
     }
 
     /**
-     * Try to wrap the given Object into an appropriate {@link UserObject}. This function will
+     * Try to wrap the given Object into an appropriate {@link DaroObject}. This function will
      * always e able to wrap the object because it can as a last resort wrap it into a
-     * {@link UserNativeObject}.
+     * {@link DaroNativeObject}.
      *
      * @param object The object to wrap
      * @return The warped object
      */
-    public static UserObject tryToWrap(Object object) {
+    public static DaroObject tryToWrap(Object object) {
         if (object == null) {
-            return new UserNull();
-        } else if (object instanceof UserObject) {
-            return (UserObject)object;
+            return new DaroNull();
+        } else if (object instanceof DaroObject) {
+            return (DaroObject)object;
         } else if (object instanceof BigInteger) {
-            return new UserInteger((BigInteger)object);
+            return new DaroInteger((BigInteger)object);
         } else if (object instanceof Long) {
-            return new UserInteger(BigInteger.valueOf((Long)object));
+            return new DaroInteger(BigInteger.valueOf((Long)object));
         } else if (object instanceof Integer) {
-            return new UserInteger(BigInteger.valueOf((Integer)object));
+            return new DaroInteger(BigInteger.valueOf((Integer)object));
         } else if (object instanceof Short) {
-            return new UserInteger(BigInteger.valueOf((Short)object));
+            return new DaroInteger(BigInteger.valueOf((Short)object));
         } else if (object instanceof Character) {
-            return new UserInteger(BigInteger.valueOf((Character)object));
+            return new DaroInteger(BigInteger.valueOf((Character)object));
         } else if (object instanceof Double) {
-            return new UserReal((Double)object);
+            return new DaroReal((Double)object);
         } else if (object instanceof Float) {
-            return new UserReal((Float)object);
+            return new DaroReal((Float)object);
         } else if (object instanceof List) {
-            List<UserObject> list = ((List<?>)object).stream()
+            List<DaroObject> list = ((List<?>)object).stream()
                 .map(obj -> tryToWrap(obj))
                 .collect(Collectors.toList());
-            return new UserArray(list);
+            return new DaroArray(list);
         } else if (object.getClass().isArray()) {
             int length = Array.getLength(object);
-            List<UserObject> list = new ArrayList<>();
+            List<DaroObject> list = new ArrayList<>();
             for (int i = 0; i < length; i++) {
                 list.add(tryToWrap(Array.get(object, i)));
             }
-            return new UserArray(list);
+            return new DaroArray(list);
         } else if (object instanceof Boolean) {
-            return new UserBoolean((Boolean)object);
+            return new DaroBoolean((Boolean)object);
         } else if (object instanceof String) {
-            return new UserString((String)object);
+            return new DaroString((String)object);
         } else if (object instanceof Class) {
-            return new UserNativeClass((Class<?>)object);
+            return new DaroNativeClass((Class<?>)object);
         } else {
-            return new UserNativeObject(object);
+            return new DaroNativeObject(object);
         }
     }
 
@@ -221,13 +221,13 @@ public class NativeScope implements Scope {
     }
 
     @Override
-    public UserObject getVariableValue(String name) {
+    public DaroObject getVariableValue(String name) {
         if (methods.containsKey(name)) {
             Method method = methods.get(name);
             if (target != null || Modifier.isStatic(method.getModifiers())) {
                 Class<?>[] paramTypes = method.getParameterTypes();
                 boolean returnsVoid = method.getReturnType().equals(Void.TYPE);
-                return new UserLambdaFunction(paramTypes.length, params -> {
+                return new DaroLambdaFunction(paramTypes.length, params -> {
                     Object[] arguments = new Object[params.length];
                     for (int i = 0; i < params.length; i++) {
                         arguments[i] = tryToCast(params[i], paramTypes[i]);
@@ -264,8 +264,8 @@ public class NativeScope implements Scope {
     }
 
     @Override
-    public Map<String, UserObject> getCompleteMapping() {
-        Map<String, UserObject> result = new HashMap<>();
+    public Map<String, DaroObject> getCompleteMapping() {
+        Map<String, DaroObject> result = new HashMap<>();
         Set<String> keys = methods.keySet();
         keys.addAll(fields.keySet());
         for (String key : keys) {

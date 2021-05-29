@@ -26,45 +26,45 @@ public class FunctionInterpreterTest {
     @Test
     void functionType() {
         interpreter.execute("fn test() { }");
-        assertEquals(new UserTypeFunction(), interpreter.execute("typeof(test)"));
+        assertEquals(new DaroTypeFunction(), interpreter.execute("typeof(test)"));
     }
 
     @Test
     void supplierFunction() {
         interpreter.execute("fn test() { 42 }");
-        assertEquals(new UserInteger(BigInteger.valueOf(42)), interpreter.execute("test()"));
+        assertEquals(new DaroInteger(BigInteger.valueOf(42)), interpreter.execute("test()"));
     }
 
     @Test
     void simpleFunction() {
         interpreter.execute("fn double(n) { 2 * n }");
-        assertEquals(new UserInteger(BigInteger.valueOf(42)), interpreter.execute("double(21)"));
+        assertEquals(new DaroInteger(BigInteger.valueOf(42)), interpreter.execute("double(21)"));
     }
 
     @Test
     void multiParameterFunction() {
         interpreter.execute("fn fma(a, b, c) { a * b + c }");
-        assertEquals(new UserInteger(BigInteger.valueOf(42)), interpreter.execute("fma(20, 2, 2)"));
+        assertEquals(new DaroInteger(BigInteger.valueOf(42)), interpreter.execute("fma(20, 2, 2)"));
     }
 
     @Test
     void recursiveFunction() {
         interpreter.execute("fn fib(n) { if n <= 1 { n } else { fib(n - 2) + fib(n - 1) } }");
-        assertEquals(new UserInteger(BigInteger.valueOf(6765)), interpreter.execute("fib(20)"));
+        assertEquals(new DaroInteger(BigInteger.valueOf(6765)), interpreter.execute("fib(20)"));
     }
 
     @Test
     void returnValue() {
         interpreter.execute("fn test(n) { if n == 0 { return 5 }; return 0 }");
-        assertEquals(new UserInteger(BigInteger.valueOf(5)), interpreter.execute("test(0)"));
-        assertEquals(new UserInteger(BigInteger.valueOf(0)), interpreter.execute("test(1)"));
+        assertEquals(new DaroInteger(BigInteger.valueOf(5)), interpreter.execute("test(0)"));
+        assertEquals(new DaroInteger(BigInteger.valueOf(0)), interpreter.execute("test(1)"));
     }
 
     @Test
     void emptyReturn() {
         interpreter.execute("fn test(n) { if n == 0 { return }; return 0 }");
         assertEquals(null, interpreter.execute("test(0)"));
-        assertEquals(new UserInteger(BigInteger.valueOf(0)), interpreter.execute("test(1)"));
+        assertEquals(new DaroInteger(BigInteger.valueOf(0)), interpreter.execute("test(1)"));
     }
 
     @Test

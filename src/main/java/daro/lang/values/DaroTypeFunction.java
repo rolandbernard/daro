@@ -5,20 +5,20 @@ import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.InterpreterException;
 
 /**
- * This class represents the type for a function object ({@link UserFunction}). All functions have the same type for
+ * This class represents the type for a function object ({@link DaroFunction}). All functions have the same type for
  * now. Functions can not be initialized using new but have to be created using the fn syntax.
  * 
  * @author Roland Bernard
  */
-public class UserTypeFunction extends UserType {
+public class DaroTypeFunction extends DaroType {
 
     @Override
-    public UserObject instantiate(ExecutionContext context) {
-        return new UserLambdaFunction(0, params -> null);
+    public DaroObject instantiate(ExecutionContext context) {
+        return new DaroLambdaFunction(0, params -> null);
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
+    public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
         if (initializer.getValues().length != 0) {
             throw new InterpreterException(initializer.getPosition(), "Function types can not be initialized");
         } else {

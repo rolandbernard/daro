@@ -8,15 +8,15 @@ import daro.lang.interpreter.ExecutionContext;
  * 
  * @author Roland Bernard
  */
-public abstract class UserType extends UserObject {
+public abstract class DaroType extends DaroObject {
 
     @Override
-    public UserType getType() {
-        return new UserTypeType();
+    public DaroType getType() {
+        return new DaroTypeType();
     }
 
     /**
-     * Instantiates a {@link UserObject} of the type represented by this object and initializes it with it's default
+     * Instantiates a {@link DaroObject} of the type represented by this object and initializes it with it's default
      * values.
      * 
      * @param context
@@ -24,31 +24,31 @@ public abstract class UserType extends UserObject {
      * 
      * @return The instantiated object
      */
-    public abstract UserObject instantiate(ExecutionContext context);
+    public abstract DaroObject instantiate(ExecutionContext context);
 
     /**
-     * Instantiates a {@link UserObject} of the type represented by this object and initializes it with it's default
+     * Instantiates a {@link DaroObject} of the type represented by this object and initializes it with it's default
      * values.
      * 
      * @return The instantiated object
      */
-    public UserObject instantiate() {
+    public DaroObject instantiate() {
         return instantiate(new ExecutionContext());
     }
 
     /**
-     * Instantiates a {@link UserObject} of the type represented by this object and initializes it with the values in
+     * Instantiates a {@link DaroObject} of the type represented by this object and initializes it with the values in
      * the given initializer. The initializer is executed in the given context, but the resulting object must not be
      * linked to the scope in any other way.
      * 
      * @param context
      *            The context to initialize in
      * @param initializer
-     *            The initializer to initialize the {@link UserObject} with
+     *            The initializer to initialize the {@link DaroObject} with
      * 
      * @return The instantiated object
      */
-    public abstract UserObject instantiate(ExecutionContext context, AstInitializer initializer);
+    public abstract DaroObject instantiate(ExecutionContext context, AstInitializer initializer);
 
     @Override
     public int hashCode() {

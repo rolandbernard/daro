@@ -5,7 +5,7 @@ import java.nio.file.Path;
 
 import daro.lang.ast.*;
 import daro.lang.parser.*;
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroObject;
 
 /**
  * This is the main interface into the daro interpreter. This class implements a simple low setup time interpreter for
@@ -66,7 +66,7 @@ public class Interpreter {
      * @throws InterpreterException
      *             It the code causes an exception during execution
      */
-    public UserObject execute(AstNode ast) {
+    public DaroObject execute(AstNode ast) {
         ScopeInitializer.initialize(globalScope, ast);
         return Executor.execute(new ExecutionContext(globalScope), ast);
     }
@@ -86,7 +86,7 @@ public class Interpreter {
      * @throws ParsingException
      *             It the source cannot be parsed
      */
-    public UserObject execute(String source) {
+    public DaroObject execute(String source) {
         AstSequence ast = Parser.parseSourceCode(source);
         return execute(ast);
     }
@@ -108,7 +108,7 @@ public class Interpreter {
      * @throws ParsingException
      *             It the source cannot be parsed
      */
-    public UserObject execute(String source, Path file) {
+    public DaroObject execute(String source, Path file) {
         AstSequence ast = Parser.parseSourceCode(source, file);
         return execute(ast);
     }
@@ -126,7 +126,7 @@ public class Interpreter {
      * @throws InterpreterException
      *             It the code causes an exception during execution
      */
-    public UserObject execute(AstNode ast, ExecutionObserver[] observers) {
+    public DaroObject execute(AstNode ast, ExecutionObserver[] observers) {
         ScopeInitializer.initialize(globalScope, ast);
         return Executor.execute(new ExecutionContext(globalScope, observers), ast);
     }
@@ -148,7 +148,7 @@ public class Interpreter {
      * @throws ParsingException
      *             It the source cannot be parsed
      */
-    public UserObject execute(String source, ExecutionObserver[] observers) {
+    public DaroObject execute(String source, ExecutionObserver[] observers) {
         AstSequence ast = Parser.parseSourceCode(source);
         return execute(ast, observers);
     }
@@ -172,7 +172,7 @@ public class Interpreter {
      * @throws ParsingException
      *             It the source cannot be parsed
      */
-    public UserObject execute(String source, Path file, ExecutionObserver[] observers) {
+    public DaroObject execute(String source, Path file, ExecutionObserver[] observers) {
         AstSequence ast = Parser.parseSourceCode(source, file);
         return execute(ast, observers);
     }

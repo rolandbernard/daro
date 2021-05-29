@@ -12,11 +12,11 @@ import daro.lang.interpreter.ReturnException;
 import daro.lang.interpreter.Scope;
 
 /**
- * This {@link UserObject} represents an instance of a function executing from a ast.
+ * This {@link DaroObject} represents an instance of a function executing from a ast.
  * 
  * @author Roland Bernard
  */
-public class UserAstFunction extends UserFunction {
+public class DaroAstFunction extends DaroFunction {
     private final Scope scope;
     private final AstFunction ast;
 
@@ -29,7 +29,7 @@ public class UserAstFunction extends UserFunction {
      * @param ast
      *            The ast that represents the function
      */
-    public UserAstFunction(Scope scope, AstFunction ast) {
+    public DaroAstFunction(Scope scope, AstFunction ast) {
         this.scope = scope;
         this.ast = ast;
     }
@@ -40,7 +40,7 @@ public class UserAstFunction extends UserFunction {
     }
 
     @Override
-    public UserObject execute(UserObject[] params, ExecutionContext context) {
+    public DaroObject execute(DaroObject[] params, ExecutionContext context) {
         BlockScope parameterScope = new BlockScope(scope);
         AstSymbol[] parameters = ast.getParameters();
         for (int i = 0; i < params.length && i < parameters.length; i++) {
@@ -60,8 +60,8 @@ public class UserAstFunction extends UserFunction {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserAstFunction) {
-            UserAstFunction function = (UserAstFunction) object;
+        if (object instanceof DaroAstFunction) {
+            DaroAstFunction function = (DaroAstFunction) object;
             return scope.equals(function.scope) && ast.equals(function.ast);
         } else {
             return false;

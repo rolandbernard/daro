@@ -12,12 +12,12 @@ import daro.lang.interpreter.Scope;
 import daro.lang.interpreter.VariableLocation;
 
 /**
- * This class represents the type for a class instance ({@link UserClass}). A class is always linked to the scope they
+ * This class represents the type for a class instance ({@link DaroClass}). A class is always linked to the scope they
  * are defined in which is used to instantiate the class.
  * 
  * @author Roland Bernard
  */
-public class UserTypeClass extends UserType {
+public class DaroTypeClass extends DaroType {
     private final Scope globalScope;
     private final AstClass definition;
 
@@ -29,7 +29,7 @@ public class UserTypeClass extends UserType {
      * @param definition
      *            The definition of the class
      */
-    public UserTypeClass(Scope globalScope, AstClass definition) {
+    public DaroTypeClass(Scope globalScope, AstClass definition) {
         this.globalScope = globalScope;
         this.definition = definition;
     }
@@ -44,13 +44,13 @@ public class UserTypeClass extends UserType {
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context) {
-        return new UserClass(globalScope, context, this);
+    public DaroObject instantiate(ExecutionContext context) {
+        return new DaroClass(globalScope, context, this);
     }
 
     @Override
-    public UserObject instantiate(ExecutionContext context, AstInitializer initializer) {
-        UserClass classObject = new UserClass(globalScope, context, this);
+    public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
+        DaroClass classObject = new DaroClass(globalScope, context, this);
         Scope classScope = classObject.getMemberScope();
         for (AstNode value : initializer.getValues()) {
             if (value instanceof AstAssignment) {
@@ -58,7 +58,7 @@ public class UserTypeClass extends UserType {
                 VariableLocation location = LocationEvaluator.execute(context.forScope(classScope),
                         assignment.getLeft());
                 if (location != null) {
-                    UserObject object = Executor.execute(context, assignment.getRight());
+                    DaroObject object = Executor.execute(context, assignment.getRight());
                     if (object == null) {
                         throw new InterpreterException(assignment.getRight().getPosition(),
                                 "Value must not be undefined");
@@ -83,8 +83,8 @@ public class UserTypeClass extends UserType {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof UserTypeClass) {
-            UserTypeClass classType = (UserTypeClass) object;
+        if (object instanceof DaroTypeClass) {
+            DaroTypeClass classType = (DaroTypeClass) object;
             return globalScope.equals(classType.globalScope) && definition.equals(classType.getDefinition());
         } else {
             return false;
