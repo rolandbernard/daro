@@ -87,6 +87,15 @@ public class UserArray extends UserObject {
     }
 
     /**
+     * Returns the values in the array.
+     *
+     * @return The values in the array
+     */
+    public List<UserObject> getValues() {
+        return values;
+    }
+
+    /**
      * Returns the value inside the array at index i.
      * 
      * @param i
