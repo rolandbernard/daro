@@ -125,9 +125,9 @@ public class UserLambdaFunction extends UserFunction {
     @Override
     public String toString() {
         if (parameters >= 0) {
-            return "fn [native] (" + String.valueOf(parameters) + ")";
+            return "[native function] (" + String.valueOf(parameters) + ")";
         } else {
-            return "fn [native] (...)";
+            return "[native function] (...)";
         }
     }
 }

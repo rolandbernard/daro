@@ -57,6 +57,7 @@ public class RootScope extends ConstantScope {
         variables.put("null", new UserNull());
         variables.put("true", new UserBoolean(true));
         variables.put("false", new UserBoolean(false));
+        variables.put("java", new UserNativePackage("java"));
         // Functions
         variables.put("typeof", new UserLambdaFunction(1, params -> {
             return params[0].getType();

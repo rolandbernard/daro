@@ -70,8 +70,8 @@ public class UserNativeObject extends UserObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof UserNativeObject) {
-            UserNativeObject bool = (UserNativeObject) object;
-            return Objects.equals(value, bool.getValue());
+            UserNativeObject userObject = (UserNativeObject) object;
+            return Objects.equals(value, userObject.getValue());
         } else {
             return false;
         }

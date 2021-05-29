@@ -98,7 +98,7 @@ public class UserNativeClass extends UserType {
 
     @Override
     public String toString() {
-        return "java " + nativeClass.getName();
+        return "[native class] " + nativeClass.getName();
     }
 
     @Override
