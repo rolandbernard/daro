@@ -5,7 +5,7 @@ import daro.lang.values.UserObject;
 
 /**
  * This represents an exception that is thrown if a return is encountered by the {@link Executor}. This simplifies the
- * implementation by using the Java VM's unrolling mechanism. If this exception is not handled by the executor the
+ * implementation by using the Java VMs unrolling mechanism. If this exception is not handled by the executor the
  * return statement was unexpected, i.e. not inside a function call.
  *
  * @author Roland Bernard

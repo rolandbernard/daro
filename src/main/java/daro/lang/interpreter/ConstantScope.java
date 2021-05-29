@@ -10,7 +10,7 @@ import java.util.Map;
  * 
  * @author Roland Bernard
  */
-public class ConstantScope extends Scope {
+public class ConstantScope extends AbstractScope {
 
     /**
      * Creates a new constant scope filling it with the given variable mapping.

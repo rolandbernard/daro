@@ -9,7 +9,7 @@ import java.util.Map;
  * 
  * @author Roland Bernard
  */
-public class BlockScope extends Scope {
+public class BlockScope extends AbstractScope {
 
     /**
      * Create a new {@link BlockScope} without a parent.
