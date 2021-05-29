@@ -25,7 +25,7 @@ public class UserNativeObject extends UserObject {
     public UserNativeObject(UserNativeClass type, Object value) {
         this.type = type;
         this.value = value;
-        this.instanceScope = type.getInstanceScope(this);
+        this.instanceScope = type.getInstanceScope(value);
     }
 
     /**
