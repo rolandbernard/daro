@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import daro.lang.values.DaroPackage;
+import daro.lang.values.DaroModule;
 
 /**
  * This class contains all the information required by the executor.
@@ -15,7 +15,7 @@ import daro.lang.values.DaroPackage;
  */
 public class ExecutionContext {
     private final Scope scope;
-    private final Map<Path, DaroPackage> modules;
+    private final Map<Path, DaroModule> modules;
     private final PrintStream output;
     private final ExecutionObserver[] observers;
 
@@ -102,7 +102,7 @@ public class ExecutionContext {
      * 
      * @return The modules for this context
      */
-    public Map<Path, DaroPackage> getModules() {
+    public Map<Path, DaroModule> getModules() {
         return modules;
     }
 

@@ -48,27 +48,42 @@ public class BlockScope extends AbstractScope {
 
     @Override
     public VariableLocation getVariableLocation(String name) {
-        if (!variables.containsKey(name)) {
-            for (Scope parent : parents) {
-                if (parent.containsVariable(name)) {
-                    VariableLocation location = parent.getVariableLocation(name);
-                    if (location != null) {
-                        return location;
+        if (visited) {
+            return null;
+        } else {
+            try {
+                visited = true;
+                if (!variables.containsKey(name)) {
+                    for (Scope parent : parents) {
+                        if (parent.containsVariable(name)) {
+                            VariableLocation location = parent.getVariableLocation(name);
+                            if (location != null) {
+                                return location;
+                            }
+                        }
                     }
                 }
+                return value -> {
+                    variables.put(name, value);
+                };
+            } finally {
+                visited = false;
             }
         }
-        return value -> {
-            variables.put(name, value);
-        };
     }
 
     @Override
     public void reset() {
-        for (Scope parent : parents) {
-            parent.reset();
+        if (!visited) {
+            try {
+                visited = true;
+                for (Scope parent : parents) {
+                    parent.reset();
+                }
+                variables.clear();
+            } finally {
+                visited = false;
+            }
         }
-        variables.clear();
     }
-
 }

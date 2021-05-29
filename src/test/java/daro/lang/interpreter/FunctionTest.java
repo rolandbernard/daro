@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigInteger;
 
-public class FunctionInterpreterTest {
+public class FunctionTest {
     private Interpreter interpreter;
 
     @BeforeEach

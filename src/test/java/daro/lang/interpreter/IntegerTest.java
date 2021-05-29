@@ -8,7 +8,7 @@ import java.math.BigInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class IntegerInterpreterTest {
+public class IntegerTest {
     private Interpreter interpreter;
 
     @BeforeEach

@@ -7,7 +7,7 @@ import daro.lang.values.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ClassInterpreterTest {
+public class ClassTest {
     private Interpreter interpreter;
 
     @BeforeEach

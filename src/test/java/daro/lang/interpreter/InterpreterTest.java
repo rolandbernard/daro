@@ -10,7 +10,7 @@ import java.math.BigInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SimpleInterpreterTest {
+public class InterpreterTest {
     private Interpreter interpreter;
 
     @BeforeEach

@@ -18,6 +18,11 @@ public abstract class AbstractScope implements Scope {
     protected Scope[] parents;
 
     /**
+     * Used to allow for recursive scopes. Be careful if you use it!
+     */
+    protected boolean visited = false;
+
+    /**
      * Creates a new {@link Scope} with the given parent.
      * 
      * @param parent
@@ -55,39 +60,60 @@ public abstract class AbstractScope implements Scope {
 
     @Override
     public boolean containsVariable(String name) {
-        if (variables.containsKey(name)) {
+        if (visited) {
+            return false;
+        } else if (variables.containsKey(name)) {
             return true;
         } else {
-            for (Scope parent : parents) {
-                if (parent.containsVariable(name)) {
-                    return true;
+            try {
+                visited = true;
+                for (Scope parent : parents) {
+                    if (parent.containsVariable(name)) {
+                        return true;
+                    }
                 }
+                return false;
+            } finally {
+                visited = false;
             }
-            return false;
         }
     }
 
     @Override
     public DaroObject getVariableValue(String name) {
-        if (variables.containsKey(name)) {
+        if (visited) {
+            return null;
+        } else if (variables.containsKey(name)) {
             return variables.get(name);
         } else {
-            for (Scope parent : parents) {
-                if (parent.containsVariable(name)) {
-                    return parent.getVariableValue(name);
+            try {
+                visited = true;
+                for (Scope parent : parents) {
+                    if (parent.containsVariable(name)) {
+                        return parent.getVariableValue(name);
+                    }
                 }
+                return null;
+            } finally {
+                visited = false;
             }
-            return null;
         }
     }
 
     @Override
     public Map<String, DaroObject> getCompleteMapping() {
         Map<String, DaroObject> result = new HashMap<>();
-        for (int i = parents.length - 1; i >= 0; i--) {
-            result.putAll(parents[i].getCompleteMapping());
+        if (!visited) {
+            try {
+                visited = true;
+                for (int i = parents.length - 1; i >= 0; i--) {
+                    result.putAll(parents[i].getCompleteMapping());
+                }
+                result.putAll(variables);
+            } finally {
+                visited = false;
+            }
         }
-        result.putAll(variables);
         return result;
     }
 

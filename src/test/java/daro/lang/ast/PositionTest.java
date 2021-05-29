@@ -52,7 +52,7 @@ public class PositionTest {
     @Test
     void toStringPosition() {
         Position position1 = new Position(42, 100);
-        assertEquals("(42,58)", position1.toString());
+        assertEquals("42..100", position1.toString());
     }
 
     @Test

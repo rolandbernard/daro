@@ -8,7 +8,7 @@ import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PrintInterpreterTest {
+public class PrintTest {
     private Interpreter interpreter;
     private ByteArrayOutputStream stream;
 

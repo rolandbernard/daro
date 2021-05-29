@@ -12,6 +12,7 @@ import java.util.function.UnaryOperator;
 
 import daro.lang.ast.*;
 import daro.lang.parser.Parser;
+import daro.lang.parser.ParsingException;
 import daro.lang.values.*;
 
 /**
@@ -23,8 +24,7 @@ public class Executor implements Visitor<DaroObject> {
     private final ExecutionContext context;
 
     /**
-     * Create a new {@link Executor} for execution in the given scope and observed by the given
-     * {@link ExecutionObserver}s.
+     * Create a new {@link Executor} for execution in the given {@link ExecutionContext}.
      * 
      * @param context
      *            The context to execute in
@@ -34,8 +34,7 @@ public class Executor implements Visitor<DaroObject> {
     }
 
     /**
-     * Run the given {@link AstNode} in the given {@link Scope} and observe it with the given
-     * {@link ExecutionObserver}s.
+     * Run the given {@link AstNode} in the given {@link ExecutionContext}.
      * 
      * @param context
      *            The context to execute in
@@ -46,6 +45,20 @@ public class Executor implements Visitor<DaroObject> {
      */
     public static DaroObject execute(ExecutionContext context, AstNode program) {
         return (new Executor(context)).execute(program);
+    }
+
+    /**
+     * Run the given file in the given {@link ExecutionContext}.
+     * 
+     * @param context
+     *            The context to execute in
+     * @param file
+     *            The file to execute
+     * 
+     * @return The result of the execution
+     */
+    public static DaroModule executeFile(ExecutionContext context, Path file) {
+        return (new Executor(context)).executeFile(file);
     }
 
     /**
@@ -73,6 +86,8 @@ public class Executor implements Visitor<DaroObject> {
                     }
                     return result;
                 }
+            } catch (ParsingException error) {
+                throw error;
             } catch (InterpreterException error) {
                 if (error.getPosition() == null) {
                     // Some exceptions are thrown in locations without positional information.
@@ -82,7 +97,9 @@ public class Executor implements Visitor<DaroObject> {
                 }
             } catch (Exception error) {
                 // All other exceptions should be converted to {@link InterpreterException}
-                throw new InterpreterException(program.getPosition(), error.getMessage());
+                InterpreterException exception = new InterpreterException(program.getPosition(), error.getMessage());
+                exception.initCause(error);
+                throw exception;
             }
         } else {
             return null;
@@ -382,7 +399,7 @@ public class Executor implements Visitor<DaroObject> {
     public DaroObject visit(AstSymbol ast) {
         DaroObject value = context.getScope().getVariableValue(ast.getName());
         if (value == null) {
-            throw new InterpreterException(ast.getPosition(), "Variable is undefined");
+            throw new InterpreterException(ast.getPosition(), "Variable `" + ast.getName() + "` is undefined");
         } else {
             return value;
         }
@@ -393,7 +410,7 @@ public class Executor implements Visitor<DaroObject> {
         DaroObject left = require(ast.getOperand());
         DaroObject value = left.getMemberScope().getVariableValue(ast.getName());
         if (value == null) {
-            throw new InterpreterException(ast.getPosition(), "Member variable is undefined");
+            throw new InterpreterException(ast.getPosition(), "Member variable `" + ast.getName() + "`  is undefined");
         } else {
             return value;
         }
@@ -534,27 +551,64 @@ public class Executor implements Visitor<DaroObject> {
         }
     }
 
+    /**
+     * This is a utility function that searches for a file inside all of the paths given by search
+     * in order an then as a last resort relative to the program execution. The function will return
+     * the absolute path of whatever file it finds.
+     *
+     * @param file The file to search
+     * @param search The locations to search in
+     * @return The path to the files expected location
+     */
+    private Path searchForImport(Path file, Path ...search) {
+        for (Path location : search) {
+            Path possibility = Path.of(location.toString(), file.toString()).toAbsolutePath();
+            if (Files.isRegularFile(possibility) && Files.isReadable(possibility)) {
+                return possibility;
+            }
+        }
+        return file.toAbsolutePath();
+    }
+
+    /**
+     * Execute a file in the executors context and return the resulting {@link DaroModule}. This
+     * will also add the file as a module in the executors {@link ExecutionContext}.
+     *
+     * @param file The file that should be executed
+     * @return The daro module resulting from execution
+     */
+    public DaroModule executeFile(Path file, Path ...search) {
+        Path path = searchForImport(file, search);
+        Map<Path, DaroModule> modules = context.getModules();
+        if (!modules.containsKey(path)) {
+            Scope scope = new BlockScope(new RootScope());
+            String content;
+            try {
+                content = Files.readString(path);
+            } catch (IOException e) {
+                throw new InterpreterException(new Position(file), "Failed to load file");
+            }
+            DaroModule pack = new DaroModule(scope);
+            modules.put(path, pack);
+            AstNode program = Parser.parseSourceCode(content, path);
+            ScopeInitializer.initialize(scope, program);
+            execute(context.forScope(scope), program);
+        }
+        return modules.get(path);
+    }
+
     @Override
     public DaroObject visit(AstFrom ast) {
         DaroObject value = require(ast.getOperand());
         if (value instanceof DaroString) {
             DaroString string = (DaroString)value;
-            Path path = Path.of(string.getValue()).toAbsolutePath();
-            Map<Path, DaroPackage> modules = context.getModules();
-            if (!modules.containsKey(path)) {
-                Scope scope = new BlockScope(new RootScope());
-                String content;
-                try {
-                    content = Files.readString(path);
-                } catch (IOException e) {
-                    throw new InterpreterException(new Position(path), "Failed to load file");
-                }
-                AstNode program = Parser.parseSourceCode(content, path);
-                execute(context.forScope(scope), program);
-                DaroPackage pack = new DaroPackage(scope);
-                modules.put(path, pack);
+            Path path = Path.of(string.getValue());
+            Path importFrom = ast.getPosition().getFile();
+            if (importFrom != null && importFrom.getParent() != null) {
+                return executeFile(path, importFrom.getParent());
+            } else {
+                return executeFile(path);
             }
-            return modules.get(path);
         } else {
             throw new InterpreterException(ast.getPosition(), "Expected a string object");
         }

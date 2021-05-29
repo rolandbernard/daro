@@ -15,7 +15,7 @@ import java.math.BigInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class NativeInterpreterTest {
+public class NativeTest {
     private Interpreter interpreter;
 
     @BeforeEach

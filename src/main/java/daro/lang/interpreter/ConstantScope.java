@@ -27,20 +27,25 @@ public class ConstantScope extends AbstractScope {
 
     @Override
     public VariableLocation getVariableLocation(String name) {
-        if (!variables.containsKey(name)) {
-            for (Scope parent : parents) {
-                if (parent.containsVariable(name)) {
+        if (!visited && !variables.containsKey(name)) {
+            try {
+                visited = true;
+                for (Scope parent : parents) {
+                    if (parent.containsVariable(name)) {
+                        VariableLocation location = parent.getVariableLocation(name);
+                        if (location != null) {
+                            return location;
+                        }
+                    }
+                }
+                for (Scope parent : parents) {
                     VariableLocation location = parent.getVariableLocation(name);
                     if (location != null) {
                         return location;
                     }
                 }
-            }
-            for (Scope parent : parents) {
-                VariableLocation location = parent.getVariableLocation(name);
-                if (location != null) {
-                    return location;
-                }
+            } finally {
+                visited = false;
             }
         }
         return null;

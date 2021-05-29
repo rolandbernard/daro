@@ -229,16 +229,16 @@ public class Position {
             if (file != null) {
                 ret += file.toString() + ":";
             }
-            ret += "(" + start + "," + getLength() + ")";
+            ret += start + ".." + end;
             return ret;
         } else {
             String ret = "";
             if (file != null) {
-                ret += file.toString() + ":";
+                ret += Path.of("").toAbsolutePath().relativize(file).toString() + ":";
             }
             ret += lineFromOffset(start, text) + ":" + columnFromOffset(start, text);
             if (start < end - 1) {
-                ret += " - " + lineFromOffset(end - 1, text) + ":" + columnFromOffset(end - 1, text);
+                ret += ".." + lineFromOffset(end - 1, text) + ":" + columnFromOffset(end - 1, text);
             }
             return ret;
         }

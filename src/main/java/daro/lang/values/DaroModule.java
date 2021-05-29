@@ -10,16 +10,16 @@ import daro.lang.interpreter.Scope;
  * 
  * @author Roland Bernard
  */
-public class DaroPackage extends DaroObject {
+public class DaroModule extends DaroObject {
     private final Scope scope;
 
     /**
      * Create a new package object from the given scope.
      * 
      * @param scope
-     *            The scope the {@link DaroPackage} represents
+     *            The scope the {@link DaroModule} represents
      */
-    public DaroPackage(Scope scope) {
+    public DaroModule(Scope scope) {
         this.scope = scope;
     }
 
@@ -30,7 +30,7 @@ public class DaroPackage extends DaroObject {
 
     @Override
     public DaroType getType() {
-        return new DaroTypePackage();
+        return new DaroTypeModule();
     }
 
     @Override
@@ -40,8 +40,8 @@ public class DaroPackage extends DaroObject {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof DaroPackage) {
-            DaroPackage pack = (DaroPackage) object;
+        if (object instanceof DaroModule) {
+            DaroModule pack = (DaroModule) object;
             return Objects.equals(scope, pack.getMemberScope());
         } else {
             return false;

@@ -13,11 +13,11 @@ import daro.lang.interpreter.Scope;
  * 
  * @author Roland Bernard
  */
-public class DaroTypePackage extends DaroType {
+public class DaroTypeModule extends DaroType {
 
     @Override
     public DaroObject instantiate(ExecutionContext context) {
-        return new DaroPackage(new EmptyScope());
+        return new DaroModule(new EmptyScope());
     }
 
     @Override
@@ -28,7 +28,7 @@ public class DaroTypePackage extends DaroType {
             for (AstNode node : initializer.getValues()) {
                 Executor.execute(innerContext, node);
             }
-            return new DaroPackage(scope);
+            return new DaroModule(scope);
         } else {
             return instantiate(context);
         }
@@ -36,6 +36,6 @@ public class DaroTypePackage extends DaroType {
 
     @Override
     public String toString() {
-        return "package";
+        return "module";
     }
 }
