@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import daro.lang.ast.*;
 
 /**
- * This class implements the parser of the Daro language. It is implement as a recursivi decent parser. All methods are
+ * This class implements the parser of the Daro language. It is implement as a recursive decent parser. All methods are
  * private except for the parseSourceCode class method, that can be used by consumers of the class to parse Daro source
  * code into a ast tree.
  * 
@@ -17,7 +17,7 @@ import daro.lang.ast.*;
  */
 public class Parser {
     /**
-     * This variable stores the scanner used for parsing. It is initialzed with the source code that should be parsed on
+     * This variable stores the scanner used for parsing. It is initialled with the source code that should be parsed on
      * instance creation of the {@link Parser} object.
      */
     private final Scanner scanner;
@@ -100,7 +100,7 @@ public class Parser {
     }
 
     /**
-     * Parse a sequence of statements optionaly seperated by semicolons.
+     * Parse a sequence of statements optionals separated by semicolons.
      * 
      * @return The parsed {@link AstSequence}
      */
@@ -374,14 +374,57 @@ public class Parser {
     private AstNode parseAssignmentExpression() {
         // This does not use parseBinaryExpression, because precedence goes right-to-left. e.g. x = a = 5
         AstNode ret = parseLazyOrExpression();
-        if (ret != null && scanner.hasNext(TokenKind.ASSIGN)) {
+        boolean hasAssignment = scanner.hasNext(new TokenKind[] {
+            TokenKind.ASSIGN,
+            TokenKind.SHIFT_LEFT_ASSIGN,
+            TokenKind.SHIFT_RIGHT_ASSIGN,
+            TokenKind.PLUS_ASSIGN,
+            TokenKind.MINUS_ASSIGN,
+            TokenKind.ASTERISK_ASSIGN,
+            TokenKind.SLASH_ASSIGN,
+            TokenKind.PERCENT_ASSIGN,
+            TokenKind.PIPE_ASSIGN,
+            TokenKind.AND_ASSIGN,
+            TokenKind.CARET_ASSIGN,
+            TokenKind.DOUBLE_PIPE_ASSIGN,
+            TokenKind.DOUBLE_AND_ASSIGN,
+        });
+        if (ret != null && hasAssignment) {
             Token token = scanner.next();
             AstNode right = parseAssignmentExpression();
             if (right == null) {
                 throw new ParsingException(new Position(ret.getPosition(), token.getPosition()),
                         "Expected an expression after `=`");
             }
-            return new AstAssignment(new Position(ret.getPosition(), right.getPosition()), ret, right);
+            Position position = new Position(ret.getPosition(), right.getPosition());
+            switch (token.getKind()) {
+                case SHIFT_LEFT_ASSIGN:
+                    return new AstAssignment(position, ret, new AstShiftLeft(position, ret, right));
+                case SHIFT_RIGHT_ASSIGN:
+                    return new AstAssignment(position, ret, new AstShiftRight(position, ret, right));
+                case PLUS_ASSIGN:
+                    return new AstAssignment(position, ret, new AstAddition(position, ret, right));
+                case MINUS_ASSIGN:
+                    return new AstAssignment(position, ret, new AstSubtract(position, ret, right));
+                case ASTERISK_ASSIGN:
+                    return new AstAssignment(position, ret, new AstMultiply(position, ret, right));
+                case SLASH_ASSIGN:
+                    return new AstAssignment(position, ret, new AstDivide(position, ret, right));
+                case PERCENT_ASSIGN:
+                    return new AstAssignment(position, ret, new AstRemainder(position, ret, right));
+                case PIPE_ASSIGN:
+                    return new AstAssignment(position, ret, new AstBitwiseOr(position, ret, right));
+                case AND_ASSIGN:
+                    return new AstAssignment(position, ret, new AstBitwiseAnd(position, ret, right));
+                case CARET_ASSIGN:
+                    return new AstAssignment(position, ret, new AstBitwiseXor(position, ret, right));
+                case DOUBLE_PIPE_ASSIGN:
+                    return new AstAssignment(position, ret, new AstOr(position, ret, right));
+                case DOUBLE_AND_ASSIGN:
+                    return new AstAssignment(position, ret, new AstAnd(position, ret, right));
+                default:
+                    return new AstAssignment(position, ret, right);
+            }
         } else {
             return ret;
         }
@@ -495,7 +538,7 @@ public class Parser {
      */
     private AstNode parseMultiplicativeExpression() {
         return parseBinaryExpression(this::parsePowerExpression,
-                new TokenKind[] { TokenKind.ASTERIX, TokenKind.SLASH, TokenKind.PERCENT },
+                new TokenKind[] { TokenKind.ASTERISK, TokenKind.SLASH, TokenKind.PERCENT },
                 (left, right) -> new AstMultiply(new Position(left.getPosition(), right.getPosition()), left, right),
                 (left, right) -> new AstDivide(new Position(left.getPosition(), right.getPosition()), left, right),
                 (left, right) -> new AstRemainder(new Position(left.getPosition(), right.getPosition()), left, right));
@@ -508,7 +551,7 @@ public class Parser {
      * @return The root node of the parsed ast tree
      */
     private AstNode parsePowerExpression() {
-        return parseBinaryExpression(this::parseUnaryPrefixExpression, new TokenKind[] { TokenKind.DOUBLEASTERIX },
+        return parseBinaryExpression(this::parseUnaryPrefixExpression, new TokenKind[] { TokenKind.DOUBLE_ASTERISK },
                 (left, right) -> new AstPower(new Position(left.getPosition(), right.getPosition()), left, right));
     }
 
@@ -629,7 +672,7 @@ public class Parser {
     }
 
     /**
-     * This is a utility function that convets a string containing escaped characters with `\` into a string containing
+     * This is a utility function that converts a string containing escaped characters with `\` into a string containing
      * the actual characters. e.g. {@code \\\"} will be transformed into {@code \"}
      * 
      * @param input
@@ -670,7 +713,7 @@ public class Parser {
     }
 
     /**
-     * Parses the base objects of an expression. This includes expressions wrapped in parenthesies, objects created with
+     * Parses the base objects of an expression. This includes expressions wrapped in parens, objects created with
      * `new`, integer, real, string and character literals, as well as simple variable access.
      * 
      * @return The root node of the parsed ast tree
@@ -682,7 +725,7 @@ public class Parser {
     }
 
     /**
-     * Parses an expression inside parenthesies. e.g. (5 + 6)
+     * Parses an expression inside parens. e.g. (5 + 6)
      * 
      * @return The parsed {@link AstNode}
      */
@@ -812,7 +855,7 @@ public class Parser {
     }
 
     /**
-     * Parses an indentifier into an {@link AstSymbol}. e.g. foo
+     * Parses an identifier into an {@link AstSymbol}. e.g. foo
      * 
      * @return The parsed ast node
      */

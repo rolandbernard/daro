@@ -237,8 +237,8 @@ public class Position {
                 ret += file.toString() + ":";
             }
             ret += lineFromOffset(start, text) + ":" + columnFromOffset(start, text);
-            if (start != end) {
-                ret += " - " + lineFromOffset(end, text) + ":" + columnFromOffset(end, text);
+            if (start < end - 1) {
+                ret += " - " + lineFromOffset(end - 1, text) + ":" + columnFromOffset(end - 1, text);
             }
             return ret;
         }

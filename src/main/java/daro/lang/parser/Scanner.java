@@ -132,14 +132,14 @@ public class Scanner {
      * @return The next {@link Token} or null of end of file
      */
     private Token determineNext() {
-        // First skip all whitespaces and comments
+        // First skip all whitespace and comments
         while (skipWhitespace() || skipComments())
             ;
         int start = offset;
         if (offset < string.length()) {
             if (string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
                 // Don't use Character.isDigit here, because it includes not ASCII digits
-                // This is a number literal (eighter integer or real)
+                // This is a number literal (either integer or real)
                 if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0b")) {
                     // Binary integer literal (e.g. 0b100100)
                     offset += 2;
@@ -216,7 +216,7 @@ public class Scanner {
                 return new Token(TokenKind.STRING, position, string.substring(start, offset));
             } else if (string.charAt(offset) == '\'') {
                 // This is a character literal. (e.g. 'a', '\n')
-                // The tokenizer is more permisive than the language. Errors will be thrown in the
+                // The tokenizer is more permissive than the language. Errors will be thrown in the
                 // parser.
                 offset++;
                 while (offset < string.length() && string.charAt(offset) != '\'') {
@@ -249,24 +249,17 @@ public class Scanner {
             } else {
                 // This is either invalid or an operator (e.g. +)
                 TokenKind kind = null;
-                if (offset + 1 < string.length()) {
-                    kind = TokenKind.findForFixedSource(string.substring(offset, offset + 2));
+                for (int i = string.length() - offset; i > 0; i--) {
+                    kind = TokenKind.findForFixedSource(string.substring(offset, offset + i));
                     if (kind != null) {
-                        offset += 2;
+                        offset += i;
                         Position position = new Position(start, offset, string, file);
                         return new Token(kind, position, string.substring(start, offset));
                     }
                 }
-                kind = TokenKind.findForFixedSource(string.substring(offset, offset + 1));
-                if (kind != null) {
-                    offset++;
-                    Position position = new Position(start, offset, string, file);
-                    return new Token(kind, position, string.substring(start, offset));
-                } else {
-                    offset++;
-                    Position position = new Position(start, offset, string, file);
-                    return new Token(TokenKind.INVALID, position, string.substring(start, offset));
-                }
+                offset++;
+                Position position = new Position(start, offset, string, file);
+                return new Token(TokenKind.INVALID, position, string.substring(start, offset));
             }
         } else {
             return null;

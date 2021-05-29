@@ -12,7 +12,7 @@ public enum TokenKind {
     /** A token that is not otherwise recognized by the scanner. */
     INVALID,
     /**
-     * A token that represents an identifier. String of one or more characters starting with a letter or underscope and
+     * A token that represents an identifier. String of one or more characters starting with a letter or underscore and
      * consisting only of letters, numbers or an underscore. e.g. {@code foo}
      */
     IDENTIFIER,
@@ -31,11 +31,15 @@ public enum TokenKind {
     CLASS("class"), RETURN("return"), COLON(":"), SEMICOLON(";"), COMMA(","), DOT("."), OPEN_PAREN("("),
     CLOSE_PAREN(")"), OPEN_BRACKET("["), CLOSE_BRACKET("]"), OPEN_BRACE("{"), CLOSE_BRACE("}"), DEFINE(":="),
     ASSIGN("="), EQUAL("=="), UNEQUAL("!="), LESS("<"), MORE(">"), LESS_EQUAL("<="), MORE_EQUAL(">="), SHIFT_LEFT("<<"),
-    SHIFT_RIGHT(">>"), PLUS("+"), MINUS("-"), ASTERIX("*"), SLASH("/"), PERCENT("%"), BANG("!"), TILDE("~"), PIPE("|"),
-    AND("&"), CARET("^"), DOUBLE_PIPE("||"), DOUBLE_AND("&&"), DOUBLEASTERIX("**");
+    SHIFT_RIGHT(">>"), PLUS("+"), MINUS("-"), ASTERISK("*"), SLASH("/"), PERCENT("%"), BANG("!"), TILDE("~"), PIPE("|"),
+    AND("&"), CARET("^"), DOUBLE_PIPE("||"), DOUBLE_AND("&&"), DOUBLE_ASTERISK("**"), SHIFT_LEFT_ASSIGN("<<="),
+    SHIFT_RIGHT_ASSIGN(">>="), PLUS_ASSIGN("+="), MINUS_ASSIGN("-="), ASTERISK_ASSIGN("*="), SLASH_ASSIGN("/="),
+    PERCENT_ASSIGN("%="), PIPE_ASSIGN("|="), AND_ASSIGN("&="), CARET_ASSIGN("^="), DOUBLE_PIPE_ASSIGN("||="),
+    DOUBLE_AND_ASSIGN("&&=");
+
 
     /**
-     * This variable gets initialited with a map from fixed source string to {@link TokenKind}.
+     * This variable gets initialized with a map from fixed source string to {@link TokenKind}.
      */
     private static final Map<String, TokenKind> reverseLookup;
     static {
@@ -96,7 +100,7 @@ public enum TokenKind {
      * Finds the {@link TokenKind} with the specified fixed source string.
      * 
      * @param string
-     *            The string to serch with
+     *            The string to search with
      * 
      * @return The {@link TokenKind} withe the specified source string, or null if none exists
      */

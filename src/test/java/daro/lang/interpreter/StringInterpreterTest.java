@@ -65,7 +65,7 @@ public class StringInterpreterTest {
     }
 
     @Test
-    void divition() {
+    void division() {
         assertThrows(InterpreterException.class, () -> {
             interpreter.execute("\"Hel\" / \"lo\"");
         });
@@ -175,5 +175,11 @@ public class StringInterpreterTest {
     @Test
     void stringType() {
         assertEquals(new UserTypeString(), interpreter.execute("typeof(\"Hello\")"));
+    }
+
+    @Test
+    void addAssign() {
+        interpreter.execute("x = \"Hello\"; x += \" world\"");
+        assertEquals(new UserString("Hello world"), interpreter.execute("x"));
     }
 }

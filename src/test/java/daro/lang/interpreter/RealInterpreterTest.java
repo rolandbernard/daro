@@ -155,4 +155,33 @@ public class RealInterpreterTest {
         assertEquals(new UserTypeReal(), interpreter.execute("typeof(42.12)"));
     }
 
+    @Test
+    void addAssign() {
+        interpreter.execute("x = 3.2; x += 1.0");
+        assertEquals(new UserReal(4.2), interpreter.execute("x"));
+    }
+
+    @Test
+    void subtractAssign() {
+        interpreter.execute("x = 6.7; x -= 2.5");
+        assertEquals(new UserReal(4.2), interpreter.execute("x"));
+    }
+
+    @Test
+    void multiplyAssign() {
+        interpreter.execute("x = 1.4; x *= 0.3");
+        assertEquals(new UserReal(0.42), interpreter.execute("x"));
+    }
+
+    @Test
+    void divideAssign() {
+        interpreter.execute("x = 29.4; x /= 0.7");
+        assertEquals(new UserReal(42), interpreter.execute("x"));
+    }
+
+    @Test
+    void remainderAssign() {
+        interpreter.execute("x = 73.5; x %= 9");
+        assertEquals(new UserReal(1.5), interpreter.execute("x"));
+    }
 }

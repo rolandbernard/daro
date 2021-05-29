@@ -140,4 +140,16 @@ public class SimpleInterpreterTest {
             interpreter.execute("x");
         });
     }
+
+    @Test
+    void logicalAndAssign() {
+        interpreter.execute("x = true; x &&= false");
+        assertEquals(new UserBoolean(false), interpreter.execute("x"));
+    }
+
+    @Test
+    void logicalOrAssign() {
+        interpreter.execute("x = false; x ||= true");
+        assertEquals(new UserBoolean(true), interpreter.execute("x"));
+    }
 }

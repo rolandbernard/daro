@@ -127,6 +127,33 @@ public class ParserTest {
     }
 
     @Test
+    void expressionAssignmentOperations() {
+        AstNode ast = Parser.parseSourceCode("x += 1; x -= 2; x *= 3; x /= 4; x %= 5; x <<= 6; x >>= 7; x |= 8; x &= 9; x ^= 10");
+        assertEquals(new AstSequence(null, new AstNode[] {
+            new AstAssignment(null, new AstSymbol(null, "x"),
+                    new AstAddition(null, new AstSymbol(null, "x"), new AstInteger(null, 1))),
+            new AstAssignment(null, new AstSymbol(null, "x"),
+                    new AstSubtract(null, new AstSymbol(null, "x"), new AstInteger(null, 2))),
+            new AstAssignment(null, new AstSymbol(null, "x"),
+                    new AstMultiply(null, new AstSymbol(null, "x"), new AstInteger(null, 3))),
+            new AstAssignment(null, new AstSymbol(null, "x"),
+                    new AstDivide(null, new AstSymbol(null, "x"), new AstInteger(null, 4))),
+            new AstAssignment(null, new AstSymbol(null, "x"),
+                    new AstRemainder(null, new AstSymbol(null, "x"), new AstInteger(null, 5))),
+            new AstAssignment(null, new AstSymbol(null, "x"),
+                    new AstShiftLeft(null, new AstSymbol(null, "x"), new AstInteger(null, 6))),
+            new AstAssignment(null, new AstSymbol(null, "x"),
+                    new AstShiftRight(null, new AstSymbol(null, "x"), new AstInteger(null, 7))),
+            new AstAssignment(null, new AstSymbol(null, "x"),
+                    new AstBitwiseOr(null, new AstSymbol(null, "x"), new AstInteger(null, 8))),
+            new AstAssignment(null, new AstSymbol(null, "x"),
+                    new AstBitwiseAnd(null, new AstSymbol(null, "x"), new AstInteger(null, 9))),
+            new AstAssignment(null, new AstSymbol(null, "x"),
+                    new AstBitwiseXor(null, new AstSymbol(null, "x"), new AstInteger(null, 10))),
+        }), ast);
+    }
+
+    @Test
     void missingAssignmentValue() {
         assertThrows(ParsingException.class, () -> {
             Parser.parseSourceCode("x = ");
@@ -191,6 +218,14 @@ public class ParserTest {
             new AstMultiply(null, new AstInteger(null, 1), new AstInteger(null, 2)),
             new AstDivide(null, new AstInteger(null, 2), new AstInteger(null, 3)),
             new AstRemainder(null, new AstInteger(null, 3), new AstInteger(null, 4)),
+        }), ast);
+    }
+
+    @Test
+    void powerOperations() {
+        AstNode ast = Parser.parseSourceCode("1 ** 4");
+        assertEquals(new AstSequence(null, new AstNode[] {
+            new AstPower(null, new AstInteger(null, 1), new AstInteger(null, 4)),
         }), ast);
     }
 

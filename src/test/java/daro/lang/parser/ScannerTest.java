@@ -292,7 +292,7 @@ public class ScannerTest {
     }
 
     @Test
-    void hexidecimalIntegerScannerNextSource() {
+    void hexadecimalIntegerScannerNextSource() {
         Scanner scanner = new Scanner("0x1234aBc 0x1234test");
         assertEquals("0x1234aBc", scanner.next().getSource());
         assertEquals("0x1234", scanner.next().getSource());
@@ -449,7 +449,7 @@ public class ScannerTest {
             TokenKind.FN, TokenKind.IDENTIFIER, TokenKind.OPEN_PAREN, TokenKind.IDENTIFIER, TokenKind.COLON,
             TokenKind.IDENTIFIER, TokenKind.COMMA, TokenKind.IDENTIFIER, TokenKind.COLON, TokenKind.IDENTIFIER,
             TokenKind.CLOSE_PAREN, TokenKind.OPEN_BRACE, TokenKind.IDENTIFIER, TokenKind.DEFINE, TokenKind.INTEGER,
-            TokenKind.PLUS, TokenKind.INTEGER, TokenKind.MINUS, TokenKind.INTEGER, TokenKind.ASTERIX, TokenKind.INTEGER,
+            TokenKind.PLUS, TokenKind.INTEGER, TokenKind.MINUS, TokenKind.INTEGER, TokenKind.ASTERISK, TokenKind.INTEGER,
             TokenKind.SLASH, TokenKind.INTEGER, TokenKind.PERCENT, TokenKind.INTEGER, TokenKind.SEMICOLON, TokenKind.IF,
             TokenKind.IDENTIFIER, TokenKind.MORE, TokenKind.INTEGER, TokenKind.DOUBLE_AND, TokenKind.IDENTIFIER,
             TokenKind.LESS, TokenKind.INTEGER, TokenKind.DOUBLE_PIPE, TokenKind.IDENTIFIER, TokenKind.MORE_EQUAL,
