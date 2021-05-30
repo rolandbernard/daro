@@ -23,12 +23,12 @@ public class DaroLambdaFunction extends DaroFunction {
      * Create a {@link DaroFunction} from a parameter checking function and a {@link Function}.
      * 
      * @param parameters
-     *            A {@link Predicate} checking if the function accepts the given number of
-     *            parameters
+     *            A {@link Predicate} checking if the function accepts the given number of parameters
      * @param function
      *            The {@link Function} the function executes
      */
-    public DaroLambdaFunction(Predicate<Integer> parameters, BiFunction<DaroObject[], ExecutionContext, DaroObject> function) {
+    public DaroLambdaFunction(Predicate<Integer> parameters,
+            BiFunction<DaroObject[], ExecutionContext, DaroObject> function) {
         this.parameters = parameters;
         this.function = function;
     }

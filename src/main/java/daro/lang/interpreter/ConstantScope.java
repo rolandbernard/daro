@@ -21,7 +21,7 @@ public class ConstantScope extends AbstractScope {
      * @param parent
      *            The parent scope
      */
-    public ConstantScope(Map<String, DaroObject> mapping, Scope ...parent) {
+    public ConstantScope(Map<String, DaroObject> mapping, Scope... parent) {
         super(mapping, parent);
     }
 

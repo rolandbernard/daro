@@ -24,9 +24,6 @@ public class RootScope extends ConstantScope {
      * This function generates a mapping between {@link String}s and {@link DaroObject}s that represent all the
      * variables in the root scope of a daro program.
      * 
-     * @param output
-     *            The stream to use for print functions
-     * 
      * @return The mapping of the root scope
      */
     private static Map<String, DaroObject> buildRootVariables() {

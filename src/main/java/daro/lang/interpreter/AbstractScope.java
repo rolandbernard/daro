@@ -28,7 +28,7 @@ public abstract class AbstractScope implements Scope {
      * @param parent
      *            The parent scope
      */
-    public AbstractScope(Scope ...parent) {
+    public AbstractScope(Scope... parent) {
         this.parents = parent;
         this.variables = new HashMap<>();
     }
@@ -47,7 +47,7 @@ public abstract class AbstractScope implements Scope {
         this.variables = variables;
     }
 
-    public void addParent(Scope ...parent) {
+    public void addParent(Scope... parent) {
         Scope[] newParents = Arrays.copyOf(parents, parents.length + parent.length);
         for (int i = 0; i < parent.length; i++) {
             newParents[parents.length + i] = parent[i];

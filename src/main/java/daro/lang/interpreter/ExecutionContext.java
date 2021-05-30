@@ -30,7 +30,7 @@ public class ExecutionContext {
      * @param observers
      *            The observers for this execution
      */
-    public ExecutionContext(Scope scope, PrintStream output, ExecutionObserver ...observers) {
+    public ExecutionContext(Scope scope, PrintStream output, ExecutionObserver... observers) {
         this.scope = scope;
         this.observers = observers;
         this.output = output;
@@ -38,8 +38,8 @@ public class ExecutionContext {
     }
 
     /**
-     * Create a new {@link ExecutionContext} for execution in the given scope but copying other data
-     * from the given context.
+     * Create a new {@link ExecutionContext} for execution in the given scope but copying other data from the given
+     * context.
      * 
      * @param context
      *            The context to copy data from
@@ -54,15 +54,15 @@ public class ExecutionContext {
     }
 
     /**
-     * Create a new {@link ExecutionContext} for execution with the given observers but copying
-     * other data from the given context.
+     * Create a new {@link ExecutionContext} for execution with the given observers but copying other data from the
+     * given context.
      * 
      * @param context
      *            The context to copy data from
      * @param observers
      *            The observers to execute with
      */
-    private ExecutionContext(ExecutionContext context, ExecutionObserver ...observers) {
+    private ExecutionContext(ExecutionContext context, ExecutionObserver... observers) {
         this.scope = context.scope;
         this.observers = Arrays.copyOf(context.observers, context.observers.length + observers.length);
         for (int i = 0; i < observers.length; i++) {
@@ -128,7 +128,7 @@ public class ExecutionContext {
      * 
      * @return The new {@link ExecutionContext}
      */
-    public ExecutionContext withObservers(ExecutionObserver ...observers) {
+    public ExecutionContext withObservers(ExecutionObserver... observers) {
         return new ExecutionContext(this, observers);
     }
 }

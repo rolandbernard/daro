@@ -6,8 +6,8 @@ import java.util.Objects;
 import daro.lang.values.*;
 
 /**
- * This class implements a scope that is used by the {@link DaroNativePackage} object. It can be
- * used to traverse Java packages.
+ * This class implements a scope that is used by the {@link DaroNativePackage} object. It can be used to traverse Java
+ * packages.
  * 
  * @author Roland Bernard
  */
@@ -17,7 +17,7 @@ public class NativePackageScope extends ClassLoader implements Scope {
     /**
      * Creates a new complete scope using the given mapping;
      * 
-     * @param pgk
+     * @param pkg
      *            The package the scope is indexing into
      */
     public NativePackageScope(DaroNativePackage pkg) {

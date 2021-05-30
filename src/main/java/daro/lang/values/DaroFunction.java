@@ -17,6 +17,9 @@ public abstract class DaroFunction extends DaroObject {
     /**
      * Check if the function accepts the given number of parameters.
      * 
+     * @param count
+     *            The number of arguments the client wants to supply
+     * 
      * @return true if the function accepts the given number of parameters, false otherwise
      */
     public abstract boolean allowsParamCount(int count);

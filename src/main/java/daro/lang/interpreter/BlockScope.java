@@ -37,7 +37,7 @@ public class BlockScope extends AbstractScope {
      * @param parent
      *            The parent scope
      */
-    private BlockScope(Map<String, DaroObject> variables, Scope ...parent) {
+    private BlockScope(Map<String, DaroObject> variables, Scope... parent) {
         super(variables, parent);
     }
 

@@ -70,7 +70,7 @@ public class DaroClass extends DaroObject {
 
     @Override
     public Scope getMemberScope() {
-        AbstractScope result = (AbstractScope)scope.getFinalLevel();
+        AbstractScope result = (AbstractScope) scope.getFinalLevel();
         result.addParent(super.getMemberScope());
         return result;
     }

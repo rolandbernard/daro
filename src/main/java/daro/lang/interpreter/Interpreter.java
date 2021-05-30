@@ -68,7 +68,7 @@ public class Interpreter {
      * @throws InterpreterException
      *             It the code causes an exception during execution
      */
-    public DaroObject execute(AstNode ast, ExecutionObserver ...observers) {
+    public DaroObject execute(AstNode ast, ExecutionObserver... observers) {
         ScopeInitializer.initialize(context.getScope(), ast);
         return Executor.execute(context.withObservers(observers), ast);
     }
@@ -90,7 +90,7 @@ public class Interpreter {
      * @throws ParsingException
      *             It the source cannot be parsed
      */
-    public DaroObject execute(String source, ExecutionObserver ...observers) {
+    public DaroObject execute(String source, ExecutionObserver... observers) {
         AstSequence ast = Parser.parseSourceCode(source);
         return execute(ast, observers);
     }
@@ -112,7 +112,7 @@ public class Interpreter {
      * @throws ParsingException
      *             It the source cannot be parsed
      */
-    public DaroObject execute(Path file, ExecutionObserver ...observers) {
+    public DaroObject execute(Path file, ExecutionObserver... observers) {
         return Executor.executeFile(context.withObservers(observers), file);
     }
 

@@ -5,8 +5,8 @@ import java.util.Objects;
 import daro.lang.interpreter.Scope;
 
 /**
- * This {@link DaroObject} represents a package. A package is a basically only a collection of
- * variables that can be accessed using the member scope.
+ * This {@link DaroObject} represents a package. A package is a basically only a collection of variables that can be
+ * accessed using the member scope.
  * 
  * @author Roland Bernard
  */

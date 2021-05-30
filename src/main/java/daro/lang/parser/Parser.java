@@ -392,21 +392,10 @@ public class Parser {
     private AstNode parseAssignmentExpression() {
         // This does not use parseBinaryExpression, because precedence goes right-to-left. e.g. x = a = 5
         AstNode ret = parseLazyOrExpression();
-        boolean hasAssignment = scanner.hasNext(new TokenKind[] {
-            TokenKind.ASSIGN,
-            TokenKind.SHIFT_LEFT_ASSIGN,
-            TokenKind.SHIFT_RIGHT_ASSIGN,
-            TokenKind.PLUS_ASSIGN,
-            TokenKind.MINUS_ASSIGN,
-            TokenKind.ASTERISK_ASSIGN,
-            TokenKind.SLASH_ASSIGN,
-            TokenKind.PERCENT_ASSIGN,
-            TokenKind.PIPE_ASSIGN,
-            TokenKind.AND_ASSIGN,
-            TokenKind.CARET_ASSIGN,
-            TokenKind.DOUBLE_PIPE_ASSIGN,
-            TokenKind.DOUBLE_AND_ASSIGN,
-        });
+        boolean hasAssignment = scanner.hasNext(new TokenKind[] { TokenKind.ASSIGN, TokenKind.SHIFT_LEFT_ASSIGN,
+                TokenKind.SHIFT_RIGHT_ASSIGN, TokenKind.PLUS_ASSIGN, TokenKind.MINUS_ASSIGN, TokenKind.ASTERISK_ASSIGN,
+                TokenKind.SLASH_ASSIGN, TokenKind.PERCENT_ASSIGN, TokenKind.PIPE_ASSIGN, TokenKind.AND_ASSIGN,
+                TokenKind.CARET_ASSIGN, TokenKind.DOUBLE_PIPE_ASSIGN, TokenKind.DOUBLE_AND_ASSIGN, });
         if (ret != null && hasAssignment) {
             Token token = scanner.next();
             AstNode right = parseAssignmentExpression();
@@ -416,32 +405,32 @@ public class Parser {
             }
             Position position = new Position(ret.getPosition(), right.getPosition());
             switch (token.getKind()) {
-                case SHIFT_LEFT_ASSIGN:
-                    return new AstAssignment(position, ret, new AstShiftLeft(position, ret, right));
-                case SHIFT_RIGHT_ASSIGN:
-                    return new AstAssignment(position, ret, new AstShiftRight(position, ret, right));
-                case PLUS_ASSIGN:
-                    return new AstAssignment(position, ret, new AstAddition(position, ret, right));
-                case MINUS_ASSIGN:
-                    return new AstAssignment(position, ret, new AstSubtract(position, ret, right));
-                case ASTERISK_ASSIGN:
-                    return new AstAssignment(position, ret, new AstMultiply(position, ret, right));
-                case SLASH_ASSIGN:
-                    return new AstAssignment(position, ret, new AstDivide(position, ret, right));
-                case PERCENT_ASSIGN:
-                    return new AstAssignment(position, ret, new AstRemainder(position, ret, right));
-                case PIPE_ASSIGN:
-                    return new AstAssignment(position, ret, new AstBitwiseOr(position, ret, right));
-                case AND_ASSIGN:
-                    return new AstAssignment(position, ret, new AstBitwiseAnd(position, ret, right));
-                case CARET_ASSIGN:
-                    return new AstAssignment(position, ret, new AstBitwiseXor(position, ret, right));
-                case DOUBLE_PIPE_ASSIGN:
-                    return new AstAssignment(position, ret, new AstOr(position, ret, right));
-                case DOUBLE_AND_ASSIGN:
-                    return new AstAssignment(position, ret, new AstAnd(position, ret, right));
-                default:
-                    return new AstAssignment(position, ret, right);
+            case SHIFT_LEFT_ASSIGN:
+                return new AstAssignment(position, ret, new AstShiftLeft(position, ret, right));
+            case SHIFT_RIGHT_ASSIGN:
+                return new AstAssignment(position, ret, new AstShiftRight(position, ret, right));
+            case PLUS_ASSIGN:
+                return new AstAssignment(position, ret, new AstAddition(position, ret, right));
+            case MINUS_ASSIGN:
+                return new AstAssignment(position, ret, new AstSubtract(position, ret, right));
+            case ASTERISK_ASSIGN:
+                return new AstAssignment(position, ret, new AstMultiply(position, ret, right));
+            case SLASH_ASSIGN:
+                return new AstAssignment(position, ret, new AstDivide(position, ret, right));
+            case PERCENT_ASSIGN:
+                return new AstAssignment(position, ret, new AstRemainder(position, ret, right));
+            case PIPE_ASSIGN:
+                return new AstAssignment(position, ret, new AstBitwiseOr(position, ret, right));
+            case AND_ASSIGN:
+                return new AstAssignment(position, ret, new AstBitwiseAnd(position, ret, right));
+            case CARET_ASSIGN:
+                return new AstAssignment(position, ret, new AstBitwiseXor(position, ret, right));
+            case DOUBLE_PIPE_ASSIGN:
+                return new AstAssignment(position, ret, new AstOr(position, ret, right));
+            case DOUBLE_AND_ASSIGN:
+                return new AstAssignment(position, ret, new AstAnd(position, ret, right));
+            default:
+                return new AstAssignment(position, ret, right);
             }
         } else {
             return ret;

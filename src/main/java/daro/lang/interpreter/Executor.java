@@ -543,7 +543,7 @@ public class Executor implements Visitor<DaroObject> {
         DaroObject value = require(ast.getOperand());
         Scope scope = context.getScope();
         if (scope instanceof AbstractScope) {
-            AbstractScope cast = (AbstractScope)scope;
+            AbstractScope cast = (AbstractScope) scope;
             cast.addParent(value.getMemberScope());
             return null;
         } else {
@@ -552,15 +552,18 @@ public class Executor implements Visitor<DaroObject> {
     }
 
     /**
-     * This is a utility function that searches for a file inside all of the paths given by search
-     * in order an then as a last resort relative to the program execution. The function will return
-     * the absolute path of whatever file it finds.
+     * This is a utility function that searches for a file inside all of the paths given by search in order an then as a
+     * last resort relative to the program execution. The function will return the absolute path of whatever file it
+     * finds.
      *
-     * @param file The file to search
-     * @param search The locations to search in
+     * @param file
+     *            The file to search
+     * @param search
+     *            The locations to search in
+     * 
      * @return The path to the files expected location
      */
-    private Path searchForImport(Path file, Path ...search) {
+    private Path searchForImport(Path file, Path... search) {
         for (Path location : search) {
             Path possibility = Path.of(location.toString(), file.toString()).toAbsolutePath();
             if (Files.isRegularFile(possibility) && Files.isReadable(possibility)) {
@@ -571,13 +574,17 @@ public class Executor implements Visitor<DaroObject> {
     }
 
     /**
-     * Execute a file in the executors context and return the resulting {@link DaroModule}. This
-     * will also add the file as a module in the executors {@link ExecutionContext}.
+     * Execute a file in the executors context and return the resulting {@link DaroModule}. This will also add the file
+     * as a module in the executors {@link ExecutionContext}.
      *
-     * @param file The file that should be executed
+     * @param file
+     *            The file that should be executed
+     * @param search
+     *            The locations to search in
+     * 
      * @return The daro module resulting from execution
      */
-    public DaroModule executeFile(Path file, Path ...search) {
+    public DaroModule executeFile(Path file, Path... search) {
         Path path = searchForImport(file, search);
         Map<Path, DaroModule> modules = context.getModules();
         if (!modules.containsKey(path)) {
@@ -601,7 +608,7 @@ public class Executor implements Visitor<DaroObject> {
     public DaroObject visit(AstFrom ast) {
         DaroObject value = require(ast.getOperand());
         if (value instanceof DaroString) {
-            DaroString string = (DaroString)value;
+            DaroString string = (DaroString) value;
             Path path = Path.of(string.getValue());
             Path importFrom = ast.getPosition().getFile();
             if (importFrom != null && importFrom.getParent() != null) {
