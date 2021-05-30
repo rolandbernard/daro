@@ -9,7 +9,7 @@ import daro.lang.values.*;
  * 
  * @author Roland Bernard
  */
-public class ScopeInitializer implements Visitor<Object> {
+public class ScopeInitializer implements Visitor<Void> {
     private final Scope scope;
 
     /**
@@ -23,7 +23,7 @@ public class ScopeInitializer implements Visitor<Object> {
     }
 
     /**
-     * Iniialize using the given {@link AstNode} the the given {@link Scope}.
+     * Initialize using the given {@link AstNode} the the given {@link Scope}.
      * 
      * @param scope
      *            The scope to initialize
@@ -35,7 +35,7 @@ public class ScopeInitializer implements Visitor<Object> {
     }
 
     /**
-     * Iniialize using the given {@link AstNode}.
+     * Initialize using the given {@link AstNode}.
      * 
      * @param program
      *            The {@link AstNode} to initialize with
@@ -47,22 +47,22 @@ public class ScopeInitializer implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(AstInteger ast) {
+    public Void visit(AstInteger ast) {
         return null;
     }
 
     @Override
-    public Object visit(AstReal ast) {
+    public Void visit(AstReal ast) {
         return null;
     }
 
     @Override
-    public Object visit(AstString ast) {
+    public Void visit(AstString ast) {
         return null;
     }
 
     @Override
-    public Object visit(AstCharacter ast) {
+    public Void visit(AstCharacter ast) {
         return null;
     }
 
@@ -78,179 +78,169 @@ public class ScopeInitializer implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(AstAddition ast) {
+    public Void visit(AstAddition ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstSubtract ast) {
+    public Void visit(AstSubtract ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstMultiply ast) {
+    public Void visit(AstMultiply ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstDivide ast) {
+    public Void visit(AstDivide ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstRemainder ast) {
+    public Void visit(AstRemainder ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstShiftLeft ast) {
+    public Void visit(AstShiftLeft ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstShiftRight ast) {
+    public Void visit(AstShiftRight ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstEqual ast) {
+    public Void visit(AstEqual ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstNotEqual ast) {
+    public Void visit(AstNotEqual ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstLessThan ast) {
+    public Void visit(AstLessThan ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstLessOrEqual ast) {
+    public Void visit(AstLessOrEqual ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstMoreThan ast) {
+    public Void visit(AstMoreThan ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstMoreOrEqual ast) {
+    public Void visit(AstMoreOrEqual ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstBitwiseAnd ast) {
+    public Void visit(AstBitwiseAnd ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstBitwiseOr ast) {
+    public Void visit(AstBitwiseOr ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstBitwiseXor ast) {
+    public Void visit(AstBitwiseXor ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstAnd ast) {
+    public Void visit(AstAnd ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstOr ast) {
+    public Void visit(AstOr ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstPositive ast) {
+    public Void visit(AstPositive ast) {
         initialize(ast.getOperand());
         return null;
     }
 
     @Override
-    public Object visit(AstNegative ast) {
+    public Void visit(AstNegative ast) {
         initialize(ast.getOperand());
         return null;
     }
 
     @Override
-    public Object visit(AstBitwiseNot ast) {
+    public Void visit(AstBitwiseNot ast) {
         initialize(ast.getOperand());
         return null;
     }
 
     @Override
-    public Object visit(AstNot ast) {
+    public Void visit(AstNot ast) {
         initialize(ast.getOperand());
         return null;
     }
 
     @Override
-    public Object visit(AstReturn ast) {
+    public Void visit(AstReturn ast) {
         initialize(ast.getOperand());
         return null;
     }
 
     @Override
-    public Object visit(AstClass ast) {
+    public Void visit(AstClass ast) {
         if (ast.getName() != null) {
-            if (scope instanceof BlockScope) {
-                UserTypeClass value = new UserTypeClass(scope, ast);
-                ((BlockScope) scope).forceNewVariable(ast.getName(), value);
-            } else {
-                throw new InterpreterException(ast.getPosition(),
-                        "The surrounding scope does not support class definitions");
-            }
+            DaroTypeClass value = new DaroTypeClass(scope, ast);
+            scope.newVariableInFinal(ast.getName(), value);
         }
         return null;
     }
 
     @Override
-    public Object visit(AstFunction ast) {
+    public Void visit(AstFunction ast) {
         if (ast.getName() != null) {
-            if (scope instanceof BlockScope) {
-                UserAstFunction value = new UserAstFunction(scope, ast);
-                ((BlockScope) scope).forceNewVariable(ast.getName(), value);
-            } else {
-                throw new InterpreterException(ast.getPosition(),
-                        "The surrounding scope does not support function definitions");
-            }
+            DaroAstFunction value = new DaroAstFunction(scope, ast);
+            scope.newVariableInFinal(ast.getName(), value);
         }
         return null;
     }
 
     @Override
-    public Object visit(AstBlock ast) {
+    public Void visit(AstBlock ast) {
         // Searching stops at scope boundaries
         return null;
     }
 
     @Override
-    public Object visit(AstSequence ast) {
+    public Void visit(AstSequence ast) {
         for (AstNode statement : ast.getStatemens()) {
             initialize(statement);
         }
@@ -258,24 +248,24 @@ public class ScopeInitializer implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(AstAssignment ast) {
+    public Void visit(AstAssignment ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstSymbol ast) {
+    public Void visit(AstSymbol ast) {
         return null;
     }
 
     @Override
-    public Object visit(AstMember ast) {
+    public Void visit(AstMember ast) {
         initialize(ast.getOperand());
         return null;
     }
 
     @Override
-    public Object visit(AstCall ast) {
+    public Void visit(AstCall ast) {
         initialize(ast.getFunction());
         for (AstNode parameter : ast.getParameters()) {
             initialize(parameter);
@@ -284,26 +274,26 @@ public class ScopeInitializer implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(AstIndex ast) {
+    public Void visit(AstIndex ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstNew ast) {
+    public Void visit(AstNew ast) {
         initialize(ast.getType());
         initialize(ast.getInitialzer());
         return null;
     }
 
     @Override
-    public Object visit(AstArray ast) {
+    public Void visit(AstArray ast) {
         initializeBinary(ast);
         return null;
     }
 
     @Override
-    public Object visit(AstIfElse ast) {
+    public Void visit(AstIfElse ast) {
         initialize(ast.getCondition());
         initialize(ast.getIf());
         initialize(ast.getElse());
@@ -311,14 +301,14 @@ public class ScopeInitializer implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(AstFor ast) {
+    public Void visit(AstFor ast) {
         initialize(ast.getCondition());
         initialize(ast.getBody());
         return null;
     }
 
     @Override
-    public Object visit(AstForIn ast) {
+    public Void visit(AstForIn ast) {
         initialize(ast.getVariable());
         initialize(ast.getList());
         initialize(ast.getBody());
@@ -326,10 +316,28 @@ public class ScopeInitializer implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(AstInitializer ast) {
+    public Void visit(AstInitializer ast) {
         for (AstNode parameter : ast.getValues()) {
             initialize(parameter);
         }
+        return null;
+    }
+
+    @Override
+    public Void visit(AstPower ast) {
+        initializeBinary(ast);
+        return null;
+    }
+
+    @Override
+    public Void visit(AstUse ast) {
+        initialize(ast.getOperand());
+        return null;
+    }
+
+    @Override
+    public Void visit(AstFrom ast) {
+        initialize(ast.getOperand());
         return null;
     }
 }

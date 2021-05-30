@@ -52,7 +52,7 @@ public class PositionTest {
     @Test
     void toStringPosition() {
         Position position1 = new Position(42, 100);
-        assertEquals("(42,58)", position1.toString());
+        assertEquals("42..100", position1.toString());
     }
 
     @Test
@@ -68,4 +68,34 @@ public class PositionTest {
             new Position(42, -100);
         });
     }
+
+   @Test
+   void lineNumber() {
+      assertEquals(3, Position.lineFromOffset(10, "0123\n567\n90123\n567"));
+   }
+
+   @Test
+   void columnNumber() {
+      assertEquals(2, Position.columnFromOffset(10, "0123\n567\n90123\n567"));
+   }
+
+   @Test
+   void lineNumberInEmptyText() {
+      assertEquals(1, Position.lineFromOffset(10, ""));
+   }
+
+   @Test
+   void columnNumberInEmptyText() {
+      assertEquals(11, Position.columnFromOffset(10, ""));
+   }
+
+   @Test
+   void lineNumberAtEnd() {
+      assertEquals(3, Position.lineFromOffset(14, "0123\n567\n90123\n"));
+   }
+
+   @Test
+   void columnNumberAtEnd() {
+      assertEquals(6, Position.columnFromOffset(14, "0123\n567\n90123\n"));
+   }
 }

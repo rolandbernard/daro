@@ -1,4 +1,7 @@
 
+### Vim ###
+.vim/
+
 ### Eclipse ###
 .metadata
 bin/

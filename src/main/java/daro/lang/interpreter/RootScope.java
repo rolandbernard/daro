@@ -1,9 +1,9 @@
 package daro.lang.interpreter;
 
 import daro.lang.values.*;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * This class implements the root scope of the program. It contains the predefined methods and types in the Daro
@@ -11,61 +11,53 @@ import java.util.stream.Collectors;
  * 
  * @author Roland Bernard
  */
-public class RootScope implements Scope {
-    private static final Map<String, UserObject> variables;
+public class RootScope extends ConstantScope {
 
-    // Fill the variables mapping with the root variables.
-    static {
-        variables = new HashMap<>();
+    /**
+     * Creates a new {@link RootScope}.
+     */
+    public RootScope() {
+        super(buildRootVariables(), (new DaroNativePackage()).getMemberScope());
+    }
+
+    /**
+     * This function generates a mapping between {@link String}s and {@link DaroObject}s that represent all the
+     * variables in the root scope of a daro program.
+     * 
+     * @return The mapping of the root scope
+     */
+    private static Map<String, DaroObject> buildRootVariables() {
+        Map<String, DaroObject> variables = new HashMap<>();
         // Types
-        variables.put("int", new UserTypeInteger());
-        variables.put("real", new UserTypeReal());
-        variables.put("bool", new UserTypeBoolean());
-        variables.put("string", new UserTypeString());
-        variables.put("type", new UserTypeType());
-        variables.put("function", new UserTypeFunction());
-        variables.put("array", new UserTypeArray());
-        variables.put("array", new UserTypeArray());
+        variables.put("int", new DaroTypeInteger());
+        variables.put("real", new DaroTypeReal());
+        variables.put("bool", new DaroTypeBoolean());
+        variables.put("string", new DaroTypeString());
+        variables.put("type", new DaroTypeType());
+        variables.put("function", new DaroTypeFunction());
+        variables.put("array", new DaroTypeArray());
+        variables.put("array", new DaroTypeArray());
+        variables.put("package", new DaroTypeModule());
         // Values
-        variables.put("null", new UserNull());
-        variables.put("true", new UserBoolean(true));
-        variables.put("false", new UserBoolean(false));
+        variables.put("null", new DaroNull());
+        variables.put("true", new DaroBoolean(true));
+        variables.put("false", new DaroBoolean(false));
         // Functions
-        variables.put("typeof", new UserLambdaFunction(1, params -> {
+        variables.put("typeof", new DaroLambdaFunction(1, params -> {
             return params[0].getType();
         }));
-        variables.put("print", new UserLambdaFunction(params -> {
-            for (UserObject object : params) {
-                System.out.print(object.toString());
+        variables.put("print", new DaroLambdaFunction((params, context) -> {
+            for (DaroObject object : params) {
+                context.getOutput().print(object.toString());
             }
         }));
-        variables.put("println", new UserLambdaFunction(params -> {
-            for (UserObject object : params) {
-                System.out.print(object.toString());
+        variables.put("println", new DaroLambdaFunction((params, context) -> {
+            for (DaroObject object : params) {
+                context.getOutput().print(object.toString());
             }
-            System.out.println();
+            context.getOutput().println();
         }));
-        // TODO: fill the root scope
-    }
-
-    @Override
-    public boolean containsVariable(String name) {
-        return variables.containsKey(name);
-    }
-
-    @Override
-    public UserObject getVariableValue(String name) {
-        return variables.get(name);
-    }
-
-    @Override
-    public VariableLocation getVariableLocation(String name) {
-        return null;
-    }
-
-    @Override
-    public int hashCode() {
-        return variables.hashCode();
+        return variables;
     }
 
     @Override
@@ -75,20 +67,5 @@ public class RootScope implements Scope {
         } else {
             return false;
         }
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder ret = new StringBuilder();
-        ret.append("{");
-        ret.append(variables.entrySet().stream().map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-                .collect(Collectors.joining(", ")));
-        ret.append("}");
-        return ret.toString();
-    }
-
-    @Override
-    public Map<String, UserObject> getCompleteMapping() {
-        return Map.copyOf(variables);
     }
 }
