@@ -24,8 +24,9 @@ public class NativeScope implements Scope {
     private final Class<?> nativeClass;
     private final Object target;
 
-    private final Map<String, Method> methods;
+    private final Map<String, List<Method>> methods;
     private final Map<String, Field> fields;
+    private final Map<String, Class<?>> classes;
 
     /**
      * Creates a new native scope for the given class and target.
@@ -40,15 +41,16 @@ public class NativeScope implements Scope {
         this.target = target;
         this.methods = new HashMap<>();
         for (Method method : nativeClass.getMethods()) {
-            if (Modifier.isPublic(method.getModifiers())) {
-                methods.put(method.getName(), method);
-            }
+            methods.putIfAbsent(method.getName(), new ArrayList<>());
+            methods.get(method.getName()).add(method);
         }
         this.fields = new HashMap<>();
         for (Field field : nativeClass.getFields()) {
-            if (Modifier.isPublic(field.getModifiers())) {
-                fields.put(field.getName(), field);
-            }
+            fields.put(field.getName(), field);
+        }
+        this.classes = new HashMap<>();
+        for (Class<?> subClass : nativeClass.getClasses()) {
+            classes.put(subClass.getSimpleName(), subClass);
         }
     }
 
@@ -75,6 +77,7 @@ public class NativeScope implements Scope {
         this.target = target;
         this.methods = scope.methods;
         this.fields = scope.fields;
+        this.classes = scope.classes;
     }
 
     /**
@@ -208,45 +211,58 @@ public class NativeScope implements Scope {
 
     @Override
     public boolean containsVariable(String name) {
-        if (!methods.containsKey(name) && !fields.containsKey(name)) {
-            return false;
-        } else if (target != null) {
-            return true;
-        } else if (methods.containsKey(name)) {
-            return Modifier.isStatic(methods.get(name).getModifiers());
-        } else {
-            return Modifier.isStatic(fields.get(name).getModifiers());
+        if (methods.containsKey(name)) {
+            for (Method method : methods.get(name)) {
+                if (target != null || Modifier.isStatic(method.getModifiers())) {
+                    return true;
+                }
+            }
         }
+        if (fields.containsKey(name)) {
+            Field field = fields.get(name);
+            if (target != null || Modifier.isStatic(field.getModifiers())) {
+                return true;
+            }
+        }
+        if (classes.containsKey(name)) {
+            Class<?> subClass = classes.get(name);
+            if (target != null || Modifier.isStatic(subClass.getModifiers())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public DaroObject getVariableValue(String name) {
         if (methods.containsKey(name)) {
-            Method method = methods.get(name);
-            if (target != null || Modifier.isStatic(method.getModifiers())) {
-                Class<?>[] paramTypes = method.getParameterTypes();
-                boolean returnsVoid = method.getReturnType().equals(Void.TYPE);
-                return new DaroLambdaFunction(paramTypes.length, params -> {
-                    Object[] arguments = new Object[params.length];
-                    for (int i = 0; i < params.length; i++) {
-                        arguments[i] = tryToCast(params[i], paramTypes[i]);
-                    }
-                    Object result;
+            List<Method> methodList = methods.get(name);
+            return new DaroLambdaFunction(params -> {
+                for (Method method : methodList) {
                     try {
-                        result = method.invoke(target, arguments);
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                        Class<?>[] paramTypes = method.getParameterTypes();
+                        if (paramTypes.length == params.length) {
+                            Object[] arguments = new Object[params.length];
+                            for (int i = 0; i < params.length; i++) {
+                                arguments[i] = NativeScope.tryToCast(params[i], paramTypes[i]);
+                            }
+                            Object result = method.invoke(target, arguments);
+                            if (method.getReturnType().equals(Void.TYPE)) {
+                                return null;
+                            } else {
+                                return tryToWrap(result);
+                            }
+                        }
+                    } catch (InterpreterException e) {
+                        // Ignore exceptions caused by impossible casting
+                    } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new InterpreterException("Failed to execute native method");
                     }
-                    if (returnsVoid) {
-                        return null;
-                    } else {
-                        return tryToWrap(result);
-                    }
-                });
-            } else {
-                return null;
-            }
-        } else if (fields.containsKey(name)) {
+                }
+                throw new InterpreterException("The native method does not support the given parameters");
+            });
+        }
+        if (fields.containsKey(name)) {
             Field field = fields.get(name);
             if (target != null || Modifier.isStatic(field.getModifiers())) {
                 try {
@@ -254,12 +270,15 @@ public class NativeScope implements Scope {
                 } catch (IllegalArgumentException | IllegalAccessException e) {
                     throw new InterpreterException("Failed to read native field");
                 }
-            } else {
-                return null;
             }
-        } else {
-            return null;
         }
+        if (classes.containsKey(name)) {
+            Class<?> subClass = classes.get(name);
+            if (target != null || Modifier.isStatic(subClass.getModifiers())) {
+                return new DaroNativeClass(subClass);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -267,6 +286,7 @@ public class NativeScope implements Scope {
         Map<String, DaroObject> result = new HashMap<>();
         List<String> keys = new ArrayList<>(methods.keySet());
         keys.addAll(fields.keySet());
+        keys.addAll(classes.keySet());
         for (String key : keys) {
             if (containsVariable(key)) {
                 result.put(key, getVariableValue(key));

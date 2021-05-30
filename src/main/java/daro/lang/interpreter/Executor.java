@@ -410,7 +410,7 @@ public class Executor implements Visitor<DaroObject> {
         DaroObject left = require(ast.getOperand());
         DaroObject value = left.getMemberScope().getVariableValue(ast.getName());
         if (value == null) {
-            throw new InterpreterException(ast.getPosition(), "Member variable `" + ast.getName() + "`  is undefined");
+            throw new InterpreterException(ast.getPosition(), "Member variable `" + ast.getName() + "` is undefined");
         } else {
             return value;
         }

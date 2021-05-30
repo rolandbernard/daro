@@ -84,7 +84,7 @@ public class DaroNativeClass extends DaroType {
                 }
             } catch (InterpreterException e) {
                 // Ignore exceptions caused by impossible casting
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new InterpreterException("Failed to instantiate native object");
             }
         }

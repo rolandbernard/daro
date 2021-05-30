@@ -63,6 +63,18 @@ public class DaroLambdaFunction extends DaroFunction {
     }
 
     /**
+     * Create a {@link DaroFunction} from a {@link Function} that accepts a variable number of parameters.
+     * 
+     * @param function
+     *            The {@link Consumer} the function executes
+     */
+    public DaroLambdaFunction(Function<DaroObject[], DaroObject> function) {
+        this(count -> true, (params, context) -> {
+            return function.apply(params);
+        });
+    }
+
+    /**
      * Create a {@link DaroFunction} from a {@link Consumer} that accepts a variable number of parameters.
      * 
      * @param function
