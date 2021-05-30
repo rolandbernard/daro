@@ -17,7 +17,7 @@ public class RootScope extends ConstantScope {
      * Creates a new {@link RootScope}.
      */
     public RootScope() {
-        super(buildRootVariables());
+        super(buildRootVariables(), (new DaroNativePackage()).getMemberScope());
     }
 
     /**
@@ -45,7 +45,6 @@ public class RootScope extends ConstantScope {
         variables.put("null", new DaroNull());
         variables.put("true", new DaroBoolean(true));
         variables.put("false", new DaroBoolean(false));
-        variables.put("java", new DaroNativePackage("java"));
         // Functions
         variables.put("typeof", new DaroLambdaFunction(1, params -> {
             return params[0].getType();

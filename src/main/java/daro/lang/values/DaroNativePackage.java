@@ -2,7 +2,7 @@ package daro.lang.values;
 
 import java.util.Arrays;
 
-import daro.lang.interpreter.CompleteScope;
+import daro.lang.interpreter.NativePackageScope;
 import daro.lang.interpreter.Scope;
 
 /**
@@ -36,12 +36,21 @@ public class DaroNativePackage extends DaroObject {
     }
 
     /**
-     * Returns the Java name of this package.
+     * Returns the Java class name of this package.
      * 
      * @return The name of the package
      */
-    public String getJavaName() {
+    public String getClassName() {
         return String.join(".", name);
+    }
+
+    /**
+     * Returns the Java resource name of this package.
+     * 
+     * @return The name of the package
+     */
+    public String getResourceName() {
+        return String.join("/", name);
     }
 
     @Override
@@ -51,14 +60,7 @@ public class DaroNativePackage extends DaroObject {
 
     @Override
     public Scope getMemberScope() {
-        return new CompleteScope(variable -> {
-            DaroNativePackage pack = new DaroNativePackage(this, variable);
-            try {
-                return new DaroNativeClass(ClassLoader.getSystemClassLoader().loadClass(pack.getJavaName()));
-            } catch (ClassNotFoundException e) {
-                return pack;
-            }
-        });
+        return new NativePackageScope(this);
     }
 
     @Override
@@ -83,6 +85,6 @@ public class DaroNativePackage extends DaroObject {
 
     @Override
     public String toString() {
-        return "[native package] " + getJavaName();
+        return "[native package] " + getClassName();
     }
 }

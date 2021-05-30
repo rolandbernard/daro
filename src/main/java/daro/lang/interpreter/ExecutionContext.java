@@ -25,6 +25,8 @@ public class ExecutionContext {
      * 
      * @param scope
      *            The scope to execute in
+     * @param output
+     *            The output for printing functions
      * @param observers
      *            The observers for this execution
      */
