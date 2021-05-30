@@ -4,8 +4,9 @@ import daro.lang.values.DaroObject;
 import java.util.Map;
 
 /**
- * This class implements a simple scope. A scope is a collection of variables (with names and values). A scope also has
- * a parent which will be inspected if a variable is not found in the current scope.
+ * This class implements a simple scope. A scope is a collection of variables
+ * (with names and values). A scope also has a parent which will be inspected if
+ * a variable is not found in the current scope.
  * 
  * @author Roland Bernard
  */
@@ -21,23 +22,20 @@ public class BlockScope extends AbstractScope {
     /**
      * Creates a new {@link BlockScope} with the given parent.
      * 
-     * @param parent
-     *            The parent scope
+     * @param parent The parent scope
      */
     public BlockScope(Scope parent) {
         super(parent);
     }
 
     /**
-     * Creates a new {@link BlockScope} with the given parent and internal map. This constructor is only to be used
-     * internally by this class.
+     * Creates a new {@link BlockScope} with the given parent and internal map. This
+     * constructor is only to be used internally by this class.
      * 
-     * @param variables
-     *            The internal variables map
-     * @param parent
-     *            The parent scope
+     * @param variables The internal variables map
+     * @param parent    The parent scope
      */
-    private BlockScope(Map<String, DaroObject> variables, Scope... parent) {
+    private BlockScope(Map<String, DaroObject> variables, Scope ...parent) {
         super(variables, parent);
     }
 

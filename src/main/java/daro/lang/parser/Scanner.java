@@ -5,7 +5,8 @@ import java.nio.file.Path;
 import daro.lang.ast.Position;
 
 /**
- * This class can be used to tokenize the input string into {@link Token} objects for easier parsing afterwards.
+ * This class can be used to tokenize the input string into {@link Token}
+ * objects for easier parsing afterwards.
  *
  * @author Roland Bernard
  */
@@ -15,8 +16,9 @@ public class Scanner {
      */
     private final String string;
     /**
-     * This variable stores the file on which the scanner will operate. This value is only used to generate the
-     * positional information of the tokens that is later used for error messages.
+     * This variable stores the file on which the scanner will operate. This value
+     * is only used to generate the positional information of the tokens that is
+     * later used for error messages.
      */
     private final Path file;
     /**
@@ -31,8 +33,7 @@ public class Scanner {
     /**
      * Create a scanner to operate on the given {@link String}.
      * 
-     * @param string
-     *            The string to operate on
+     * @param string The string to operate on
      */
     public Scanner(String string) {
         this(string, null);
@@ -41,11 +42,8 @@ public class Scanner {
     /**
      * Create a scanner to operate on the given {@link String}.
      * 
-     * @param string
-     *            The string to operate on
-     * 
-     * @param file
-     *            The file the string belongs to (used for error positions)
+     * @param string The string to operate on
+     * @param file   The file the string belongs to (used for error positions)
      */
     public Scanner(String string, Path file) {
         this.string = string;
@@ -55,7 +53,8 @@ public class Scanner {
     }
 
     /**
-     * Skip the next whitespace character in the scanner and return if a whitespace was consumed.
+     * Skip the next whitespace character in the scanner and return if a whitespace
+     * was consumed.
      * 
      * @return true if a character was consumed, otherwise false
      */
@@ -69,7 +68,8 @@ public class Scanner {
     }
 
     /**
-     * Skip the next comment starting at offset and return if a comment was consumed.
+     * Skip the next comment starting at offset and return if a comment was
+     * consumed.
      * 
      * @return true if a comment was found, otherwise false
      */
@@ -109,9 +109,7 @@ public class Scanner {
     /**
      * Return if the giver character is a hexadecimal digit or not.
      * 
-     * @param c
-     *            The character to test
-     * 
+     * @param c The character to test
      * @return true is c is a hexadecimal digit, otherwise false
      */
     private static boolean isHexDigit(char c) {
@@ -172,8 +170,9 @@ public class Scanner {
                     if (offset < string.length() && string.charAt(offset) == '.') {
                         // Floating point number literal (e.g. 1.2)
                         offset++;
-                        while (offset < string.length() && string.charAt(offset) >= '0'
-                                && string.charAt(offset) <= '9') {
+                        while (
+                            offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9'
+                        ) {
                             offset++;
                         }
                         isFloat = true;
@@ -181,12 +180,14 @@ public class Scanner {
                     if (offset < string.length() && string.charAt(offset) == 'e') {
                         // Exponent e.g. (1.2e+12)
                         offset++;
-                        if (offset < string.length()
-                                && (string.charAt(offset) == '+' || string.charAt(offset) == '-')) {
+                        if (
+                            offset < string.length() && (string.charAt(offset) == '+' || string.charAt(offset) == '-')
+                        ) {
                             offset++;
                         }
-                        while (offset < string.length() && string.charAt(offset) >= '0'
-                                && string.charAt(offset) <= '9') {
+                        while (
+                            offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9'
+                        ) {
                             offset++;
                         }
                         isFloat = true;
@@ -216,7 +217,8 @@ public class Scanner {
                 return new Token(TokenKind.STRING, position, string.substring(start, offset));
             } else if (string.charAt(offset) == '\'') {
                 // This is a character literal. (e.g. 'a', '\n')
-                // The tokenizer is more permissive than the language. Errors will be thrown in the
+                // The tokenizer is more permissive than the language. Errors will be thrown in
+                // the
                 // parser.
                 offset++;
                 while (offset < string.length() && string.charAt(offset) != '\'') {
@@ -234,8 +236,10 @@ public class Scanner {
             } else if (Character.isLetter(string.charAt(offset)) || string.charAt(offset) == '_') {
                 // This is an identifier (e.g. main) or keyword (e.g. else)
                 offset++;
-                while (offset < string.length()
-                        && (Character.isLetterOrDigit(string.charAt(offset)) || string.charAt(offset) == '_')) {
+                while (
+                    offset < string.length()
+                        && (Character.isLetterOrDigit(string.charAt(offset)) || string.charAt(offset) == '_')
+                ) {
                     offset++;
                 }
                 String source = string.substring(start, offset);
@@ -288,10 +292,9 @@ public class Scanner {
     /**
      * Test if the next {@link Token} is of the given {@link TokenKind}.
      * 
-     * @param kind
-     *            The kind to look for
-     * 
-     * @return true if the next {@link Token} has {@link TokenKind} kind, otherwise false
+     * @param kind The kind to look for
+     * @return true if the next {@link Token} has {@link TokenKind} kind, otherwise
+     *         false
      */
     public boolean hasNext(TokenKind kind) {
         return hasNext() && nextToken.getKind() == kind;
@@ -300,10 +303,9 @@ public class Scanner {
     /**
      * Test if the next {@link Token} is of one of the given {@link TokenKind}s.
      * 
-     * @param kinds
-     *            The kinds of token to look for
-     * 
-     * @return true if the next {@link Token} has a kind inside kinds, otherwise false
+     * @param kinds The kinds of token to look for
+     * @return true if the next {@link Token} has a kind inside kinds, otherwise
+     *         false
      */
     public boolean hasNext(TokenKind[] kinds) {
         for (TokenKind kind : kinds) {
@@ -327,10 +329,10 @@ public class Scanner {
     }
 
     /**
-     * Returns the scanner state to before calling next, which returned the given token.
+     * Returns the scanner state to before calling next, which returned the given
+     * token.
      * 
-     * @param token
-     *            The {@link Token} to revert
+     * @param token The {@link Token} to revert
      */
     public void revert(Token token) {
         nextToken = token;
@@ -340,10 +342,9 @@ public class Scanner {
     /**
      * Return the next {@link Token} if is is of the given {@link TokenKind}.
      * 
-     * @param kind
-     *            The kind to search for
-     * 
-     * @return The {@link TokenKind} if the next {@link Token} hast the correct kind, otherwise null
+     * @param kind The kind to search for
+     * @return The {@link TokenKind} if the next {@link Token} hast the correct
+     *         kind, otherwise null
      */
     public Token accept(TokenKind kind) {
         if (hasNext(kind)) {
@@ -354,7 +355,8 @@ public class Scanner {
     }
 
     /**
-     * Return the starting offset of the next token or the offset of the end if there is no next token.
+     * Return the starting offset of the next token or the offset of the end if
+     * there is no next token.
      * 
      * @return The current offset
      */

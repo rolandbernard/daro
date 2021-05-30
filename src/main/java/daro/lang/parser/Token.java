@@ -22,13 +22,12 @@ public class Token {
     private final Position position;
 
     /**
-     * Create a {@link Token} from the given {@link TokenKind}. The token type must be a kind with a fixed source value,
-     * otherwise a {@link IllegalArgumentException} will be thrown.
+     * Create a {@link Token} from the given {@link TokenKind}. The token type must
+     * be a kind with a fixed source value, otherwise a
+     * {@link IllegalArgumentException} will be thrown.
      * 
-     * @param kind
-     *            The kind of token you want to create
-     * @param position
-     *            The position the token was found at
+     * @param kind     The kind of token you want to create
+     * @param position The position the token was found at
      */
     public Token(TokenKind kind, Position position) {
         this(kind, position, kind.getFixedSource());
@@ -37,12 +36,9 @@ public class Token {
     /**
      * Create a {@link Token} from the give {@link TokenKind} and source string.
      * 
-     * @param kind
-     *            The kind of token you want to create
-     * @param position
-     *            The position the token was found at
-     * @param source
-     *            The source string for the token
+     * @param kind     The kind of token you want to create
+     * @param position The position the token was found at
+     * @param source   The source string for the token
      */
     public Token(TokenKind kind, Position position, String source) {
         if (source == null) {

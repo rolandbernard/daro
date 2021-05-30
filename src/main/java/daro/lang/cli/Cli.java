@@ -12,8 +12,9 @@ import daro.lang.parser.ParsingException;
 import daro.lang.values.DaroObject;
 
 /**
- * This is a small REPL (Read-Eval-Print Loop) cli interface into the interpreter designed for testing and demonstration
- * of the programming language.
+ * This is a small REPL (Read-Eval-Print Loop) cli interface into the
+ * interpreter designed for testing and demonstration of the programming
+ * language.
  * 
  * @author Roland Bernard
  */
@@ -22,12 +23,9 @@ public class Cli {
     /**
      * This method prints a error onto System.out.err,
      * 
-     * @param type
-     *            The type of error. e.g Syntax error, Runtime error, ...
-     * @param position
-     *            The position the error occurred at
-     * @param message
-     *            The message the error contains
+     * @param type     The type of error. e.g Syntax error, Runtime error, ...
+     * @param position The position the error occurred at
+     * @param message  The message the error contains
      */
     private static void printError(String type, Position position, String message) {
         System.err.println(type + " at " + position + ": " + message);
@@ -36,8 +34,7 @@ public class Cli {
     /**
      * Execute the given files inside a single interpreter.
      * 
-     * @param files
-     *            The filenames of the files that should be executed
+     * @param files The filenames of the files that should be executed
      */
     public static void executeFiles(String[] files) {
         Interpreter interpreter = new Interpreter();
@@ -56,7 +53,8 @@ public class Cli {
     }
 
     /**
-     * Start executing in REPL mode. This will continue until the stream has no more lines.
+     * Start executing in REPL mode. This will continue until the stream has no more
+     * lines.
      */
     public static void executeRepl() {
         Interpreter interpreter = new Interpreter();
@@ -98,8 +96,7 @@ public class Cli {
     /**
      * Main function of this CLI application.
      * 
-     * @param args
-     *            Command line arguments to the program
+     * @param args Command line arguments to the program
      */
     public static void main(String[] args) {
         if (args.length > 0) {

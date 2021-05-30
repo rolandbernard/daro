@@ -11,8 +11,7 @@ public abstract class AstNode {
     /**
      * Construct a {@link AstNode} for the given position.
      * 
-     * @param position
-     *            Source position represented by the {@link AstNode}
+     * @param position Source position represented by the {@link AstNode}
      */
     public AstNode(Position position) {
         this.position = position;
@@ -28,13 +27,11 @@ public abstract class AstNode {
     }
 
     /**
-     * Accepts a ast {@link Visitor} calling a method debending on the base class implementation.
+     * Accepts a ast {@link Visitor} calling a method depending on the base class
+     * implementation.
      * 
-     * @param <T>
-     *            The type returned by the visitor
-     * @param visitor
-     *            The visitor to accept
-     * 
+     * @param <T>     The type returned by the visitor
+     * @param visitor The visitor to accept
      * @return The result from the visitor
      */
     abstract public <T> T accept(Visitor<T> visitor);

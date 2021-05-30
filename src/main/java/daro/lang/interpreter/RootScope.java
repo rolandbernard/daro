@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class implements the root scope of the program. It contains the predefined methods and types in the Daro
- * language.
+ * This class implements the root scope of the program. It contains the
+ * predefined methods and types in the Daro language.
  * 
  * @author Roland Bernard
  */
@@ -21,8 +21,9 @@ public class RootScope extends ConstantScope {
     }
 
     /**
-     * This function generates a mapping between {@link String}s and {@link DaroObject}s that represent all the
-     * variables in the root scope of a daro program.
+     * This function generates a mapping between {@link String}s and
+     * {@link DaroObject}s that represent all the variables in the root scope of a
+     * daro program.
      * 
      * @return The mapping of the root scope
      */

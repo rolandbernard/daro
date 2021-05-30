@@ -26,11 +26,10 @@ public class Position {
     private final String text;
 
     /**
-     * Create a position which only specifies a {@link Path}. This should be uses if the source of the file can not be
-     * read for example.
+     * Create a position which only specifies a {@link Path}. This should be uses if
+     * the source of the file can not be read for example.
      * 
-     * @param file
-     *            The file the position is in
+     * @param file The file the position is in
      */
     public Position(Path file) {
         this.start = -1;
@@ -42,8 +41,7 @@ public class Position {
     /**
      * Create a source {@link Position} from the start position.
      * 
-     * @param start
-     *            The starting position
+     * @param start The starting position
      */
     public Position(int start) {
         this(start, start, null, null);
@@ -52,10 +50,8 @@ public class Position {
     /**
      * Create a source {@link Position} from the start and end position.
      * 
-     * @param start
-     *            The starting position
-     * @param end
-     *            The end position
+     * @param start The starting position
+     * @param end   The end position
      */
     public Position(int start, int end) {
         this(start, end, null, null);
@@ -64,12 +60,9 @@ public class Position {
     /**
      * Create a source {@link Position} from the start position and length.
      * 
-     * @param start
-     *            The starting position
-     * @param end
-     *            The end position
-     * @param text
-     *            The text the position is in
+     * @param start The starting position
+     * @param end   The end position
+     * @param text  The text the position is in
      */
     public Position(int start, int end, String text) {
         this(start, end, text, null);
@@ -78,14 +71,10 @@ public class Position {
     /**
      * Create a source {@link Position} from the start position and length.
      * 
-     * @param start
-     *            The starting position
-     * @param end
-     *            The end position
-     * @param text
-     *            The text the position is in
-     * @param file
-     *            The file the position is in
+     * @param start The starting position
+     * @param end   The end position
+     * @param text  The text the position is in
+     * @param file  The file the position is in
      */
     public Position(int start, int end, String text, Path file) {
         if (start < 0) {
@@ -101,13 +90,12 @@ public class Position {
     }
 
     /**
-     * Create a new position that covers the area defined by the two extreme positions. This function can only be used
-     * for positions that describe an exact position.
+     * Create a new position that covers the area defined by the two extreme
+     * positions. This function can only be used for positions that describe an
+     * exact position.
      * 
-     * @param start
-     *            The position to start at
-     * @param end
-     *            The position to end at
+     * @param start The position to start at
+     * @param end   The position to end at
      */
     public Position(Position start, Position end) {
         this(start.getStart(), end.getEnd(), start.getText(), start.getFile());
@@ -116,11 +104,8 @@ public class Position {
     /**
      * This method computes the line number from a offset into the given text.
      * 
-     * @param offset
-     *            The offset to check the line number of
-     * @param text
-     *            The text the offset refers to
-     * 
+     * @param offset The offset to check the line number of
+     * @param text   The text the offset refers to
      * @return The line number of the offset
      */
     public static int lineFromOffset(int offset, String text) {
@@ -137,11 +122,8 @@ public class Position {
     /**
      * This method computes the column number from a offset into the given text.
      * 
-     * @param offset
-     *            The offset to check the column number of
-     * @param text
-     *            The text the offset refers to
-     * 
+     * @param offset The offset to check the column number of
+     * @param text   The text the offset refers to
      * @return The column number of the offset
      */
     public static int columnFromOffset(int offset, String text) {
@@ -158,8 +140,8 @@ public class Position {
     }
 
     /**
-     * Returns the starting position of the source code {@link Position}. The value will be negative if no exact
-     * position is associated with the position.
+     * Returns the starting position of the source code {@link Position}. The value
+     * will be negative if no exact position is associated with the position.
      * 
      * @return The start position
      */
@@ -168,8 +150,9 @@ public class Position {
     }
 
     /**
-     * Returns the ending position (exclusive) of the source code {@link Position}. The value will be negative if no
-     * exact position is associated with the position.
+     * Returns the ending position (exclusive) of the source code {@link Position}.
+     * The value will be negative if no exact position is associated with the
+     * position.
      * 
      * @return The end position
      */
@@ -212,9 +195,9 @@ public class Position {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Position) {
-            Position position = (Position) obj;
+            Position position = (Position)obj;
             return start == position.getStart() && end == position.getEnd() && text == position.getText()
-                    && file == position.getFile();
+                && file == position.getFile();
         } else {
             return false;
         }
