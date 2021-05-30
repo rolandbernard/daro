@@ -11,8 +11,7 @@ public class DaroBoolean extends DaroObject {
     /**
      * Create a new boolean value from the given value.
      * 
-     * @param value
-     *            The value the {@link DaroBoolean} represents
+     * @param value The value the {@link DaroBoolean} represents
      */
     public DaroBoolean(boolean value) {
         this.value = value;
@@ -40,7 +39,7 @@ public class DaroBoolean extends DaroObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroBoolean) {
-            DaroBoolean bool = (DaroBoolean) object;
+            DaroBoolean bool = (DaroBoolean)object;
             return value == bool.getValue();
         } else {
             return false;

@@ -22,10 +22,10 @@ public class DaroNativeClass extends DaroType {
     private final NativeScope staticScope;
 
     /**
-     * Create a new native class that can be used in daro and refers to the given Java class.
+     * Create a new native class that can be used in daro and refers to the given
+     * Java class.
      *
-     * @param nativeClass
-     *            The class this type will refer to
+     * @param nativeClass The class this type will refer to
      */
     public DaroNativeClass(Class<?> nativeClass) {
         this.nativeClass = nativeClass;
@@ -44,9 +44,7 @@ public class DaroNativeClass extends DaroType {
     /**
      * Returns the scope for instances of this class.
      * 
-     * @param target
-     *            The target the instances scope is for
-     * 
+     * @param target The target the instances scope is for
      * @return The {@link NativeScope} for instances of this class
      */
     public NativeScope getInstanceScope(Object target) {
@@ -60,8 +58,9 @@ public class DaroNativeClass extends DaroType {
             return new DaroNativeObject(this, constructor.newInstance());
         } catch (NoSuchMethodException e) {
             throw new InterpreterException("Java class is missing an no-args constructor");
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
+        } catch (
+            InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e
+        ) {
             throw new InterpreterException("Failed to instantiate native object");
         }
     }
@@ -114,7 +113,7 @@ public class DaroNativeClass extends DaroType {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroNativeClass) {
-            DaroNativeClass classType = (DaroNativeClass) object;
+            DaroNativeClass classType = (DaroNativeClass)object;
             return Objects.equals(nativeClass, classType.getNativeClass());
         } else {
             return false;

@@ -15,11 +15,8 @@ public class Terminal extends VBox {
     }
 
     /**
-     * 
-     * @param width
-     *            TODO TOFIX
-     * @param height
-     *            TODO TOFIX
+     * @param width  TODO TOFIX
+     * @param height TODO TOFIX
      */
     public Terminal(double width, double height) {
         this.setPrefHeight(height);

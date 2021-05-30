@@ -11,15 +11,15 @@ public class DaroString extends DaroObject {
     /**
      * Create a new {@link DaroString} from the given value.
      * 
-     * @param value
-     *            The value the {@link DaroString} should represent
+     * @param value The value the {@link DaroString} should represent
      */
     public DaroString(String value) {
         this.value = value;
     }
 
     /**
-     * Returns the value stored inside the {@link DaroString} as a {@link String} object.
+     * Returns the value stored inside the {@link DaroString} as a {@link String}
+     * object.
      * 
      * @return The value stored in the object
      */
@@ -40,7 +40,7 @@ public class DaroString extends DaroObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroString) {
-            DaroString integer = (DaroString) object;
+            DaroString integer = (DaroString)object;
             return value.equals(integer.getValue());
         } else {
             return false;

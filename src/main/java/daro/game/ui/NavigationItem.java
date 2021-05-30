@@ -11,12 +11,11 @@ public class NavigationItem extends HBox {
      * <strong>UI: <em>Component</em></strong><br>
      * A navigation item for the main-navigation
      * 
-     * @param icon
-     *            a string containing the unicode of a Material-Icon (e.g. \ue021)
-     * @param label
-     *            a string containing the label next to the icon
-     * @param isDefault
-     *            a boolean if the Navigation Item has the active class as a default
+     * @param icon      a string containing the unicode of a Material-Icon (e.g.
+     *                  \ue021)
+     * @param label     a string containing the label next to the icon
+     * @param isDefault a boolean if the Navigation Item has the active class as a
+     *                  default
      */
     public NavigationItem(String icon, String label, boolean isDefault) {
         Text labelText = new Text(label);

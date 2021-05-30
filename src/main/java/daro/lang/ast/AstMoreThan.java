@@ -1,7 +1,8 @@
 package daro.lang.ast;
 
 /**
- * Class representing an ast node for a more than comparison. e.g. {@code foo > bar}
+ * Class representing an ast node for a more than comparison. e.g.
+ * {@code foo > bar}
  * 
  * @author Roland Bernard
  */

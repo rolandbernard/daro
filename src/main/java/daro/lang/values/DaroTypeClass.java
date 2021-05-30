@@ -12,8 +12,9 @@ import daro.lang.interpreter.Scope;
 import daro.lang.interpreter.VariableLocation;
 
 /**
- * This class represents the type for a class instance ({@link DaroClass}). A class is always linked to the scope they
- * are defined in which is used to instantiate the class.
+ * This class represents the type for a class instance ({@link DaroClass}). A
+ * class is always linked to the scope they are defined in which is used to
+ * instantiate the class.
  * 
  * @author Roland Bernard
  */
@@ -24,10 +25,8 @@ public class DaroTypeClass extends DaroType {
     /**
      * Create a new class type from the given definition inside the given scope.
      * 
-     * @param globalScope
-     *            The scope the class is defined in
-     * @param definition
-     *            The definition of the class
+     * @param globalScope The scope the class is defined in
+     * @param definition  The definition of the class
      */
     public DaroTypeClass(Scope globalScope, AstClass definition) {
         this.globalScope = globalScope;
@@ -54,20 +53,22 @@ public class DaroTypeClass extends DaroType {
         Scope classScope = classObject.getMemberScope();
         for (AstNode value : initializer.getValues()) {
             if (value instanceof AstAssignment) {
-                AstAssignment assignment = (AstAssignment) value;
-                VariableLocation location = LocationEvaluator.execute(context.forScope(classScope),
-                        assignment.getLeft());
+                AstAssignment assignment = (AstAssignment)value;
+                VariableLocation location =
+                    LocationEvaluator.execute(context.forScope(classScope), assignment.getLeft());
                 if (location != null) {
                     DaroObject object = Executor.execute(context, assignment.getRight());
                     if (object == null) {
-                        throw new InterpreterException(assignment.getRight().getPosition(),
-                                "Value must not be undefined");
+                        throw new InterpreterException(
+                            assignment.getRight().getPosition(), "Value must not be undefined"
+                        );
                     } else {
                         location.storeValue(object);
                     }
                 } else {
-                    throw new InterpreterException(assignment.getLeft().getPosition(),
-                            "Expression can not be written to");
+                    throw new InterpreterException(
+                        assignment.getLeft().getPosition(), "Expression can not be written to"
+                    );
                 }
             } else {
                 throw new InterpreterException(value.getPosition(), "Value must be an assignment");
@@ -84,7 +85,7 @@ public class DaroTypeClass extends DaroType {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroTypeClass) {
-            DaroTypeClass classType = (DaroTypeClass) object;
+            DaroTypeClass classType = (DaroTypeClass)object;
             return globalScope.equals(classType.globalScope) && definition.equals(classType.getDefinition());
         } else {
             return false;

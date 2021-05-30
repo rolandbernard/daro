@@ -9,7 +9,8 @@ import daro.lang.interpreter.Executor;
 import daro.lang.interpreter.Scope;
 
 /**
- * This class represents the type for a package object ({@link DaroNativePackage}).
+ * This class represents the type for a package object
+ * ({@link DaroNativePackage}).
  * 
  * @author Roland Bernard
  */

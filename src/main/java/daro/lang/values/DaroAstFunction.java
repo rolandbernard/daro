@@ -12,7 +12,8 @@ import daro.lang.interpreter.ReturnException;
 import daro.lang.interpreter.Scope;
 
 /**
- * This {@link DaroObject} represents an instance of a function executing from a ast.
+ * This {@link DaroObject} represents an instance of a function executing from a
+ * ast.
  * 
  * @author Roland Bernard
  */
@@ -21,13 +22,11 @@ public class DaroAstFunction extends DaroFunction {
     private final AstFunction ast;
 
     /**
-     * Create a new function from a scope and ast. The function will normally be executed either in the global scope or
-     * in a class scope.
+     * Create a new function from a scope and ast. The function will normally be
+     * executed either in the global scope or in a class scope.
      * 
-     * @param scope
-     *            The scope to execute the function in
-     * @param ast
-     *            The ast that represents the function
+     * @param scope The scope to execute the function in
+     * @param ast   The ast that represents the function
      */
     public DaroAstFunction(Scope scope, AstFunction ast) {
         this.scope = scope;
@@ -61,7 +60,7 @@ public class DaroAstFunction extends DaroFunction {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroAstFunction) {
-            DaroAstFunction function = (DaroAstFunction) object;
+            DaroAstFunction function = (DaroAstFunction)object;
             return scope.equals(function.scope) && ast.equals(function.ast);
         } else {
             return false;
@@ -70,7 +69,7 @@ public class DaroAstFunction extends DaroFunction {
 
     @Override
     public String toString() {
-        return "fn " + (ast.getName() != null ? ast.getName() : "[anonymous]") + Arrays.stream(ast.getParameters())
-                .map(AstSymbol::getName).collect(Collectors.joining(", ", "(", ")"));
+        return "fn " + (ast.getName() != null ? ast.getName() : "[anonymous]")
+            + Arrays.stream(ast.getParameters()).map(AstSymbol::getName).collect(Collectors.joining(", ", "(", ")"));
     }
 }

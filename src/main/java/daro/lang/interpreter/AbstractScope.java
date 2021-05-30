@@ -9,7 +9,8 @@ import java.util.stream.Collectors;
 import daro.lang.values.DaroObject;
 
 /**
- * This is the superclass of most scopes. A scope is a collection of variables (with names and values).
+ * This is the superclass of most scopes. A scope is a collection of variables
+ * (with names and values).
  *
  * @author Roland Bernard
  */
@@ -25,29 +26,26 @@ public abstract class AbstractScope implements Scope {
     /**
      * Creates a new {@link Scope} with the given parent.
      * 
-     * @param parent
-     *            The parent scope
+     * @param parent The parent scope
      */
-    public AbstractScope(Scope... parent) {
+    public AbstractScope(Scope ...parent) {
         this.parents = parent;
         this.variables = new HashMap<>();
     }
 
     /**
-     * Creates a new {@link Scope} with the given parent and internal map. This constructor is only to be used
-     * internally by this class.
+     * Creates a new {@link Scope} with the given parent and internal map. This
+     * constructor is only to be used internally by this class.
      * 
-     * @param variables
-     *            The internal variables map
-     * @param parent
-     *            The parent scope
+     * @param variables The internal variables map
+     * @param parent    The parent scope
      */
     protected AbstractScope(Map<String, DaroObject> variables, Scope[] parent) {
         this.parents = parent;
         this.variables = variables;
     }
 
-    public void addParent(Scope... parent) {
+    public void addParent(Scope ...parent) {
         Scope[] newParents = Arrays.copyOf(parents, parents.length + parent.length);
         for (int i = 0; i < parent.length; i++) {
             newParents[parents.length + i] = parent[i];
@@ -125,7 +123,7 @@ public abstract class AbstractScope implements Scope {
     @Override
     public boolean equals(Object object) {
         if (object instanceof AbstractScope) {
-            AbstractScope scope = (AbstractScope) object;
+            AbstractScope scope = (AbstractScope)object;
             return Objects.equals(variables, scope.variables) && Arrays.equals(parents, scope.parents);
         } else {
             return false;
@@ -134,8 +132,9 @@ public abstract class AbstractScope implements Scope {
 
     @Override
     public String toString() {
-        return getCompleteMapping().entrySet().stream()
-                .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-                .collect(Collectors.joining(", ", "{", "}"));
+        return getCompleteMapping().entrySet()
+            .stream()
+            .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
+            .collect(Collectors.joining(", ", "{", "}"));
     }
 }
