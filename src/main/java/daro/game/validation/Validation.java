@@ -4,7 +4,6 @@ import daro.lang.interpreter.Interpreter;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.values.DaroArray;
 import daro.lang.values.DaroObject;
-import daro.lang.values.DaroType;
 import daro.lang.values.DaroTypeArray;
 
 import java.util.List;
