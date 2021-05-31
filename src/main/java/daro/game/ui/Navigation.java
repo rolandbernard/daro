@@ -41,7 +41,7 @@ public class Navigation extends VBox {
      * @return imageview containing the logo
      */
     private ImageView getLogo() {
-        ImageView logo = new ImageView(new Image("img/logo.png"));
+        ImageView logo = new ImageView(new Image("game/img/logo.png"));
         logo.setFitHeight(40);
         logo.setFitWidth(104);
         logo.setPreserveRatio(true);
