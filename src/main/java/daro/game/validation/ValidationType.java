@@ -2,6 +2,7 @@ package daro.game.validation;
 
 public enum ValidationType {
     EQUALS(true),
+    NOT_EQUALS(true),
     TRUE(false),
     FALSE(false),
     ARRAY_INCLUDES(true),

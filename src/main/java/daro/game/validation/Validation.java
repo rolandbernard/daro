@@ -76,9 +76,15 @@ public class Validation {
         String expectedString = null;
         try {
             DaroObject codeResult = interpreter.execute(code + source);
+            givenResult = codeResult.toString();
+
             switch (type) {
                 case EQUALS:
                     success = codeResult.equals(expected);
+                    break;
+                case NOT_EQUALS:
+                    success = !codeResult.equals(expected);
+                    expectedString = "not " + expected;
                     break;
                 case TRUE:
                     success = codeResult.isTrue();
@@ -98,11 +104,12 @@ public class Validation {
                     break;
 
             }
-            givenResult = codeResult.toString();
         } catch (InterpreterException e) {
             givenResult = "There was an issue with your code: " + e.getMessage();
         }
-        return new ValidationResult(id, success, expectedString == null ? expected.toString() : expectedString, givenResult);
+
+        expectedString = expectedString == null ? expected.toString() : expectedString;
+        return new ValidationResult(id, success, expectedString, givenResult);
     }
 
     /**
