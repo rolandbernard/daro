@@ -41,16 +41,4 @@ public class Game extends Application {
         stage.setScene(scene);
         stage.show();
     }
-
-    /**
-     *
-     * Updates the view of the Game to a given page.
-     * 
-     * @param view
-     *            The view game displays
-     *
-     */
-    public void setView(View view) {
-        scene.setRoot(view);
-    }
 }

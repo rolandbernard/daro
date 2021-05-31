@@ -97,7 +97,6 @@ public class LevelGroup {
         JSONParser parser = new JSONParser();
         List<LevelGroup> groupsList = new ArrayList<>();
         try {
-            // TODO: check pathing
             Scanner scanner = new Scanner(LevelGroup.class.getResourceAsStream("/data/levels.json"));
             scanner.useDelimiter("\\Z");
             Object object = parser.parse(scanner.next());
@@ -118,7 +117,7 @@ public class LevelGroup {
 
                             // TODO: add make done dynamic
                             levelsList.add(new Level((long) levelJson.get("id"), levelJson.get("name").toString(),
-                                    levelJson.get("description").toString(), (boolean) levelJson.get("completed")));
+                                    levelJson.get("description").toString(), false));
                         });
                     }
 

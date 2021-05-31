@@ -7,9 +7,8 @@
       "levels": [
         {
           "id": 1,
-          "name": "Test Level",
-          "description": "Write a Test",
-          "completed": true
+          "name": "Create a variable",
+          "description": "Create a variable with the name a and assign it to the value 10",
         }
       ]
     },
@@ -18,18 +17,6 @@
       "name": "If and else",
       "description_short": "Basic control structures",
       "levels": [
-        {
-          "id": 1,
-          "name": "Test Level",
-          "description": "Write a Test",
-          "completed": true
-        },
-        {
-          "id": 2,
-          "name": "Test level 2",
-          "description": "This is an example text",
-          "completed": false
-        }
       ]
     },
     {
@@ -37,12 +24,6 @@
       "name": "Sample group",
       "description_short": "This is just a test",
       "levels": [
-        {
-          "id": 1,
-          "name": "Test Level",
-          "description": "Write a Test",
-          "completed": false
-        }
       ]
     },
     {
@@ -50,12 +31,6 @@
       "name": "Sample group",
       "description_short": "This is just a test",
       "levels": [
-        {
-          "id": 1,
-          "name": "Test Level",
-          "description": "Write a Test",
-          "completed": false
-        }
       ]
     }
   ]
