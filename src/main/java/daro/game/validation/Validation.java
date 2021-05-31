@@ -2,7 +2,10 @@ package daro.game.validation;
 
 import daro.lang.interpreter.Interpreter;
 import daro.lang.interpreter.InterpreterException;
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroArray;
+import daro.lang.values.DaroObject;
+import daro.lang.values.DaroType;
+import daro.lang.values.DaroTypeArray;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,13 +14,14 @@ public class Validation {
     private long id;
     private ValidationType type;
     private String source;
-    private UserObject expected;
+    private DaroObject expected;
 
 
     /**
      * Generates a test for daro without an expected value.
-     * @param id number of test for the level
-     * @param type a type of test
+     *
+     * @param id     number of test for the level
+     * @param type   a type of test
      * @param source variable / function call that has to be tested
      */
     public Validation(long id, ValidationType type, String source) {
@@ -30,9 +34,10 @@ public class Validation {
 
     /**
      * Generates a test for daro with an expected value.
-     * @param id number of test for the level
-     * @param type a type of test
-     * @param source variable / function call that has to be tested
+     *
+     * @param id       number of test for the level
+     * @param type     a type of test
+     * @param source   variable / function call that has to be tested
      * @param expected the expected value. Either a simple value or an array in the form of e.g. [2, 3, 4]
      */
     public Validation(long id, ValidationType type, String source, String expected) {
@@ -48,7 +53,7 @@ public class Validation {
     /**
      * Runs all the tests of a list on a specific code
      *
-     * @param code the code that has to be validated
+     * @param code        the code that has to be validated
      * @param validations a list containing tests that have to be run
      * @return a list of test results
      */
@@ -68,26 +73,80 @@ public class Validation {
         Interpreter interpreter = new Interpreter();
         boolean success = false;
         String givenResult;
+        String expectedString = null;
         try {
-            UserObject codeResult = interpreter.execute(code + source);
+            DaroObject codeResult = interpreter.execute(code + source);
             switch (type) {
                 case EQUALS:
                     success = codeResult.equals(expected);
                     break;
                 case TRUE:
                     success = codeResult.isTrue();
+                    expectedString = "to be a truthy value";
                     break;
                 case FALSE:
                     success = !codeResult.isTrue();
+                    expectedString = "to be a falsy value";
                     break;
+                case ARRAY_INCLUDES:
+                    success = validateArrayIncludes(codeResult);
+                    expectedString = "to contain " + expected;
+                    break;
+                case ARRAY_EXCLUDES:
+                    success = validateArrayExcludes(codeResult);
+                    expectedString = "to not contain " + expected;
+                    break;
+
             }
             givenResult = codeResult.toString();
         } catch (InterpreterException e) {
             givenResult = "There was an issue with your code: " + e.getMessage();
         }
+        return new ValidationResult(id, success, expectedString == null ? expected.toString() : expectedString, givenResult);
+    }
 
+    /**
+     * Checks if the codeResult is an array and contains a certain element or list of elements
+     *
+     * @param codeResult the actual code result
+     * @return if the expected value of the validation is contained in the code result
+     */
+    private boolean validateArrayIncludes(DaroObject codeResult) {
+        try {
+            DaroArray array = (DaroArray) codeResult;
+            if (expected.getType().equals(new DaroTypeArray())) {
+                DaroArray expectedArray = (DaroArray) expected;
+                return expectedArray.getValues().stream().allMatch(a ->
+                        array.getValues().stream()
+                                .anyMatch(e -> e.equals(a))
+                );
+            }
+            return array.getValues().stream().anyMatch(i -> i.equals(expected));
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-        return new ValidationResult(id, success, expected.toString(), givenResult);
+    /**
+     * Checks if the codeResult is an array and doesn't contain a certain element
+     *
+     * @param codeResult the actual code result
+     * @return if the expected value of the validation is contained in the code result
+     */
+    private boolean validateArrayExcludes(DaroObject codeResult) {
+        try {
+            DaroArray array = (DaroArray) codeResult;
+            if (expected.getType().equals(new DaroTypeArray())) {
+                DaroArray expectedArray = (DaroArray) expected;
+                return expectedArray.getValues().stream().noneMatch(a ->
+                        array.getValues().stream()
+                                .anyMatch(e -> e.equals(a))
+                );
+            }
+            return array.getValues().stream().noneMatch(i -> i.equals(expected));
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -97,8 +156,8 @@ public class Validation {
      * @param expected expected string value
      * @return UserObject to compare to actual value
      */
-    private UserObject parseExpectedResult(String expected) {
-        UserObject expectedResult;
+    private DaroObject parseExpectedResult(String expected) {
+        DaroObject expectedResult;
         Interpreter interpreter = new Interpreter();
 
         try {

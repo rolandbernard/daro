@@ -81,6 +81,14 @@ public class EqualsValidationTest {
     }
 
     @Test
+    public void shouldRunCharacterTest() {
+        List<ValidationResult> results = Validation.run("a = 'a'", List.of(
+                new Validation(1, ValidationType.EQUALS, "a", "'a'"))
+        );
+        assertTrue(ValidationResult.evaluate(results));
+    }
+
+    @Test
     public void shouldRunFunctionTestWithArguments() {
         List<ValidationResult> results = Validation.run("fn test(a) { return a; }", List.of(
                 new Validation(1, ValidationType.EQUALS, "test(10)", "10"))
