@@ -69,6 +69,11 @@ public class Level {
         return completed;
     }
 
+    /**
+     * Parses levels from a JsonArray
+     * @param levels a JsonArray containing levels as JSON Objects
+     * @return a list of levels
+     */
     public static List<Level> parseFromJson(JSONArray levels) {
         List<Level> levelsList = new ArrayList<>();
         if (levels != null && levels.size() > 0) {

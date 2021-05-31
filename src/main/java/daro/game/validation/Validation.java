@@ -183,6 +183,11 @@ public class Validation {
         }
     }
 
+    /**
+     * Parses tests from a json
+     * @param tests a JsonArray containing tests
+     * @return a list of tests
+     */
     public static List<Validation> parseFromJson(JSONArray tests) {
         List<Validation> testsList = new ArrayList<>();
         if (tests != null && tests.size() > 0) {
