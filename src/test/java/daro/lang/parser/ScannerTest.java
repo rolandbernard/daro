@@ -2,6 +2,8 @@ package daro.lang.parser;
 
 import org.junit.jupiter.api.Test;
 
+import daro.lang.ast.Position;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ScannerTest {
@@ -53,16 +55,17 @@ public class ScannerTest {
 
     @Test
     void simpleScannerNextPosition() {
-        Scanner scanner = new Scanner("fn main() { x := 12.7 }");
-        assertEquals(0, scanner.next().getStart());
-        assertEquals(3, scanner.next().getStart());
-        assertEquals(7, scanner.next().getStart());
-        assertEquals(8, scanner.next().getStart());
-        assertEquals(10, scanner.next().getStart());
-        assertEquals(12, scanner.next().getStart());
-        assertEquals(14, scanner.next().getStart());
-        assertEquals(17, scanner.next().getStart());
-        assertEquals(22, scanner.next().getStart());
+        String source = "fn main() { x := 12.7 }";
+        Scanner scanner = new Scanner(source);
+        assertEquals(new Position(0, 2, source), scanner.next().getPosition());
+        assertEquals(new Position(3, 7, source), scanner.next().getPosition());
+        assertEquals(new Position(7, 8, source), scanner.next().getPosition());
+        assertEquals(new Position(8, 9, source), scanner.next().getPosition());
+        assertEquals(new Position(10, 11, source), scanner.next().getPosition());
+        assertEquals(new Position(12, 13, source), scanner.next().getPosition());
+        assertEquals(new Position(14, 16, source), scanner.next().getPosition());
+        assertEquals(new Position(17, 21, source), scanner.next().getPosition());
+        assertEquals(new Position(22, 23, source), scanner.next().getPosition());
     }
 
     @Test
@@ -289,7 +292,7 @@ public class ScannerTest {
     }
 
     @Test
-    void hexidecimalIntegerScannerNextSource() {
+    void hexadecimalIntegerScannerNextSource() {
         Scanner scanner = new Scanner("0x1234aBc 0x1234test");
         assertEquals("0x1234aBc", scanner.next().getSource());
         assertEquals("0x1234", scanner.next().getSource());
@@ -446,7 +449,7 @@ public class ScannerTest {
             TokenKind.FN, TokenKind.IDENTIFIER, TokenKind.OPEN_PAREN, TokenKind.IDENTIFIER, TokenKind.COLON,
             TokenKind.IDENTIFIER, TokenKind.COMMA, TokenKind.IDENTIFIER, TokenKind.COLON, TokenKind.IDENTIFIER,
             TokenKind.CLOSE_PAREN, TokenKind.OPEN_BRACE, TokenKind.IDENTIFIER, TokenKind.DEFINE, TokenKind.INTEGER,
-            TokenKind.PLUS, TokenKind.INTEGER, TokenKind.MINUS, TokenKind.INTEGER, TokenKind.ASTERIX, TokenKind.INTEGER,
+            TokenKind.PLUS, TokenKind.INTEGER, TokenKind.MINUS, TokenKind.INTEGER, TokenKind.ASTERISK, TokenKind.INTEGER,
             TokenKind.SLASH, TokenKind.INTEGER, TokenKind.PERCENT, TokenKind.INTEGER, TokenKind.SEMICOLON, TokenKind.IF,
             TokenKind.IDENTIFIER, TokenKind.MORE, TokenKind.INTEGER, TokenKind.DOUBLE_AND, TokenKind.IDENTIFIER,
             TokenKind.LESS, TokenKind.INTEGER, TokenKind.DOUBLE_PIPE, TokenKind.IDENTIFIER, TokenKind.MORE_EQUAL,

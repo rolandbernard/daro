@@ -2,18 +2,43 @@ package daro.lang.interpreter;
 
 import java.util.Map;
 
-import daro.lang.values.UserObject;
+import daro.lang.values.DaroObject;
 
 /**
- * This interface should be implemented by all of the scope classes. A scope is a collection of variables (with names
- * and values).
+ * This interface should be implement by all scopes. A scope is a collection of variables (with names and values).
  *
  * @author Roland Bernard
  */
 public interface Scope {
 
     /**
-     * Test whether this scope contans a variable with the given name.
+     * Returns a {@link Scope} that only includes the last level of this scope. This method is used inside classes as
+     * the member scope.
+     * 
+     * @return The last level scope
+     */
+    public Scope getFinalLevel();
+
+    /**
+     * Creates a new variable in the last level of the scope if possible, otherwise throw a
+     * {@link InterpreterException}.
+     *
+     * @param name
+     *            The name of the new variable
+     * @param object
+     *            The object to store into the new variable
+     */
+    default public void newVariableInFinal(String name, DaroObject object) {
+        VariableLocation location = getFinalLevel().getVariableLocation(name);
+        if (location == null) {
+            throw new InterpreterException("The surrounding scope does not support function or class definitions");
+        } else {
+            location.storeValue(object);
+        }
+    }
+
+    /**
+     * Test whether this scope contains a variable with the given name.
      * 
      * @param name
      *            The name to search for
@@ -29,9 +54,17 @@ public interface Scope {
      * @param name
      *            The name to search for
      * 
-     * @return The {@link UserObject} stored in the variable if it exists, null otherwise
+     * @return The {@link DaroObject} stored in the variable if it exists, null otherwise
      */
-    public UserObject getVariableValue(String name);
+    public DaroObject getVariableValue(String name);
+
+    /**
+     * Returns the complete mapping of this scope. i.e. A map of every possible name that would return a non-null value
+     * from getVariableValue.
+     * 
+     * @return The complete mapping
+     */
+    public Map<String, DaroObject> getCompleteMapping();
 
     /**
      * Returns a {@link VariableLocation} to store a variable of the given name. If the variable does not exist in this
@@ -43,13 +76,10 @@ public interface Scope {
      * 
      * @return A {@link VariableLocation} to store the variable at
      */
-    public VariableLocation getVariableLocation(String name);
+    abstract public VariableLocation getVariableLocation(String name);
 
     /**
-     * Returns the complete mapping of this scope. i.e. A map of every possible name that would return a non-null value
-     * from getVariableValue.
-     * 
-     * @return The complete mapping
+     * Resets the scope to its default state.
      */
-    public Map<String, UserObject> getCompleteMapping();
+    abstract public void reset();
 }

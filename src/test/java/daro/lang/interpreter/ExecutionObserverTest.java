@@ -31,7 +31,7 @@ public class ExecutionObserverTest {
         }
 
         @Override
-        public void afterNodeExecution(AstNode node, UserObject value, Scope scope) {
+        public void afterNodeExecution(AstNode node, DaroObject value, Scope scope) {
             if (node instanceof AstAssignment) {
                 assignments++;
             } else if (node instanceof AstAddition) {

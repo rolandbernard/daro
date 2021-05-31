@@ -4,67 +4,36 @@ import daro.lang.ast.*;
 import daro.lang.values.*;
 
 /**
- * This class is used to execute an ast inside a given scope and return the variable location that corresponts to the
+ * This class is used to execute an ast inside a given scope and return the variable location that corresponds to the
  * ast.
  *
  * @author Roland Bernard
  */
 public class LocationEvaluator implements Visitor<VariableLocation> {
-    private final Scope scope;
-    private final ExecutionObserver[] observers;
+    private final ExecutionContext context;
 
     /**
-     * Create a new {@link LocationEvaluator} for execution in the given scope and observed by the given
-     * {@link ExecutionObserver}s.
+     * Create a new {@link LocationEvaluator} for execution in the given context.
      * 
-     * @param scope
-     *            The scope to execute in
-     * @param observers
-     *            The observers for this execution
+     * @param context
+     *            The context to execute in
      */
-    public LocationEvaluator(Scope scope, ExecutionObserver[] observers) {
-        this.scope = scope;
-        this.observers = observers;
+    public LocationEvaluator(ExecutionContext context) {
+        this.context = context;
     }
 
     /**
-     * Create a new {@link LocationEvaluator} for execution in the given scope.
+     * Run the given {@link AstNode} in the given {@link ExecutionContext}.
      * 
-     * @param scope
-     *            The scope to execute in
-     */
-    public LocationEvaluator(Scope scope) {
-        this(scope, null);
-    }
-
-    /**
-     * Run the given {@link AstNode} in the given {@link Scope}.
-     * 
-     * @param scope
-     *            The scope to execute in
+     * @param context
+     *            The context to execute in
      * @param program
      *            The {@link AstNode} to execute
      * 
      * @return The result of the execution
      */
-    public static VariableLocation execute(Scope scope, AstNode program) {
-        return (new LocationEvaluator(scope)).execute(program);
-    }
-
-    /**
-     * Run the given {@link AstNode} in the given {@link Scope}.
-     * 
-     * @param scope
-     *            The scope to execute in
-     * @param observers
-     *            The observers to notify during execution
-     * @param program
-     *            The {@link AstNode} to execute
-     * 
-     * @return The result of the execution
-     */
-    public static VariableLocation execute(Scope scope, ExecutionObserver[] observers, AstNode program) {
-        return (new LocationEvaluator(scope, observers)).execute(program);
+    public static VariableLocation execute(ExecutionContext context, AstNode program) {
+        return (new LocationEvaluator(context)).execute(program);
     }
 
     /**
@@ -77,9 +46,11 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
      */
     public VariableLocation execute(AstNode program) {
         if (program != null) {
+            ExecutionObserver[] observers = context.getObservers();
             if (observers == null) {
                 return program.accept(this);
             } else {
+                Scope scope = context.getScope();
                 for (ExecutionObserver observer : observers) {
                     observer.beforeNodeLocalization(program, scope);
                 }
@@ -256,12 +227,12 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     @Override
     public VariableLocation visit(AstSymbol ast) {
-        return scope.getVariableLocation(ast.getName());
+        return context.getScope().getVariableLocation(ast.getName());
     }
 
     @Override
     public VariableLocation visit(AstMember ast) {
-        UserObject left = Executor.execute(scope, observers, ast.getOperand());
+        DaroObject left = Executor.execute(context, ast.getOperand());
         if (left == null) {
             throw new InterpreterException(ast.getOperand().getPosition(), "Can not access member of undefined");
         } else {
@@ -276,12 +247,12 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     @Override
     public VariableLocation visit(AstIndex ast) {
-        UserObject left = Executor.execute(scope, observers, ast.getLeft());
-        if (left instanceof UserArray) {
-            UserObject right = Executor.execute(scope, observers, ast.getRight());
-            if (right instanceof UserInteger) {
-                UserArray array = (UserArray) left;
-                int index = ((UserInteger) right).getValue().intValue();
+        DaroObject left = Executor.execute(context, ast.getLeft());
+        if (left instanceof DaroArray) {
+            DaroObject right = Executor.execute(context, ast.getRight());
+            if (right instanceof DaroInteger) {
+                DaroArray array = (DaroArray) left;
+                int index = ((DaroInteger) right).getValue().intValue();
                 return value -> {
                     if (index < 0 || index >= array.getLength()) {
                         throw new InterpreterException(ast.getPosition(), "Index out of bounds");
@@ -324,6 +295,21 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     @Override
     public VariableLocation visit(AstInitializer ast) {
+        return null;
+    }
+
+    @Override
+    public VariableLocation visit(AstPower ast) {
+        return null;
+    }
+
+    @Override
+    public VariableLocation visit(AstUse ast) {
+        return null;
+    }
+
+    @Override
+    public VariableLocation visit(AstFrom ast) {
         return null;
     }
 }

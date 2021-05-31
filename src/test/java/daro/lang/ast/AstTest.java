@@ -15,24 +15,6 @@ public class AstTest {
     }
 
     @Test
-    void getStartAst() {
-        AstNode node = new AstInteger(new Position(0, 10), 42);
-        assertEquals(0, node.getStart());
-    }
-
-    @Test
-    void getEndAst() {
-        AstNode node = new AstInteger(new Position(0, 10), 42);
-        assertEquals(10, node.getEnd());
-    }
-
-    @Test
-    void getLengthAst() {
-        AstNode node = new AstInteger(new Position(0, 10), 42);
-        assertEquals(10, node.getLength());
-    }
-
-    @Test
     void valueIntegerAst() {
         AstInteger node = new AstInteger(new Position(0, 10), 42);
         assertEquals(BigInteger.valueOf(42), node.getValue());

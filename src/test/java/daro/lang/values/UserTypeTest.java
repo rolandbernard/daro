@@ -8,29 +8,29 @@ public class UserTypeTest {
 
     @Test
     void sameEqual() {
-        UserType type = new UserTypeInteger();
+        DaroType type = new DaroTypeInteger();
         assertEquals(type, type);
     }
 
     @Test
     void equal() {
-        assertEquals(new UserTypeInteger(), new UserTypeInteger());
+        assertEquals(new DaroTypeInteger(), new DaroTypeInteger());
     }
 
     @Test
     void notEqual() {
-        assertNotEquals(new UserTypeInteger(), new UserTypeType());
+        assertNotEquals(new DaroTypeInteger(), new DaroTypeType());
     }
 
     @Test
     void getType() {
-        UserType type = new UserTypeInteger();
-        assertEquals(new UserTypeType(), type.getType());
+        DaroType type = new DaroTypeInteger();
+        assertEquals(new DaroTypeType(), type.getType());
     }
 
     @Test
     void isTrue() {
-        UserType type = new UserTypeInteger();
+        DaroType type = new DaroTypeInteger();
         assertTrue(type.isTrue());
     }
 }

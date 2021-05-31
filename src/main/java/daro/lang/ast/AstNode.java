@@ -28,33 +28,6 @@ public abstract class AstNode {
     }
 
     /**
-     * Returns the start of the source position.
-     * 
-     * @return Start of the source position
-     */
-    public int getStart() {
-        return position.getStart();
-    }
-
-    /**
-     * Returns the end of the source position.
-     * 
-     * @return End of the source position
-     */
-    public int getEnd() {
-        return position.getEnd();
-    }
-
-    /**
-     * Returns the length of the source position.
-     * 
-     * @return Length of the source position
-     */
-    public int getLength() {
-        return position.getLength();
-    }
-
-    /**
      * Accepts a ast {@link Visitor} calling a method debending on the base class implementation.
      * 
      * @param <T>
