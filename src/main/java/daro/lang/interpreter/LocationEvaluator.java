@@ -11,6 +11,21 @@ import daro.lang.values.*;
  */
 public class LocationEvaluator implements Visitor<VariableLocation> {
     private final Scope scope;
+    private final ExecutionObserver[] observers;
+
+    /**
+     * Create a new {@link LocationEvaluator} for execution in the given scope and observed by the given
+     * {@link ExecutionObserver}s.
+     * 
+     * @param scope
+     *            The scope to execute in
+     * @param observers
+     *            The observers for this execution
+     */
+    public LocationEvaluator(Scope scope, ExecutionObserver[] observers) {
+        this.scope = scope;
+        this.observers = observers;
+    }
 
     /**
      * Create a new {@link LocationEvaluator} for execution in the given scope.
@@ -19,7 +34,7 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
      *            The scope to execute in
      */
     public LocationEvaluator(Scope scope) {
-        this.scope = scope;
+        this(scope, null);
     }
 
     /**
@@ -37,6 +52,22 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
     }
 
     /**
+     * Run the given {@link AstNode} in the given {@link Scope}.
+     * 
+     * @param scope
+     *            The scope to execute in
+     * @param observers
+     *            The observers to notify during execution
+     * @param program
+     *            The {@link AstNode} to execute
+     * 
+     * @return The result of the execution
+     */
+    public static VariableLocation execute(Scope scope, ExecutionObserver[] observers, AstNode program) {
+        return (new LocationEvaluator(scope, observers)).execute(program);
+    }
+
+    /**
      * Run the {@link AstNode} in the scope of the {@link LocationEvaluator}
      * 
      * @param program
@@ -46,7 +77,18 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
      */
     public VariableLocation execute(AstNode program) {
         if (program != null) {
-            return program.accept(this);
+            if (observers == null) {
+                return program.accept(this);
+            } else {
+                for (ExecutionObserver observer : observers) {
+                    observer.beforeNodeLocalization(program, scope);
+                }
+                VariableLocation result = program.accept(this);
+                for (ExecutionObserver observer : observers) {
+                    observer.afterNodeLocalization(program, result, scope);
+                }
+                return result;
+            }
         } else {
             return null;
         }
@@ -219,7 +261,7 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     @Override
     public VariableLocation visit(AstMember ast) {
-        UserObject left = Executor.execute(scope, ast.getOperand());
+        UserObject left = Executor.execute(scope, observers, ast.getOperand());
         if (left == null) {
             throw new InterpreterException(ast.getOperand().getPosition(), "Can not access member of undefined");
         } else {
@@ -234,9 +276,9 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     @Override
     public VariableLocation visit(AstIndex ast) {
-        UserObject left = Executor.execute(scope, ast.getLeft());
+        UserObject left = Executor.execute(scope, observers, ast.getLeft());
         if (left instanceof UserArray) {
-            UserObject right = Executor.execute(scope, ast.getRight());
+            UserObject right = Executor.execute(scope, observers, ast.getRight());
             if (right instanceof UserInteger) {
                 UserArray array = (UserArray) left;
                 int index = ((UserInteger) right).getValue().intValue();

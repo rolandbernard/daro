@@ -50,15 +50,15 @@ public class UserArray extends UserObject {
                 return null;
             }
         }));
-        variables.put("sort", new UserLambdaFunction(1, params -> {
+        variables.put("sort", new UserLambdaFunction(1, (params, observers) -> {
             if (params[0] instanceof UserFunction) {
                 UserFunction function = (UserFunction) params[0];
                 if (function.getParamCount() >= 0 && function.getParamCount() != 2) {
                     throw new InterpreterException("Sorting function must accept two arguments");
                 } else {
                     values.sort((a, b) -> {
-                        UserObject less = function.execute(new UserObject[] { a, b });
-                        UserObject more = function.execute(new UserObject[] { b, a });
+                        UserObject less = function.execute(new UserObject[] { a, b }, observers);
+                        UserObject more = function.execute(new UserObject[] { b, a }, observers);
                         if (less != null && less.isTrue() && more != null && more.isTrue()) {
                             return 0;
                         } else if (less != null && less.isTrue()) {

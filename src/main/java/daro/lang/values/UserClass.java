@@ -2,6 +2,7 @@ package daro.lang.values;
 
 import daro.lang.ast.AstSequence;
 import daro.lang.interpreter.BlockScope;
+import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.Executor;
 import daro.lang.interpreter.Scope;
 import daro.lang.interpreter.ScopeInitializer;
@@ -24,21 +25,37 @@ public class UserClass extends UserObject {
      * @param classType
      *            The type of the class
      */
-    public UserClass(Scope globalScope, UserTypeClass classType) {
+    public UserClass(Scope globalScope, ExecutionObserver[] observers, UserTypeClass classType) {
         this.classType = classType;
         BlockScope thisScope = new BlockScope(globalScope);
         thisScope.forceNewVariable("this", this);
         this.scope = new BlockScope(thisScope);
-        initialize();
+        initialize(observers);
+    }
+
+    /**
+     * Create a new instance of a user defined class. The class is defined in the given scope and references the given
+     * type.
+     * 
+     * @param globalScope
+     *            The scope the class should be instantiated in
+     * @param classType
+     *            The type of the class
+     */
+    public UserClass(Scope globalScope, UserTypeClass classType) {
+        this(globalScope, null, classType);
     }
 
     /**
      * Initialize the class by running the code directly inside the body of the class definition.
+     * 
+     * @param observers
+     *            The observers for this execution
      */
-    private void initialize() {
+    private void initialize(ExecutionObserver[] observers) {
         AstSequence sequence = classType.getDefinition().getBody().getSequence();
         ScopeInitializer.initialize(scope, sequence);
-        Executor.execute(scope, sequence);
+        Executor.execute(scope, observers, sequence);
     }
 
     @Override

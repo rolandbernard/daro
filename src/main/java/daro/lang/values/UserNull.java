@@ -1,6 +1,7 @@
 package daro.lang.values;
 
 import daro.lang.ast.AstInitializer;
+import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 
@@ -17,16 +18,16 @@ public class UserNull extends UserType {
     }
 
     @Override
-    public UserObject instantiate() {
+    public UserObject instantiate(ExecutionObserver[] observers) {
         return this;
     }
 
     @Override
-    public UserObject instantiate(Scope scope, AstInitializer initializer) {
+    public UserObject instantiate(Scope scope, ExecutionObserver[] observers, AstInitializer initializer) {
         if (initializer.getValues().length != 0) {
             throw new InterpreterException(initializer.getPosition(), "Null type can not be initialized");
         } else {
-            return instantiate();
+            return instantiate(observers);
         }
     }
 

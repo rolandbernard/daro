@@ -4,6 +4,7 @@ import daro.lang.ast.AstAssignment;
 import daro.lang.ast.AstClass;
 import daro.lang.ast.AstInitializer;
 import daro.lang.ast.AstNode;
+import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.Executor;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.LocationEvaluator;
@@ -43,20 +44,20 @@ public class UserTypeClass extends UserType {
     }
 
     @Override
-    public UserObject instantiate() {
-        return new UserClass(globalScope, this);
+    public UserObject instantiate(ExecutionObserver[] observers) {
+        return new UserClass(globalScope, observers, this);
     }
 
     @Override
-    public UserObject instantiate(Scope scope, AstInitializer initializer) {
-        UserClass classObject = new UserClass(globalScope, this);
+    public UserObject instantiate(Scope scope, ExecutionObserver[] observers, AstInitializer initializer) {
+        UserClass classObject = new UserClass(globalScope, observers, this);
         Scope classScope = classObject.getMemberScope();
         for (AstNode value : initializer.getValues()) {
             if (value instanceof AstAssignment) {
                 AstAssignment assignment = (AstAssignment) value;
-                VariableLocation location = LocationEvaluator.execute(classScope, assignment.getLeft());
+                VariableLocation location = LocationEvaluator.execute(classScope, observers, assignment.getLeft());
                 if (location != null) {
-                    UserObject object = Executor.execute(scope, assignment.getRight());
+                    UserObject object = Executor.execute(scope, observers, assignment.getRight());
                     if (object == null) {
                         throw new InterpreterException(assignment.getRight().getPosition(),
                                 "Value must not be undefined");
