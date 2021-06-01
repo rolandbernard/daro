@@ -87,4 +87,11 @@ public class ModuleTest {
         assertEquals(new DaroInteger(BigInteger.valueOf(42)), interpreter.execute("x"));
         assertEquals(new DaroInteger(BigInteger.valueOf(12)), interpreter.execute("y"));
     }
+
+    @Test
+    void inlineModules() {
+        interpreter.execute("use new module { x = 12; y = 12; x = 42 }");
+        assertEquals(new DaroInteger(BigInteger.valueOf(42)), interpreter.execute("x"));
+        assertEquals(new DaroInteger(BigInteger.valueOf(12)), interpreter.execute("y"));
+    }
 }

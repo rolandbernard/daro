@@ -77,6 +77,84 @@ public class NativeScope implements Scope {
     }
 
     /**
+     * Determine if the object can be cast to the given type, returning the amount of loss for the
+     * given casting (0 == no cast, Integer.MAX_VALUE == impossible cast).
+     *
+     * @param object   The object that should be cast
+     * @param expected The java class that should be cast to
+     * @return The loss of casting
+     */
+    public static int getCastingLoss(DaroObject object, Class<?> expected) {
+        if (object instanceof DaroNull) {
+            return 0;
+        } else if (object instanceof DaroNativeClass) {
+            if (expected.isAssignableFrom(Class.class)) {
+                return 0;
+            }
+        } else if (object instanceof DaroNativeObject) {
+            DaroNativeObject obj = (DaroNativeObject)object;
+            if (expected.isInstance(obj.getValue())) {
+                return 0;
+            }
+        } else if (object instanceof DaroInteger) {
+            DaroInteger integer = (DaroInteger)object;
+            if (expected.isInstance(integer.getValue())) {
+                return 0;
+            } else if (expected.isAssignableFrom(Long.TYPE)) {
+                return 10;
+            } else if (expected.isAssignableFrom(Integer.TYPE)) {
+                return 20;
+            } else if (expected.isAssignableFrom(Short.TYPE)) {
+                return 30;
+            } else if (expected.isAssignableFrom(Character.TYPE)) {
+                return 40;
+            } else if (expected.isAssignableFrom(Double.TYPE)) {
+                return 15;
+            } else if (expected.isAssignableFrom(Float.TYPE)) {
+                return 25;
+            }
+        } else if (object instanceof DaroReal) {
+            DaroReal real = (DaroReal)object;
+            if (expected.isInstance(real.getValue())) {
+                return 0;
+            } else if (expected.isAssignableFrom(Double.TYPE)) {
+                return 0;
+            } else if (expected.isAssignableFrom(Float.TYPE)) {
+                return 10;
+            }
+        } else if (object instanceof DaroArray) {
+            DaroArray array = (DaroArray)object;
+            if (expected.isInstance(array.getValues())) {
+                return 0;
+            } else if (expected.isArray()) {
+                Class<?> elementType = expected.getComponentType();
+                Object result = Array.newInstance(elementType, array.getLength());
+                for (int i = 0; i < array.getLength(); i++) {
+                    Array.set(result, i, tryToWrap(array.getValueAt(i)));
+                }
+                return 0;
+            }
+        } else if (object instanceof DaroBoolean) {
+            DaroBoolean bool = (DaroBoolean)object;
+            if (expected.isInstance(bool.getValue())) {
+                return 0;
+            } else if (expected.isAssignableFrom(Boolean.TYPE)) {
+                return 0;
+            }
+        } else if (object instanceof DaroString) {
+            DaroString string = (DaroString)object;
+            if (expected.isInstance(string.getValue())) {
+                return 0;
+            }
+        }
+        if (expected.isInstance(object)) {
+            return 1;
+        } else {
+            return Integer.MAX_VALUE;
+        }
+    }
+
+    /**
      * Try to cast a {@link DaroObject} into a Java object of the given type. If
      * this is not possible throw an interpreter exception.
      *
@@ -238,28 +316,52 @@ public class NativeScope implements Scope {
         if (methods.containsKey(name)) {
             List<Method> methodList = methods.get(name);
             return new DaroLambdaFunction(params -> {
+                Method bestMethod = null;
+                int bestMatch = Integer.MAX_VALUE;
+                // Find the method that matches the given parameters best
                 for (Method method : methodList) {
                     try {
                         Class<?>[] paramTypes = method.getParameterTypes();
                         if (paramTypes.length == params.length) {
-                            Object[] arguments = new Object[params.length];
+                            int match = 0;
                             for (int i = 0; i < params.length; i++) {
-                                arguments[i] = NativeScope.tryToCast(params[i], paramTypes[i]);
+                                int loss = getCastingLoss(params[i], paramTypes[i]);
+                                if (loss < Integer.MAX_VALUE) {
+                                    match += loss;
+                                } else {
+                                    match = Integer.MAX_VALUE;
+                                    break;
+                                }
                             }
-                            Object result = method.invoke(target, arguments);
-                            if (method.getReturnType().equals(Void.TYPE)) {
-                                return null;
-                            } else {
-                                return tryToWrap(result);
+                            if (match < bestMatch) {
+                                bestMethod = method;
+                                bestMatch = match;
                             }
                         }
                     } catch (InterpreterException e) {
                         // Ignore exceptions caused by impossible casting
+                    }
+                }
+                if (bestMethod != null) {
+                    // Execute the best matching method
+                    try {
+                        Object[] arguments = new Object[params.length];
+                        Class<?>[] paramTypes = bestMethod.getParameterTypes();
+                        for (int i = 0; i < params.length; i++) {
+                            arguments[i] = NativeScope.tryToCast(params[i], paramTypes[i]);
+                        }
+                        Object result = bestMethod.invoke(target, arguments);
+                        if (bestMethod.getReturnType().equals(Void.TYPE)) {
+                            return null;
+                        } else {
+                            return tryToWrap(result);
+                        }
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new InterpreterException("Failed to execute native method");
                     }
+                } else {
+                    throw new InterpreterException("The native method does not support the given parameters");
                 }
-                throw new InterpreterException("The native method does not support the given parameters");
             });
         }
         if (fields.containsKey(name)) {
@@ -339,9 +441,6 @@ public class NativeScope implements Scope {
 
     @Override
     public String toString() {
-        return getCompleteMapping().entrySet()
-            .stream()
-            .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-            .collect(Collectors.joining(", ", "{", "}"));
+        return getAsString();
     }
 }

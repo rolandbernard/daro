@@ -13,18 +13,11 @@ import java.util.Map;
 public class BlockScope extends AbstractScope {
 
     /**
-     * Create a new {@link BlockScope} without a parent.
-     */
-    public BlockScope() {
-        this(null);
-    }
-
-    /**
      * Creates a new {@link BlockScope} with the given parent.
      * 
      * @param parent The parent scope
      */
-    public BlockScope(Scope parent) {
+    public BlockScope(Scope ...parent) {
         super(parent);
     }
 

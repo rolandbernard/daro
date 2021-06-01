@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import daro.lang.values.DaroObject;
 
@@ -132,9 +131,6 @@ public abstract class AbstractScope implements Scope {
 
     @Override
     public String toString() {
-        return getCompleteMapping().entrySet()
-            .stream()
-            .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-            .collect(Collectors.joining(", ", "{", "}"));
+        return getAsString();
     }
 }

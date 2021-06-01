@@ -606,7 +606,7 @@ public class Executor implements Visitor<DaroObject> {
                 throw new InterpreterException(new Position(file), "Failed to load file");
             }
             DaroModule pack = new DaroModule(scope);
-            modules.put(path, pack);
+            modules.put(path.normalize(), pack);
             AstNode program = Parser.parseSourceCode(content, path);
             ScopeInitializer.initialize(scope, program);
             execute(context.forScope(scope), program);

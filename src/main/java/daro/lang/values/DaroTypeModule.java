@@ -6,6 +6,7 @@ import daro.lang.interpreter.BlockScope;
 import daro.lang.interpreter.EmptyScope;
 import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.Executor;
+import daro.lang.interpreter.RootScope;
 import daro.lang.interpreter.Scope;
 
 /**
@@ -24,7 +25,7 @@ public class DaroTypeModule extends DaroType {
     @Override
     public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
         if (initializer.getValues().length != 0) {
-            Scope scope = new BlockScope();
+            Scope scope = new BlockScope(new RootScope());
             ExecutionContext innerContext = context.forScope(scope);
             for (AstNode node : initializer.getValues()) {
                 Executor.execute(innerContext, node);

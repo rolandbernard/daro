@@ -1,6 +1,7 @@
 package daro.lang.interpreter;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import daro.lang.values.DaroObject;
 
@@ -77,4 +78,18 @@ public interface Scope {
      * Resets the scope to its default state.
      */
     abstract public void reset();
+
+    /**
+     * Get a string representation of the {@link Scope}. This method may be used by implementing
+     * classes to implement the toString function. We can not overwrite toString directly in the
+     * interface.
+     *
+     * @return The string representation of the scope
+     */
+    default public String getAsString() {
+        return getCompleteMapping().entrySet()
+            .stream()
+            .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
+            .collect(Collectors.joining(", ", "{", "}"));
+    }
 }

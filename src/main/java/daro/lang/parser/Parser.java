@@ -924,6 +924,27 @@ public class Parser {
     }
 
     /**
+     * Parses the element of an initializer.
+     * 
+     * @return The parsed ast node
+     */
+    private AstNode parseInitializerElement() {
+        AstNode value = firstNonNull(this::parseInitializer, this::parseSequence);
+        if (value instanceof AstSequence) {
+            AstSequence seq = (AstSequence)value;
+            if (seq.getStatemens().length == 0) {
+                return null;
+            } else if (seq.getStatemens().length == 1) {
+                return seq.getStatemens()[0];
+            } else {
+                return seq;
+            }
+        } else {
+            return value;
+        }
+    }
+
+    /**
      * Parses a initializer list. e.g. {@code {{1, "Hello"}, { id = 2, text = "ok"
      * }, null}}
      * 
@@ -935,7 +956,7 @@ public class Parser {
             ArrayList<AstNode> values = new ArrayList<>();
             AstNode value;
             do {
-                value = firstNonNull(this::parseInitializer, this::parseExpression);
+                value = parseInitializerElement();
                 if (value != null) {
                     values.add(value);
                 }
