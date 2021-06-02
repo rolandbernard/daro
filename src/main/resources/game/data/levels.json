@@ -22,8 +22,8 @@
         {
           "id": 2,
           "name": "Sum two numbers",
-          "description": "Assign to a variable c, the sum of a and b",
-          "startCode": "a = 5;\nb = 10;\nc = //code goes here",
+          "description": "Assign to a variable 'c', the sum of 'a' and 'b'",
+          "startCode": "a = 5;\nb = 10;\n//code goes here",
           "tests": [
             {
               "id": 1,

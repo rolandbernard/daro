@@ -22,7 +22,7 @@ public class Game extends Application {
         Font.loadFont(PathHandler.getFont("Montserrat-Italic.ttf"), 16);
         Font.loadFont(PathHandler.getFont("Montserrat-Bold.ttf"), 16);
         Font.loadFont(PathHandler.getFont("Montserrat-BoldItalic.ttf"), 16);
-        Font.loadFont(PathHandler.getFont("MaterialIcons-Regular.ttf"), 16);
+        Font.loadFont(PathHandler.getFont("MaterialIcons-Regular.ttf"), 24);
         Font.loadFont(PathHandler.getFont("JetBrainsMono-Bold.ttf"), 16);
         Font.loadFont(PathHandler.getFont("JetBrainsMono-BoldItalic.ttf"), 16);
         Font.loadFont(PathHandler.getFont("JetBrainsMono-Regular.ttf"), 16);

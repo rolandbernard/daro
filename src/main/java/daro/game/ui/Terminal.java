@@ -20,13 +20,14 @@ public class Terminal extends ScrollPane {
     private StringBuffer currentString;
     private PrintStream stream;
     private SimpleDateFormat dateFormatter;
+    public static final double STANDARD_WIDTH = 360;
 
     /**
      * A simple terminal that shows prints of code
      */
     public Terminal() {
         this.setHeight(Game.HEIGHT);
-        this.setPrefWidth(360);
+        this.setPrefWidth(STANDARD_WIDTH);
         init();
     }
 
@@ -37,7 +38,6 @@ public class Terminal extends ScrollPane {
      * @param height height of the Terminal
      */
     public Terminal(double width, double height) {
-        this.setHeight(height);
         this.setPrefHeight(height);
         this.setPrefWidth(width);
         init();

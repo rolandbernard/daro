@@ -91,8 +91,8 @@ public class CodeEditor extends CodeArea {
     public CodeEditor(String defaultText, double width, double height) {
         super(defaultText);
         initRepeatingStrings();
-        this.setPrefHeight(width);
-        this.setPrefWidth(height);
+        this.setPrefWidth(width);
+        this.setPrefHeight(height);
         init();
     }
 
