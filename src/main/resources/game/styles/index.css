@@ -8,7 +8,8 @@
 .icon {
     -fx-font-family: "Material Icons";
     -fx-font-weight: normal;
-    -fx-fill: #fff;
+    -fx-font-size: 20px;
+    -fx-fill: #eee;
 }
 
 .monospace {
@@ -117,4 +118,8 @@
 
 .terminal-error {
     -fx-fill: #fc323f;
+}
+
+.scroll-pane {
+    -fx-stroke: transparent;
 }

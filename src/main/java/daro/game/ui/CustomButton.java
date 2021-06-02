@@ -14,17 +14,25 @@ public class CustomButton extends HBox {
      * @param text   text for the button
      * @param width  width of the button
      * @param height height of the button
+     * @param dark   if the background is dark
      */
-    public CustomButton(String icon, String text, double width, double height) {
+    public CustomButton(String icon, String text, double width, double height, boolean dark) {
         this.setPrefWidth(width);
         this.setPrefHeight(height);
-        init(icon, text);
+        init(icon, text, dark);
     }
 
-    public CustomButton(String icon, String text) {
+    /**
+     * Creates a custom button with an icon
+     *
+     * @param icon icon string e.g. \ue037 
+     * @param text text for the button
+     * @param dark if the background is dark
+     */
+    public CustomButton(String icon, String text, boolean dark) {
         this.setPadding(new Insets(15));
         this.setStyle("-fx-background-radius: 5px;");
-        init(icon, text);
+        init(icon, text, dark);
     }
 
     /**
@@ -33,8 +41,12 @@ public class CustomButton extends HBox {
      * @param icon icon string
      * @param text text string
      */
-    private void init(String icon, String text) {
-        this.setStyle("-fx-background-color: #FF3D23");
+    private void init(String icon, String text, boolean dark) {
+        if (dark) {
+            this.setStyle("-fx-background-color: #dd331c");
+        } else {
+            this.setStyle("-fx-background-color: #FF3D23");
+        }
         this.setAlignment(Pos.CENTER);
         this.setCursor(Cursor.HAND);
         this.setSpacing(10);

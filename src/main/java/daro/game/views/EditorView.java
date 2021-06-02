@@ -16,7 +16,9 @@ public class EditorView extends View {
     private final static double TERMINAL_WIDTH = 360;
 
     /**
-     * A view showing a CodeEditor and a Terminal
+     * A view showing a CodeEditor and a Terminal used for playgrounds
+     *
+     * @param filename filename of the playground
      */
     public EditorView(String filename) {
         try {
@@ -26,8 +28,8 @@ public class EditorView extends View {
             Terminal terminal = new Terminal(TERMINAL_WIDTH, Game.HEIGHT - buttonHeight * 2);
             CodeEditor editor = new CodeEditor(code, Game.WIDTH - TERMINAL_WIDTH, Game.HEIGHT);
 
-            CustomButton runButton = new CustomButton("\ue037", "Run the program", TERMINAL_WIDTH, buttonHeight);
-            CustomButton closeButton = new CustomButton("\ue9ba", "Save & Close", TERMINAL_WIDTH, buttonHeight);
+            CustomButton runButton = new CustomButton("\ue037", "Run the program", TERMINAL_WIDTH, buttonHeight, false);
+            CustomButton closeButton = new CustomButton("\ue9ba", "Save & Close", TERMINAL_WIDTH, buttonHeight, true);
             runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
             closeButton.setOnMouseClicked(e -> {
                 UserData.savePlayground(filename, editor.getText());
