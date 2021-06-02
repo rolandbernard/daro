@@ -27,7 +27,7 @@ public class CodeEditor extends CodeArea {
     private static final String[] COMMENTS = { "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/" };
     private static final String[] STRINGS = { "\\\".*?\\\"", "\\'.*?\\'" };
     private static final String[] DIGITS = { "\\d+" };
-    private static final String TAB = "    ";
+    private static final String TAB = " ".repeat(4);
 
     // Generate Pattern for specific groups
     private static String generateBoundedPattern(String... pattern) {
@@ -52,6 +52,7 @@ public class CodeEditor extends CodeArea {
 
     // Workaround to ensure that autocompletions don't go into an infinite loop
     private int lastTypePosition;
+    private String lastTypeString;
 
     /**
      * A full-fledged CodeEditor with syntax highlighting and basic features.
@@ -148,11 +149,14 @@ public class CodeEditor extends CodeArea {
      */
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int position = this.getCaretPosition();
-        if (this.lastTypePosition != position && oldValue.length() < newValue.length()) {
+        if (oldValue.length() < newValue.length()) {
             REPEATING_STRING.keySet().forEach(string -> {
                 try {
-                    if (newValue.substring(position - string.length(), position).equals(string)) {
+                    String lastTyped = newValue.substring(position - string.length(), position);
+                    if ((this.lastTypePosition != position || !this.lastTypeString.equals(lastTyped))
+                            && lastTyped.equals(string)) {
                         this.lastTypePosition = position + string.length();
+                        this.lastTypeString = lastTyped;
                         this.insertText(position, REPEATING_STRING.get(string));
                     }
                 } catch (Exception ignored) {

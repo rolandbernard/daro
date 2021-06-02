@@ -11,16 +11,29 @@
     -fx-fill: #fff;
 }
 
+.monospace {
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-weight: normal;
+    -fx-fill: #eee;
+}
+
 /*Navigation*/
 .nav-item.active {
     -fx-background-color: #FF3D23;
 }
-
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
 
 .track, .increment-button, .decrement-button {
     -fx-background-color: #200D57;
     -fx-border-color: #200D57;
     -fx-stroke-color: #200D57;
+}
+
+.terminal .track, .terminal .increment-button, .terminal .decrement-button  {
+    -fx-background-color: #1D1F26;
+    -fx-border-color: #1D1F26;
 }
 
 .thumb {
@@ -95,7 +108,7 @@
 }
 
 .code-editor .text {
-    -fx-font-family: "monospace" !important;
+    -fx-font-family: "JetBrains Mono", monospace !important;
     -fx-font-weight: 500;
 }
 .caret {
