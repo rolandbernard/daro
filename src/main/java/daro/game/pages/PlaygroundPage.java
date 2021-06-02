@@ -1,5 +1,6 @@
 package daro.game.pages;
 
+import daro.game.main.UserData;
 import daro.game.ui.Heading;
 import daro.game.ui.PlaygroundItem;
 import daro.game.views.MenuView;
@@ -13,7 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class PlaygroundPage extends Page {
-    private final String PLAYGROUNDS_PATH = "./user/playgrounds";
 
     /**
      * <strong>UI: <em>Page</em></strong><br>
@@ -21,26 +21,16 @@ public class PlaygroundPage extends Page {
      */
     public PlaygroundPage() {
         Heading heading = new Heading("Playground", "Play around with the language and use what you've learned.");
-        File[] playgrounds = parsePlaygrounds();
+        File[] playgrounds = UserData.parsePlaygrounds();
         this.getChildren().addAll(heading, getCreateButton(), getPlaygroundItems(playgrounds));
     }
 
-    /**
-     * Creates, if it not already exists, the playgrounds folder and parses the files
-     * @return an array of playground files
-     */
-    private File[] parsePlaygrounds() {
-        File playgrounds = new File(PLAYGROUNDS_PATH);
-        if(!playgrounds.exists()) {
-            try {
-                Files.createDirectories(Path.of(PLAYGROUNDS_PATH));
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-        }
-        return playgrounds.listFiles();
-    }
 
+    /**
+     * Generates PlaygroundItemList
+     * @param playgrounds the playgroundfiles
+     * @return Playground
+     */
     private VBox getPlaygroundItems(File[] playgrounds) {
         VBox playgroundList = new VBox();
         for(File playground : playgrounds) {
@@ -63,18 +53,5 @@ public class PlaygroundPage extends Page {
         createButton.setOnMouseClicked(e -> MenuView.setContent(new CreatePlaygroundPage()));
         this.getStyleClass().addAll("text", "playground-item");
         return createButton;
-    }
-
-    /**
-     * Handles the creation of a new playground
-     * @param mouseEvent
-     */
-    private void createPlayground(MouseEvent mouseEvent) {
-        Path newFile = Path.of(PLAYGROUNDS_PATH + "/newFile.daro");
-        try {
-            Files.createFile(newFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

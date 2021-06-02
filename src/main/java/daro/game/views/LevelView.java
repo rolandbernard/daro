@@ -4,6 +4,7 @@ import daro.game.main.Game;
 import daro.game.main.Level;
 import daro.game.main.UserData;
 import daro.game.ui.CodeEditor;
+import daro.game.ui.CustomButton;
 import daro.game.ui.Terminal;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -54,11 +55,8 @@ public class LevelView extends View {
 
         Terminal terminal = new Terminal(SIDEBAR_WIDTH, Game.HEIGHT - textBoxHeight - buttonHeight);
 
-        HBox runButton = getRunButton(buttonHeight);
-        runButton.setOnMouseClicked(e -> {
-            terminal.update(editor.getText());
-            UserData.writeLevelData(parentId, level.getId(), false, editor.getText());
-        });
+        CustomButton runButton = new CustomButton("\ue037", "Run the program", SIDEBAR_WIDTH, buttonHeight);
+        runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
 
         bar.getChildren().addAll(textBox, terminal, runButton);
         bar.setMinWidth(SIDEBAR_WIDTH);
@@ -72,17 +70,8 @@ public class LevelView extends View {
         return bar;
     }
 
-    private HBox getRunButton(double height) {
-        HBox runButton = new HBox();
-        runButton.setAlignment(Pos.CENTER);
-        runButton.setPrefHeight(height);
-        runButton.setStyle("-fx-background-color: #FF3D23");
-        Text icon = new Text("\ue037");
-        icon.getStyleClass().add("icon");
-        Text text = new Text("Run code");
-        text.getStyleClass().add("text");
-        runButton.setCursor(Cursor.HAND);
-        runButton.getChildren().addAll(icon, text);
-        return runButton;
+
+    private boolean save(boolean completion) {
+        return UserData.writeLevelData(parentId, level.getId(), completion, editor.getText());
     }
 }

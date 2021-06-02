@@ -114,3 +114,7 @@
 .caret {
     -fx-stroke: white;
 }
+
+.terminal-error {
+    -fx-fill: #fc323f;
+}

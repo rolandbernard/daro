@@ -90,7 +90,7 @@ public class Level {
      */
     public static List<Level> parseFromJson(long parentId, JSONArray levels) {
         List<Level> levelsList = new ArrayList<>();
-        Map<Long, Map<String, String>> completionMap = UserData.getLevelGroupData(parentId);
+        Map<Long, JSONObject> completionMap = UserData.getLevelGroupData(parentId);
 
         if (levels != null && levels.size() > 0) {
             levels.forEach(level -> {
@@ -100,13 +100,13 @@ public class Level {
                 String description = (String) levelJson.get("description");
                 JSONArray tests = (JSONArray) levelJson.get("tests");
                 List<Validation> testsList = Validation.parseFromJson(tests);
-                Map<String, String> data = completionMap.get(id);
+                JSONObject data = completionMap.get(id);
                 boolean isCompleted = false;
                 String currentCode = null;
 
                 if(data != null) {
-                    isCompleted = data.get("completed").equals("true");
-                    currentCode = data.get("currentCode");
+                    isCompleted = (boolean) data.get("completed");
+                    currentCode = (String) data.get("currentCode");
                 }
 
                 String code = currentCode == null ? (String) levelJson.get("startCode") : currentCode;

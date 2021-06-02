@@ -7,6 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -15,8 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Terminal extends ScrollPane {
-    private Text textContent;
-    private StringBuffer textString;
+    private TextFlow textContent;
+    private StringBuffer currentString;
     private PrintStream stream;
     private SimpleDateFormat dateFormatter;
 
@@ -43,11 +44,8 @@ public class Terminal extends ScrollPane {
     }
 
     private void init() {
-        this.textString = new StringBuffer();
 
-        this.textContent = new Text();
-        this.textContent.setWrappingWidth(this.getPrefWidth() - 40);
-        this.textContent.getStyleClass().addAll( "monospace");
+        this.textContent = new TextFlow();
 
         this.dateFormatter = new SimpleDateFormat("HH:mm");
 
@@ -64,7 +62,7 @@ public class Terminal extends ScrollPane {
         OutputStream out = new OutputStream() {
             @Override
             public void write(int b) {
-                textString.append(new String(new byte[]{(byte) b}, StandardCharsets.UTF_8));
+                currentString.append(new String(new byte[]{(byte) b}, StandardCharsets.UTF_8));
             }
         };
         stream = new PrintStream(out);
@@ -76,18 +74,25 @@ public class Terminal extends ScrollPane {
      * @param code code that the terminal should run
      */
     public void update(String code) {
+        Text status = new Text();
+        this.currentString = new StringBuffer("\n\n\n");
+        status.setWrappingWidth(this.getPrefWidth() - 40);
         try {
             Interpreter interpreter = new Interpreter(stream);
-            textString.append("(");
-            textString.append(dateFormatter.format(new Date()));
-            textString.append("): ");
+            currentString.append("(");
+            currentString.append(dateFormatter.format(new Date()));
+            currentString.append("): ");
             interpreter.execute(code);
-            textString.append("\n\nProgram terminated without errors.\n\n\n");
+            status.setText("\n\nProgram terminated.");
+            status.getStyleClass().addAll( "monospace");
         } catch(Exception e) {
-            textString.append("\n\nProgram terminated with errors.\n");
-            textString.append(e.getMessage());
-            textString.append("\n\n\n");
+            status.setText("\n\nProgram terminated with errors:\n" + e.getMessage());
+            status.getStyleClass().addAll( "monospace", "terminal-error");
         }
-        textContent.setText(textString.toString());
+        Text text = new Text(currentString.toString());
+        text.getStyleClass().addAll( "monospace");
+        text.setWrappingWidth(this.getPrefWidth() - 40);
+        currentString = new StringBuffer();
+        textContent.getChildren().addAll(text, status);
     }
 }

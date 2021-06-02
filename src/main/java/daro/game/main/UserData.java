@@ -1,18 +1,24 @@
 package daro.game.main;
 
+import javafx.scene.input.MouseEvent;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public abstract class UserData {
     private static final String USER_PATH = "./user/";
+    private static final String PLAYGROUNDS_PATH = USER_PATH + "playgrounds";
 
+    // LEVELS
     private static JSONObject parseUserDataJson() {
         JSONObject obj = new JSONObject();
         JSONParser parser = new JSONParser();
@@ -42,18 +48,15 @@ public abstract class UserData {
         return obj;
     }
 
-    public static Map<Long, Map<String, String>> getLevelGroupData(long groupId) {
+    public static Map<Long, JSONObject> getLevelGroupData(long groupId) {
         JSONObject object = parseUserDataJson();
-        Map<Long, Map<String, String>> map = new HashMap<>();
+        Map<Long, JSONObject> map = new HashMap<>();
         Object levelGroupData = object.get(String.valueOf(groupId));
         if (levelGroupData != null) {
             JSONArray groupData = (JSONArray) levelGroupData;
             for (Object level : groupData) {
                 JSONObject levelData = (JSONObject) level;
-                Map<String, String> levelDataMap = new HashMap<>();
-                levelDataMap.put("completed", (boolean) levelData.get("completed") ? "true" : "");
-                levelDataMap.put("currentCode", (String) levelData.get("currentCode"));
-                map.put((long) levelData.get("id"), levelDataMap);
+                map.put((long) levelData.get("id"), levelData);
             }
         }
         return map;
@@ -90,5 +93,58 @@ public abstract class UserData {
             e.printStackTrace();
         }
         return false;
+    }
+
+    //Playgrounds
+
+    /**
+     * Creates, if it not already exists, the playgrounds folder and parses the files
+     *
+     * @return an array of playground files
+     */
+    public static File[] parsePlaygrounds() {
+        File playgrounds = new File(PLAYGROUNDS_PATH);
+        if (!playgrounds.exists()) {
+            try {
+                Files.createDirectories(Path.of(PLAYGROUNDS_PATH));
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+        return playgrounds.listFiles();
+    }
+
+    /**
+     * Create a new Playgroundfile
+     *
+     * @param name name of the new Playground (without .daro)
+     * @return a string being null (if successful) or with an error message
+     */
+    public static String createPlayground(String name) {
+        Path newFile = Path.of(PLAYGROUNDS_PATH + "/" + name + ".daro");
+        try {
+            Files.createFile(newFile);
+            return null;
+        } catch (FileAlreadyExistsException e) {
+            return "This playground already exists. Please choose a different name.";
+        } catch (IOException e) {
+            return "There was an issue with creating this playground. Please try again.";
+        }
+    }
+
+    /**
+     * Removes a Playgroundfile
+     *
+     * @param filename filename with .daro
+     * @return true if successful, false if error
+     */
+    public static boolean removePlayground(String filename) {
+        Path file = Path.of(PLAYGROUNDS_PATH + "/" + filename);
+        try {
+            Files.delete(file);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }
