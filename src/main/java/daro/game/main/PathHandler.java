@@ -41,6 +41,7 @@ public class PathHandler {
         scanner.useDelimiter("\\Z");
         JSONParser parser = new JSONParser();
         Object object = parser.parse(scanner.next());
+        scanner.close();
         return (JSONObject) object;
     }
 }

@@ -21,7 +21,7 @@ public class LevelItem extends VBox {
      * @param level
      *            the level displayed
      */
-    public LevelItem(Level level) {
+    public LevelItem(long parentId, Level level) {
         this.level = level;
         this.setCursor(Cursor.HAND);
         this.setWidth(Page.INNER_WIDTH);
@@ -30,7 +30,7 @@ public class LevelItem extends VBox {
                 "-fx-background-radius: 25px; -fx-background-color: #381A90; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);");
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
-        this.setOnMouseClicked(event -> this.getScene().setRoot(new LevelView(level)));
+        this.setOnMouseClicked(event -> this.getScene().setRoot(new LevelView(parentId, level)));
     }
 
     /**

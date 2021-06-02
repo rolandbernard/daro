@@ -2,6 +2,7 @@ package daro.game.views;
 
 import daro.game.main.Game;
 import daro.game.main.Level;
+import daro.game.main.UserData;
 import daro.game.ui.CodeEditor;
 import daro.game.ui.Terminal;
 import javafx.geometry.Insets;
@@ -18,6 +19,7 @@ public class LevelView extends View {
     private final double SIDEBAR_WIDTH = 340;
     private final double BOX_PADDINGS = 30;
     private CodeEditor editor;
+    private long parentId;
 
     /**
      * <strong>UI: <em>View</em></strong><br>
@@ -25,9 +27,10 @@ public class LevelView extends View {
      *
      * @param level the level shown in the view
      */
-    public LevelView(Level level) {
+    public LevelView(long parentId, Level level) {
         this.level = level;
-        editor = new CodeEditor();
+        this.parentId = parentId;
+        editor = new CodeEditor(level.getCode());
         this.getChildren().addAll(getLeftBar(), editor, getRightBar());
     }
 
@@ -52,7 +55,10 @@ public class LevelView extends View {
         Terminal terminal = new Terminal(SIDEBAR_WIDTH, Game.HEIGHT - textBoxHeight - buttonHeight);
 
         HBox runButton = getRunButton(buttonHeight);
-        runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
+        runButton.setOnMouseClicked(e -> {
+            terminal.update(editor.getText());
+            UserData.writeLevelData(parentId, level.getId(), false, editor.getText());
+        });
 
         bar.getChildren().addAll(textBox, terminal, runButton);
         bar.setMinWidth(SIDEBAR_WIDTH);

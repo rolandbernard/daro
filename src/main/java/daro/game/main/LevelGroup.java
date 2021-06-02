@@ -107,7 +107,7 @@ public class LevelGroup {
                     String description = groupJson.get("description_short").toString();
 
                     JSONArray levels = (JSONArray) groupJson.get("levels");
-                    List<Level> levelsList = Level.parseFromJson(levels);
+                    List<Level> levelsList = Level.parseFromJson(id, levels);
                     groupsList.add(new LevelGroup(id, name, description, levelsList));
                 });
             }

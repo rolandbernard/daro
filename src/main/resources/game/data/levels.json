@@ -9,12 +9,13 @@
           "id": 1,
           "name": "Create a variable",
           "description": "Create a variable with the name a and assign it to the value 10",
+          "startCode": "// code goes here\n// or here",
           "tests": [
             {
               "id": 1,
               "source": "a",
               "expected": "10",
-              "type": "EQUALS"
+              "type": "EQUALS",
             }
           ]
         }

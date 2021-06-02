@@ -3,6 +3,7 @@ package daro.game.ui;
 import daro.game.main.Game;
 import daro.lang.interpreter.Interpreter;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -52,6 +53,7 @@ public class Terminal extends ScrollPane {
 
         VBox container = new VBox(textContent);
         container.setPrefHeight(this.getPrefHeight());
+        container.setAlignment(Pos.BOTTOM_LEFT);
         container.setPadding(new Insets(20));
 
         this.setContent(container);
@@ -82,8 +84,9 @@ public class Terminal extends ScrollPane {
             interpreter.execute(code);
             textString.append("\n\nProgram terminated without errors.\n\n\n");
         } catch(Exception e) {
-            textString.append("\n\nProgram terminated with errors.\n\n\n");
+            textString.append("\n\nProgram terminated with errors.\n");
             textString.append(e.getMessage());
+            textString.append("\n\n\n");
         }
         textContent.setText(textString.toString());
     }
