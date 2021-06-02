@@ -64,3 +64,10 @@
     -fx-padding: 0 1px 0 1px;  
 }
 
+.track, .increment-button, .decrement-button  {
+    -fx-background-color: #1D1F26;
+    -fx-border-color: #1D1F26;
+    -fx-stroke-color: #1D1F26;
+    -fx-focus-color: #1D1F26;
+}
+

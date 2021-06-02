@@ -4,6 +4,10 @@
     -fx-fill: #abb2bf;
 }
 
+.syntax-punctuation {
+    -fx-fill: #7c8696;
+}
+
 .syntax-constant {
     -fx-fill: #56b6c2;
 }

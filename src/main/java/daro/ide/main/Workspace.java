@@ -1,7 +1,5 @@
 package daro.ide.main;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import daro.ide.debug.Terminal;
@@ -12,9 +10,6 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 
 public class Workspace extends SplitPane {
     private EditorTabs editor;
@@ -36,16 +31,10 @@ public class Workspace extends SplitPane {
         scopeTab.setClosable(false);
         console.getTabs().addAll(terminalTab, scopeTab);
         getItems().addAll(editor, console);
-        sceneProperty().addListener((observable, old, scene) -> {
-            KeyCombination keys = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-            scene.getAccelerators().put(keys, () -> {
-                Path file = editor.getOpenFile();
-                String content = editor.getOpenContent();
-                try {
-                    Files.writeString(file, content);
-                } catch (IOException e) { }
-            });
-        });
+    }
+
+    public boolean hasUnsavedFile() {
+        return editor.hasUnsavedFile();
     }
 
     public void openNewFile(Path file) {

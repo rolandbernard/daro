@@ -1,10 +1,26 @@
 
 .terminal {
+    -fx-padding: 8px;
+    -fx-background-color: #11151b;
     -fx-font-family: "JetBrains Mono", monospace;
     -fx-fill: #d7d7d7;
 }
 
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.monospace {
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-fill: #d7d7d7;
+    -fx-font-size: 16px;
+}
+
 .terminal-error {
     -fx-fill: #fc323f;
+}
+
+.terminal .caret {
+    -fx-stroke: white;
 }
 
