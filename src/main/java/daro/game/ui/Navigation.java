@@ -1,6 +1,7 @@
 package daro.game.ui;
 
 import daro.game.main.Game;
+import daro.game.pages.CoursePage;
 import daro.game.pages.Page;
 import daro.game.pages.PlaygroundPage;
 import daro.game.views.MenuView;
@@ -21,7 +22,7 @@ public class Navigation extends VBox {
     /**
      * <strong>UI: <em>Component</em></strong><br>
      * The main navigation-sidebar for the game
-     * 
+     *
      * @param defaultPage The default active page
      */
     public Navigation(Page defaultPage) {
@@ -36,11 +37,11 @@ public class Navigation extends VBox {
 
     /**
      * Generates the logo for the top part of the navigation
-     * 
+     *
      * @return imageview containing the logo
      */
     private ImageView getLogo() {
-        ImageView logo = new ImageView(new Image("img/logo.png"));
+        ImageView logo = new ImageView(new Image("game/img/logo.png"));
         logo.setFitHeight(40);
         logo.setFitWidth(104);
         logo.setPreserveRatio(true);
@@ -49,14 +50,17 @@ public class Navigation extends VBox {
 
     /**
      * Generates the navigation item and links them to the pages.
-     * 
-     * @param defaultPage TODO TOFIX
+     *
+     * @param defaultPage defaultPage of the navigation
      * @return a vertical box containing the links
      */
     private VBox getNavigation(Page defaultPage) {
         navItems = new LinkedHashMap<>();
-        navItems.put(new NavigationItem("\ue021", "Course", true), defaultPage);
-        navItems.put(new NavigationItem("\uea26", "Playground", false), new PlaygroundPage());
+        navItems.put(
+                new NavigationItem("\ue021", "Course", isDefault(CoursePage.class, defaultPage)),
+                getPage(CoursePage.class, defaultPage));
+        navItems.put(new NavigationItem("\uea26", "Playground", isDefault(PlaygroundPage.class, defaultPage)),
+                getPage(PlaygroundPage.class, defaultPage));
         navItems.put(new NavigationItem("\ue9ba", "Exit", false), null);
         linkNavLinks();
 
@@ -64,6 +68,35 @@ public class Navigation extends VBox {
         navigation.getChildren().addAll(navItems.keySet());
         navigation.setSpacing(5);
         return navigation;
+    }
+
+    /**
+     * Checks if the default page is an instance of the current page
+     *
+     * @param currentPage current page that you want to create
+     * @param defaultPage the default page of the navigation
+     * @return boolean if the current page is a default page
+     */
+    private boolean isDefault(Class<?> currentPage, Page defaultPage) {
+        return currentPage.equals(defaultPage.getClass());
+    }
+
+    /**
+     * Checks if the current default page is the page wanted, else creates a new instance of the class
+     *
+     * @param currentPage page that is currently created for a nav link
+     * @param defaultPage the defaultpage for the navigation
+     * @return a page
+     */
+    private Page getPage(Class<?> currentPage, Page defaultPage) {
+        try {
+            return isDefault(currentPage, defaultPage) ?
+                    defaultPage :
+                    (Page) currentPage.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

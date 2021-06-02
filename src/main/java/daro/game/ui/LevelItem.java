@@ -20,7 +20,7 @@ public class LevelItem extends VBox {
      * 
      * @param level the level displayed
      */
-    public LevelItem(Level level) {
+    public LevelItem(long parentId, Level level) {
         this.level = level;
         this.setCursor(Cursor.HAND);
         this.setWidth(Page.INNER_WIDTH);
@@ -30,8 +30,7 @@ public class LevelItem extends VBox {
         );
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
-        // TOOD: Can not reference non-static method!
-        // this.setOnMouseClicked(event -> Game.setView(new LevelView(level)));
+        this.setOnMouseClicked(event -> this.getScene().setRoot(new LevelView(parentId, level)));
     }
 
     /**
