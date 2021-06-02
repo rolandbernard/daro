@@ -16,6 +16,7 @@ public class ValidationItem extends HBox {
         this.setAlignment(Pos.CENTER);
         icon = new Text();
         text = new Text();
+        this.getChildren().addAll(icon, text);
         render();
     }
 
@@ -30,10 +31,5 @@ public class ValidationItem extends HBox {
             this.getStyleClass().remove("passed");
             this.getStyleClass().add("failed");
         }
-    }
-
-    private void updateResult(ValidationResult result) {
-        this.result = result;
-        render();
     }
 }

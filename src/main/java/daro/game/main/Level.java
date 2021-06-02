@@ -83,6 +83,15 @@ public class Level {
     }
 
     /**
+     * Checks if level is completed
+     *
+     * @return the completion state of the level
+     */
+    public List<Validation> getTests() {
+        return tests;
+    }
+
+    /**
      * Parses levels from a JsonArray
      *
      * @param levels a JsonArray containing levels as JSON Objects

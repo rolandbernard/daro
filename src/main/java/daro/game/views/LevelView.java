@@ -7,14 +7,20 @@ import daro.game.pages.CoursePage;
 import daro.game.ui.CodeEditor;
 import daro.game.ui.CustomButton;
 import daro.game.ui.Terminal;
+import daro.game.ui.ValidationItem;
+import daro.game.validation.Validation;
+import daro.game.validation.ValidationResult;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
+import java.util.List;
 
 
 public class LevelView extends View {
@@ -25,6 +31,7 @@ public class LevelView extends View {
     private Level level;
     private CodeEditor editor;
     private long parentId;
+    private StackPane popup;
 
     /**
      * <strong>UI: <em>View</em></strong><br>
@@ -38,8 +45,9 @@ public class LevelView extends View {
         editor = new CodeEditor(level.getCode());
         HBox mainContent = new HBox(getSidebar(), editor);
 
+        this.popup = createPopup();
         StackPane wholeContent = new StackPane();
-        wholeContent.getChildren().addAll(mainContent, createPopup());
+        wholeContent.getChildren().addAll(mainContent, popup);
         wholeContent.setAlignment(Pos.CENTER);
         this.getChildren().add(wholeContent);
     }
@@ -58,6 +66,7 @@ public class LevelView extends View {
         CustomButton runButton = new CustomButton("\ue037", "Run the program", SIDEBAR_WIDTH, buttonHeight, false);
         CustomButton submitButton = new CustomButton("\ue86c", "Submit your result", SIDEBAR_WIDTH, buttonHeight, true);
         runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
+        submitButton.setOnMouseClicked(this::openValidationPopup);
 
         bar.getChildren().addAll(backButton, textBox, terminal, runButton, submitButton);
         bar.setMinWidth(SIDEBAR_WIDTH);
@@ -68,9 +77,6 @@ public class LevelView extends View {
 
     private StackPane createPopup() {
         StackPane popup = new StackPane();
-        Text test = new Text("test");
-        popup.getChildren().add(test);
-        popup.setAlignment(Pos.CENTER);
         popup.setStyle("-fx-background-color: rgba(0,0,0,0.5)");
         popup.setVisible(false);
         return popup;
@@ -123,5 +129,18 @@ public class LevelView extends View {
 
     private boolean save(boolean completion) {
         return UserData.writeLevelData(parentId, level.getId(), completion, editor.getText());
+    }
+
+    private void openValidationPopup(MouseEvent mouseEvent) {
+        popup.setVisible(true);
+        VBox items = new VBox();
+        items.setMaxWidth(600);
+        items.setMaxHeight(400);
+        items.setAlignment(Pos.CENTER);
+        items.setStyle("-fx-background-color: #eee; -fx-background-radius: 25px;");
+        List<ValidationResult> results = Validation.run(editor.getText(), level.getTests());
+        results.stream().map(ValidationItem::new).forEach(v -> items.getChildren().add(v));
+        save(ValidationResult.evaluate(results));
+        popup.getChildren().add(items);
     }
 }
