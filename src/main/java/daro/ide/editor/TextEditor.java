@@ -9,6 +9,7 @@ public class TextEditor extends CodeArea {
     public TextEditor(String initialContent) {
         super(initialContent);
         changed = false;
+        getStyleClass().add("text-editor");
         setParagraphGraphicFactory(LineNumberFactory.get(this));
     }
 

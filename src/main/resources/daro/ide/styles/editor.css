@@ -1,0 +1,31 @@
+
+.text-editor {
+    -fx-background-color: #21252b;
+    -fx-padding: 5px 0 0 0;
+}
+
+.text-editor .selection {
+    -fx-fill: #343f41;
+}
+
+.paragraph-box:has-caret {
+    -fx-background-color: #252930;
+}
+
+.lineno {
+    -fx-background-color: #21252b;
+    -fx-pref-width: 50px;
+    -fx-font-size: 16px;
+    -fx-padding: 0;
+}
+
+.text-editor .text {
+    -fx-font-family: "JetBrains Mono", monospace !important;
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+}
+
+.caret {
+    -fx-stroke: white;
+}
+

@@ -9,8 +9,7 @@ import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 
 public class FileTreeItem extends TreeItem<String> {
     private final Path file;
@@ -20,15 +19,13 @@ public class FileTreeItem extends TreeItem<String> {
         super(file.getFileName().toString());
         this.file = file;
         this.loaded = false;
-        Image image;
+        Text icon = new Text();
+        icon.getStyleClass().add("icon");
         if (Files.isDirectory(file)) {
-            image = new Image(FileTreeItem.class.getResourceAsStream("folder.png"));
+            icon.setText("\ue2c7");
         } else {
-            image = new Image(FileTreeItem.class.getResourceAsStream("file.png"));
+            icon.setText("\ue873");
         }
-        ImageView icon = new ImageView(image);
-        icon.setFitWidth(20);
-        icon.setFitHeight(20);
         setGraphic(icon);
     }
 

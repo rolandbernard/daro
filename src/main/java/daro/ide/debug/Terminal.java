@@ -8,6 +8,10 @@ import javafx.scene.control.TextArea;
 
 public class Terminal extends TextArea {
 
+    public Terminal() {
+        setEditable(false);
+    }
+
     public PrintStream getPrintStream() {
         return new PrintStream(new OutputStream() {
             @Override

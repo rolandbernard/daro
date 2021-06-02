@@ -1,0 +1,66 @@
+
+.split-pane,
+.tree-view .tree-cell,
+.tab-pane .tab-header-background,
+.tab-pane .tab,
+.tab-pane .tab-content-area {
+    -fx-background-color: #21252b;
+}
+
+.tab-pane .tab-close-button {
+    -fx-background-color: #fff;
+}
+
+.tree-view {
+    -fx-background-color: #21252b;
+    -fx-padding: 10px 5px 5px 5px;
+}
+
+.tree-view .tree-cell,
+.tab-pane .tab {
+    -fx-cursor: hand;
+    -fx-focus-color: transparent;
+}
+
+.tree-view .tree-cell .arrow {
+    -fx-background-color: #eee;
+}
+
+.tab-pane .tab:selected,
+.tree-view .tree-cell:selected {
+    -fx-background-color: #3d434c;
+}
+
+.text {
+    -fx-fill: #d7d7d7;
+    -fx-font-weight: normal;
+}
+
+.icon {
+    -fx-font-family: "Material Icons";
+    -fx-font-size: 20px;
+    -fx-fill: #fff;
+}
+
+.button {
+    -fx-background-color: #200D57;
+    -fx-border-color: #200D57;
+    -fx-stroke-color: #200D57;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #250f5f;
+    -fx-border-color: #250f5f;
+    -fx-stroke-color: #250f5f;
+}
+
+.context-menu {
+    -fx-background-color: #303040;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-background-color: #666;
+    -fx-padding: 0 1px 0 1px;  
+}
+

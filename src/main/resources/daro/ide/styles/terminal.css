@@ -1,0 +1,10 @@
+
+.terminal {
+    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-fill: #d7d7d7;
+}
+
+.terminal-error {
+    -fx-fill: #fc323f;
+}
+

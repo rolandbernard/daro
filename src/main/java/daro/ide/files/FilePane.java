@@ -8,12 +8,11 @@ import java.util.function.Consumer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 
 public class FilePane extends BorderPane {
@@ -42,10 +41,8 @@ public class FilePane extends BorderPane {
                     onFileOpen.accept(file);
                 }
             });
-            Image image = new Image(FileTreeItem.class.getResourceAsStream("refresh.png"));
-            ImageView icon = new ImageView(image);
-            icon.setFitWidth(20);
-            icon.setFitHeight(20);
+            Text icon = new Text("\ue5d5");
+            icon.getStyleClass().add("icon");
             Button refresh = new Button();
             refresh.setGraphic(icon);
             refresh.setOnAction(event -> {

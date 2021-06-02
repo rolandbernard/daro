@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import daro.game.ui.Terminal;
+import daro.ide.debug.Terminal;
 import daro.ide.debug.ScopeViewer;
 import daro.ide.editor.EditorTabs;
 import daro.lang.interpreter.Interpreter;
@@ -24,9 +24,9 @@ public class Workspace extends SplitPane {
 
     public Workspace() {
         editor = new EditorTabs();
-        interpreter = new Interpreter();
         terminal = new Terminal();
-        scope = new ScopeViewer(interpreter.getGlobalScope());
+        interpreter = new Interpreter(terminal.getPrintStream());
+        scope = new ScopeViewer(interpreter.getContext().getScope());
         setOrientation(Orientation.VERTICAL);
         TabPane console = new TabPane();
         console.setMaxHeight(450);
