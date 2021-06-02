@@ -29,7 +29,7 @@ public final class AstCharacter extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstCharacter) {
-            AstCharacter node = (AstCharacter) obj;
+            AstCharacter node = (AstCharacter)obj;
             return value == node.getValue();
         } else {
             return false;

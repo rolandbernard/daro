@@ -3,7 +3,8 @@ package daro.lang.ast;
 import java.util.Objects;
 
 /**
- * Class representing an ast node for a for-in loop. e.g. {@code for foo in bar { ... }}
+ * Class representing an ast node for a for-in loop. e.g. {@code for foo in bar
+ * { ... }}
  * 
  * @author Roland Bernard
  */
@@ -43,9 +44,9 @@ public final class AstForIn extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstForIn) {
-            AstForIn node = (AstForIn) obj;
+            AstForIn node = (AstForIn)obj;
             return Objects.equals(variable, node.getVariable()) && Objects.equals(list, node.getList())
-                    && Objects.equals(body, node.getBody());
+                && Objects.equals(body, node.getBody());
         } else {
             return false;
         }

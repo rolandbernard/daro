@@ -14,17 +14,12 @@ public class LevelGroup {
     private List<Level> levels;
 
     /**
-     *
      * A group of levels containing additional information
      *
-     * @param id
-     *            the ID of the level group
-     * @param name
-     *            the name of the level group
-     * @param description
-     *            a short description of the level group
-     * @param levels
-     *            a list of levels
+     * @param id          the ID of the level group
+     * @param name        the name of the level group
+     * @param description a short description of the level group
+     * @param levels      a list of levels
      */
     public LevelGroup(long id, String name, String description, List<Level> levels) {
         this.name = name;
@@ -84,7 +79,7 @@ public class LevelGroup {
      * @return the amount of completed levels
      */
     public int countCompletedLevels() {
-        return (int) levels.stream().filter(Level::isCompleted).count();
+        return (int)levels.stream().filter(Level::isCompleted).count();
     }
 
     /**
@@ -98,30 +93,38 @@ public class LevelGroup {
         try {
             // TODO: check pathing
             Object object = parser.parse(new FileReader("src/main/resources/data/levels.json"));
-            JSONObject jsonObject = (JSONObject) object;
+            JSONObject jsonObject = (JSONObject)object;
 
-            JSONArray groups = (JSONArray) jsonObject.get("groups");
+            JSONArray groups = (JSONArray)jsonObject.get("groups");
 
             if (groups != null && groups.size() > 0) {
                 groups.forEach(group -> {
-                    JSONObject groupJson = (JSONObject) group;
-                    JSONArray levels = (JSONArray) groupJson.get("levels");
+                    JSONObject groupJson = (JSONObject)group;
+                    JSONArray levels = (JSONArray)groupJson.get("levels");
 
                     // generate level list
                     List<Level> levelsList = new ArrayList<>();
                     if (levels != null && levels.size() > 0) {
                         levels.forEach(level -> {
-                            JSONObject levelJson = (JSONObject) level;
+                            JSONObject levelJson = (JSONObject)level;
 
                             // TODO: add make done dynamic
-                            levelsList.add(new Level((long) levelJson.get("id"), levelJson.get("name").toString(),
-                                    levelJson.get("description").toString(), (boolean) levelJson.get("completed")));
+                            levelsList.add(
+                                new Level(
+                                    (long)levelJson.get("id"), levelJson.get("name").toString(),
+                                    levelJson.get("description").toString(), (boolean)levelJson.get("completed")
+                                )
+                            );
                         });
                     }
 
                     // add everything to group json
-                    groupsList.add(new LevelGroup((long) groupJson.get("id"), groupJson.get("name").toString(),
-                            groupJson.get("description_short").toString(), levelsList));
+                    groupsList.add(
+                        new LevelGroup(
+                            (long)groupJson.get("id"), groupJson.get("name").toString(),
+                            groupJson.get("description_short").toString(), levelsList
+                        )
+                    );
                 });
             }
         } catch (Exception e) {

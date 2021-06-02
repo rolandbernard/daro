@@ -17,9 +17,9 @@ public class ConstantScopeTest {
 
     @BeforeEach
     void initializeScopes() {
-        firstScope = new ConstantScope(Map.of("test", new UserNull()));
-        secondScope = new ConstantScope(Map.of("test", new UserNull()));
-        thirdScope = new ConstantScope(Map.of("test", new UserNull(), "foo", new UserReal(2.5)));
+        firstScope = new ConstantScope(Map.of("test", new DaroNull()));
+        secondScope = new ConstantScope(Map.of("test", new DaroNull()));
+        thirdScope = new ConstantScope(Map.of("test", new DaroNull(), "foo", new DaroReal(2.5)));
     }
 
     @Test
@@ -59,9 +59,9 @@ public class ConstantScopeTest {
     }
 
     @Test
-    void variablesReturnTheContaindValue() {
-        assertEquals(new UserNull(), thirdScope.getVariableValue("test"));
-        assertEquals(new UserReal(2.5), thirdScope.getVariableValue("foo"));
+    void variablesReturnTheContainsValue() {
+        assertEquals(new DaroNull(), thirdScope.getVariableValue("test"));
+        assertEquals(new DaroReal(2.5), thirdScope.getVariableValue("foo"));
     }
 
     @Test

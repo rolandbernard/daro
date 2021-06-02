@@ -1,8 +1,9 @@
 package daro.lang.ast;
 
 /**
- * This interface must be implemented by all Classes that want to visit ast nodes ({@link AstNode}) using the
- * AstNode.accept() method. It contains methods for visiting any of the non abstract decendet classes of
+ * This interface must be implemented by all Classes that want to visit ast
+ * nodes ({@link AstNode}) using the AstNode.accept() method. It contains
+ * methods for visiting any of the non abstract descendent classes of
  * {@link AstNode}.
  *
  * @author Roland Bernard
@@ -92,4 +93,10 @@ public interface Visitor<T> {
     public T visit(AstForIn ast);
 
     public T visit(AstInitializer ast);
+
+    public T visit(AstPower ast);
+
+    public T visit(AstUse ast);
+
+    public T visit(AstFrom ast);
 }

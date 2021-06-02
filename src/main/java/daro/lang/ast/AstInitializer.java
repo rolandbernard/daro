@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * Class representing an ast node for a initializer list. e.g. {@code {{foo = {1, 2, 3}, bar = 4}, null}}
+ * Class representing an ast node for a initializer list. e.g. {@code {{foo =
+ * {1, 2, 3}, bar = 4}, null}}
  * 
  * @author Roland Bernard
  */
@@ -32,7 +33,7 @@ public final class AstInitializer extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstInitializer) {
-            AstInitializer node = (AstInitializer) obj;
+            AstInitializer node = (AstInitializer)obj;
             return Arrays.equals(values, node.getValues());
         } else {
             return false;
@@ -42,6 +43,6 @@ public final class AstInitializer extends AstNode {
     @Override
     public String toString() {
         return "(" + this.getClass().getSimpleName() + " "
-                + Arrays.stream(values).map(String::valueOf).collect(Collectors.joining(" ")) + ")";
+            + Arrays.stream(values).map(String::valueOf).collect(Collectors.joining(" ")) + ")";
     }
 }

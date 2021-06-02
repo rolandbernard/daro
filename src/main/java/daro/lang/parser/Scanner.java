@@ -1,7 +1,12 @@
 package daro.lang.parser;
 
+import java.nio.file.Path;
+
+import daro.lang.ast.Position;
+
 /**
- * This class can be used to tokenize the input string into {@link Token} objects for easier parsing afterwards.
+ * This class can be used to tokenize the input string into {@link Token}
+ * objects for easier parsing afterwards.
  *
  * @author Roland Bernard
  */
@@ -10,6 +15,12 @@ public class Scanner {
      * This variable stores the string on which the scanner will operate.
      */
     private final String string;
+    /**
+     * This variable stores the file on which the scanner will operate. This value
+     * is only used to generate the positional information of the tokens that is
+     * later used for error messages.
+     */
+    private final Path file;
     /**
      * This variable stores the current offset of the next (non-cached) token.
      */
@@ -22,16 +33,28 @@ public class Scanner {
     /**
      * Create a scanner to operate on the given {@link String}.
      * 
-     * @param string
-     *            The string to operate on
+     * @param string The string to operate on
      */
     public Scanner(String string) {
-        this.string = string;
-        offset = 0;
+        this(string, null);
     }
 
     /**
-     * Skip the next whitespace character in the scanner and return if a whitespace was consumed.
+     * Create a scanner to operate on the given {@link String}.
+     * 
+     * @param string The string to operate on
+     * @param file   The file the string belongs to (used for error positions)
+     */
+    public Scanner(String string, Path file) {
+        this.string = string;
+        this.file = file;
+        offset = 0;
+        nextToken = null;
+    }
+
+    /**
+     * Skip the next whitespace character in the scanner and return if a whitespace
+     * was consumed.
      * 
      * @return true if a character was consumed, otherwise false
      */
@@ -45,7 +68,8 @@ public class Scanner {
     }
 
     /**
-     * Skip the next comment starting at offset and return if a comment was consumed.
+     * Skip the next comment starting at offset and return if a comment was
+     * consumed.
      * 
      * @return true if a comment was found, otherwise false
      */
@@ -85,9 +109,7 @@ public class Scanner {
     /**
      * Return if the giver character is a hexadecimal digit or not.
      * 
-     * @param c
-     *            The character to test
-     * 
+     * @param c The character to test
      * @return true is c is a hexadecimal digit, otherwise false
      */
     private static boolean isHexDigit(char c) {
@@ -108,35 +130,38 @@ public class Scanner {
      * @return The next {@link Token} or null of end of file
      */
     private Token determineNext() {
-        // First skip all whitespaces and comments
+        // First skip all whitespace and comments
         while (skipWhitespace() || skipComments())
             ;
         int start = offset;
         if (offset < string.length()) {
             if (string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
                 // Don't use Character.isDigit here, because it includes not ASCII digits
-                // This is a number literal (eighter integer or real)
+                // This is a number literal (either integer or real)
                 if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0b")) {
                     // Binary integer literal (e.g. 0b100100)
                     offset += 2;
                     while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '1') {
                         offset++;
                     }
-                    return new Token(TokenKind.INTEGER, start, string.substring(start, offset));
+                    Position position = new Position(start, offset, string, file);
+                    return new Token(TokenKind.INTEGER, position, string.substring(start, offset));
                 } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0o")) {
                     // Octal integer literal (e.g. 0o7711)
                     offset += 2;
                     while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '7') {
                         offset++;
                     }
-                    return new Token(TokenKind.INTEGER, start, string.substring(start, offset));
+                    Position position = new Position(start, offset, string, file);
+                    return new Token(TokenKind.INTEGER, position, string.substring(start, offset));
                 } else if (offset + 1 < string.length() && string.substring(offset, offset + 2).equals("0x")) {
                     // Hexadecimal integer literal (e.g. 0xffaa)
                     offset += 2;
                     while (offset < string.length() && isHexDigit(string.charAt(offset))) {
                         offset++;
                     }
-                    return new Token(TokenKind.INTEGER, start, string.substring(start, offset));
+                    Position position = new Position(start, offset, string, file);
+                    return new Token(TokenKind.INTEGER, position, string.substring(start, offset));
                 } else {
                     boolean isFloat = false;
                     while (offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9') {
@@ -145,8 +170,9 @@ public class Scanner {
                     if (offset < string.length() && string.charAt(offset) == '.') {
                         // Floating point number literal (e.g. 1.2)
                         offset++;
-                        while (offset < string.length() && string.charAt(offset) >= '0'
-                                && string.charAt(offset) <= '9') {
+                        while (
+                            offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9'
+                        ) {
                             offset++;
                         }
                         isFloat = true;
@@ -154,21 +180,24 @@ public class Scanner {
                     if (offset < string.length() && string.charAt(offset) == 'e') {
                         // Exponent e.g. (1.2e+12)
                         offset++;
-                        if (offset < string.length()
-                                && (string.charAt(offset) == '+' || string.charAt(offset) == '-')) {
+                        if (
+                            offset < string.length() && (string.charAt(offset) == '+' || string.charAt(offset) == '-')
+                        ) {
                             offset++;
                         }
-                        while (offset < string.length() && string.charAt(offset) >= '0'
-                                && string.charAt(offset) <= '9') {
+                        while (
+                            offset < string.length() && string.charAt(offset) >= '0' && string.charAt(offset) <= '9'
+                        ) {
                             offset++;
                         }
                         isFloat = true;
                     }
+                    Position position = new Position(start, offset, string, file);
                     if (isFloat) {
-                        return new Token(TokenKind.REAL, start, string.substring(start, offset));
+                        return new Token(TokenKind.REAL, position, string.substring(start, offset));
                     } else {
                         // Decimal integer literal (e.g. 12)
-                        return new Token(TokenKind.INTEGER, start, string.substring(start, offset));
+                        return new Token(TokenKind.INTEGER, position, string.substring(start, offset));
                     }
                 }
             } else if (string.charAt(offset) == '"') {
@@ -184,10 +213,12 @@ public class Scanner {
                 if (offset > string.length()) {
                     offset = string.length();
                 }
-                return new Token(TokenKind.STRING, start, string.substring(start, offset));
+                Position position = new Position(start, offset, string, file);
+                return new Token(TokenKind.STRING, position, string.substring(start, offset));
             } else if (string.charAt(offset) == '\'') {
                 // This is a character literal. (e.g. 'a', '\n')
-                // The tokenizer is more permisive than the language. Errors will be thrown in the
+                // The tokenizer is more permissive than the language. Errors will be thrown in
+                // the
                 // parser.
                 offset++;
                 while (offset < string.length() && string.charAt(offset) != '\'') {
@@ -200,39 +231,39 @@ public class Scanner {
                 if (offset > string.length()) {
                     offset = string.length();
                 }
-                return new Token(TokenKind.CHARACTER, start, string.substring(start, offset));
+                Position position = new Position(start, offset, string, file);
+                return new Token(TokenKind.CHARACTER, position, string.substring(start, offset));
             } else if (Character.isLetter(string.charAt(offset)) || string.charAt(offset) == '_') {
                 // This is an identifier (e.g. main) or keyword (e.g. else)
                 offset++;
-                while (offset < string.length()
-                        && (Character.isLetterOrDigit(string.charAt(offset)) || string.charAt(offset) == '_')) {
+                while (
+                    offset < string.length()
+                        && (Character.isLetterOrDigit(string.charAt(offset)) || string.charAt(offset) == '_')
+                ) {
                     offset++;
                 }
                 String source = string.substring(start, offset);
                 TokenKind kind = TokenKind.findForFixedSource(source);
+                Position position = new Position(start, offset, string, file);
                 if (kind != null) {
-                    return new Token(kind, start);
+                    return new Token(kind, position);
                 } else {
-                    return new Token(TokenKind.IDENTIFIER, start, string.substring(start, offset));
+                    return new Token(TokenKind.IDENTIFIER, position, string.substring(start, offset));
                 }
             } else {
-                // This is eighter invalid or an operator (e.g. +)
+                // This is either invalid or an operator (e.g. +)
                 TokenKind kind = null;
-                if (offset + 1 < string.length()) {
-                    kind = TokenKind.findForFixedSource(string.substring(offset, offset + 2));
+                for (int i = string.length() - offset; i > 0; i--) {
+                    kind = TokenKind.findForFixedSource(string.substring(offset, offset + i));
                     if (kind != null) {
-                        offset += 2;
-                        return new Token(kind, start, string.substring(start, offset));
+                        offset += i;
+                        Position position = new Position(start, offset, string, file);
+                        return new Token(kind, position, string.substring(start, offset));
                     }
                 }
-                kind = TokenKind.findForFixedSource(string.substring(offset, offset + 1));
-                if (kind != null) {
-                    offset++;
-                    return new Token(kind, start, string.substring(start, offset));
-                } else {
-                    offset++;
-                    return new Token(TokenKind.INVALID, start, string.substring(start, offset));
-                }
+                offset++;
+                Position position = new Position(start, offset, string, file);
+                return new Token(TokenKind.INVALID, position, string.substring(start, offset));
             }
         } else {
             return null;
@@ -261,10 +292,9 @@ public class Scanner {
     /**
      * Test if the next {@link Token} is of the given {@link TokenKind}.
      * 
-     * @param kind
-     *            The kind to look for
-     * 
-     * @return true if the next {@link Token} has {@link TokenKind} kind, otherwise false
+     * @param kind The kind to look for
+     * @return true if the next {@link Token} has {@link TokenKind} kind, otherwise
+     *         false
      */
     public boolean hasNext(TokenKind kind) {
         return hasNext() && nextToken.getKind() == kind;
@@ -273,10 +303,9 @@ public class Scanner {
     /**
      * Test if the next {@link Token} is of one of the given {@link TokenKind}s.
      * 
-     * @param kinds
-     *            The kinds of token to look for
-     * 
-     * @return true if the next {@link Token} has a kind inside kinds, otherwise false
+     * @param kinds The kinds of token to look for
+     * @return true if the next {@link Token} has a kind inside kinds, otherwise
+     *         false
      */
     public boolean hasNext(TokenKind[] kinds) {
         for (TokenKind kind : kinds) {
@@ -300,23 +329,22 @@ public class Scanner {
     }
 
     /**
-     * Returns the scanner state to before calling next, which returned the given token.
+     * Returns the scanner state to before calling next, which returned the given
+     * token.
      * 
-     * @param token
-     *            The {@link Token} to revert
+     * @param token The {@link Token} to revert
      */
     public void revert(Token token) {
         nextToken = token;
-        offset = nextToken.getEnd();
+        offset = nextToken.getPosition().getEnd();
     }
 
     /**
      * Return the next {@link Token} if is is of the given {@link TokenKind}.
      * 
-     * @param kind
-     *            The kind to search for
-     * 
-     * @return The {@link TokenKind} if the next {@link Token} hast the correct kind, otherwise null
+     * @param kind The kind to search for
+     * @return The {@link TokenKind} if the next {@link Token} hast the correct
+     *         kind, otherwise null
      */
     public Token accept(TokenKind kind) {
         if (hasNext(kind)) {
@@ -327,14 +355,15 @@ public class Scanner {
     }
 
     /**
-     * Return the starting offset of the next token or the offset of the end if there is no next token.
+     * Return the starting offset of the next token or the offset of the end if
+     * there is no next token.
      * 
      * @return The current offset
      */
     public int getOffset() {
         cacheToken();
         if (nextToken != null) {
-            return nextToken.getStart();
+            return nextToken.getPosition().getStart();
         } else {
             return offset;
         }

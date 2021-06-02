@@ -5,7 +5,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Class representing an ast node for a function definition. e.g. {@code fn foo( ... ): bar { ... }}
+ * Class representing an ast node for a function definition. e.g. {@code fn foo(
+ * ... ): bar { ... }}
  * 
  * @author Roland Bernard
  */
@@ -45,9 +46,9 @@ public final class AstFunction extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstFunction) {
-            AstFunction node = (AstFunction) obj;
+            AstFunction node = (AstFunction)obj;
             return Objects.equals(name, node.getName()) && Arrays.equals(parameters, node.getParameters())
-                    && Objects.equals(body, node.getBody());
+                && Objects.equals(body, node.getBody());
         } else {
             return false;
         }
@@ -56,6 +57,6 @@ public final class AstFunction extends AstNode {
     @Override
     public String toString() {
         return "(" + this.getClass().getSimpleName() + " " + name + " ("
-                + Arrays.stream(parameters).map(String::valueOf).collect(Collectors.joining(" ")) + ") " + body + ")";
+            + Arrays.stream(parameters).map(String::valueOf).collect(Collectors.joining(" ")) + ") " + body + ")";
     }
 }

@@ -7,17 +7,12 @@ public class Level {
     private final long id;
 
     /**
-     *
      * Manages the logic of the Levels
      *
-     * @param id
-     *            The id of the level
-     * @param name
-     *            The name of the level
-     * @param description
-     *            A short description of the task
-     * @param isCompleted
-     *            If a level is completed
+     * @param id          The id of the level
+     * @param name        The name of the level
+     * @param description A short description of the task
+     * @param isCompleted If a level is completed
      */
 
     public Level(long id, String name, String description, boolean isCompleted) {

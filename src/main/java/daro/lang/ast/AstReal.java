@@ -29,7 +29,7 @@ public final class AstReal extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstReal) {
-            AstReal node = (AstReal) obj;
+            AstReal node = (AstReal)obj;
             return value == node.getValue();
         } else {
             return false;
