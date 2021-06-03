@@ -54,6 +54,10 @@
     -fx-font-size: 24px;
 }
 
+.heading.tiny {
+    -fx-font-size: 18px;
+}
+
 .heading-description {
     -fx-font-size: 20px;
 }
@@ -116,7 +120,7 @@
     -fx-stroke: white;
 }
 
-.terminal-error {
+.terminal-error, .failed .text, .failed .icon {
     -fx-fill: #fc323f;
 }
 

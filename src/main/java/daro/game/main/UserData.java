@@ -65,6 +65,7 @@ public abstract class UserData {
     public static boolean writeLevelData(long groupId, long levelId, boolean completion, String currentCode) {
         JSONObject object = parseUserDataJson();
         Object levelGroupData = object.get(String.valueOf(groupId));
+        System.out.println(levelGroupData);
         if (levelGroupData == null) {
             JSONArray levels = new JSONArray();
             JSONObject level = new JSONObject();

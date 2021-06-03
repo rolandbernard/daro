@@ -12,14 +12,11 @@ import javafx.scene.text.TextFlow;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Terminal extends ScrollPane {
     private TextFlow textContent;
     private StringBuffer currentString;
     private PrintStream stream;
-    private SimpleDateFormat dateFormatter;
     public static final double STANDARD_WIDTH = 360;
 
     /**
@@ -46,8 +43,6 @@ public class Terminal extends ScrollPane {
     private void init() {
 
         this.textContent = new TextFlow();
-
-        this.dateFormatter = new SimpleDateFormat("HH:mm");
 
         VBox container = new VBox(textContent);
         container.setPrefHeight(this.getPrefHeight());
@@ -79,9 +74,6 @@ public class Terminal extends ScrollPane {
         status.setWrappingWidth(this.getPrefWidth() - 40);
         try {
             Interpreter interpreter = new Interpreter(stream);
-            currentString.append("(");
-            currentString.append(dateFormatter.format(new Date()));
-            currentString.append("): ");
             interpreter.execute(code);
             status.setText("\n\nProgram terminated.");
             status.getStyleClass().addAll( "monospace");

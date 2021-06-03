@@ -76,42 +76,42 @@ public class Validation {
         Interpreter interpreter = new Interpreter();
         boolean success = false;
         String givenResult;
-        String expectedString = null;
+        String expectedString = "";
         try {
-            DaroObject codeResult = interpreter.execute(code + source);
+            DaroObject codeResult = interpreter.execute(code + "\n" + source);
             givenResult = codeResult.toString();
 
             switch (type) {
                 case EQUALS:
                     success = codeResult.equals(expected);
+                    expectedString = source + " = " + expected;
                     break;
                 case NOT_EQUALS:
                     success = !codeResult.equals(expected);
-                    expectedString = "not " + expected;
+                    expectedString = source + " not = " + expected;
                     break;
                 case TRUE:
                     success = codeResult.isTrue();
-                    expectedString = "to be a truthy value";
+                    expectedString = source + " to be a truthy value";
                     break;
                 case FALSE:
                     success = !codeResult.isTrue();
-                    expectedString = "to be a falsy value";
+                    expectedString = source + " to be a falsy value";
                     break;
                 case ARRAY_INCLUDES:
                     success = validateArrayIncludes(codeResult);
-                    expectedString = "to contain " + expected;
+                    expectedString = source + " to contain " + expected;
                     break;
                 case ARRAY_EXCLUDES:
                     success = validateArrayExcludes(codeResult);
-                    expectedString = "to not contain " + expected;
+                    expectedString = source + " to not contain " + expected;
                     break;
 
             }
-        } catch (InterpreterException e) {
+        } catch (Exception e) {
             givenResult = "There was an issue with your code: " + e.getMessage();
         }
 
-        expectedString = expectedString == null ? expected.toString() : expectedString;
         return new ValidationResult(id, success, expectedString, givenResult);
     }
 
@@ -169,11 +169,12 @@ public class Validation {
     private DaroObject parseExpectedResult(String expected) {
         DaroObject expectedResult;
         Interpreter interpreter = new Interpreter();
+        interpreter.reset();
 
         try {
             if (expected.matches("^\\[(.+,)*.+]$")) {
                 String items = expected.substring(1, expected.length() - 1);
-                expectedResult = interpreter.execute("a = new array; a.push(" + items + "); a");
+                expectedResult = interpreter.execute("a = new array{" + items + "}; a");
             } else {
                 expectedResult = interpreter.execute(expected);
             }
@@ -185,6 +186,7 @@ public class Validation {
 
     /**
      * Parses tests from a json
+     *
      * @param tests a JsonArray containing tests
      * @return a list of tests
      */

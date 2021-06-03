@@ -19,14 +19,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import java.util.List;
 
 
 public class LevelView extends View {
 
-    private final double SIDEBAR_WIDTH = 340;
-    private final double BOX_PADDINGS = 30;
+    private static final double SIDEBAR_WIDTH = 340;
+    private static final double BOX_PADDINGS = 30;
+    private static final double POPUP_HEIGHT = 300;
 
     private Level level;
     private CodeEditor editor;
@@ -117,7 +119,7 @@ public class LevelView extends View {
         btn.setPrefHeight(height);
         btn.setPrefWidth(width);
         btn.setOnMouseClicked(e -> {
-            save(false);
+            save(ValidationResult.evaluate(Validation.run(editor.getText(), level.getTests())));
             this.getScene().setRoot(new MenuView(new CoursePage()));
         });
         btn.setCursor(Cursor.HAND);
@@ -133,14 +135,63 @@ public class LevelView extends View {
 
     private void openValidationPopup(MouseEvent mouseEvent) {
         popup.setVisible(true);
-        VBox items = new VBox();
-        items.setMaxWidth(600);
-        items.setMaxHeight(400);
-        items.setAlignment(Pos.CENTER);
-        items.setStyle("-fx-background-color: #eee; -fx-background-radius: 25px;");
+        ScrollPane innerPopup = new ScrollPane();
+        VBox popupContent = new VBox();
+        innerPopup.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        innerPopup.setMaxHeight(400);
+        innerPopup.setMaxWidth(640);
+        innerPopup.setContent(popupContent);
+        innerPopup.setStyle("-fx-background-color: #2b2e3a; -fx-background-radius: 25px;");
         List<ValidationResult> results = Validation.run(editor.getText(), level.getTests());
-        results.stream().map(ValidationItem::new).forEach(v -> items.getChildren().add(v));
-        save(ValidationResult.evaluate(results));
-        popup.getChildren().add(items);
+        boolean success = ValidationResult.evaluate(results);
+        save(success);
+
+        VBox items = createValidationItems(results);
+        Text heading = new Text(success ? "Congratulations!\nYou passed all the tests" : "Ooops! Try again.");
+        heading.getStyleClass().addAll("text", "heading", "small");
+        heading.setTextAlignment(TextAlignment.CENTER);
+
+        HBox controls = createControlButtons(success);
+        popupContent.getChildren().addAll(heading, items, controls);
+        popupContent.setSpacing(30);
+        popupContent.setPadding(new Insets(40));
+        popupContent.setAlignment(Pos.CENTER);
+        popupContent.setFillWidth(true);
+        popup.getChildren().removeAll();
+        popup.getChildren().add(innerPopup);
     }
+
+    private VBox createValidationItems(List<ValidationResult> results) {
+        VBox items = new VBox();
+        items.setSpacing(20);
+        items.setAlignment(Pos.CENTER);
+        results.stream().map(ValidationItem::new).forEach(v -> items.getChildren().add(v));
+        return items;
+    }
+
+    private HBox createControlButtons(boolean success) {
+        double buttonHeight = 40;
+        double buttonWidth = 180;
+        HBox buttons = new HBox();
+        CustomButton mainButton = null;
+        if (success) {
+            mainButton = new CustomButton("\ue16a", "Next Level", buttonWidth, buttonHeight, false);
+        } else {
+            mainButton = new CustomButton("\ue5d5", "Try again", buttonWidth, buttonHeight, false);
+            mainButton.setOnMouseClicked(e -> popup.setVisible(false));
+        }
+        CustomButton backButton = new CustomButton("\ue5c4", "Back to overview", buttonWidth, buttonHeight, true);
+        backButton.setOnMouseClicked(e -> backToOverview());
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setSpacing(20);
+        buttons.getChildren().add(backButton);
+        buttons.getChildren().add(mainButton);
+        return buttons;
+    }
+
+    private void backToOverview() {
+        this.getScene().setRoot(new MenuView(new CoursePage()));
+    }
+
+
 }
