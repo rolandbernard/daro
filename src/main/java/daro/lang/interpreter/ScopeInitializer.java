@@ -336,4 +336,24 @@ public class ScopeInitializer implements Visitor<Void> {
         initialize(ast.getOperand());
         return null;
     }
+
+    @Override
+    public Void visit(AstMatch ast) {
+        initialize(ast.getValue());
+        for (AstMatchCase node : ast.getCases()) {
+            initialize(node);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visit(AstMatchCase ast) {
+        if (ast.getValues() != null) {
+            for (AstNode node : ast.getValues()) {
+                initialize(node);
+            }
+        }
+        initialize(ast.getStatement());
+        return null;
+    }
 }

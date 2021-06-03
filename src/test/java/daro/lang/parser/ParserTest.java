@@ -857,5 +857,74 @@ public class ParserTest {
             Parser.parseSourceCode("fn foo() ");
         });
     }
+
+    @Test
+    void matchStatement() {
+        AstNode ast = Parser.parseSourceCode("match x { 1: foo(); 2, 3, 4: bar(); default: fizz() }");
+        assertEquals(new AstSequence(null, new AstNode[] {
+            new AstMatch(null, new AstSymbol(null, "x"), new AstMatchCase[] {
+                new AstMatchCase(null,
+                    new AstNode[] { new AstInteger(null, 1) },
+                    new AstCall(null, new AstSymbol(null, "foo"), new AstNode[0])
+                ),
+                new AstMatchCase(null,
+                    new AstNode[] { new AstInteger(null, 2), new AstInteger(null, 3), new AstInteger(null, 4) },
+                    new AstCall(null, new AstSymbol(null, "bar"), new AstNode[0])
+                ),
+                new AstMatchCase(null, null,
+                    new AstCall(null, new AstSymbol(null, "fizz"), new AstNode[0])
+                ),
+            })
+        }), ast);
+    }
+
+    @Test
+    void missingMatchValue() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("match ");
+        });
+    }
+
+    @Test
+    void missingMatchCaseColon() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("match x { 1 foo() }");
+        });
+    }
+
+    @Test
+    void missingMatchDefaultColon() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("match x { default foo() }");
+        });
+    }
+
+    @Test
+    void missingMatchDefaultStatement() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("match x { default: }");
+        });
+    }
+
+    @Test
+    void missingMatchCaseStatement() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("match x { 1: }");
+        });
+    }
+
+    @Test
+    void missingMatchOpeningBrace() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("match x 1: foo() }");
+        });
+    }
+
+    @Test
+    void missingMatchClosingBrace() {
+        assertThrows(ParsingException.class, () -> {
+            Parser.parseSourceCode("match x { 1: foo(); ");
+        });
+    }
 }
 

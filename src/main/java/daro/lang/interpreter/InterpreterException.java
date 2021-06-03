@@ -68,4 +68,9 @@ public class InterpreterException extends IllegalArgumentException {
     public int getLength() {
         return position.getLength();
     }
+
+    @Override
+    public String toString() {
+        return "Runtime error at " + position + ": " + getMessage();
+    }
 }

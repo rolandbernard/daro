@@ -152,4 +152,40 @@ public class InterpreterTest {
         interpreter.execute("x = false; x ||= true");
         assertEquals(new DaroBoolean(true), interpreter.execute("x"));
     }
+
+    @Test
+    void matchStatementTakingFirst() {
+        DaroObject object = interpreter.execute("match 5 { 5: 42; 4: 12; 3: 12; default: 12 }");
+        assertEquals(new DaroInteger(BigInteger.valueOf(42)), object);
+    }
+
+    @Test
+    void matchStatementTakingSecond() {
+        DaroObject object = interpreter.execute("match 4 { 5: 42; 4: 12; 3: 42; default: 42 }");
+        assertEquals(new DaroInteger(BigInteger.valueOf(12)), object);
+    }
+
+    @Test
+    void matchStatementTakingSecondOfSequence() {
+        DaroObject object = interpreter.execute("match 3 { 5: 42; 4, 3, 2: 12; default: 42 }");
+        assertEquals(new DaroInteger(BigInteger.valueOf(12)), object);
+    }
+
+    @Test
+    void matchStatementTakingDefault() {
+        DaroObject object = interpreter.execute("match 1 { 5: 42; 4, 3, 2: 12; default: 42 }");
+        assertEquals(new DaroInteger(BigInteger.valueOf(42)), object);
+    }
+
+    @Test
+    void matchStatementTakingNone() {
+        DaroObject object = interpreter.execute("match 1 { 5: 42; 4, 3, 2: 12; }");
+        assertNull(object);
+    }
+
+    @Test
+    void matchStatementOnStrings() {
+        DaroObject object = interpreter.execute("match \"Test\" { \"Hello\": 12; \"Test\": 42; \"World\": 12; }");
+        assertEquals(new DaroInteger(BigInteger.valueOf(42)), object);
+    }
 }
