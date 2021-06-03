@@ -58,4 +58,9 @@ public class ParsingException extends IllegalArgumentException {
     public int getLength() {
         return position.getLength();
     }
+
+    @Override
+    public String toString() {
+        return "Syntax error at " + position + ": " + getMessage();
+    }
 }
