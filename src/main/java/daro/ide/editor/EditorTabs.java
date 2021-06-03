@@ -1,10 +1,10 @@
 package daro.ide.editor;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
@@ -14,75 +14,71 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
 public class EditorTabs extends TabPane {
-    private Map<Path, Tab> paths;
-    private Map<Tab, Path> tabs;
+    private Map<Path, EditorTab> tabs;
 
     public EditorTabs() {
-        paths = new HashMap<>();
         tabs = new HashMap<>();
         setTabClosingPolicy(TabClosingPolicy.ALL_TABS);
         sceneProperty().addListener((observable, old, scene) -> {
             KeyCombination keys = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
             scene.getAccelerators().put(keys, () -> {
-                Tab tab = getSelectionModel().getSelectedItem();
-                TextEditor editor = (TextEditor)tab.getContent();
-                Path file = getOpenFile();
-                String content = getOpenContent();
-                try {
-                    Files.writeString(file, content);
-                    editor.setUnsaved(false);
-                    tab.setText(file.getFileName().toString());
-                } catch (IOException e) { }
+                ((EditorTab)getSelectionModel().getSelectedItem()).saveFile();
             });
         });
+        Tab addTab = new Tab("+");
+        addTab.setClosable(false);
+        addTab.getStyleClass().add("add-tab");
+        addTab.setOnSelectionChanged(event -> {
+            addTab(new EditorTab(""));
+        });
+        getTabs().add(addTab);
     }
 
-    public boolean hasUnsavedFile() {
-        return tabs.keySet().stream()
-            .map(tab -> (TextEditor)tab.getContent())
-            .anyMatch(TextEditor::hasUnsaved);
+    public boolean allowClosing() {
+        boolean hasUnsaved = tabs.values().stream()
+            .map(tab -> (EditorTab)tab)
+            .anyMatch(EditorTab::isUnsaved);
+        if (hasUnsaved) {
+            ConfirmDialog alert = new ConfirmDialog("Exit without saving?");
+            return alert.showAndWait().orElse(null) == ButtonType.OK;
+        } else {
+            return true;
+        }
     }
 
-    public Path getOpenFile() {
-        return tabs.get(getSelectionModel().getSelectedItem());
-    }
-
-    public String getOpenContent() {
-        return ((TextEditor)getSelectionModel().getSelectedItem().getContent()).getText();
+    private void addTab(EditorTab tab) {
+        List<Tab> toRemove = getTabs().stream()
+            .filter(t -> {
+                if (t instanceof EditorTab) {
+                    EditorTab editor = (EditorTab) t;
+                    return editor.getFile() == null && !editor.isUnsaved();
+                } else {
+                    return false;
+                }
+            })
+            .collect(Collectors.toList());
+        Path file = tab.getFile();
+        if (file != null) {
+            tabs.put(file, tab);
+        }
+        tab.setOnClosed(event -> {
+            tabs.remove(file);
+        });
+        getTabs().add(getTabs().size() - 1, tab);
+        getSelectionModel().select(tab);
+        getTabs().removeAll(toRemove);
     }
 
     public void openFile(Path file) {
-        if (paths.containsKey(file)) {
-            getSelectionModel().select(paths.get(file));
+        Path path = file.toAbsolutePath().normalize();
+        if (tabs.containsKey(path)) {
+            getSelectionModel().select(tabs.get(path));
         } else {
-            try {
-                String filename = file.getFileName().toString();
-                Tab tab = new Tab(filename);
-                String content = Files.readString(file);
-                TextEditor editor = new TextEditor(content);
-                editor.setOnChange(value -> {
-                    tab.setText(filename + "+");
-                });
-                tab.setContent(editor);
-                paths.put(file, tab);
-                tabs.put(tab, file);
-                tab.setOnCloseRequest(event -> {
-                    if (!editor.hasUnsaved()) {
-                        paths.remove(file);
-                        tabs.remove(tab);
-                    } else {
-                        ConfirmDialog alert = new ConfirmDialog("Close without saving?");
-                        if (alert.showAndWait().orElse(null) == ButtonType.OK) {
-                            paths.remove(file);
-                            tabs.remove(tab);
-                        } else {
-                            event.consume();
-                        }
-                    }
-                });
-                getTabs().add(tab);
-                getSelectionModel().select(tab);
-            } catch (IOException e) { }
+            addTab(new EditorTab(path));
         }
+    }
+
+    public String getOpenContent() {
+        return ((EditorTab)getSelectionModel().getSelectedItem()).getEditorContent();
     }
 }

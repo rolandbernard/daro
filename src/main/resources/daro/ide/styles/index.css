@@ -9,6 +9,7 @@
 
 .tab-pane .tab-close-button {
     -fx-background-color: #fff;
+    -fx-cursor: hand;
 }
 
 .tree-view {
@@ -18,7 +19,6 @@
 
 .tree-view .tree-cell,
 .tab-pane .tab {
-    -fx-cursor: hand;
     -fx-focus-color: transparent;
 }
 
@@ -47,6 +47,15 @@
     -fx-border-color: #200D57;
     -fx-stroke-color: #200D57;
     -fx-cursor: hand;
+}
+
+.tab-pane .tab.add-tab {
+    -fx-background-color: #200D57;
+    -fx-cursor: hand;
+}
+
+.tab-pane .tab.add-tab:hover {
+    -fx-background-color: #250f5f;
 }
 
 .button:hover {

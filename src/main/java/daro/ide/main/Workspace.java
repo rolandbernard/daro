@@ -24,6 +24,7 @@ public class Workspace extends SplitPane {
         scope = new ScopeViewer(interpreter.getContext().getScope());
         setOrientation(Orientation.VERTICAL);
         TabPane console = new TabPane();
+        console.setPrefHeight(300);
         console.setMaxHeight(450);
         Tab terminalTab = new Tab("Terminal", terminal);
         terminalTab.setClosable(false);
@@ -31,10 +32,11 @@ public class Workspace extends SplitPane {
         scopeTab.setClosable(false);
         console.getTabs().addAll(terminalTab, scopeTab);
         getItems().addAll(editor, console);
+        terminal.printInfo("IDE initialized.");
     }
 
-    public boolean hasUnsavedFile() {
-        return editor.hasUnsavedFile();
+    public boolean allowClosing() {
+        return editor.allowClosing();
     }
 
     public void openNewFile(Path file) {

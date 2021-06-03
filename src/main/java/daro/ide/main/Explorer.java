@@ -18,7 +18,7 @@ public class Explorer extends SplitPane {
         getItems().addAll(files, workspace);
     }
 
-    public boolean hasUnsavedFile() {
-        return workspace.hasUnsavedFile();
+    public boolean allowClosing() {
+        return workspace.allowClosing();
     }
 }

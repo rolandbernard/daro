@@ -27,7 +27,7 @@ public class FilePane extends BorderPane {
         open.setOnAction(event -> {
             DirectoryChooser chooser = new DirectoryChooser();
             chooser.setTitle("Select a folder");
-            File file = chooser.showDialog(sceneProperty().get().getWindow());
+            File file = chooser.showDialog(null);
             if (file != null) {
                 setRoot(Path.of(file.getAbsolutePath()));
             }

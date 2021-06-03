@@ -8,27 +8,16 @@ import org.fxmisc.richtext.LineNumberFactory;
 import javafx.beans.value.ObservableValue;
 
 public class TextEditor extends CodeArea {
-    private boolean changed;
     private Consumer<String> onChange;
 
     public TextEditor(String initialContent) {
         super(initialContent);
-        changed = false;
         getStyleClass().add("text-editor");
         setParagraphGraphicFactory(LineNumberFactory.get(this));
         textProperty().addListener(this::handleTextChange);
     }
 
-    public void setUnsaved(boolean changed) {
-        this.changed = changed;
-    }
-
-    public boolean hasUnsaved() {
-        return changed;
-    }
-
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-        changed = true;
         if (onChange != null) {
             onChange.accept(newValue);
         }

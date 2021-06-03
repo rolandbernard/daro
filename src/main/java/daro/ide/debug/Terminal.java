@@ -34,6 +34,12 @@ public class Terminal extends ScrollPane {
         appendText(text);
     }
 
+    public void printInfo(String content) {
+        Text text = new Text(content);
+        text.getStyleClass().addAll("monospace", "terminal-info");
+        appendText(text);
+    }
+
     public PrintStream getPrintStream() {
         return new PrintStream(new OutputStream() {
             @Override

@@ -1,9 +1,7 @@
 package daro.ide.main;
 
-import daro.ide.editor.ConfirmDialog;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonType;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -37,11 +35,8 @@ public class Ide extends Application {
         );
 
         stage.setOnCloseRequest(event -> {
-            if (explorer.hasUnsavedFile()) {
-                ConfirmDialog alert = new ConfirmDialog("Exit without saving?");
-                if (alert.showAndWait().orElse(null) != ButtonType.OK) {
-                    event.consume();
-                }
+            if (!explorer.allowClosing()) {
+                event.consume();
             }
         });
         stage.setWidth(1000);
@@ -49,6 +44,7 @@ public class Ide extends Application {
         stage.setTitle("DaRo IDE");
         stage.setScene(scene);
         stage.show();
+        stage.setMaximized(true);
     }
 }
 
