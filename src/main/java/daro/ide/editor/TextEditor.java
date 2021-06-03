@@ -17,7 +17,7 @@ public class TextEditor extends CodeArea {
         textProperty().addListener(this::handleTextChange);
     }
 
-    private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+    protected void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         if (onChange != null) {
             onChange.accept(newValue);
         }

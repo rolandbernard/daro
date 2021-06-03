@@ -37,7 +37,6 @@ public class RootScope extends ConstantScope {
         variables.put("type", new DaroTypeType());
         variables.put("function", new DaroTypeFunction());
         variables.put("array", new DaroTypeArray());
-        variables.put("array", new DaroTypeArray());
         variables.put("module", new DaroTypeModule());
         // Values
         variables.put("null", new DaroNull());
