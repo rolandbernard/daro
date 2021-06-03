@@ -13,7 +13,7 @@
 
 .tree-view {
     -fx-background-color: #21252b;
-    -fx-padding: 10px 5px 5px 5px;
+    -fx-padding: 10 0 0 0;
 }
 
 .tree-view .tree-cell,
@@ -38,7 +38,7 @@
 
 .icon {
     -fx-font-family: "Material Icons";
-    -fx-font-size: 20px;
+    -fx-font-size: 20;
     -fx-fill: #fff;
 }
 
@@ -61,13 +61,6 @@
 
 .split-pane > .split-pane-divider {
     -fx-background-color: #666;
-    -fx-padding: 0 1px 0 1px;  
-}
-
-.track, .increment-button, .decrement-button  {
-    -fx-background-color: #1D1F26;
-    -fx-border-color: #1D1F26;
-    -fx-stroke-color: #1D1F26;
-    -fx-focus-color: #1D1F26;
+    -fx-padding: 0 1 0 1;  
 }
 

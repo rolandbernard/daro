@@ -16,7 +16,6 @@ public class Ide extends Application {
 
     @Override
     public void start(Stage stage) {
-
         Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/Montserrat-Regular.ttf"), 16);
         Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/Montserrat-Italic.ttf"), 16);
         Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/Montserrat-Bold.ttf"), 16);
@@ -29,10 +28,13 @@ public class Ide extends Application {
 
         Explorer explorer = new Explorer();
         Scene scene = new Scene(explorer);
-        scene.getStylesheets().add(Ide.class.getResource("/daro/ide/styles/index.css").toExternalForm());
-        scene.getStylesheets().add(Ide.class.getResource("/daro/ide/styles/editor.css").toExternalForm());
-        scene.getStylesheets().add(Ide.class.getResource("/daro/ide/styles/terminal.css").toExternalForm());
-        scene.getStylesheets().add(Ide.class.getResource("/daro/ide/styles/syntax.css").toExternalForm());
+        scene.getStylesheets().addAll(
+            Ide.class.getResource("/daro/ide/styles/index.css").toExternalForm(),
+            Ide.class.getResource("/daro/ide/styles/scrollbar.css").toExternalForm(),
+            Ide.class.getResource("/daro/ide/styles/editor.css").toExternalForm(),
+            Ide.class.getResource("/daro/ide/styles/terminal.css").toExternalForm(),
+            Ide.class.getResource("/daro/ide/styles/syntax.css").toExternalForm()
+        );
 
         stage.setOnCloseRequest(event -> {
             if (explorer.hasUnsavedFile()) {

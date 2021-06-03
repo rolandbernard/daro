@@ -9,6 +9,7 @@ public class Explorer extends SplitPane {
 
     public Explorer() {
         files = new FilePane();
+        files.setPrefWidth(200);
         files.setMaxWidth(450);
         workspace = new Workspace();
         files.setOnFileOpen(file -> {

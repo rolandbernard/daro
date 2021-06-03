@@ -9,10 +9,13 @@ public class ConfirmDialog extends Alert {
         setGraphic(null);
         setHeaderText(null);
         setResizable(true);
-        setWidth(300);
+        setWidth(200);
         setHeight(125);
         setTitle(message);
         setContentText(message);
+
+        getDialogPane().getStylesheets()
+                .add(ConfirmDialog.class.getResource("/daro/ide/styles/dialog.css").toExternalForm());
     }
 }
 
