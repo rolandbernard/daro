@@ -306,4 +306,14 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
     public VariableLocation visit(AstFrom ast) {
         return null;
     }
+
+    @Override
+    public VariableLocation visit(AstMatch ast) {
+        return null;
+    }
+
+    @Override
+    public VariableLocation visit(AstMatchCase ast) {
+        return null;
+    }
 }

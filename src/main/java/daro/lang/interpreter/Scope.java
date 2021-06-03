@@ -80,9 +80,9 @@ public interface Scope {
     abstract public void reset();
 
     /**
-     * Get a string representation of the {@link Scope}. This method may be used by implementing
-     * classes to implement the toString function. We can not overwrite toString directly in the
-     * interface.
+     * Get a string representation of the {@link Scope}. This method may be used by
+     * implementing classes to implement the toString function. We can not overwrite
+     * toString directly in the interface.
      *
      * @return The string representation of the scope
      */

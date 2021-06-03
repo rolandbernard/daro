@@ -630,4 +630,27 @@ public class Executor implements Visitor<DaroObject> {
             throw new InterpreterException(ast.getPosition(), "Expected a string object");
         }
     }
+
+    @Override
+    public DaroObject visit(AstMatch ast) {
+        DaroObject value = require(ast.getValue());
+        for (AstMatchCase option : ast.getCases()) {
+            if (option.getValues() == null) {
+                return execute(option.getStatement());
+            } else {
+                for (AstNode comparison : option.getValues()) {
+                    DaroObject comp = require(comparison);
+                    if (value.equals(comp)) {
+                        return execute(option.getStatement());
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public DaroObject visit(AstMatchCase ast) {
+        throw new InterpreterException(ast.getPosition(), "Execution error");
+    }
 }
