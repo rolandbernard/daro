@@ -101,7 +101,7 @@ public class Interpreter {
      * @throws ParsingException     It the source cannot be parsed
      */
     public DaroObject execute(Path file, ExecutionObserver ...observers) {
-        return Executor.executeFile(context.withObservers(observers), file);
+        return Executor.executeRootFile(context.withObservers(observers), file);
     }
 
     /**
