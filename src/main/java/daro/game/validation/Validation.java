@@ -81,8 +81,6 @@ public class Validation {
             interpreter.execute(code);
             try {
                 DaroObject codeResult = interpreter.execute(source);
-                System.out.println(codeResult);
-
                 givenResult = codeResult.toString();
 
                 switch (type) {

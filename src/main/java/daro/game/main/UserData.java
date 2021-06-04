@@ -62,13 +62,55 @@ public abstract class UserData {
         return map;
     }
 
+    public static Level getNextLevel(long groupId, long levelId) {
+        try {
+            JSONObject json = PathHandler.getJsonData("levels.json");
+            JSONArray groups = (JSONArray) json.get("groups");
+            JSONObject group = findLevelGroupInJSON(groups, groupId);
+            if(group != null) {
+                JSONArray groupLevels = (JSONArray) group.get("levels");
+                JSONObject nextLevelJSON;
+                long nextGroupId = groupId;
+
+                if (levelId < groupLevels.size()) {
+                    nextLevelJSON = (JSONObject) groupLevels.stream().filter(l -> {
+                        JSONObject levelObj = (JSONObject) l;
+                        return (long) levelObj.get("id") == levelId + 1;
+                    }).findFirst().orElse(null);
+                } else {
+                    nextGroupId = groupId + 1;
+                    JSONObject nextGroup = findLevelGroupInJSON(groups, nextGroupId);
+                    JSONArray nextGroupLevels = (JSONArray) nextGroup.get("levels");
+                    if (nextGroupLevels == null)
+                        return null;
+                    nextLevelJSON = (JSONObject) nextGroupLevels.get(0);
+                }
+
+                if (nextLevelJSON == null)
+                    return null;
+                Map<Long, JSONObject> completionMap = UserData.getLevelGroupData(nextGroupId);
+                return Level.parseLevelFromJSONObject(nextGroupId, nextLevelJSON, completionMap);
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
+    }
+
+    private static JSONObject findLevelGroupInJSON(JSONArray groups, long groupId) {
+        return (JSONObject) groups.stream().filter(g -> {
+            JSONObject groupObj = (JSONObject) g;
+            return (long) groupObj.get("id") == groupId;
+        }).findFirst().orElse(null);
+    }
+
     /**
      * A method that rewrites the user data file by either creating or replacing an old entry of
      * user data concerning the completion of a level.
      *
-     * @param groupId the group id of the level
-     * @param levelId the level id
-     * @param completion the completion (if it was solved successfully)
+     * @param groupId     the group id of the level
+     * @param levelId     the level id
+     * @param completion  the completion (if it was solved successfully)
      * @param currentCode the code written by the user
      * @return if the writing wsa successful or not.
      */
@@ -95,7 +137,7 @@ public abstract class UserData {
                     break;
                 }
             }
-            if(!existsAlready) {
+            if (!existsAlready) {
                 JSONObject level = new JSONObject();
                 level.put("id", levelId);
                 level.put("completed", completion);

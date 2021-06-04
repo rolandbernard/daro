@@ -14,7 +14,6 @@ public class ValidationItem extends HBox {
     public ValidationItem(ValidationResult result) {
         this.result = result;
         this.setSpacing(5);
-        this.setPrefWidth(360);
         this.setAlignment(Pos.CENTER);
         icon = new Text();
         icon.getStyleClass().add("icon");

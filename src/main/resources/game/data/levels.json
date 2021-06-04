@@ -52,6 +52,11 @@
       "name": "If and else",
       "description_short": "Basic control structures",
       "levels": [
+        {
+          "id": 1,
+          "name": "testname",
+          "description": "Assign to a variable 'c', the sum of 'a' and 'b'"
+        }
       ]
     },
     {

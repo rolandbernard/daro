@@ -4,10 +4,7 @@ import daro.game.main.Game;
 import daro.game.main.Level;
 import daro.game.main.UserData;
 import daro.game.pages.CoursePage;
-import daro.game.ui.CodeEditor;
-import daro.game.ui.CustomButton;
-import daro.game.ui.Terminal;
-import daro.game.ui.ValidationItem;
+import daro.game.ui.*;
 import daro.game.validation.Validation;
 import daro.game.validation.ValidationResult;
 import javafx.geometry.Insets;
@@ -28,12 +25,10 @@ public class LevelView extends View {
 
     private static final double SIDEBAR_WIDTH = 340;
     private static final double BOX_PADDINGS = 30;
-    private static final double POPUP_HEIGHT = 300;
 
     private Level level;
     private CodeEditor editor;
-    private long parentId;
-    private StackPane popup;
+    private Popup popup;
 
     /**
      * <strong>UI: <em>View</em></strong><br>
@@ -41,13 +36,12 @@ public class LevelView extends View {
      *
      * @param level the level shown in the view
      */
-    public LevelView(long parentId, Level level) {
+    public LevelView(Level level) {
         this.level = level;
-        this.parentId = parentId;
         editor = new CodeEditor(level.getCode());
         HBox mainContent = new HBox(getSidebar(), editor);
 
-        this.popup = createPopup();
+        this.popup = new Popup();
         StackPane wholeContent = new StackPane();
         wholeContent.getChildren().addAll(mainContent, popup);
         wholeContent.setAlignment(Pos.CENTER);
@@ -75,13 +69,6 @@ public class LevelView extends View {
         bar.setPrefHeight(Game.HEIGHT);
         bar.setStyle("-fx-background-color: #2b2e3a");
         return bar;
-    }
-
-    private StackPane createPopup() {
-        StackPane popup = new StackPane();
-        popup.setStyle("-fx-background-color: rgba(0,0,0,0.5)");
-        popup.setVisible(false);
-        return popup;
     }
 
     private ScrollPane createTextBox(double textBoxHeight) {
@@ -130,18 +117,11 @@ public class LevelView extends View {
 
 
     private boolean save(boolean completion) {
-        return UserData.writeLevelData(parentId, level.getId(), completion, editor.getText());
+        return UserData.writeLevelData(level.getGroupId(), level.getId(), completion, editor.getText());
     }
 
     private void openValidationPopup(MouseEvent mouseEvent) {
-        popup.setVisible(true);
-        ScrollPane innerPopup = new ScrollPane();
-        VBox popupContent = new VBox();
-        innerPopup.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        innerPopup.setMaxHeight(400);
-        innerPopup.setMaxWidth(640);
-        innerPopup.setContent(popupContent);
-        innerPopup.setStyle("-fx-background-color: #2b2e3a; -fx-background-radius: 25px;");
+        popup.open();
         List<ValidationResult> results = Validation.run(editor.getText(), level.getTests());
         boolean success = ValidationResult.evaluate(results);
         save(success);
@@ -152,13 +132,13 @@ public class LevelView extends View {
         heading.setTextAlignment(TextAlignment.CENTER);
 
         HBox controls = createControlButtons(success);
+        VBox popupContent = new VBox();
         popupContent.getChildren().addAll(heading, items, controls);
         popupContent.setSpacing(30);
         popupContent.setPadding(new Insets(40));
         popupContent.setAlignment(Pos.CENTER);
-        popupContent.setFillWidth(true);
-        popup.getChildren().removeAll();
-        popup.getChildren().add(innerPopup);
+        popupContent.setPrefWidth(Popup.POPUP_WIDTH);
+        popup.updateContent(popupContent);
     }
 
     private VBox createValidationItems(List<ValidationResult> results) {
@@ -175,17 +155,23 @@ public class LevelView extends View {
         HBox buttons = new HBox();
         CustomButton mainButton = null;
         if (success) {
-            mainButton = new CustomButton("\ue16a", "Next Level", buttonWidth, buttonHeight, false);
+            Level nextLevel = UserData.getNextLevel(level.getGroupId(), level.getId());
+            if(nextLevel != null) {
+                mainButton = new CustomButton("\ue16a", "Next Level", buttonWidth, buttonHeight, false);
+                mainButton.setOnMouseClicked(e -> View.updateView(this, new LevelView(nextLevel)));
+            }
         } else {
             mainButton = new CustomButton("\ue5d5", "Try again", buttonWidth, buttonHeight, false);
-            mainButton.setOnMouseClicked(e -> popup.setVisible(false));
+            mainButton.setOnMouseClicked(e -> popup.close());
         }
         CustomButton backButton = new CustomButton("\ue5c4", "Back to overview", buttonWidth, buttonHeight, true);
         backButton.setOnMouseClicked(e -> backToOverview());
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
         buttons.getChildren().add(backButton);
-        buttons.getChildren().add(mainButton);
+        if(mainButton != null) {
+            buttons.getChildren().add(mainButton);
+        }
         return buttons;
     }
 
