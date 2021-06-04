@@ -108,6 +108,6 @@ public class Interpreter {
      * Reset the global scope of this interpreter, clearing all variables.
      */
     public void reset() {
-        context.getScope().reset();
+        context.reset();
     }
 }
