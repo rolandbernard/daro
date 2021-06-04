@@ -9,8 +9,6 @@ import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import javafx.beans.value.ObservableValue;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 
 public class CodeEditor extends TextEditor {
 
@@ -44,7 +42,6 @@ public class CodeEditor extends TextEditor {
     private static final String[] FUNCTIONS = {
         "\\w+(?=(\\s*\\(.*?\\)))"
     };
-    private static final String TAB = "    ";
 
     private static String generateBoundedPattern(String ...pattern) {
         return "(\\b(" + String.join("|", pattern) + ")\\b)";
@@ -64,34 +61,7 @@ public class CodeEditor extends TextEditor {
 
     public CodeEditor(String initialContent) {
         super(initialContent);
-        setOnKeyPressed(this::handleKeyPress);
         setStyleSpans(0, computeHighlighting(initialContent));
-    }
-
-    private void handleKeyPress(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.ENTER) {
-            int position = getCaretPosition();
-            int paragraph = getCurrentParagraph();
-            if (paragraph > 0) {
-                Pattern spacePattern = Pattern.compile("^\\s+");
-                Matcher spaceMatcher = spacePattern.matcher(getParagraph(paragraph - 1).getSegments().get(0));
-                String additionalSpace = "";
-                if (spaceMatcher.find()) {
-                    additionalSpace = spaceMatcher.group();
-                }
-                insertText(position, additionalSpace);
-            }
-        } else if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
-            int position = getCaretPosition();
-            int column = getCaretColumn();
-            String text = getText();
-            int length = column % TAB.length();
-            if (position >= length && text.substring(position - length, position).equals(TAB.substring(0, length))) {
-                deleteText(position - length, position);
-            }
-        } else if (keyEvent.getCode() == KeyCode.TAB) {
-            replaceText(getCaretPosition() - 1, getCaretPosition(), TAB);
-        }
     }
 
     @Override

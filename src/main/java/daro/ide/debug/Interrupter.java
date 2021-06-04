@@ -4,42 +4,34 @@ import daro.lang.ast.AstNode;
 import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.VariableLocation;
+import daro.lang.interpreter.InterpreterException;
 import daro.lang.values.DaroObject;
 
 public class Interrupter implements ExecutionObserver {
 
-    public Interrupter() {
-    }
-
-    @Override
-    public DaroObject onException(AstNode node, RuntimeException error, DaroObject value, ExecutionContext context) {
-        return null;
+    private void checkForInterruption(AstNode node) {
+        if (Thread.interrupted()) {
+            throw new InterpreterException(node.getPosition(), "Interrupted by the interrupter");
+        }
     }
 
     @Override
     public void beforeExecution(AstNode node, ExecutionContext context) {
-        // TODO: implement
+        checkForInterruption(node);
     }
 
     @Override
     public void afterExecution(AstNode node, DaroObject value, ExecutionContext context) {
-        // TODO: implement
-    }
-
-    @Override
-    public VariableLocation onException(
-        AstNode node, RuntimeException error, VariableLocation value, ExecutionContext context
-    ) {
-        return null;
+        checkForInterruption(node);
     }
 
     @Override
     public void beforeLocalization(AstNode node, ExecutionContext context) {
-        // TODO: implement
+        checkForInterruption(node);
     }
 
     @Override
     public void afterLocalization(AstNode node, VariableLocation location, ExecutionContext context) {
-        // TODO: implement
+        checkForInterruption(node);
     }
 }

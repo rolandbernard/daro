@@ -1,9 +1,13 @@
 package daro.ide.main;
 
 import java.nio.file.Path;
+import java.util.Set;
 
+import daro.ide.debug.Debugger;
+import daro.ide.debug.Interrupter;
 import daro.ide.debug.Terminal;
 import daro.ide.editor.EditorTabs;
+import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.Interpreter;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.parser.ParsingException;
@@ -17,7 +21,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class ExecutionPalette extends VBox {
+    private EditorTabs editor;
+    private Terminal terminal;
+    private Interpreter interpreter;
+
     private Thread thread;
+    private Debugger debugger;
     private Button run;
     private Button debug;
     private Button stop;
@@ -29,36 +38,14 @@ public class ExecutionPalette extends VBox {
     private Button clear;
 
     public ExecutionPalette(EditorTabs editor, Terminal terminal, Interpreter interpreter) {
-        thread = null;
-        run = buildIconButton("\ue037", event -> {
-            startRunning();
-            editor.saveOpenIfNamed();
-            Path file = editor.getOpenFile();
-            String content = editor.getOpenContent();
-            thread = new Thread(() -> {
-            interpreter.reset();
-                try {
-                    if (file != null) {
-                        interpreter.execute(file);
-                    } else {
-                        interpreter.execute(content);
-                    }
-                } catch (InterpreterException error) {
-                    editor.highlightError(error.getPosition());
-                    terminal.printError(error.toString() + "\n");
-                } catch (ParsingException error) {
-                    editor.highlightError(error.getPosition());
-                    terminal.printError(error.toString() + "\n");
-                } catch (Exception error) {
-                    terminal.printError(error.toString() + "\n");
-                }
-                stopRunning();
-            });
-            thread.start();
-        });
-        debug = buildIconButton("\ue868", event -> {});
+        this.editor = editor;
+        this.terminal = terminal;
+        this.interpreter = interpreter;
+
+        run = buildIconButton("\ue037", event -> executeCode(false));
+        debug = buildIconButton("\ue868", event -> executeCode(true));
         stop = buildIconButton("\ue047", event -> {
-            killThread();
+            thread.interrupt();
             startRunning();
         });
         next = buildIconButton("\uf1df", event -> {});
@@ -101,11 +88,38 @@ public class ExecutionPalette extends VBox {
         stop.setDisable(true);
     }
 
-    @SuppressWarnings("deprecation")
-    private void killThread() {
-        // There is no reliable way to kill a thread. This is the most reliable, but it is
-        // deprecated because it is unsafe.
-        thread.stop();
+    private void executeCode(boolean debug) {
+        startRunning();
+        editor.saveOpenIfNamed();
+        Path file = editor.getOpenFile();
+        String content = editor.getOpenContent();
+        thread = new Thread(() -> {
+            interpreter.reset();
+            try {
+                ExecutionObserver[] observers;
+                if (debug) {
+                    debugger = new Debugger(Set.of());
+                    observers = new ExecutionObserver[] { new Interrupter(), debugger };
+                } else {
+                    observers = new ExecutionObserver[] { new Interrupter() };
+                }
+                if (file != null) {
+                    interpreter.execute(file, observers);
+                } else {
+                    interpreter.execute(content, observers);
+                }
+            } catch (InterpreterException error) {
+                editor.highlightError(error.getPosition());
+                terminal.printError(error.toString() + "\n");
+            } catch (ParsingException error) {
+                editor.highlightError(error.getPosition());
+                terminal.printError(error.toString() + "\n");
+            } catch (Exception error) {
+                terminal.printError(error.toString() + "\n");
+            }
+            stopRunning();
+        });
+        thread.start();
     }
 
     private Button buildIconButton(String iconString, EventHandler<ActionEvent> onClick) {
