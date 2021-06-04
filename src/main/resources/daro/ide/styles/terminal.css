@@ -2,8 +2,6 @@
 .terminal {
     -fx-padding: 8;
     -fx-background-color: #11151b;
-    -fx-font-family: "JetBrains Mono", monospace;
-    -fx-fill: #d7d7d7;
 }
 
 .scroll-pane > .viewport {
@@ -11,7 +9,7 @@
 }
 
 .monospace {
-    -fx-font-family: "JetBrains Mono", monospace;
+    -fx-font-family: "IBM Plex Mono", monospace;
     -fx-fill: #d7d7d7;
     -fx-font-size: 14;
 }

@@ -19,10 +19,10 @@ public class Ide extends Application {
         Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/Montserrat-Bold.ttf"), 16);
         Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/Montserrat-BoldItalic.ttf"), 16);
         Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/MaterialIcons-Regular.ttf"), 16);
-        Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/JetBrainsMono-Bold.ttf"), 16);
-        Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/JetBrainsMono-BoldItalic.ttf"), 16);
-        Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/JetBrainsMono-Regular.ttf"), 16);
-        Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/JetBrainsMono-Italic.ttf"), 16);
+        Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/IBMPlexMono-Bold.ttf"), 16);
+        Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/IBMPlexMono-BoldItalic.ttf"), 16);
+        Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/IBMPlexMono-Regular.ttf"), 16);
+        Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/IBMPlexMono-Italic.ttf"), 16);
 
         Explorer explorer = new Explorer();
         Scene scene = new Scene(explorer);

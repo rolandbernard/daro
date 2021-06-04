@@ -1,7 +1,7 @@
 
 .text-editor {
     -fx-background-color: #21252b;
-    -fx-padding: 8 0 0 0;
+    -fx-padding: 8 0 8 0;
 }
 
 .text-editor .selection {
@@ -24,7 +24,7 @@
 }
 
 .text-editor .text {
-    -fx-font-family: "JetBrains Mono", monospace !important;
+    -fx-font-family: "IBM Plex Mono", monospace !important;
     -fx-font-size: 16;
     -fx-font-weight: 500;
 }

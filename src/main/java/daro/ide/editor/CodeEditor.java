@@ -1,7 +1,7 @@
 package daro.ide.editor;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,19 +15,20 @@ import javafx.scene.input.KeyEvent;
 public class CodeEditor extends TextEditor {
 
     private static final String[] COMMENTS = { "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/" };
-    private static final String[] PUNCTUATION = { "\\{", "}", "\\[", "]", "\\(", ")", ".", ",", ";" };
+    private static final String[] PUNCTUATION = { "\\{", "\\}", "\\[", "\\]", "\\(", "\\)", "\\.", "\\,", "\\;", "\\:" };
     private static final String[] OPERATORS = {
-        "&&", "\\|\\|", "==", "!=", ">=", "<=", ">", "<", "\\|", "&", ">>", "<<", "\\+", "-", "\\*", "\\/",
-        "%", "~", "!", "=", "\\+=", "-=", "\\*=", "\\/=", "%=", "\\|=", "&=", "\\^=", "<<=", ">>="
+        "\\+\\=", "\\-\\=", "\\*\\=", "\\/\\=", "\\%\\=", "\\|\\=", "\\&\\=", "\\^\\=", "\\<\\<\\=", "\\>\\>\\=",
+        "\\&\\&", "\\|\\|", "\\=\\=", "\\!\\=", "\\>\\=", "\\<\\=", "\\>", "\\<", "\\|", "\\&", "\\>\\>", "\\<\\<",
+        "\\+", "\\-", "\\*", "\\/", "\\%", "\\~", "\\!", "\\=",
     };
     private static final String[] CONSTANTS = {
-        "0x[0-9a-fA-F]+|0o[0-7]+|0d[0-9]+|0b[01]+|[0-9]+", "[0-9]+(\\.[0-9]*)?(e[+-]?[0-9]+)?", "'.*?'", "true", "false", "null"
+        "'.*?'", "\\b0x[0-9a-fA-F]+|0o[0-7]+|0d[0-9]+|0b[01]+|[0-9]+", "\\b[0-9]+(\\.[0-9]*)?(e[+-]?[0-9]+)?", "\\btrue\\b", "\\bfalse\\b", "\\bnull\\“"
     };
     private static final String[] STRINGS = { "\".*?\"" };
     private static final String[] IDENTIFIERS = { "[_a-zA-Z][_a-zA-Z0-9]*" };
-    private static final String[] STATEMENTS = { "if", "else", "for", "in", "fn", "class", "return", "new" };
-    private static final String[] TYPES = { "int", "bool", "real", "string", "array", "module", "type", "function" };
-    private static final String[] FUNCTIONS = { "([^\\s]+)?(\\s)?(?=((\\s+)?\\())" };
+    private static final String[] STATEMENTS = { "if", "else", "for", "in", "return", "new", "use", "match", "default", "from" };
+    private static final String[] TYPES = { "int", "bool", "real", "string", "array", "module", "type", "function", "fn", "class" };
+    private static final String[] FUNCTIONS = { "\\w+(?=(\\s*\\(.*?\\)))" };
     private static final String TAB = "    ";
 
     private static String generateBoundedPattern(String ...pattern) {
@@ -40,14 +41,14 @@ public class CodeEditor extends TextEditor {
 
     private static final Pattern SYNTAX_PATTERN = Pattern.compile(
         "(?<COMMENT>" + generatePattern(COMMENTS) + ")"
-        + "|(?<PUNCTUATION>" + generatePattern(PUNCTUATION) + ")"
         + "|(?<OPERATOR>" + generatePattern(OPERATORS) + ")"
-        + "|(?<CONSTANT>" + generateBoundedPattern(CONSTANTS) + ")"
+        + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"
+        + "|(?<PUNCTUATION>" + generatePattern(PUNCTUATION) + ")"
+        + "|(?<CONSTANT>" + generatePattern(CONSTANTS) + ")"
         + "|(?<STRING>" + generatePattern(STRINGS) + ")"
-        + "|(?<IDENTIFIER>" + generateBoundedPattern(IDENTIFIERS) + ")"
         + "|(?<STATEMENT>" + generateBoundedPattern(STATEMENTS) + ")"
         + "|(?<TYPE>" + generateBoundedPattern(TYPES) + ")"
-        + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"
+        + "|(?<IDENTIFIER>" + generateBoundedPattern(IDENTIFIERS) + ")"
     );
 
     public CodeEditor(String initialContent) {
@@ -69,6 +70,14 @@ public class CodeEditor extends TextEditor {
                 }
                 insertText(position, additionalSpace);
             }
+        } else if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
+            int position = getCaretPosition();
+            int column = getCaretColumn();
+            String text = getText();
+            int length = column % TAB.length();
+            if (position >= length && text.substring(position - length, position).equals(TAB.substring(0, length))) {
+                deleteText(position - length, position);
+            }
         } else if (keyEvent.getCode() == KeyCode.TAB) {
             replaceText(getCaretPosition() - 1, getCaretPosition(), TAB);
         }
@@ -85,28 +94,35 @@ public class CodeEditor extends TextEditor {
         Matcher matcher = SYNTAX_PATTERN.matcher(text);
         int lastMatchEnd = 0;
         while (matcher.find()) {
-            spansBuilder.add(Collections.emptyList(), matcher.start() - lastMatchEnd);
+            spansBuilder.add(List.of(), matcher.start() - lastMatchEnd);
             String syntaxClass = null;
             if (matcher.group("COMMENT") != null) {
                 syntaxClass = "syntax-comment";
             } else if (matcher.group("PUNCTUATION") != null) {
                 syntaxClass = "syntax-punctuation";
+            } else if (matcher.group("OPERATOR") != null) {
+                syntaxClass = "syntax-operator";
+            } else if (matcher.group("CONSTANT") != null) {
+                syntaxClass = "syntax-constant";
+            } else if (matcher.group("STRING") != null) {
+                syntaxClass = "syntax-string";
+            } else if (matcher.group("IDENTIFIER") != null) {
+                syntaxClass = "syntax-identifier";
+            } else if (matcher.group("STATEMENT") != null) {
+                syntaxClass = "syntax-statement";
+            } else if (matcher.group("TYPE") != null) {
+                syntaxClass = "syntax-type";
+            } else if (matcher.group("FUNCTION") != null) {
+                syntaxClass = "syntax-function";
             }
-        // "(?<COMMENT>" + generatePattern(COMMENTS) + ")"
-        // + "|(?<PUNCTUATION>" + generatePattern(PUNCTUATION) + ")"
-        // + "|(?<OPERATOR>" + generatePattern(OPERATORS) + ")"
-        // + "|(?<CONSTANT>" + generateBoundedPattern(CONSTANTS) + ")"
-        // + "|(?<STRING>" + generatePattern(STRINGS) + ")"
-        // + "|(?<IDENTIFIER>" + generateBoundedPattern(IDENTIFIERS) + ")"
-        // + "|(?<STATEMENT>" + generateBoundedPattern(STATEMENTS) + ")"
-        // + "|(?<TYPE>" + generateBoundedPattern(TYPES) + ")"
-        // + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"
-
             if (syntaxClass != null) {
-                spansBuilder.add(Collections.singleton(syntaxClass), matcher.end() - matcher.start());
-                lastMatchEnd = matcher.end();
+                spansBuilder.add(List.of(syntaxClass), matcher.end() - matcher.start());
+            } else {
+                spansBuilder.add(List.of(), matcher.end() - matcher.start());
             }
+            lastMatchEnd = matcher.end();
         }
+        spansBuilder.add(List.of(), text.length() - lastMatchEnd);
         return spansBuilder.create();
     }
 }

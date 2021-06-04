@@ -16,6 +16,10 @@
     -fx-fill: #98c379;
 }
 
+.syntax-operator {
+    -fx-fill: #e06c75;
+}
+
 .syntax-identifier {
     -fx-fill: #d7d7d7;
 }

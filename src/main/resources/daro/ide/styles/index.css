@@ -32,8 +32,9 @@
 }
 
 .text {
-    -fx-fill: #d7d7d7;
+    -fx-font-family: "Montserrat";
     -fx-font-weight: normal;
+    -fx-fill: #d7d7d7;
 }
 
 .icon {
@@ -52,6 +53,8 @@
 .tab-pane .tab.add-tab {
     -fx-background-color: #200D57;
     -fx-cursor: hand;
+    -fx-font-size: 20;
+    -fx-padding: 0 10 2 10;
 }
 
 .tab-pane .tab.add-tab:hover {
