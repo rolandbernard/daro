@@ -56,6 +56,11 @@ public abstract class AbstractScope implements Scope {
     abstract public Scope getFinalLevel();
 
     @Override
+    public Scope[] getParents() {
+        return parents;
+    }
+
+    @Override
     public boolean containsVariable(String name) {
         if (visited) {
             return false;

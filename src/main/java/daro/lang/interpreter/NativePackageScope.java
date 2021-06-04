@@ -32,6 +32,11 @@ public class NativePackageScope extends ClassLoader implements Scope {
     }
 
     @Override
+    public Scope[] getParents() {
+        return new Scope[0];
+    }
+
+    @Override
     public boolean containsVariable(String name) {
         DaroNativePackage pack = new DaroNativePackage(pkg, name);
         if (getResource(pack.getResourceName() + ".class") != null) {

@@ -80,6 +80,14 @@ public interface Scope {
     abstract public void reset();
 
     /**
+     * Returns the scopes that include all the variables that are excluded by the scope by running
+     * getFinalLevel on the same scope.
+     *
+     * @return The parents of this scope
+     */
+    abstract public Scope[] getParents();
+
+    /**
      * Get a string representation of the {@link Scope}. This method may be used by
      * implementing classes to implement the toString function. We can not overwrite
      * toString directly in the interface.
