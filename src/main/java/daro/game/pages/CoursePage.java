@@ -34,7 +34,7 @@ public class CoursePage extends Page {
         pane.setHgap(gap);
 
         List<LevelGroup> groups = LevelHandler.getAllLevels();
-        if (groups != null && groups.size() > 0) {
+        if (groups.size() > 0) {
             groups.forEach(group -> pane.getChildren().add(new LevelGroupItem(group)));
         } else {
             Text errorText = new Text("There was an error with loading the level groups.");

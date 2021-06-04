@@ -15,8 +15,8 @@ public abstract class UserData {
     private static final String PLAYGROUNDS_PATH = USER_PATH + "playgrounds";
 
     // LEVELS
-    private static JsonObject parseUserDataJson() {
-        File file = new File(USER_PATH + "data.json");
+    public static JsonObject parseUserJson(String filename) {
+        File file = new File(USER_PATH + filename);
         JsonObject element = new JsonObject();
         try {
             Scanner scanner = new Scanner(file);
@@ -37,7 +37,7 @@ public abstract class UserData {
     }
 
     public static Map<Long, JsonObject> getLevelGroupData(long groupId) {
-        JsonObject object = parseUserDataJson();
+        JsonObject object = parseUserJson("data.json");
         Map<Long, JsonObject> map = new HashMap<>();
         JsonElement groupData = object.get(String.valueOf(groupId));
 
@@ -63,7 +63,7 @@ public abstract class UserData {
      * @return if the writing wsa successful or not.
      */
     public static boolean writeLevelData(long groupId, long levelId, boolean completion, String currentCode) {
-        JsonObject outputObject = parseUserDataJson();
+        JsonObject outputObject = parseUserJson("data.json");
         JsonElement levelCompObj = outputObject.get(String.valueOf(groupId));
         if (levelCompObj == null) {
             JsonArray levels = new JsonArray();

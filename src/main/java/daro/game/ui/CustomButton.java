@@ -73,7 +73,7 @@ public class CustomButton extends HBox {
      */
     private Text generateText(String textString) {
         Text text = new Text(textString);
-        text.getStyleClass().add("text");
+        text.getStyleClass().addAll("text", "bold");
         return text;
     }
 }

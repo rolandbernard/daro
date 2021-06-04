@@ -3,17 +3,17 @@ package daro.game.pages;
 import daro.game.io.UserData;
 import daro.game.ui.CustomButton;
 import daro.game.ui.Heading;
+import daro.game.ui.TextInput;
 import daro.game.views.EditorView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class CreatePlaygroundPage extends Page {
-    private TextField nameField;
+    private TextInput nameField;
     private CustomButton saveButton;
     private HBox callout;
     private VBox form;
@@ -21,8 +21,7 @@ public class CreatePlaygroundPage extends Page {
 
     public CreatePlaygroundPage() {
         Heading heading = new Heading("Create a new playground", "Give it a name and get started!");
-        nameField = new TextField();
-        nameField.setStyle("-fx-font-size: 24px; -fx-background: rgba(255, 255, 255, 0.5)");
+        nameField = new TextInput();
         saveButton = new CustomButton("\ue161", "Create the playground", false);
         saveButton.setOnMouseClicked(this::createPlayground);
         callout = createCallout();
