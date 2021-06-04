@@ -6,6 +6,7 @@ import java.util.Set;
 import daro.ide.debug.Debugger;
 import daro.ide.debug.Interrupter;
 import daro.ide.debug.Terminal;
+import daro.ide.debug.ScopeViewer;
 import daro.ide.editor.EditorTabs;
 import daro.lang.interpreter.DaroException;
 import daro.lang.interpreter.ExecutionObserver;
@@ -22,6 +23,7 @@ import javafx.scene.text.Text;
 public class ExecutionPalette extends VBox {
     private EditorTabs editor;
     private Terminal terminal;
+    private ScopeViewer scope;
     private Interpreter interpreter;
 
     private Thread thread;
@@ -36,16 +38,16 @@ public class ExecutionPalette extends VBox {
     private Button restart;
     private Button clear;
 
-    public ExecutionPalette(EditorTabs editor, Terminal terminal, Interpreter interpreter) {
+    public ExecutionPalette(EditorTabs editor, Terminal terminal, ScopeViewer scope, Interpreter interpreter) {
         this.editor = editor;
         this.terminal = terminal;
         this.interpreter = interpreter;
+        this.scope = scope;
 
         run = buildIconButton("\ue037", event -> executeCode(false));
         debug = buildIconButton("\ue868", event -> executeCode(true));
         stop = buildIconButton("\ue047", event -> {
             thread.interrupt();
-            startRunning();
         });
         next = buildIconButton("\uf1df", event -> {});
         stepOver = buildIconButton("\ue15a", event -> {});
@@ -55,6 +57,7 @@ public class ExecutionPalette extends VBox {
         clear = buildIconButton("\ue872", event -> {
             terminal.clear();
             interpreter.reset();
+            scope.reload();
         });
 
         stop.setDisable(true);
@@ -75,20 +78,10 @@ public class ExecutionPalette extends VBox {
         getChildren().addAll(run, debug, stop, spacerA, next, stepOver, stepInto, stepOut, restart, spacerB, clear);
     }
 
-    private void startRunning() {
+    private void executeCode(boolean withDebugger) {
         run.setDisable(true);
         debug.setDisable(true);
         stop.setDisable(false);
-    }
-
-    private void stopRunning() {
-        run.setDisable(false);
-        debug.setDisable(false);
-        stop.setDisable(true);
-    }
-
-    private void executeCode(boolean debug) {
-        startRunning();
         editor.saveOpenIfNamed();
         Path file = editor.getOpenFile();
         String content = editor.getOpenContent();
@@ -96,7 +89,7 @@ public class ExecutionPalette extends VBox {
             interpreter.reset();
             try {
                 ExecutionObserver[] observers;
-                if (debug) {
+                if (withDebugger) {
                     debugger = new Debugger(Set.of());
                     observers = new ExecutionObserver[] { new Interrupter(), debugger };
                 } else {
@@ -113,7 +106,11 @@ public class ExecutionPalette extends VBox {
             } catch (Exception error) {
                 terminal.printError(error.toString() + "\n");
             }
-            stopRunning();
+            run.setDisable(false);
+            debug.setDisable(false);
+            stop.setDisable(true);
+            scope.setScope(interpreter.getContext().getScope());
+            scope.reload();
         });
         thread.start();
     }

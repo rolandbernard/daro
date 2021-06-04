@@ -26,7 +26,7 @@ public class Workspace extends SplitPane {
         terminal = new Terminal();
         interpreter = new Interpreter(terminal.getPrintStream());
         scope = new ScopeViewer(interpreter.getContext().getScope());
-        palette = new ExecutionPalette(editor, terminal, interpreter);
+        palette = new ExecutionPalette(editor, terminal, scope, interpreter);
 
         Region divider = new Region();
         divider.getStyleClass().add("pane-divider");
