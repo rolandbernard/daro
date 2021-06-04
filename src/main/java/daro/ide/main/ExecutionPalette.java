@@ -7,10 +7,9 @@ import daro.ide.debug.Debugger;
 import daro.ide.debug.Interrupter;
 import daro.ide.debug.Terminal;
 import daro.ide.editor.EditorTabs;
+import daro.lang.interpreter.DaroException;
 import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.Interpreter;
-import daro.lang.interpreter.InterpreterException;
-import daro.lang.parser.ParsingException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -108,11 +107,8 @@ public class ExecutionPalette extends VBox {
                 } else {
                     interpreter.execute(content, observers);
                 }
-            } catch (InterpreterException error) {
-                editor.highlightError(error.getPosition());
-                terminal.printError(error.toString() + "\n");
-            } catch (ParsingException error) {
-                editor.highlightError(error.getPosition());
+            } catch (DaroException error) {
+                editor.highlightError(error);
                 terminal.printError(error.toString() + "\n");
             } catch (Exception error) {
                 terminal.printError(error.toString() + "\n");

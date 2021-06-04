@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import daro.lang.ast.Position;
+import daro.lang.interpreter.DaroException;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.stage.FileChooser;
@@ -79,8 +79,8 @@ public class EditorTab extends Tab {
         return editor.getText();
     }
 
-    public void highlightError(Position position) {
-        editor.highlightError(position);
+    public void highlightError(DaroException error) {
+        editor.highlightError(error);
     }
 
     public void saveFile() {

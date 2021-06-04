@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import daro.lang.ast.Position;
+import daro.lang.interpreter.DaroException;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -90,12 +90,12 @@ public class EditorTabs extends TabPane {
         return ((EditorTab)getSelectionModel().getSelectedItem()).getEditorContent();
     }
 
-    public void highlightError(Position position) {
-        Path file = position.getFile();
+    public void highlightError(DaroException error) {
+        Path file = error.getFile();
         if (file != null) {
             openFile(file);
         }
         EditorTab editor = (EditorTab)getSelectionModel().getSelectedItem();
-        editor.highlightError(position);
+        editor.highlightError(error);
     }
 }

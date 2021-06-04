@@ -8,7 +8,7 @@
 }
 
 .tab-pane .tab-close-button {
-    -fx-background-color: #fff;
+    -fx-background-color: #eee;
     -fx-cursor: hand;
 }
 
@@ -40,7 +40,7 @@
 .icon {
     -fx-font-family: "Material Icons";
     -fx-font-size: 20;
-    -fx-fill: #fff;
+    -fx-fill: #eee;
 }
 
 .button {
@@ -85,6 +85,11 @@
 }
 
 .execution-palette {
+    -fx-padding: 5;  
+}
+
+.popup .label {
+    -fx-background-color: #121e20;
     -fx-padding: 5;  
 }
 
