@@ -41,8 +41,7 @@ public class NativePackageScope extends ClassLoader implements Scope {
         } else {
             for (Package packs : getPackages()) {
                 if (
-                    packs.getName().startsWith(pack.getClassName() + ".")
-                    || packs.getName().equals(pack.getClassName())
+                    packs.getName().startsWith(pack.getClassName() + ".") || packs.getName().equals(pack.getClassName())
                 ) {
                     return true;
                 }

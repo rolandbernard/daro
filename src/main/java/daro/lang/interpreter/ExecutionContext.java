@@ -134,8 +134,8 @@ public class ExecutionContext {
     }
 
     /**
-     * Reset the execution context, by resting the scope and module registry. This method will
-     * retain all observers registered for the context.
+     * Reset the execution context, by resting the scope and module registry. This
+     * method will retain all observers registered for the context.
      */
     public void reset() {
         scope.reset();

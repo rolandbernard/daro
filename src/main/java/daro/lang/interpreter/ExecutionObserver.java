@@ -14,55 +14,75 @@ public interface ExecutionObserver {
 
     /**
      * This method is called after an exception is thrown during execution of the
-     * given ast node. If this method does not throw another exception, the return value of the
-     * lasts succeeding observer will be used as the return value of the given ast.
+     * given ast node. If this method does not throw another exception, the return
+     * value of the lasts succeeding observer will be used as the return value of
+     * the given ast.
      * 
-     * @param node  The node that was executed
-     * @param error The error that was thrown
-     * @param value The value returned by the previous observer
-     * @param scope The scope the ast was executed in
+     * @param node    The node that was executed
+     * @param error   The error that was thrown
+     * @param value   The value returned by the previous observer
+     * @param context The context the execution is in
+     * @return The value that the node should return, if continuation is possible
      */
-    public DaroObject onException(AstNode node, RuntimeException error, DaroObject value, ExecutionContext context);
+    default public DaroObject onException(
+        AstNode node, RuntimeException error, DaroObject value, ExecutionContext context
+    ) {
+        // The default is to rethrow the exception
+        throw error;
+    }
 
     /**
      * This method is called before execution of a {@link AstNode} inside the given
      * {@link Scope}.
      * 
-     * @param node  The node that will be executed
-     * @param scope The scope the ast node will be executed in
+     * @param node    The node that will be executed
+     * @param context The context the execution is in
      */
-    public void beforeExecution(AstNode node, ExecutionContext context);
+    default public void beforeExecution(AstNode node, ExecutionContext context) {
+        // Do nothing by default
+    }
 
     /**
      * This method is called after successful execution of the given ast node. And
      * gets called with the value that was returned by the nodes execution.
      * 
-     * @param node  The node that was executed
-     * @param value The value returned by node execution
-     * @param scope The scope the ast was executed in
+     * @param node    The node that was executed
+     * @param value   The value returned by node execution
+     * @param context The context the execution is in
      */
-    public void afterExecution(AstNode node, DaroObject value, ExecutionContext context);
+    default public void afterExecution(AstNode node, DaroObject value, ExecutionContext context) {
+        // Do nothing by default
+    }
 
     /**
      * This method is called after an exception is thrown during localization of the
-     * given ast node. If this method does not throw another exception, the return value of the
-     * lasts succeeding observer will be used as the return value of the given ast.
+     * given ast node. If this method does not throw another exception, the return
+     * value of the lasts succeeding observer will be used as the return value of
+     * the given ast.
      * 
-     * @param node  The node that was executed
-     * @param error The error that was thrown
-     * @param value The value returned by the previous observer
-     * @param scope The scope the ast was executed in
+     * @param node    The node that was executed
+     * @param error   The error that was thrown
+     * @param value   The value returned by the previous observer
+     * @param context The context the execution is in
+     * @return The value that the node should return, if continuation is possible
      */
-    public VariableLocation onException(AstNode node, RuntimeException error, VariableLocation value, ExecutionContext context);
+    default public VariableLocation onException(
+        AstNode node, RuntimeException error, VariableLocation value, ExecutionContext context
+    ) {
+        // The default is to rethrow the exception
+        throw error;
+    }
 
     /**
      * This method will be called before trying to find the {@link VariableLocation}
      * corresponding to the given {@link AstNode} inside the given {@link Scope}.
      * 
-     * @param node  The node that will be executed
-     * @param scope The scope the ast node will be executed in
+     * @param node    The node that will be executed
+     * @param context The context the execution is in
      */
-    public void beforeLocalization(AstNode node, ExecutionContext context);
+    default public void beforeLocalization(AstNode node, ExecutionContext context) {
+        // Do nothing by default
+    }
 
     /**
      * This method will be called after having successfully found the
@@ -70,7 +90,9 @@ public interface ExecutionObserver {
      * 
      * @param node     The ast node that was executed
      * @param location The {@link VariableLocation} that resulted from the ast node
-     * @param scope    The scope the ast was executed in
+     * @param context  The context the execution is in
      */
-    public void afterLocalization(AstNode node, VariableLocation location, ExecutionContext context);
+    default public void afterLocalization(AstNode node, VariableLocation location, ExecutionContext context) {
+        // Do nothing by default
+    }
 }
