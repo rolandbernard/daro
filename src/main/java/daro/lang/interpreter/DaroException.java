@@ -1,5 +1,7 @@
 package daro.lang.interpreter;
 
+import java.nio.file.Path;
+
 import daro.lang.ast.Position;
 
 /**
@@ -58,6 +60,15 @@ public class DaroException extends IllegalArgumentException {
      */
     public int getEnd() {
         return position.getEnd();
+    }
+
+    /**
+     * Return the file of the position of the error.
+     * 
+     * @return The file of the error
+     */
+    public Path getFile() {
+        return position.getFile();
     }
 
     /**

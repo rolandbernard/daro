@@ -289,6 +289,11 @@ public class NativeScope implements Scope {
     }
 
     @Override
+    public Scope[] getParents() {
+        return new Scope[0];
+    }
+
+    @Override
     public boolean containsVariable(String name) {
         if (methods.containsKey(name)) {
             for (Method method : methods.get(name)) {
