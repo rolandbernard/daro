@@ -29,7 +29,11 @@ public class ExecutionContext {
      */
     public ExecutionContext(Scope scope, PrintStream output, ExecutionObserver ...observers) {
         this.scope = scope;
-        this.observers = observers;
+        if (observers.length == 0) {
+            this.observers = null;
+        } else {
+            this.observers = observers;
+        }
         this.output = output;
         this.modules = new HashMap<>();
     }
@@ -57,9 +61,15 @@ public class ExecutionContext {
      */
     private ExecutionContext(ExecutionContext context, ExecutionObserver ...observers) {
         this.scope = context.scope;
-        this.observers = Arrays.copyOf(context.observers, context.observers.length + observers.length);
-        for (int i = 0; i < observers.length; i++) {
-            this.observers[context.observers.length + i] = observers[i];
+        if (observers.length == 0) {
+            this.observers = context.observers;
+        } else if (context.observers == null) {
+            this.observers = observers;
+        } else {
+            this.observers = Arrays.copyOf(context.observers, context.observers.length + observers.length);
+            for (int i = 0; i < observers.length; i++) {
+                this.observers[context.observers.length + i] = observers[i];
+            }
         }
         this.output = context.output;
         this.modules = context.modules;
