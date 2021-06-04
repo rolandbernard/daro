@@ -4,8 +4,8 @@ import daro.lang.ast.*;
 import daro.lang.values.*;
 
 /**
- * This class is used to execute an ast inside a given scope and return the variable location that corresponds to the
- * ast.
+ * This class is used to execute an ast inside a given scope and return the
+ * variable location that corresponds to the ast.
  *
  * @author Roland Bernard
  */
@@ -15,8 +15,7 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
     /**
      * Create a new {@link LocationEvaluator} for execution in the given context.
      * 
-     * @param context
-     *            The context to execute in
+     * @param context The context to execute in
      */
     public LocationEvaluator(ExecutionContext context) {
         this.context = context;
@@ -25,11 +24,8 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
     /**
      * Run the given {@link AstNode} in the given {@link ExecutionContext}.
      * 
-     * @param context
-     *            The context to execute in
-     * @param program
-     *            The {@link AstNode} to execute
-     * 
+     * @param context The context to execute in
+     * @param program The {@link AstNode} to execute
      * @return The result of the execution
      */
     public static VariableLocation execute(ExecutionContext context, AstNode program) {
@@ -39,9 +35,7 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
     /**
      * Run the {@link AstNode} in the scope of the {@link LocationEvaluator}
      * 
-     * @param program
-     *            The {@link AstNode} to execute
-     * 
+     * @param program The {@link AstNode} to execute
      * @return The result of the execution
      */
     public VariableLocation execute(AstNode program) {
@@ -251,8 +245,8 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
         if (left instanceof DaroArray) {
             DaroObject right = Executor.execute(context, ast.getRight());
             if (right instanceof DaroInteger) {
-                DaroArray array = (DaroArray) left;
-                int index = ((DaroInteger) right).getValue().intValue();
+                DaroArray array = (DaroArray)left;
+                int index = ((DaroInteger)right).getValue().intValue();
                 return value -> {
                     if (index < 0 || index >= array.getLength()) {
                         throw new InterpreterException(ast.getPosition(), "Index out of bounds");

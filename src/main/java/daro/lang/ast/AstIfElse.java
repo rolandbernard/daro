@@ -3,7 +3,8 @@ package daro.lang.ast;
 import java.util.Objects;
 
 /**
- * Class representing an ast node for a if-else condition. e.g. {@code if foo { ... } else { ... }}
+ * Class representing an ast node for a if-else condition. e.g. {@code if foo {
+ * ... } else { ... }}
  * 
  * @author Roland Bernard
  */
@@ -43,9 +44,9 @@ public final class AstIfElse extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstIfElse) {
-            AstIfElse node = (AstIfElse) obj;
+            AstIfElse node = (AstIfElse)obj;
             return Objects.equals(condition, node.getCondition()) && Objects.equals(ifBlock, node.getIf())
-                    && Objects.equals(elseBlock, node.getElse());
+                && Objects.equals(elseBlock, node.getElse());
         } else {
             return false;
         }

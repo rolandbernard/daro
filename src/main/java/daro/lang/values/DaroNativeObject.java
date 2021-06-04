@@ -17,10 +17,8 @@ public class DaroNativeObject extends DaroObject {
     /**
      * Create a new native object value from the given value and specify its type.
      * 
-     * @param type
-     *            The type the {@link DaroNativeObject} represents
-     * @param value
-     *            The value the {@link DaroNativeObject} represents
+     * @param type  The type the {@link DaroNativeObject} represents
+     * @param value The value the {@link DaroNativeObject} represents
      */
     public DaroNativeObject(DaroNativeClass type, Object value) {
         this.type = type;
@@ -31,8 +29,7 @@ public class DaroNativeObject extends DaroObject {
     /**
      * Create a new native object value from the given value.
      * 
-     * @param value
-     *            The value the {@link DaroNativeObject} represents
+     * @param value The value the {@link DaroNativeObject} represents
      */
     public DaroNativeObject(Object value) {
         this(new DaroNativeClass(value.getClass()), value);
@@ -70,7 +67,7 @@ public class DaroNativeObject extends DaroObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroNativeObject) {
-            DaroNativeObject userObject = (DaroNativeObject) object;
+            DaroNativeObject userObject = (DaroNativeObject)object;
             return Objects.equals(value, userObject.getValue());
         } else {
             return false;

@@ -28,7 +28,7 @@ public class DaroTypeReal extends DaroType {
             AstNode value = initializer.getValues()[0];
             DaroObject object = Executor.execute(context, value);
             if (object instanceof DaroNumber) {
-                DaroNumber number = (DaroNumber) object;
+                DaroNumber number = (DaroNumber)object;
                 return new DaroReal(number.doubleValue());
             } else if (object != null) {
                 throw new InterpreterException(value.getPosition(), "Value can not be converted to a real number");

@@ -15,11 +15,10 @@ public class LevelItem extends VBox {
 
     /**
      * <strong>UI: <em>Component</em></strong><br>
-     * An overview item, containing basic information about the level. When clicked it changes the scene to the
-     * LevelView
+     * An overview item, containing basic information about the level. When clicked
+     * it changes the scene to the LevelView
      * 
-     * @param level
-     *            the level displayed
+     * @param level the level displayed
      */
     public LevelItem(long parentId, Level level) {
         this.level = level;
@@ -27,7 +26,8 @@ public class LevelItem extends VBox {
         this.setWidth(Page.INNER_WIDTH);
         this.setMinHeight(200);
         this.setStyle(
-                "-fx-background-radius: 25px; -fx-background-color: #381A90; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);");
+            "-fx-background-radius: 25px; -fx-background-color: #381A90; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+        );
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
         this.setOnMouseClicked(event -> this.getScene().setRoot(new LevelView(level)));

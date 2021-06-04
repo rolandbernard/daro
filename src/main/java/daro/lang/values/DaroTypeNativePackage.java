@@ -5,7 +5,8 @@ import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.InterpreterException;
 
 /**
- * This class represents the type for a package object ({@link DaroNativePackage}).
+ * This class represents the type for a package object
+ * ({@link DaroNativePackage}).
  * 
  * @author Roland Bernard
  */

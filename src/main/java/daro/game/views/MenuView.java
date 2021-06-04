@@ -11,8 +11,7 @@ public class MenuView extends View {
      * <strong>UI: <em>View</em></strong><br>
      * A view with a navigation sidebar and pages.
      * 
-     * @param defaultPage
-     *            the starting page
+     * @param defaultPage the starting page
      */
     public MenuView(Page defaultPage) {
         setContent(defaultPage);
@@ -20,12 +19,9 @@ public class MenuView extends View {
     }
 
     /**
-     *
      * Updates the main content of the MenuView to a given page.
      * 
-     * @param page
-     *            The page the content should contain
-     *
+     * @param page The page the content should contain
      */
     public static void setContent(Page page) {
         CONTENT.setContent(page);

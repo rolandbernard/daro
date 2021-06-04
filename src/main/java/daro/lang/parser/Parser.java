@@ -9,39 +9,38 @@ import java.util.function.Supplier;
 import daro.lang.ast.*;
 
 /**
- * This class implements the parser of the Daro language. It is implement as a recursive decent parser. All methods are
- * private except for the parseSourceCode class method, that can be used by consumers of the class to parse Daro source
- * code into a ast tree.
+ * This class implements the parser of the Daro language. It is implement as a
+ * recursive decent parser. All methods are private except for the
+ * parseSourceCode class method, that can be used by consumers of the class to
+ * parse Daro source code into a ast tree.
  * 
  * @author Roland Bernard
  */
 public class Parser {
     /**
-     * This variable stores the scanner used for parsing. It is initialled with the source code that should be parsed on
-     * instance creation of the {@link Parser} object.
+     * This variable stores the scanner used for parsing. It is initialled with the
+     * source code that should be parsed on instance creation of the {@link Parser}
+     * object.
      */
     private final Scanner scanner;
 
     /**
      * Create a Parser object for the given source.
      * 
-     * @param source
-     *            The source code for the parser
-     * @param file
-     *            The file for error message positions
+     * @param source The source code for the parser
+     * @param file   The file for error message positions
      */
     private Parser(String source, Path file) {
         scanner = new Scanner(source, file);
     }
 
     /**
-     * Parse the source code found in the given {@link String} into a ast tree using the types in daro.lang.ast. Errors
-     * during parsing will throw a {@link ParsingException}. A empty source does not constitute an syntax error and will
-     * return an empty {@link AstSequence} node.
+     * Parse the source code found in the given {@link String} into a ast tree using
+     * the types in daro.lang.ast. Errors during parsing will throw a
+     * {@link ParsingException}. A empty source does not constitute an syntax error
+     * and will return an empty {@link AstSequence} node.
      * 
-     * @param source
-     *            The source code that should be parsed
-     * 
+     * @param source The source code that should be parsed
      * @return The root node for the resulting ast tree
      */
     public static AstSequence parseSourceCode(String source) {
@@ -49,15 +48,13 @@ public class Parser {
     }
 
     /**
-     * Parse the source code found in the given {@link String} into a ast tree using the types in daro.lang.ast. Errors
-     * during parsing will throw a {@link ParsingException}. A empty source does not constitute an syntax error and will
-     * return an empty {@link AstSequence} node.
+     * Parse the source code found in the given {@link String} into a ast tree using
+     * the types in daro.lang.ast. Errors during parsing will throw a
+     * {@link ParsingException}. A empty source does not constitute an syntax error
+     * and will return an empty {@link AstSequence} node.
      * 
-     * @param source
-     *            The source code that should be parsed
-     * @param file
-     *            The file for error message positions
-     * 
+     * @param source The source code that should be parsed
+     * @param file   The file for error message positions
      * @return The root node for the resulting ast tree
      */
     public static AstSequence parseSourceCode(String source, Path file) {
@@ -68,15 +65,13 @@ public class Parser {
     /**
      * Utility function that returns the first option that does not resolve to null.
      * 
-     * @param <T>
-     *            The type of parameter returned by the supplies
-     * @param options
-     *            The different suppliers that should be tested
-     * 
-     * @return The first option in options that return non-null or null if all return null
+     * @param <T>     The type of parameter returned by the supplies
+     * @param options The different suppliers that should be tested
+     * @return The first option in options that return non-null or null if all
+     *         return null
      */
     @SafeVarargs
-    private static <T> T firstNonNull(Supplier<T>... options) {
+    private static <T> T firstNonNull(Supplier<T> ...options) {
         for (var option : options) {
             T result = option.get();
             if (result != null) {
@@ -119,8 +114,8 @@ public class Parser {
         if (statements.isEmpty()) {
             return new AstSequence(new Position(scanner.getOffset()), new AstNode[0]);
         } else {
-            Position position = new Position(statements.get(0).getPosition(),
-                    statements.get(statements.size() - 1).getPosition());
+            Position position =
+                new Position(statements.get(0).getPosition(), statements.get(statements.size() - 1).getPosition());
             return new AstSequence(position, statements.toArray(new AstNode[statements.size()]));
         }
     }
@@ -145,8 +140,9 @@ public class Parser {
             Token name = scanner.accept(TokenKind.IDENTIFIER);
             Token opening = scanner.accept(TokenKind.OPEN_PAREN);
             if (opening == null) {
-                throw new ParsingException(new Position(token.getPosition(), name.getPosition()),
-                        "Expected opening `(` after function name");
+                throw new ParsingException(
+                    new Position(token.getPosition(), name.getPosition()), "Expected opening `(` after function name"
+                );
             }
             ArrayList<AstSymbol> parameters = new ArrayList<>();
             Token parameter;
@@ -168,11 +164,14 @@ public class Parser {
             }
             AstBlock body = parseCodeBlock();
             if (body == null) {
-                throw new ParsingException(new Position(token.getPosition(), name.getPosition()),
-                        "Expected body after parameter list");
+                throw new ParsingException(
+                    new Position(token.getPosition(), name.getPosition()), "Expected body after parameter list"
+                );
             }
-            return new AstFunction(new Position(token.getPosition(), body.getPosition()),
-                    name != null ? name.getSource() : null, parameters.toArray(new AstSymbol[parameters.size()]), body);
+            return new AstFunction(
+                new Position(token.getPosition(), body.getPosition()), name != null ? name.getSource() : null,
+                parameters.toArray(new AstSymbol[parameters.size()]), body
+            );
         } else {
             return null;
         }
@@ -190,14 +189,16 @@ public class Parser {
             AstBlock body = parseCodeBlock();
             if (body == null) {
                 if (name != null) {
-                    throw new ParsingException(new Position(token.getPosition(), name.getPosition()),
-                            "Expected body after class name");
+                    throw new ParsingException(
+                        new Position(token.getPosition(), name.getPosition()), "Expected body after class name"
+                    );
                 } else {
                     throw new ParsingException(token.getPosition(), "Expected body or name after `class`");
                 }
             }
-            return new AstClass(new Position(token.getPosition(), body.getPosition()),
-                    name != null ? name.getSource() : null, body);
+            return new AstClass(
+                new Position(token.getPosition(), body.getPosition()), name != null ? name.getSource() : null, body
+            );
         } else {
             return null;
         }
@@ -217,8 +218,9 @@ public class Parser {
             }
             AstNode body = parserStatement();
             if (body == null) {
-                throw new ParsingException(new Position(ifToken.getPosition(), condition.getPosition()),
-                        "Expected body after `if` condition");
+                throw new ParsingException(
+                    new Position(ifToken.getPosition(), condition.getPosition()), "Expected body after `if` condition"
+                );
             }
             if (scanner.hasNext(TokenKind.ELSE)) {
                 Token elseToken = scanner.next();
@@ -226,8 +228,9 @@ public class Parser {
                 if (elseBody == null) {
                     throw new ParsingException(elseToken.getPosition(), "Expected body after `else`");
                 }
-                return new AstIfElse(new Position(ifToken.getPosition(), elseBody.getPosition()), condition, body,
-                        elseBody);
+                return new AstIfElse(
+                    new Position(ifToken.getPosition(), elseBody.getPosition()), condition, body, elseBody
+                );
             } else {
                 return new AstIfElse(new Position(ifToken.getPosition(), body.getPosition()), condition, body, null);
             }
@@ -259,16 +262,19 @@ public class Parser {
                 }
                 AstNode body = parserStatement();
                 if (body == null) {
-                    throw new ParsingException(new Position(forToken.getPosition(), first.getPosition()),
-                            "Expected body after `for`-`in`");
+                    throw new ParsingException(
+                        new Position(forToken.getPosition(), first.getPosition()), "Expected body after `for`-`in`"
+                    );
                 }
-                return new AstForIn(new Position(forToken.getPosition(), body.getPosition()), (AstSymbol) first, list,
-                        body);
+                return new AstForIn(
+                    new Position(forToken.getPosition(), body.getPosition()), (AstSymbol)first, list, body
+                );
             } else {
                 AstNode body = parserStatement();
                 if (body == null) {
-                    throw new ParsingException(new Position(forToken.getPosition(), first.getPosition()),
-                            "Expected body after `for`-condition");
+                    throw new ParsingException(
+                        new Position(forToken.getPosition(), first.getPosition()), "Expected body after `for`-condition"
+                    );
                 }
                 return new AstFor(new Position(forToken.getPosition(), body.getPosition()), first, body);
             }
@@ -334,9 +340,11 @@ public class Parser {
     }
 
     /**
-     * Parse an expression of the Daro language. Operator precedence (from lowest to highest): 0. {@code =} 1.
-     * {@code ||} 2. {@code &&} 3. {@code == != < <= > >=} 4. {@code |} 5. {@code ^} 6. {@code &} 7. {@code << >>} 8.
-     * {@code + -} 9. {@code * / %} 10. unary prefix: {@code + - ~ ! []} 11. unary suffix: {@code () [] .}
+     * Parse an expression of the Daro language. Operator precedence (from lowest to
+     * highest): 0. {@code =} 1. {@code ||} 2. {@code &&} 3. {@code == != < <= > >=}
+     * 4. {@code |} 5. {@code ^} 6. {@code &} 7. {@code << >>} 8. {@code + -} 9.
+     * {@code * / %} 10. unary prefix: {@code + - ~ ! []} 11. unary suffix:
+     * {@code () [] .}
      * 
      * @return The parsed expression's ast, or null
      */
@@ -345,32 +353,33 @@ public class Parser {
     }
 
     /**
-     * This is a utility function that is able to parse binary expressions and is used for parsing most of the binary
-     * operations in this parser. It will accept binary infix operations where the operator is one of the tokens in
-     * operators. Both sides of will be generated by nextLevel and if a operation was found the ast node will be
-     * generated using the corresponding operator in build. (i.e. if we find operators[i] we will use build[i] to
-     * generate the resulting node given the left and right ast nodes)
+     * This is a utility function that is able to parse binary expressions and is
+     * used for parsing most of the binary operations in this parser. It will accept
+     * binary infix operations where the operator is one of the tokens in operators.
+     * Both sides of will be generated by nextLevel and if a operation was found the
+     * ast node will be generated using the corresponding operator in build. (i.e.
+     * if we find operators[i] we will use build[i] to generate the resulting node
+     * given the left and right ast nodes)
      * 
-     * @param nextLevel
-     *            The next higher precedence level
-     * @param operators
-     *            The operators that will be parsed
-     * @param build
-     *            The operators to generate the ast node
-     * 
+     * @param nextLevel The next higher precedence level
+     * @param operators The operators that will be parsed
+     * @param build     The operators to generate the ast node
      * @return The root node of the parsed ast tree
      */
     @SafeVarargs
-    private AstNode parseBinaryExpression(Supplier<AstNode> nextLevel, TokenKind[] operators,
-            BinaryOperator<AstNode>... build) {
+    private AstNode parseBinaryExpression(
+        Supplier<AstNode> nextLevel, TokenKind[] operators, BinaryOperator<AstNode> ...build
+    ) {
         AstNode ret = nextLevel.get();
         if (ret != null) {
             while (scanner.hasNext(operators)) {
                 Token token = scanner.next();
                 AstNode right = nextLevel.get();
                 if (right == null) {
-                    throw new ParsingException(new Position(ret.getPosition(), token.getPosition()),
-                            "Expected an expression after `" + token.getSource() + "`");
+                    throw new ParsingException(
+                        new Position(ret.getPosition(), token.getPosition()),
+                        "Expected an expression after `" + token.getSource() + "`"
+                    );
                 }
                 for (int i = 0; i < operators.length; i++) {
                     if (token.getKind() == operators[i]) {
@@ -384,53 +393,57 @@ public class Parser {
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the assignment operation.
-     * i.e. {@code =}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the assignment operation. i.e. {@code =}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseAssignmentExpression() {
-        // This does not use parseBinaryExpression, because precedence goes right-to-left. e.g. x = a = 5
+        // This does not use parseBinaryExpression, because precedence goes
+        // right-to-left. e.g. x = a = 5
         AstNode ret = parseLazyOrExpression();
-        boolean hasAssignment = scanner.hasNext(new TokenKind[] { TokenKind.ASSIGN, TokenKind.SHIFT_LEFT_ASSIGN,
-                TokenKind.SHIFT_RIGHT_ASSIGN, TokenKind.PLUS_ASSIGN, TokenKind.MINUS_ASSIGN, TokenKind.ASTERISK_ASSIGN,
-                TokenKind.SLASH_ASSIGN, TokenKind.PERCENT_ASSIGN, TokenKind.PIPE_ASSIGN, TokenKind.AND_ASSIGN,
-                TokenKind.CARET_ASSIGN, TokenKind.DOUBLE_PIPE_ASSIGN, TokenKind.DOUBLE_AND_ASSIGN, });
+        boolean hasAssignment = scanner.hasNext(new TokenKind[] {
+            TokenKind.ASSIGN, TokenKind.SHIFT_LEFT_ASSIGN, TokenKind.SHIFT_RIGHT_ASSIGN, TokenKind.PLUS_ASSIGN,
+            TokenKind.MINUS_ASSIGN, TokenKind.ASTERISK_ASSIGN, TokenKind.SLASH_ASSIGN, TokenKind.PERCENT_ASSIGN,
+            TokenKind.PIPE_ASSIGN, TokenKind.AND_ASSIGN, TokenKind.CARET_ASSIGN, TokenKind.DOUBLE_PIPE_ASSIGN,
+            TokenKind.DOUBLE_AND_ASSIGN,
+        });
         if (ret != null && hasAssignment) {
             Token token = scanner.next();
             AstNode right = parseAssignmentExpression();
             if (right == null) {
-                throw new ParsingException(new Position(ret.getPosition(), token.getPosition()),
-                        "Expected an expression after `=`");
+                throw new ParsingException(
+                    new Position(ret.getPosition(), token.getPosition()), "Expected an expression after `=`"
+                );
             }
             Position position = new Position(ret.getPosition(), right.getPosition());
             switch (token.getKind()) {
-            case SHIFT_LEFT_ASSIGN:
-                return new AstAssignment(position, ret, new AstShiftLeft(position, ret, right));
-            case SHIFT_RIGHT_ASSIGN:
-                return new AstAssignment(position, ret, new AstShiftRight(position, ret, right));
-            case PLUS_ASSIGN:
-                return new AstAssignment(position, ret, new AstAddition(position, ret, right));
-            case MINUS_ASSIGN:
-                return new AstAssignment(position, ret, new AstSubtract(position, ret, right));
-            case ASTERISK_ASSIGN:
-                return new AstAssignment(position, ret, new AstMultiply(position, ret, right));
-            case SLASH_ASSIGN:
-                return new AstAssignment(position, ret, new AstDivide(position, ret, right));
-            case PERCENT_ASSIGN:
-                return new AstAssignment(position, ret, new AstRemainder(position, ret, right));
-            case PIPE_ASSIGN:
-                return new AstAssignment(position, ret, new AstBitwiseOr(position, ret, right));
-            case AND_ASSIGN:
-                return new AstAssignment(position, ret, new AstBitwiseAnd(position, ret, right));
-            case CARET_ASSIGN:
-                return new AstAssignment(position, ret, new AstBitwiseXor(position, ret, right));
-            case DOUBLE_PIPE_ASSIGN:
-                return new AstAssignment(position, ret, new AstOr(position, ret, right));
-            case DOUBLE_AND_ASSIGN:
-                return new AstAssignment(position, ret, new AstAnd(position, ret, right));
-            default:
-                return new AstAssignment(position, ret, right);
+                case SHIFT_LEFT_ASSIGN:
+                    return new AstAssignment(position, ret, new AstShiftLeft(position, ret, right));
+                case SHIFT_RIGHT_ASSIGN:
+                    return new AstAssignment(position, ret, new AstShiftRight(position, ret, right));
+                case PLUS_ASSIGN:
+                    return new AstAssignment(position, ret, new AstAddition(position, ret, right));
+                case MINUS_ASSIGN:
+                    return new AstAssignment(position, ret, new AstSubtract(position, ret, right));
+                case ASTERISK_ASSIGN:
+                    return new AstAssignment(position, ret, new AstMultiply(position, ret, right));
+                case SLASH_ASSIGN:
+                    return new AstAssignment(position, ret, new AstDivide(position, ret, right));
+                case PERCENT_ASSIGN:
+                    return new AstAssignment(position, ret, new AstRemainder(position, ret, right));
+                case PIPE_ASSIGN:
+                    return new AstAssignment(position, ret, new AstBitwiseOr(position, ret, right));
+                case AND_ASSIGN:
+                    return new AstAssignment(position, ret, new AstBitwiseAnd(position, ret, right));
+                case CARET_ASSIGN:
+                    return new AstAssignment(position, ret, new AstBitwiseXor(position, ret, right));
+                case DOUBLE_PIPE_ASSIGN:
+                    return new AstAssignment(position, ret, new AstOr(position, ret, right));
+                case DOUBLE_AND_ASSIGN:
+                    return new AstAssignment(position, ret, new AstAnd(position, ret, right));
+                default:
+                    return new AstAssignment(position, ret, right);
             }
         } else {
             return ret;
@@ -438,133 +451,142 @@ public class Parser {
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the boolean or operation.
-     * i.e. {@code ||}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the boolean or operation. i.e. {@code ||}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseLazyOrExpression() {
-        return parseBinaryExpression(this::parseLazyAndExpression, new TokenKind[] { TokenKind.DOUBLE_PIPE },
-                (left, right) -> new AstOr(new Position(left.getPosition(), right.getPosition()), left, right));
+        return parseBinaryExpression(this::parseLazyAndExpression, new TokenKind[] {
+            TokenKind.DOUBLE_PIPE
+        }, (left, right) -> new AstOr(new Position(left.getPosition(), right.getPosition()), left, right));
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the boolean and operation.
-     * i.e. {@code &&}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the boolean and operation. i.e. {@code &&}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseLazyAndExpression() {
-        return parseBinaryExpression(this::parseComparisonExpression, new TokenKind[] { TokenKind.DOUBLE_AND },
-                (left, right) -> new AstAnd(new Position(left.getPosition(), right.getPosition()), left, right));
+        return parseBinaryExpression(this::parseComparisonExpression, new TokenKind[] {
+            TokenKind.DOUBLE_AND
+        }, (left, right) -> new AstAnd(new Position(left.getPosition(), right.getPosition()), left, right));
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the comparison operations.
-     * i.e. {@code == != < <= > >=}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the comparison operations. i.e. {@code == != < <= > >=}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseComparisonExpression() {
-        return parseBinaryExpression(this::parseBitwiseOrExpression,
-                new TokenKind[] { TokenKind.EQUAL, TokenKind.UNEQUAL, TokenKind.LESS, TokenKind.LESS_EQUAL,
-                        TokenKind.MORE, TokenKind.MORE_EQUAL },
-                (left, right) -> new AstEqual(new Position(left.getPosition(), right.getPosition()), left, right),
-                (left, right) -> new AstNotEqual(new Position(left.getPosition(), right.getPosition()), left, right),
-                (left, right) -> new AstLessThan(new Position(left.getPosition(), right.getPosition()), left, right),
-                (left, right) -> new AstLessOrEqual(new Position(left.getPosition(), right.getPosition()), left, right),
-                (left, right) -> new AstMoreThan(new Position(left.getPosition(), right.getPosition()), left, right),
-                (left, right) -> new AstMoreOrEqual(new Position(left.getPosition(), right.getPosition()), left,
-                        right));
+        return parseBinaryExpression(this::parseBitwiseOrExpression, new TokenKind[] {
+            TokenKind.EQUAL, TokenKind.UNEQUAL, TokenKind.LESS, TokenKind.LESS_EQUAL, TokenKind.MORE,
+            TokenKind.MORE_EQUAL
+        }, (left, right) -> new AstEqual(new Position(left.getPosition(), right.getPosition()), left, right),
+            (left, right) -> new AstNotEqual(new Position(left.getPosition(), right.getPosition()), left, right),
+            (left, right) -> new AstLessThan(new Position(left.getPosition(), right.getPosition()), left, right),
+            (left, right) -> new AstLessOrEqual(new Position(left.getPosition(), right.getPosition()), left, right),
+            (left, right) -> new AstMoreThan(new Position(left.getPosition(), right.getPosition()), left, right),
+            (left, right) -> new AstMoreOrEqual(new Position(left.getPosition(), right.getPosition()), left, right)
+        );
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the bitwise or operation.
-     * i.e. {@code |}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the bitwise or operation. i.e. {@code |}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseBitwiseOrExpression() {
-        return parseBinaryExpression(this::parseBitwiseXorExpression, new TokenKind[] { TokenKind.PIPE },
-                (left, right) -> new AstBitwiseOr(new Position(left.getPosition(), right.getPosition()), left, right));
+        return parseBinaryExpression(this::parseBitwiseXorExpression, new TokenKind[] {
+            TokenKind.PIPE
+        }, (left, right) -> new AstBitwiseOr(new Position(left.getPosition(), right.getPosition()), left, right));
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the bitwise xor operation.
-     * i.e. {@code ^}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the bitwise xor operation. i.e. {@code ^}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseBitwiseXorExpression() {
-        return parseBinaryExpression(this::parseBitwiseAndExpression, new TokenKind[] { TokenKind.CARET },
-                (left, right) -> new AstBitwiseXor(new Position(left.getPosition(), right.getPosition()), left, right));
+        return parseBinaryExpression(this::parseBitwiseAndExpression, new TokenKind[] {
+            TokenKind.CARET
+        }, (left, right) -> new AstBitwiseXor(new Position(left.getPosition(), right.getPosition()), left, right));
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the bitwise and operation.
-     * i.e. {@code &}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the bitwise and operation. i.e. {@code &}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseBitwiseAndExpression() {
-        return parseBinaryExpression(this::parseShiftExpression, new TokenKind[] { TokenKind.AND },
-                (left, right) -> new AstBitwiseAnd(new Position(left.getPosition(), right.getPosition()), left, right));
+        return parseBinaryExpression(this::parseShiftExpression, new TokenKind[] {
+            TokenKind.AND
+        }, (left, right) -> new AstBitwiseAnd(new Position(left.getPosition(), right.getPosition()), left, right));
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the shift operations. i.e.
-     * {@code << >>}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the shift operations. i.e. {@code << >>}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseShiftExpression() {
-        return parseBinaryExpression(this::parseAdditiveExpression,
-                new TokenKind[] { TokenKind.SHIFT_LEFT, TokenKind.SHIFT_RIGHT },
-                (left, right) -> new AstShiftLeft(new Position(left.getPosition(), right.getPosition()), left, right),
-                (left, right) -> new AstShiftRight(new Position(left.getPosition(), right.getPosition()), left, right));
+        return parseBinaryExpression(this::parseAdditiveExpression, new TokenKind[] {
+            TokenKind.SHIFT_LEFT, TokenKind.SHIFT_RIGHT
+        }, (left, right) -> new AstShiftLeft(new Position(left.getPosition(), right.getPosition()), left, right),
+            (left, right) -> new AstShiftRight(new Position(left.getPosition(), right.getPosition()), left, right)
+        );
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the additive operations.
-     * i.e. {@code + -}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the additive operations. i.e. {@code + -}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseAdditiveExpression() {
-        return parseBinaryExpression(this::parseMultiplicativeExpression,
-                new TokenKind[] { TokenKind.PLUS, TokenKind.MINUS },
-                (left, right) -> new AstAddition(new Position(left.getPosition(), right.getPosition()), left, right),
-                (left, right) -> new AstSubtract(new Position(left.getPosition(), right.getPosition()), left, right));
+        return parseBinaryExpression(this::parseMultiplicativeExpression, new TokenKind[] {
+            TokenKind.PLUS, TokenKind.MINUS
+        }, (left, right) -> new AstAddition(new Position(left.getPosition(), right.getPosition()), left, right),
+            (left, right) -> new AstSubtract(new Position(left.getPosition(), right.getPosition()), left, right)
+        );
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the multiplication
-     * operation. i.e. {@code * / %}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the multiplication operation. i.e. {@code * / %}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseMultiplicativeExpression() {
-        return parseBinaryExpression(this::parsePowerExpression,
-                new TokenKind[] { TokenKind.ASTERISK, TokenKind.SLASH, TokenKind.PERCENT },
-                (left, right) -> new AstMultiply(new Position(left.getPosition(), right.getPosition()), left, right),
-                (left, right) -> new AstDivide(new Position(left.getPosition(), right.getPosition()), left, right),
-                (left, right) -> new AstRemainder(new Position(left.getPosition(), right.getPosition()), left, right));
+        return parseBinaryExpression(this::parsePowerExpression, new TokenKind[] {
+            TokenKind.ASTERISK, TokenKind.SLASH, TokenKind.PERCENT
+        }, (left, right) -> new AstMultiply(new Position(left.getPosition(), right.getPosition()), left, right),
+            (left, right) -> new AstDivide(new Position(left.getPosition(), right.getPosition()), left, right),
+            (left, right) -> new AstRemainder(new Position(left.getPosition(), right.getPosition()), left, right)
+        );
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the power operation. i.e.
-     * {@code **}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the power operation. i.e. {@code **}
      *
      * @return The root node of the parsed ast tree
      */
     private AstNode parsePowerExpression() {
-        return parseBinaryExpression(this::parseUnaryPrefixExpression, new TokenKind[] { TokenKind.DOUBLE_ASTERISK },
-                (left, right) -> new AstPower(new Position(left.getPosition(), right.getPosition()), left, right));
+        return parseBinaryExpression(this::parseUnaryPrefixExpression, new TokenKind[] {
+            TokenKind.DOUBLE_ASTERISK
+        }, (left, right) -> new AstPower(new Position(left.getPosition(), right.getPosition()), left, right));
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the unary prefix
-     * operations. i.e. {@code + - ~ ! []}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the unary prefix operations. i.e. {@code + - ~ ! []}
      * 
      * @return The root node of the parsed ast tree
      */
@@ -606,8 +628,10 @@ public class Parser {
             Token closing = scanner.next();
             AstNode operand = parseUnaryPrefixExpression();
             if (operand == null) {
-                throw new ParsingException(new Position(token.getPosition(), closing.getPosition()),
-                        "Expected an expression after unary prefix `[]`");
+                throw new ParsingException(
+                    new Position(token.getPosition(), closing.getPosition()),
+                    "Expected an expression after unary prefix `[]`"
+                );
             }
             return new AstArray(new Position(token.getPosition(), operand.getPosition()), size, operand);
         } else if (scanner.hasNext(TokenKind.FROM)) {
@@ -623,15 +647,17 @@ public class Parser {
     }
 
     /**
-     * Parses a expression containing only operations with a precedence equal or higher than the unary suffix
-     * operations. i.e. {@code () [] .}
+     * Parses a expression containing only operations with a precedence equal or
+     * higher than the unary suffix operations. i.e. {@code () [] .}
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseUnarySuffixExpression() {
         AstNode operand = parseBaseExpression();
         if (operand != null) {
-            while (scanner.hasNext(new TokenKind[] { TokenKind.OPEN_PAREN, TokenKind.OPEN_BRACKET, TokenKind.DOT })) {
+            while (scanner.hasNext(new TokenKind[] {
+                TokenKind.OPEN_PAREN, TokenKind.OPEN_BRACKET, TokenKind.DOT
+            })) {
                 if (scanner.hasNext(TokenKind.OPEN_PAREN)) {
                     Token open = scanner.next();
                     ArrayList<AstNode> parameters = new ArrayList<>();
@@ -648,35 +674,44 @@ public class Parser {
                         if (parameters.isEmpty()) {
                             position = open.getPosition();
                         } else {
-                            position = new Position(open.getPosition(),
-                                    parameters.get(parameters.size() - 1).getPosition());
+                            position =
+                                new Position(open.getPosition(), parameters.get(parameters.size() - 1).getPosition());
                         }
                         throw new ParsingException(position, "Expected a closing `)` after opening `(`");
                     }
-                    operand = new AstCall(new Position(operand.getPosition(), closing.getPosition()), operand,
-                            parameters.toArray(new AstNode[parameters.size()]));
+                    operand = new AstCall(
+                        new Position(operand.getPosition(), closing.getPosition()), operand,
+                        parameters.toArray(new AstNode[parameters.size()])
+                    );
                 } else if (scanner.hasNext(TokenKind.OPEN_BRACKET)) {
                     Token open = scanner.next();
                     AstNode index = parseExpression();
                     if (index == null) {
-                        throw new ParsingException(new Position(operand.getPosition(), open.getPosition()),
-                                "Expected an expression after indexing `[`");
+                        throw new ParsingException(
+                            new Position(operand.getPosition(), open.getPosition()),
+                            "Expected an expression after indexing `[`"
+                        );
                     }
                     Token closing = scanner.accept(TokenKind.CLOSE_BRACKET);
                     if (closing == null) {
-                        throw new ParsingException(new Position(open.getPosition(), index.getPosition()),
-                                "Expected a closing `]` after opening `[`");
+                        throw new ParsingException(
+                            new Position(open.getPosition(), index.getPosition()),
+                            "Expected a closing `]` after opening `[`"
+                        );
                     }
                     operand = new AstIndex(new Position(operand.getPosition(), closing.getPosition()), operand, index);
                 } else /* if (scanner.hasNext(TokenKind.DOT)) */ {
                     Token dot = scanner.next();
                     Token member = scanner.accept(TokenKind.IDENTIFIER);
                     if (member == null) {
-                        throw new ParsingException(new Position(operand.getPosition(), dot.getPosition()),
-                                "Expected member name after accessing `.`");
+                        throw new ParsingException(
+                            new Position(operand.getPosition(), dot.getPosition()),
+                            "Expected member name after accessing `.`"
+                        );
                     }
-                    operand = new AstMember(new Position(operand.getPosition(), member.getPosition()), operand,
-                            member.getSource());
+                    operand = new AstMember(
+                        new Position(operand.getPosition(), member.getPosition()), operand, member.getSource()
+                    );
                 }
             }
             return operand;
@@ -686,12 +721,11 @@ public class Parser {
     }
 
     /**
-     * This is a utility function that converts a string containing escaped characters with `\` into a string containing
-     * the actual characters. e.g. {@code \\\"} will be transformed into {@code \"}
+     * This is a utility function that converts a string containing escaped
+     * characters with `\` into a string containing the actual characters. e.g.
+     * {@code \\\"} will be transformed into {@code \"}
      * 
-     * @param input
-     *            The string that should be converted
-     * 
+     * @param input The string that should be converted
      * @return The converted string
      */
     private static String resolveEscapeCharacters(String input) {
@@ -700,24 +734,24 @@ public class Parser {
             if (input.charAt(i) == '\\' && i + 1 < input.length()) {
                 i++;
                 switch (input.charAt(i)) {
-                case 'b':
-                    builder.append('\b');
-                    break;
-                case 't':
-                    builder.append('\t');
-                    break;
-                case 'n':
-                    builder.append('\n');
-                    break;
-                case 'f':
-                    builder.append('\f');
-                    break;
-                case 'r':
-                    builder.append('\r');
-                    break;
-                default:
-                    builder.append(input.charAt(i));
-                    break;
+                    case 'b':
+                        builder.append('\b');
+                        break;
+                    case 't':
+                        builder.append('\t');
+                        break;
+                    case 'n':
+                        builder.append('\n');
+                        break;
+                    case 'f':
+                        builder.append('\f');
+                        break;
+                    case 'r':
+                        builder.append('\r');
+                        break;
+                    default:
+                        builder.append(input.charAt(i));
+                        break;
                 }
             } else {
                 builder.append(input.charAt(i));
@@ -727,15 +761,18 @@ public class Parser {
     }
 
     /**
-     * Parses the base objects of an expression. This includes expressions wrapped in parens, objects created with
-     * `new`, integer, real, string and character literals, as well as simple variable access.
+     * Parses the base objects of an expression. This includes expressions wrapped
+     * in parens, objects created with `new`, integer, real, string and character
+     * literals, as well as simple variable access.
      * 
      * @return The root node of the parsed ast tree
      */
     private AstNode parseBaseExpression() {
-        return firstNonNull(this::parseIfElse, this::parseForLoop, this::parseCodeBlock, this::parseFunctionDefinition,
-                this::parseClassDefinition, this::parseParenthesis, this::parseNew, this::parseInteger, this::parseReal,
-                this::parseString, this::parseCharacter, this::parseSymbol);
+        return firstNonNull(
+            this::parseIfElse, this::parseForLoop, this::parseCodeBlock, this::parseFunctionDefinition,
+            this::parseClassDefinition, this::parseParenthesis, this::parseNew, this::parseInteger, this::parseReal,
+            this::parseString, this::parseCharacter, this::parseSymbol
+        );
     }
 
     /**
@@ -749,8 +786,9 @@ public class Parser {
             AstSequence value = parseSequence();
             Token closing = scanner.accept(TokenKind.CLOSE_PAREN);
             if (closing == null) {
-                throw new ParsingException(new Position(open.getPosition(), value.getPosition()),
-                        "Expected a closing `)` after opening `(`");
+                throw new ParsingException(
+                    new Position(open.getPosition(), value.getPosition()), "Expected a closing `)` after opening `(`"
+                );
             }
             if (value.getStatemens().length == 1) {
                 return value.getStatemens()[0];
@@ -775,8 +813,10 @@ public class Parser {
                 throw new ParsingException(token.getPosition(), "Expected an expression after `new`");
             }
             AstInitializer initializer = parseInitializer();
-            return new AstNew(new Position(token.getPosition(),
-                    initializer == null ? type.getPosition() : initializer.getPosition()), type, initializer);
+            return new AstNew(
+                new Position(token.getPosition(), initializer == null ? type.getPosition() : initializer.getPosition()),
+                type, initializer
+            );
         } else {
             return null;
         }
@@ -859,8 +899,9 @@ public class Parser {
             }
             String value = resolveEscapeCharacters(source);
             if (value.length() != 1) {
-                throw new ParsingException(token.getPosition(),
-                        "Character literals should include exactly one character");
+                throw new ParsingException(
+                    token.getPosition(), "Character literals should include exactly one character"
+                );
             }
             return new AstCharacter(token.getPosition(), value.charAt(0));
         } else {
@@ -883,7 +924,29 @@ public class Parser {
     }
 
     /**
-     * Parses a initializer list. e.g. {@code {{1, "Hello"}, { id = 2, text = "ok" }, null}}
+     * Parses the element of an initializer.
+     * 
+     * @return The parsed ast node
+     */
+    private AstNode parseInitializerElement() {
+        AstNode value = firstNonNull(this::parseInitializer, this::parseSequence);
+        if (value instanceof AstSequence) {
+            AstSequence seq = (AstSequence)value;
+            if (seq.getStatemens().length == 0) {
+                return null;
+            } else if (seq.getStatemens().length == 1) {
+                return seq.getStatemens()[0];
+            } else {
+                return seq;
+            }
+        } else {
+            return value;
+        }
+    }
+
+    /**
+     * Parses a initializer list. e.g. {@code {{1, "Hello"}, { id = 2, text = "ok"
+     * }, null}}
      * 
      * @return The root node of the parsed ast tree
      */
@@ -893,7 +956,7 @@ public class Parser {
             ArrayList<AstNode> values = new ArrayList<>();
             AstNode value;
             do {
-                value = firstNonNull(this::parseInitializer, this::parseExpression);
+                value = parseInitializerElement();
                 if (value != null) {
                     values.add(value);
                 }
@@ -908,8 +971,9 @@ public class Parser {
                 }
                 throw new ParsingException(position, "Expected a closing `{` after opening `}`");
             }
-            return new AstInitializer(new Position(opening.getPosition(), closing.getPosition()),
-                    values.toArray(new AstNode[values.size()]));
+            return new AstInitializer(
+                new Position(opening.getPosition(), closing.getPosition()), values.toArray(new AstNode[values.size()])
+            );
         }
         return null;
     }

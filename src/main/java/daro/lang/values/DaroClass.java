@@ -21,15 +21,12 @@ public class DaroClass extends DaroObject {
     private final BlockScope scope;
 
     /**
-     * Create a new instance of a user defined class. The class is defined in the given scope and references the given
-     * type.
+     * Create a new instance of a user defined class. The class is defined in the
+     * given scope and references the given type.
      * 
-     * @param globalScope
-     *            The scope the class should be instantiated in
-     * @param context
-     *            The surrounding context for this execution
-     * @param classType
-     *            The type of the class
+     * @param globalScope The scope the class should be instantiated in
+     * @param context     The surrounding context for this execution
+     * @param classType   The type of the class
      */
     public DaroClass(Scope globalScope, ExecutionContext context, DaroTypeClass classType) {
         this.classType = classType;
@@ -39,23 +36,21 @@ public class DaroClass extends DaroObject {
     }
 
     /**
-     * Create a new instance of a user defined class. The class is defined in the given scope and references the given
-     * type.
+     * Create a new instance of a user defined class. The class is defined in the
+     * given scope and references the given type.
      * 
-     * @param globalScope
-     *            The scope the class should be instantiated in
-     * @param classType
-     *            The type of the class
+     * @param globalScope The scope the class should be instantiated in
+     * @param classType   The type of the class
      */
     public DaroClass(Scope globalScope, DaroTypeClass classType) {
         this(globalScope, null, classType);
     }
 
     /**
-     * Initialize the class by running the code directly inside the body of the class definition.
+     * Initialize the class by running the code directly inside the body of the
+     * class definition.
      * 
-     * @param context
-     *            The surrounding context for this execution
+     * @param context The surrounding context for this execution
      */
     private void initialize(ExecutionContext context) {
         AstSequence sequence = classType.getDefinition().getBody().getSequence();
@@ -70,7 +65,7 @@ public class DaroClass extends DaroObject {
 
     @Override
     public Scope getMemberScope() {
-        AbstractScope result = (AbstractScope) scope.getFinalLevel();
+        AbstractScope result = (AbstractScope)scope.getFinalLevel();
         result.addParent(super.getMemberScope());
         return result;
     }
@@ -83,9 +78,9 @@ public class DaroClass extends DaroObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroClass) {
-            DaroClass classObject = (DaroClass) object;
+            DaroClass classObject = (DaroClass)object;
             return scope.getFinalLevel().equals(classObject.scope.getFinalLevel())
-                    && classType.equals(classObject.classType);
+                && classType.equals(classObject.classType);
         } else {
             return false;
         }

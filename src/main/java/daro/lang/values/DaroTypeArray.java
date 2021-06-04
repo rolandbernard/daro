@@ -22,7 +22,7 @@ public class DaroTypeArray extends DaroType {
 
     @Override
     public DaroObject instantiate(ExecutionContext context, AstInitializer initializer) {
-        DaroArray array = (DaroArray) instantiate(context);
+        DaroArray array = (DaroArray)instantiate(context);
         for (AstNode value : initializer.getValues()) {
             DaroObject object = Executor.execute(context, value);
             if (object != null) {

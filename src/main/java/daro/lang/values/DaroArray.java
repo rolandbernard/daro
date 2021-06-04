@@ -21,8 +21,7 @@ public class DaroArray extends DaroObject {
     /**
      * Create a new {@link DaroArray} with the values inside the given list.
      * 
-     * @param values
-     *            The values of the array
+     * @param values The values of the array
      */
     public DaroArray(List<DaroObject> values) {
         this.values = values;
@@ -52,13 +51,17 @@ public class DaroArray extends DaroObject {
         }));
         variables.put("sort", new DaroLambdaFunction(1, (params, observers) -> {
             if (params[0] instanceof DaroFunction) {
-                DaroFunction function = (DaroFunction) params[0];
+                DaroFunction function = (DaroFunction)params[0];
                 if (!function.allowsParamCount(2)) {
                     throw new InterpreterException("Sorting function must accept two arguments");
                 } else {
                     values.sort((a, b) -> {
-                        DaroObject less = function.execute(new DaroObject[] { a, b }, observers);
-                        DaroObject more = function.execute(new DaroObject[] { b, a }, observers);
+                        DaroObject less = function.execute(new DaroObject[] {
+                            a, b
+                        }, observers);
+                        DaroObject more = function.execute(new DaroObject[] {
+                            b, a
+                        }, observers);
                         if (less != null && less.isTrue() && more != null && more.isTrue()) {
                             return 0;
                         } else if (less != null && less.isTrue()) {
@@ -98,9 +101,7 @@ public class DaroArray extends DaroObject {
     /**
      * Returns the value inside the array at index i.
      * 
-     * @param i
-     *            The index to query
-     * 
+     * @param i The index to query
      * @return The value at index i
      */
     public DaroObject getValueAt(int i) {
@@ -110,10 +111,8 @@ public class DaroArray extends DaroObject {
     /**
      * Put the given value inside the array at the given index.
      * 
-     * @param i
-     *            The index to write to
-     * @param value
-     *            The value that should be written
+     * @param i     The index to write to
+     * @param value The value that should be written
      */
     public void putValueAt(int i, DaroObject value) {
         values.set(i, value);
@@ -122,8 +121,7 @@ public class DaroArray extends DaroObject {
     /**
      * Adds a new element to the end of the array.
      * 
-     * @param value
-     *            The value that should be added
+     * @param value The value that should be added
      */
     public void pushValue(DaroObject value) {
         values.add(value);
@@ -147,7 +145,7 @@ public class DaroArray extends DaroObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroArray) {
-            DaroArray array = (DaroArray) object;
+            DaroArray array = (DaroArray)object;
             return values.equals(array.values);
         } else {
             return false;

@@ -1,13 +1,16 @@
 package daro.lang.interpreter;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import daro.lang.values.*;
+import daro.lang.values.DaroNativeClass;
+import daro.lang.values.DaroNativePackage;
+import daro.lang.values.DaroObject;
 
 /**
- * This class implements a scope that is used by the {@link DaroNativePackage} object. It can be used to traverse Java
- * packages.
+ * This class implements a scope that is used by the {@link DaroNativePackage}
+ * object. It can be used to traverse Java packages.
  * 
  * @author Roland Bernard
  */
@@ -17,8 +20,7 @@ public class NativePackageScope extends ClassLoader implements Scope {
     /**
      * Creates a new complete scope using the given mapping;
      * 
-     * @param pkg
-     *            The package the scope is indexing into
+     * @param pkg The package the scope is indexing into
      */
     public NativePackageScope(DaroNativePackage pkg) {
         this.pkg = pkg;
@@ -62,7 +64,7 @@ public class NativePackageScope extends ClassLoader implements Scope {
 
     @Override
     public Map<String, DaroObject> getCompleteMapping() {
-        throw new InterpreterException("Scope can not be iterated over");
+        return new HashMap<>();
     }
 
     @Override
@@ -83,7 +85,7 @@ public class NativePackageScope extends ClassLoader implements Scope {
     @Override
     public boolean equals(Object object) {
         if (object instanceof NativePackageScope) {
-            NativePackageScope scope = (NativePackageScope) object;
+            NativePackageScope scope = (NativePackageScope)object;
             return Objects.equals(pkg, scope.pkg);
         } else {
             return false;

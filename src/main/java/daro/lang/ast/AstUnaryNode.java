@@ -3,7 +3,8 @@ package daro.lang.ast;
 import java.util.Objects;
 
 /**
- * Abstract super class representing an ast node for a unary opreation like negation, boolean not, etc.
+ * Abstract super class representing an ast node for a unary opreation like
+ * negation, boolean not, etc.
  * 
  * @author Roland Bernard
  */
@@ -27,7 +28,7 @@ public abstract class AstUnaryNode extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
-            AstUnaryNode node = (AstUnaryNode) obj;
+            AstUnaryNode node = (AstUnaryNode)obj;
             return Objects.equals(operand, node.getOperand());
         } else {
             return false;

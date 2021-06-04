@@ -32,8 +32,8 @@ public class DaroTypeInteger extends DaroType {
             if (object instanceof DaroInteger) {
                 return object;
             } else if (object instanceof DaroNumber) {
-                DaroNumber number = (DaroNumber) object;
-                return new DaroInteger(BigInteger.valueOf((long) number.doubleValue()));
+                DaroNumber number = (DaroNumber)object;
+                return new DaroInteger(BigInteger.valueOf((long)number.doubleValue()));
             } else if (object != null) {
                 throw new InterpreterException(value.getPosition(), "Value can not be converted to an integer");
             } else {

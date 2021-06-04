@@ -20,17 +20,14 @@ public class ExecutionContext {
     private final ExecutionObserver[] observers;
 
     /**
-     * Create a new {@link ExecutionContext} for execution in the given scope and observed by the given
-     * {@link ExecutionObserver}s.
+     * Create a new {@link ExecutionContext} for execution in the given scope and
+     * observed by the given {@link ExecutionObserver}s.
      * 
-     * @param scope
-     *            The scope to execute in
-     * @param output
-     *            The output for printing functions
-     * @param observers
-     *            The observers for this execution
+     * @param scope     The scope to execute in
+     * @param output    The output for printing functions
+     * @param observers The observers for this execution
      */
-    public ExecutionContext(Scope scope, PrintStream output, ExecutionObserver... observers) {
+    public ExecutionContext(Scope scope, PrintStream output, ExecutionObserver ...observers) {
         this.scope = scope;
         this.observers = observers;
         this.output = output;
@@ -38,13 +35,11 @@ public class ExecutionContext {
     }
 
     /**
-     * Create a new {@link ExecutionContext} for execution in the given scope but copying other data from the given
-     * context.
+     * Create a new {@link ExecutionContext} for execution in the given scope but
+     * copying other data from the given context.
      * 
-     * @param context
-     *            The context to copy data from
-     * @param scope
-     *            The scope to execute in
+     * @param context The context to copy data from
+     * @param scope   The scope to execute in
      */
     private ExecutionContext(ExecutionContext context, Scope scope) {
         this.scope = scope;
@@ -54,15 +49,13 @@ public class ExecutionContext {
     }
 
     /**
-     * Create a new {@link ExecutionContext} for execution with the given observers but copying other data from the
-     * given context.
+     * Create a new {@link ExecutionContext} for execution with the given observers
+     * but copying other data from the given context.
      * 
-     * @param context
-     *            The context to copy data from
-     * @param observers
-     *            The observers to execute with
+     * @param context   The context to copy data from
+     * @param observers The observers to execute with
      */
-    private ExecutionContext(ExecutionContext context, ExecutionObserver... observers) {
+    private ExecutionContext(ExecutionContext context, ExecutionObserver ...observers) {
         this.scope = context.scope;
         this.observers = Arrays.copyOf(context.observers, context.observers.length + observers.length);
         for (int i = 0; i < observers.length; i++) {
@@ -109,11 +102,10 @@ public class ExecutionContext {
     }
 
     /**
-     * Create a new context that uses the same data as this, but has a different scope.
+     * Create a new context that uses the same data as this, but has a different
+     * scope.
      *
-     * @param scope
-     *            The new scope for the resulting context
-     * 
+     * @param scope The new scope for the resulting context
      * @return The new {@link ExecutionContext}
      */
     public ExecutionContext forScope(Scope scope) {
@@ -121,14 +113,13 @@ public class ExecutionContext {
     }
 
     /**
-     * Create a new context that uses the same data as this, but has additional observers.
+     * Create a new context that uses the same data as this, but has additional
+     * observers.
      *
-     * @param observers
-     *            The new observers for the resulting context
-     * 
+     * @param observers The new observers for the resulting context
      * @return The new {@link ExecutionContext}
      */
-    public ExecutionContext withObservers(ExecutionObserver... observers) {
+    public ExecutionContext withObservers(ExecutionObserver ...observers) {
         return new ExecutionContext(this, observers);
     }
 }

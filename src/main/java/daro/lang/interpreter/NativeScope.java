@@ -31,10 +31,8 @@ public class NativeScope implements Scope {
     /**
      * Creates a new native scope for the given class and target.
      * 
-     * @param nativeClass
-     *            The Java class for this scope
-     * @param target
-     *            The Java object for this scope
+     * @param nativeClass The Java class for this scope
+     * @param target      The Java object for this scope
      */
     public NativeScope(Class<?> nativeClass, Object target) {
         this.nativeClass = nativeClass;
@@ -57,20 +55,18 @@ public class NativeScope implements Scope {
     /**
      * Creates a new native scope for the given class without a target.
      * 
-     * @param nativeClass
-     *            The Java class for this scope
+     * @param nativeClass The Java class for this scope
      */
     public NativeScope(Class<?> nativeClass) {
         this(nativeClass, null);
     }
 
     /**
-     * Create a new scope that shares all the same values, except that the target is different.
+     * Create a new scope that shares all the same values, except that the target is
+     * different.
      * 
-     * @param scope
-     *            The scope of a different object of the same class
-     * @param target
-     *            The Java object for this scope
+     * @param scope  The scope of a different object of the same class
+     * @param target The Java object for this scope
      */
     public NativeScope(NativeScope scope, Object target) {
         this.nativeClass = scope.nativeClass;
@@ -81,14 +77,89 @@ public class NativeScope implements Scope {
     }
 
     /**
-     * Try to cast a {@link DaroObject} into a Java object of the given type. If this is not possible throw an
-     * interpreter exception.
+     * Determine if the object can be cast to the given type, returning the amount of loss for the
+     * given casting (0 == no cast, Integer.MAX_VALUE == impossible cast).
      *
-     * @param object
-     *            The object that should be cast
-     * @param expected
-     *            The java class that should be cast to
-     * 
+     * @param object   The object that should be cast
+     * @param expected The java class that should be cast to
+     * @return The loss of casting
+     */
+    public static int getCastingLoss(DaroObject object, Class<?> expected) {
+        if (object instanceof DaroNull) {
+            return 0;
+        } else if (object instanceof DaroNativeClass) {
+            if (expected.isAssignableFrom(Class.class)) {
+                return 0;
+            }
+        } else if (object instanceof DaroNativeObject) {
+            DaroNativeObject obj = (DaroNativeObject)object;
+            if (expected.isInstance(obj.getValue())) {
+                return 0;
+            }
+        } else if (object instanceof DaroInteger) {
+            DaroInteger integer = (DaroInteger)object;
+            if (expected.isInstance(integer.getValue())) {
+                return 0;
+            } else if (expected.isAssignableFrom(Long.TYPE)) {
+                return 10;
+            } else if (expected.isAssignableFrom(Integer.TYPE)) {
+                return 20;
+            } else if (expected.isAssignableFrom(Short.TYPE)) {
+                return 30;
+            } else if (expected.isAssignableFrom(Character.TYPE)) {
+                return 40;
+            } else if (expected.isAssignableFrom(Double.TYPE)) {
+                return 15;
+            } else if (expected.isAssignableFrom(Float.TYPE)) {
+                return 25;
+            }
+        } else if (object instanceof DaroReal) {
+            DaroReal real = (DaroReal)object;
+            if (expected.isInstance(real.getValue())) {
+                return 0;
+            } else if (expected.isAssignableFrom(Double.TYPE)) {
+                return 0;
+            } else if (expected.isAssignableFrom(Float.TYPE)) {
+                return 10;
+            }
+        } else if (object instanceof DaroArray) {
+            DaroArray array = (DaroArray)object;
+            if (expected.isInstance(array.getValues())) {
+                return 0;
+            } else if (expected.isArray()) {
+                Class<?> elementType = expected.getComponentType();
+                Object result = Array.newInstance(elementType, array.getLength());
+                for (int i = 0; i < array.getLength(); i++) {
+                    Array.set(result, i, tryToWrap(array.getValueAt(i)));
+                }
+                return 0;
+            }
+        } else if (object instanceof DaroBoolean) {
+            DaroBoolean bool = (DaroBoolean)object;
+            if (expected.isInstance(bool.getValue())) {
+                return 0;
+            } else if (expected.isAssignableFrom(Boolean.TYPE)) {
+                return 0;
+            }
+        } else if (object instanceof DaroString) {
+            DaroString string = (DaroString)object;
+            if (expected.isInstance(string.getValue())) {
+                return 0;
+            }
+        }
+        if (expected.isInstance(object)) {
+            return 1;
+        } else {
+            return Integer.MAX_VALUE;
+        }
+    }
+
+    /**
+     * Try to cast a {@link DaroObject} into a Java object of the given type. If
+     * this is not possible throw an interpreter exception.
+     *
+     * @param object   The object that should be cast
+     * @param expected The java class that should be cast to
      * @return The cast version of the object
      */
     public static Object tryToCast(DaroObject object, Class<?> expected) {
@@ -96,15 +167,15 @@ public class NativeScope implements Scope {
             return null;
         } else if (object instanceof DaroNativeClass) {
             if (expected.isAssignableFrom(Class.class)) {
-                return ((DaroNativeClass) object).getNativeClass();
+                return ((DaroNativeClass)object).getNativeClass();
             }
         } else if (object instanceof DaroNativeObject) {
-            DaroNativeObject obj = (DaroNativeObject) object;
+            DaroNativeObject obj = (DaroNativeObject)object;
             if (expected.isInstance(obj.getValue())) {
                 return obj.getValue();
             }
         } else if (object instanceof DaroInteger) {
-            DaroInteger integer = (DaroInteger) object;
+            DaroInteger integer = (DaroInteger)object;
             if (expected.isInstance(integer.getValue())) {
                 return integer.getValue();
             } else if (expected.isAssignableFrom(Long.TYPE)) {
@@ -114,21 +185,23 @@ public class NativeScope implements Scope {
             } else if (expected.isAssignableFrom(Short.TYPE)) {
                 return integer.getValue().shortValue();
             } else if (expected.isAssignableFrom(Character.TYPE)) {
-                return (char) integer.getValue().intValue();
+                return (char)integer.getValue().intValue();
             } else if (expected.isAssignableFrom(Double.TYPE)) {
-                return (char) integer.getValue().doubleValue();
+                return (char)integer.getValue().doubleValue();
             } else if (expected.isAssignableFrom(Float.TYPE)) {
-                return (char) integer.getValue().floatValue();
+                return (char)integer.getValue().floatValue();
             }
         } else if (object instanceof DaroReal) {
-            DaroReal real = (DaroReal) object;
+            DaroReal real = (DaroReal)object;
             if (expected.isInstance(real.getValue())) {
                 return real.getValue();
+            } else if (expected.isAssignableFrom(Double.TYPE)) {
+                return real.getValue();
             } else if (expected.isAssignableFrom(Float.TYPE)) {
-                return (float) real.getValue();
+                return (float)real.getValue();
             }
         } else if (object instanceof DaroArray) {
-            DaroArray array = (DaroArray) object;
+            DaroArray array = (DaroArray)object;
             if (expected.isInstance(array.getValues())) {
                 return array.getValues();
             } else if (expected.isArray()) {
@@ -140,12 +213,14 @@ public class NativeScope implements Scope {
                 return result;
             }
         } else if (object instanceof DaroBoolean) {
-            DaroBoolean bool = (DaroBoolean) object;
+            DaroBoolean bool = (DaroBoolean)object;
             if (expected.isInstance(bool.getValue())) {
+                return bool.getValue();
+            } else if (expected.isAssignableFrom(Boolean.TYPE)) {
                 return bool.getValue();
             }
         } else if (object instanceof DaroString) {
-            DaroString string = (DaroString) object;
+            DaroString string = (DaroString)object;
             if (expected.isInstance(string.getValue())) {
                 return string.getValue();
             }
@@ -154,40 +229,40 @@ public class NativeScope implements Scope {
             return object;
         } else {
             throw new InterpreterException(
-                    "Can not cast " + object.getType().toString() + " to java " + expected.getName());
+                "Can not cast " + object.getType().toString() + " to java " + expected.getName()
+            );
         }
     }
 
     /**
-     * Try to wrap the given Object into an appropriate {@link DaroObject}. This function will always e able to wrap the
-     * object because it can as a last resort wrap it into a {@link DaroNativeObject}.
+     * Try to wrap the given Object into an appropriate {@link DaroObject}. This
+     * function will always e able to wrap the object because it can as a last
+     * resort wrap it into a {@link DaroNativeObject}.
      *
-     * @param object
-     *            The object to wrap
-     * 
+     * @param object The object to wrap
      * @return The warped object
      */
     public static DaroObject tryToWrap(Object object) {
         if (object == null) {
             return new DaroNull();
         } else if (object instanceof DaroObject) {
-            return (DaroObject) object;
+            return (DaroObject)object;
         } else if (object instanceof BigInteger) {
-            return new DaroInteger((BigInteger) object);
+            return new DaroInteger((BigInteger)object);
         } else if (object instanceof Long) {
-            return new DaroInteger(BigInteger.valueOf((Long) object));
+            return new DaroInteger(BigInteger.valueOf((Long)object));
         } else if (object instanceof Integer) {
-            return new DaroInteger(BigInteger.valueOf((Integer) object));
+            return new DaroInteger(BigInteger.valueOf((Integer)object));
         } else if (object instanceof Short) {
-            return new DaroInteger(BigInteger.valueOf((Short) object));
+            return new DaroInteger(BigInteger.valueOf((Short)object));
         } else if (object instanceof Character) {
-            return new DaroInteger(BigInteger.valueOf((Character) object));
+            return new DaroInteger(BigInteger.valueOf((Character)object));
         } else if (object instanceof Double) {
-            return new DaroReal((Double) object);
+            return new DaroReal((Double)object);
         } else if (object instanceof Float) {
-            return new DaroReal((Float) object);
+            return new DaroReal((Float)object);
         } else if (object instanceof List) {
-            List<DaroObject> list = ((List<?>) object).stream().map(obj -> tryToWrap(obj)).collect(Collectors.toList());
+            List<DaroObject> list = ((List<?>)object).stream().map(obj -> tryToWrap(obj)).collect(Collectors.toList());
             return new DaroArray(list);
         } else if (object.getClass().isArray()) {
             int length = Array.getLength(object);
@@ -197,11 +272,11 @@ public class NativeScope implements Scope {
             }
             return new DaroArray(list);
         } else if (object instanceof Boolean) {
-            return new DaroBoolean((Boolean) object);
+            return new DaroBoolean((Boolean)object);
         } else if (object instanceof String) {
-            return new DaroString((String) object);
+            return new DaroString((String)object);
         } else if (object instanceof Class) {
-            return new DaroNativeClass((Class<?>) object);
+            return new DaroNativeClass((Class<?>)object);
         } else {
             return new DaroNativeObject(object);
         }
@@ -241,28 +316,52 @@ public class NativeScope implements Scope {
         if (methods.containsKey(name)) {
             List<Method> methodList = methods.get(name);
             return new DaroLambdaFunction(params -> {
+                Method bestMethod = null;
+                int bestMatch = Integer.MAX_VALUE;
+                // Find the method that matches the given parameters best
                 for (Method method : methodList) {
                     try {
                         Class<?>[] paramTypes = method.getParameterTypes();
                         if (paramTypes.length == params.length) {
-                            Object[] arguments = new Object[params.length];
+                            int match = 0;
                             for (int i = 0; i < params.length; i++) {
-                                arguments[i] = NativeScope.tryToCast(params[i], paramTypes[i]);
+                                int loss = getCastingLoss(params[i], paramTypes[i]);
+                                if (loss < Integer.MAX_VALUE) {
+                                    match += loss;
+                                } else {
+                                    match = Integer.MAX_VALUE;
+                                    break;
+                                }
                             }
-                            Object result = method.invoke(target, arguments);
-                            if (method.getReturnType().equals(Void.TYPE)) {
-                                return null;
-                            } else {
-                                return tryToWrap(result);
+                            if (match < bestMatch) {
+                                bestMethod = method;
+                                bestMatch = match;
                             }
                         }
                     } catch (InterpreterException e) {
                         // Ignore exceptions caused by impossible casting
+                    }
+                }
+                if (bestMethod != null) {
+                    // Execute the best matching method
+                    try {
+                        Object[] arguments = new Object[params.length];
+                        Class<?>[] paramTypes = bestMethod.getParameterTypes();
+                        for (int i = 0; i < params.length; i++) {
+                            arguments[i] = NativeScope.tryToCast(params[i], paramTypes[i]);
+                        }
+                        Object result = bestMethod.invoke(target, arguments);
+                        if (bestMethod.getReturnType().equals(Void.TYPE)) {
+                            return null;
+                        } else {
+                            return tryToWrap(result);
+                        }
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new InterpreterException("Failed to execute native method");
                     }
+                } else {
+                    throw new InterpreterException("The native method does not support the given parameters");
                 }
-                throw new InterpreterException("The native method does not support the given parameters");
             });
         }
         if (fields.containsKey(name)) {
@@ -302,8 +401,9 @@ public class NativeScope implements Scope {
     public VariableLocation getVariableLocation(String name) {
         if (fields.containsKey(name)) {
             Field field = fields.get(name);
-            if ((target != null || Modifier.isStatic(field.getModifiers()))
-                    && !Modifier.isFinal(field.getModifiers())) {
+            if (
+                (target != null || Modifier.isStatic(field.getModifiers())) && !Modifier.isFinal(field.getModifiers())
+            ) {
                 return value -> {
                     try {
                         field.set(target, tryToCast(value, field.getType()));
@@ -332,7 +432,7 @@ public class NativeScope implements Scope {
     @Override
     public boolean equals(Object object) {
         if (object instanceof NativeScope) {
-            NativeScope scope = (NativeScope) object;
+            NativeScope scope = (NativeScope)object;
             return Objects.equals(nativeClass, scope.nativeClass) && Objects.equals(target, scope.target);
         } else {
             return false;
@@ -341,8 +441,6 @@ public class NativeScope implements Scope {
 
     @Override
     public String toString() {
-        return getCompleteMapping().entrySet().stream()
-                .map(entry -> entry.getKey() + " = " + String.valueOf(entry.getValue()))
-                .collect(Collectors.joining(", ", "{", "}"));
+        return getAsString();
     }
 }

@@ -5,7 +5,8 @@ import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.InterpreterException;
 
 /**
- * This class represents both the null object and null type. This means that {@code typeof (null) == null}.
+ * This class represents both the null object and null type. This means that
+ * {@code typeof (null) == null}.
  * 
  * @author Roland Bernard
  */

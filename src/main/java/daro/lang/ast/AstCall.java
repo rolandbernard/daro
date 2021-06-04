@@ -39,7 +39,7 @@ public final class AstCall extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstCall) {
-            AstCall node = (AstCall) obj;
+            AstCall node = (AstCall)obj;
             return Objects.equals(function, node.getFunction()) && Arrays.equals(parameters, node.getParameters());
         } else {
             return false;
@@ -49,6 +49,6 @@ public final class AstCall extends AstNode {
     @Override
     public String toString() {
         return "(" + this.getClass().getSimpleName() + " " + function + " ("
-                + Arrays.stream(parameters).map(String::valueOf).collect(Collectors.joining(" ")) + "))";
+            + Arrays.stream(parameters).map(String::valueOf).collect(Collectors.joining(" ")) + "))";
     }
 }

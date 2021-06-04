@@ -11,8 +11,7 @@ public class DaroReal extends DaroNumber {
     /**
      * Create a new {@link DaroReal} from the given value.
      * 
-     * @param value
-     *            The value that should be stored inside the object
+     * @param value The value that should be stored inside the object
      */
     public DaroReal(double value) {
         this.value = value;
@@ -40,7 +39,7 @@ public class DaroReal extends DaroNumber {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroReal) {
-            DaroReal real = (DaroReal) object;
+            DaroReal real = (DaroReal)object;
             return value == real.getValue();
         } else {
             return false;

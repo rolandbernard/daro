@@ -29,10 +29,15 @@ public class Terminal extends ScrollPane {
     }
 
     /**
+<<<<<<< HEAD
      * A simple terminal that shows prints of code
      *
      * @param width  width of the Terminal
      * @param height height of the Terminal
+=======
+     * @param width  TODO TOFIX
+     * @param height TODO TOFIX
+>>>>>>> origin/interpreter-improvements
      */
     public Terminal(double width, double height) {
         this.setPrefHeight(height);

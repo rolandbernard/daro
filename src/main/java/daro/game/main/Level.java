@@ -25,6 +25,7 @@ public class Level {
      * @param isCompleted If a level is completed
      * @param tests       tests that have to run in the Level
      * @param code        code written for the level
+     * @param groupId     group id of the level
      */
 
     public Level(long id, String name, String description, boolean isCompleted, String code,

@@ -3,7 +3,8 @@ package daro.lang.ast;
 import java.util.Objects;
 
 /**
- * Class representing an ast node for a new operation. e.g. {@code new foo{ ... }}
+ * Class representing an ast node for a new operation. e.g. {@code new foo{ ...
+ * }}
  * 
  * @author Roland Bernard
  */
@@ -37,7 +38,7 @@ public final class AstNew extends AstNode {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AstNew) {
-            AstNew node = (AstNew) obj;
+            AstNew node = (AstNew)obj;
             return Objects.equals(type, node.getType()) && Objects.equals(initializer, node.getInitialzer());
         } else {
             return false;

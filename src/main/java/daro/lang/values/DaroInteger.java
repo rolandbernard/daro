@@ -13,8 +13,7 @@ public class DaroInteger extends DaroNumber {
     /**
      * Create a new {@link DaroInteger} from the given value.
      * 
-     * @param value
-     *            The value to be stored in the {@link DaroInteger}
+     * @param value The value to be stored in the {@link DaroInteger}
      */
     public DaroInteger(BigInteger value) {
         this.value = value;
@@ -42,7 +41,7 @@ public class DaroInteger extends DaroNumber {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroInteger) {
-            DaroInteger integer = (DaroInteger) object;
+            DaroInteger integer = (DaroInteger)object;
             return value.equals(integer.getValue());
         } else {
             return false;

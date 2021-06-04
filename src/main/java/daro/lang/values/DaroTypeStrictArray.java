@@ -11,8 +11,9 @@ import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.InterpreterException;
 
 /**
- * This class represents the type for a array object that has a single type of child ({@link DaroArray}). This type can
- * be constructed and instantiated, but the resulting object will not enforce the single type. It is mainly for
+ * This class represents the type for a array object that has a single type of
+ * child ({@link DaroArray}). This type can be constructed and instantiated, but
+ * the resulting object will not enforce the single type. It is mainly for
  * initialization.
  * 
  * @author Roland Bernard
@@ -22,22 +23,21 @@ public class DaroTypeStrictArray extends DaroType {
     private final Integer size;
 
     /**
-     * Create a new {@link DaroTypeStrictArray} for a given base type and undefined length.
+     * Create a new {@link DaroTypeStrictArray} for a given base type and undefined
+     * length.
      * 
-     * @param base
-     *            The base type of the array
+     * @param base The base type of the array
      */
     public DaroTypeStrictArray(DaroType base) {
         this(null, base);
     }
 
     /**
-     * Create a new {@link DaroTypeStrictArray} for a given base type and the given length.
+     * Create a new {@link DaroTypeStrictArray} for a given base type and the given
+     * length.
      * 
-     * @param size
-     *            The length of the resulting array
-     * @param base
-     *            The base type of the array
+     * @param size The length of the resulting array
+     * @param base The base type of the array
      */
     public DaroTypeStrictArray(Integer size, DaroType base) {
         this.size = size;
@@ -53,8 +53,11 @@ public class DaroTypeStrictArray extends DaroType {
         if (size == null) {
             return new DaroArray(new ArrayList<>());
         } else {
-            return new DaroArray(Stream.generate(() -> base.instantiate(context)).limit(size)
-                    .collect(Collectors.toCollection(() -> new ArrayList<>())));
+            return new DaroArray(
+                Stream.generate(() -> base.instantiate(context))
+                    .limit(size)
+                    .collect(Collectors.toCollection(() -> new ArrayList<>()))
+            );
         }
     }
 
@@ -66,9 +69,11 @@ public class DaroTypeStrictArray extends DaroType {
         }
         for (AstNode value : initializer.getValues()) {
             if (value instanceof AstInitializer) {
-                list.add(base.instantiate(context, (AstInitializer) value));
+                list.add(base.instantiate(context, (AstInitializer)value));
             } else {
-                list.add(base.instantiate(context, new AstInitializer(value.getPosition(), new AstNode[] { value })));
+                list.add(base.instantiate(context, new AstInitializer(value.getPosition(), new AstNode[] {
+                    value
+                })));
             }
         }
         if (size != null) {
@@ -87,7 +92,7 @@ public class DaroTypeStrictArray extends DaroType {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroTypeStrictArray) {
-            DaroTypeStrictArray array = (DaroTypeStrictArray) object;
+            DaroTypeStrictArray array = (DaroTypeStrictArray)object;
             return base.equals(array.getBaseType()) && Objects.equals(size, array.size);
         } else {
             return false;

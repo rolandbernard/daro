@@ -15,17 +15,12 @@ public class LevelGroup {
     private List<Level> levels;
 
     /**
-     *
      * A group of levels containing additional information
      *
-     * @param id
-     *            the ID of the level group
-     * @param name
-     *            the name of the level group
-     * @param description
-     *            a short description of the level group
-     * @param levels
-     *            a list of levels
+     * @param id          the ID of the level group
+     * @param name        the name of the level group
+     * @param description a short description of the level group
+     * @param levels      a list of levels
      */
     public LevelGroup(long id, String name, String description, List<Level> levels) {
         this.name = name;
@@ -85,7 +80,7 @@ public class LevelGroup {
      * @return the amount of completed levels
      */
     public int countCompletedLevels() {
-        return (int) levels.stream().filter(Level::isCompleted).count();
+        return (int)levels.stream().filter(Level::isCompleted).count();
     }
 
     /**

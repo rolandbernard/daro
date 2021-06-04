@@ -10,8 +10,9 @@ import java.util.function.Predicate;
 import daro.lang.interpreter.ExecutionContext;
 
 /**
- * This {@link DaroObject} represents an instance of a function executing a {@link Function}. This is used for build in
- * functions that are not created by the user.
+ * This {@link DaroObject} represents an instance of a function executing a
+ * {@link Function}. This is used for build in functions that are not created by
+ * the user.
  * 
  * @author Roland Bernard
  */
@@ -20,15 +21,16 @@ public class DaroLambdaFunction extends DaroFunction {
     private final BiFunction<DaroObject[], ExecutionContext, DaroObject> function;
 
     /**
-     * Create a {@link DaroFunction} from a parameter checking function and a {@link Function}.
+     * Create a {@link DaroFunction} from a parameter checking function and a
+     * {@link Function}.
      * 
-     * @param parameters
-     *            A {@link Predicate} checking if the function accepts the given number of parameters
-     * @param function
-     *            The {@link Function} the function executes
+     * @param parameters A {@link Predicate} checking if the function accepts the
+     *                   given number of parameters
+     * @param function   The {@link Function} the function executes
      */
-    public DaroLambdaFunction(Predicate<Integer> parameters,
-            BiFunction<DaroObject[], ExecutionContext, DaroObject> function) {
+    public DaroLambdaFunction(
+        Predicate<Integer> parameters, BiFunction<DaroObject[], ExecutionContext, DaroObject> function
+    ) {
         this.parameters = parameters;
         this.function = function;
     }
@@ -36,10 +38,8 @@ public class DaroLambdaFunction extends DaroFunction {
     /**
      * Create a {@link DaroFunction} from a parameter count and a {@link Function}.
      * 
-     * @param parameters
-     *            The number of parameters the function accepts
-     * @param function
-     *            The {@link Function} the function executes
+     * @param parameters The number of parameters the function accepts
+     * @param function   The {@link Function} the function executes
      */
     public DaroLambdaFunction(int parameters, Function<DaroObject[], DaroObject> function) {
         this(count -> count == parameters, (params, context) -> {
@@ -50,10 +50,8 @@ public class DaroLambdaFunction extends DaroFunction {
     /**
      * Create a {@link DaroFunction} from a parameter count and a {@link Consumer}.
      * 
-     * @param parameters
-     *            The number of parameters the function accepts
-     * @param function
-     *            The {@link BiConsumer} the function executes
+     * @param parameters The number of parameters the function accepts
+     * @param function   The {@link BiConsumer} the function executes
      */
     public DaroLambdaFunction(int parameters, BiConsumer<DaroObject[], ExecutionContext> function) {
         this(count -> count == parameters, (params, context) -> {
@@ -63,10 +61,10 @@ public class DaroLambdaFunction extends DaroFunction {
     }
 
     /**
-     * Create a {@link DaroFunction} from a {@link Function} that accepts a variable number of parameters.
+     * Create a {@link DaroFunction} from a {@link Function} that accepts a variable
+     * number of parameters.
      * 
-     * @param function
-     *            The {@link Consumer} the function executes
+     * @param function The {@link Consumer} the function executes
      */
     public DaroLambdaFunction(Function<DaroObject[], DaroObject> function) {
         this(count -> true, (params, context) -> {
@@ -75,10 +73,10 @@ public class DaroLambdaFunction extends DaroFunction {
     }
 
     /**
-     * Create a {@link DaroFunction} from a {@link Consumer} that accepts a variable number of parameters.
+     * Create a {@link DaroFunction} from a {@link Consumer} that accepts a variable
+     * number of parameters.
      * 
-     * @param function
-     *            The {@link Consumer} the function executes
+     * @param function The {@link Consumer} the function executes
      */
     public DaroLambdaFunction(Consumer<DaroObject[]> function) {
         this(count -> true, (params, context) -> {
@@ -88,10 +86,10 @@ public class DaroLambdaFunction extends DaroFunction {
     }
 
     /**
-     * Create a {@link DaroFunction} from a {@link BiConsumer} that accepts a variable number of parameters.
+     * Create a {@link DaroFunction} from a {@link BiConsumer} that accepts a
+     * variable number of parameters.
      * 
-     * @param function
-     *            The {@link BiConsumer} the function executes
+     * @param function The {@link BiConsumer} the function executes
      */
     public DaroLambdaFunction(BiConsumer<DaroObject[], ExecutionContext> function) {
         this(count -> true, (params, context) -> {
@@ -118,7 +116,7 @@ public class DaroLambdaFunction extends DaroFunction {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroLambdaFunction) {
-            DaroLambdaFunction func = (DaroLambdaFunction) object;
+            DaroLambdaFunction func = (DaroLambdaFunction)object;
             return Objects.equals(function, func.function) && Objects.equals(parameters, func.parameters);
         } else {
             return false;

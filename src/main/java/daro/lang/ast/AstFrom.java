@@ -1,7 +1,8 @@
 package daro.lang.ast;
 
 /**
- * Class representing an ast node for a from statement. e.g. {@code from "test.daro"}
+ * Class representing an ast node for a from statement. e.g.
+ * {@code from "test.daro"}
  * 
  * @author Roland Bernard
  */
