@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import javafx.application.Platform;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -20,8 +21,16 @@ public class Terminal extends ScrollPane {
         });
     }
 
+    /**
+     * Append a {@link Text} object to the terminals output. This method may be called from a
+     * non-Javafx thread.
+     *
+     * @param text The text object that should be added
+     */
     synchronized private void appendText(Text text) {
-        textFlow.getChildren().add(text);
+        Platform.runLater(() -> {
+            textFlow.getChildren().add(text);
+        });
     }
 
     public void printString(String content) {

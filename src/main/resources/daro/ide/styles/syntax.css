@@ -37,6 +37,7 @@
 }
 
 .syntax-error {
+    -fx-font-weight: 700;
     -fx-underline: true;
     -fx-fill: #e06c75;
 }

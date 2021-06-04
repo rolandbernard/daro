@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import daro.lang.ast.Position;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -87,5 +88,14 @@ public class EditorTabs extends TabPane {
 
     public String getOpenContent() {
         return ((EditorTab)getSelectionModel().getSelectedItem()).getEditorContent();
+    }
+
+    public void highlightError(Position position) {
+        Path file = position.getFile();
+        if (file != null) {
+            openFile(file);
+        }
+        EditorTab editor = (EditorTab)getSelectionModel().getSelectedItem();
+        editor.highlightError(position);
     }
 }

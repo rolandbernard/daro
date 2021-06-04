@@ -5,6 +5,8 @@ import java.nio.file.Path;
 import daro.ide.debug.Terminal;
 import daro.ide.editor.EditorTabs;
 import daro.lang.interpreter.Interpreter;
+import daro.lang.interpreter.InterpreterException;
+import daro.lang.parser.ParsingException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -35,19 +37,24 @@ public class ExecutionPalette extends VBox {
             String content = editor.getOpenContent();
             thread = new Thread(() -> {
             interpreter.reset();
-            System.out.println("Test");
                 try {
                     if (file != null) {
                         interpreter.execute(file);
                     } else {
                         interpreter.execute(content);
                     }
+                } catch (InterpreterException error) {
+                    editor.highlightError(error.getPosition());
+                    terminal.printError(error.toString() + "\n");
+                } catch (ParsingException error) {
+                    editor.highlightError(error.getPosition());
+                    terminal.printError(error.toString() + "\n");
                 } catch (Exception error) {
                     terminal.printError(error.toString() + "\n");
                 }
                 stopRunning();
             });
-            thread.run();
+            thread.start();
         });
         debug = buildIconButton("\ue868", event -> {});
         stop = buildIconButton("\ue047", event -> {
@@ -96,6 +103,8 @@ public class ExecutionPalette extends VBox {
 
     @SuppressWarnings("deprecation")
     private void killThread() {
+        // There is no reliable way to kill a thread. This is the most reliable, but it is
+        // deprecated because it is unsafe.
         thread.stop();
     }
 
