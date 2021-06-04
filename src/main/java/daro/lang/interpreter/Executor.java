@@ -64,18 +64,25 @@ public class Executor implements Visitor<DaroObject> {
      */
     public DaroObject execute(AstNode program) {
         if (program != null) {
+            ExecutionObserver[] observers = context.getObservers();
             try {
-                ExecutionObserver[] observers = context.getObservers();
                 if (observers == null) {
                     return program.accept(this);
                 } else {
-                    Scope scope = context.getScope();
                     for (ExecutionObserver observer : observers) {
-                        observer.beforeNodeExecution(program, scope);
+                        observer.beforeExecution(program, context);
                     }
-                    DaroObject result = program.accept(this);
+                    DaroObject result = null;
+                    try {
+                        result = program.accept(this);
+                    } catch (RuntimeException error) {
+                        for (ExecutionObserver observer : observers) {
+                            result = observer.onException(program, error, result, context);
+                        }
+                        return result;
+                    }
                     for (ExecutionObserver observer : observers) {
-                        observer.afterNodeExecution(program, result, scope);
+                        observer.afterExecution(program, result, context);
                     }
                     return result;
                 }

@@ -44,13 +44,20 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
             if (observers == null) {
                 return program.accept(this);
             } else {
-                Scope scope = context.getScope();
                 for (ExecutionObserver observer : observers) {
-                    observer.beforeNodeLocalization(program, scope);
+                    observer.beforeLocalization(program, context);
                 }
-                VariableLocation result = program.accept(this);
+                VariableLocation result = null;
+                try {
+                    result = program.accept(this);
+                } catch (RuntimeException error) {
+                    for (ExecutionObserver observer : observers) {
+                        result = observer.onException(program, error, result, context);
+                    }
+                    return result;
+                }
                 for (ExecutionObserver observer : observers) {
-                    observer.afterNodeLocalization(program, result, scope);
+                    observer.afterLocalization(program, result, context);
                 }
                 return result;
             }
