@@ -1,12 +1,11 @@
 package daro.game.views;
 
 import daro.game.main.Game;
-import daro.game.main.UserData;
+import daro.game.io.UserData;
 import daro.game.pages.PlaygroundPage;
 import daro.game.ui.CodeEditor;
 import daro.game.ui.CustomButton;
 import daro.game.ui.Terminal;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;

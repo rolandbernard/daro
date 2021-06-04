@@ -1,10 +1,6 @@
-package daro.game.main;
+package daro.game.io;
 
-import javafx.scene.input.MouseEvent;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.*;
 
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
@@ -19,25 +15,17 @@ public abstract class UserData {
     private static final String PLAYGROUNDS_PATH = USER_PATH + "playgrounds";
 
     // LEVELS
-    private static JSONObject parseUserDataJson() {
-        JSONObject obj = new JSONObject();
-        JSONParser parser = new JSONParser();
+    private static JsonObject parseUserDataJson() {
         File file = new File(USER_PATH + "data.json");
+        JsonObject element = new JsonObject();
         try {
             Scanner scanner = new Scanner(file);
             scanner.useDelimiter("\\Z");
-            String jsonString = "";
             if (scanner.hasNext()) {
-                jsonString = scanner.next();
+                element = JsonParser.parseString(scanner.next()).getAsJsonObject();
             }
-
             scanner.close();
-            try {
-                obj = (JSONObject) parser.parse(jsonString);
 
-            } catch (ParseException e) {
-                return obj;
-            }
         } catch (FileNotFoundException ex) {
             try {
                 file.createNewFile();
@@ -45,64 +33,24 @@ public abstract class UserData {
                 e.printStackTrace();
             }
         }
-        return obj;
+        return element;
     }
 
-    public static Map<Long, JSONObject> getLevelGroupData(long groupId) {
-        JSONObject object = parseUserDataJson();
-        Map<Long, JSONObject> map = new HashMap<>();
-        Object levelGroupData = object.get(String.valueOf(groupId));
-        if (levelGroupData != null) {
-            JSONArray groupData = (JSONArray) levelGroupData;
-            for (Object level : groupData) {
-                JSONObject levelData = (JSONObject) level;
-                map.put((long) levelData.get("id"), levelData);
+    public static Map<Long, JsonObject> getLevelGroupData(long groupId) {
+        JsonObject object = parseUserDataJson();
+        Map<Long, JsonObject> map = new HashMap<>();
+        JsonElement groupData = object.get(String.valueOf(groupId));
+
+        if (groupData != null) {
+            JsonArray groups = groupData.getAsJsonArray();
+            for (JsonElement level : groups) {
+                JsonObject obj = level.getAsJsonObject();
+                map.put(obj.get("id").getAsLong(), obj);
             }
         }
         return map;
     }
 
-    public static Level getNextLevel(long groupId, long levelId) {
-        try {
-            JSONObject json = PathHandler.getJsonData("levels.json");
-            JSONArray groups = (JSONArray) json.get("groups");
-            JSONObject group = findLevelGroupInJSON(groups, groupId);
-            if(group != null) {
-                JSONArray groupLevels = (JSONArray) group.get("levels");
-                JSONObject nextLevelJSON;
-                long nextGroupId = groupId;
-
-                if (levelId < groupLevels.size()) {
-                    nextLevelJSON = (JSONObject) groupLevels.stream().filter(l -> {
-                        JSONObject levelObj = (JSONObject) l;
-                        return (long) levelObj.get("id") == levelId + 1;
-                    }).findFirst().orElse(null);
-                } else {
-                    nextGroupId = groupId + 1;
-                    JSONObject nextGroup = findLevelGroupInJSON(groups, nextGroupId);
-                    JSONArray nextGroupLevels = (JSONArray) nextGroup.get("levels");
-                    if (nextGroupLevels == null)
-                        return null;
-                    nextLevelJSON = (JSONObject) nextGroupLevels.get(0);
-                }
-
-                if (nextLevelJSON == null)
-                    return null;
-                Map<Long, JSONObject> completionMap = UserData.getLevelGroupData(nextGroupId);
-                return Level.parseLevelFromJSONObject(nextGroupId, nextLevelJSON, completionMap);
-            }
-        } catch (Exception e) {
-            return null;
-        }
-        return null;
-    }
-
-    private static JSONObject findLevelGroupInJSON(JSONArray groups, long groupId) {
-        return (JSONObject) groups.stream().filter(g -> {
-            JSONObject groupObj = (JSONObject) g;
-            return (long) groupObj.get("id") == groupId;
-        }).findFirst().orElse(null);
-    }
 
     /**
      * A method that rewrites the user data file by either creating or replacing an old entry of
@@ -115,45 +63,39 @@ public abstract class UserData {
      * @return if the writing wsa successful or not.
      */
     public static boolean writeLevelData(long groupId, long levelId, boolean completion, String currentCode) {
-        JSONObject object = parseUserDataJson();
-        Object levelGroupData = object.get(String.valueOf(groupId));
-        if (levelGroupData == null) {
-            JSONArray levels = new JSONArray();
-            JSONObject level = new JSONObject();
-            level.put("id", levelId);
-            level.put("completed", completion);
-            level.put("currentCode", currentCode);
-            levels.add(level);
-            object.put(groupId, levels);
+        JsonObject outputObject = parseUserDataJson();
+        JsonElement levelCompObj = outputObject.get(String.valueOf(groupId));
+        if (levelCompObj == null) {
+            JsonArray levels = new JsonArray();
+            levels.add(createLevelDataEntry(levelId, completion, currentCode));
+            outputObject.add(String.valueOf(groupId), levels);
         } else {
-            JSONArray levelGroup = (JSONArray) levelGroupData;
-            boolean existsAlready = false;
-            for (Object o : levelGroup) {
-                JSONObject level = (JSONObject) o;
-                if ((long) level.get("id") == levelId) {
-                    level.replace("completed", completion);
-                    level.replace("currentCode", currentCode);
-                    existsAlready = true;
+            JsonArray levelCompletions = levelCompObj.getAsJsonArray();
+            for (int i = 0; i < levelCompletions.size(); i++) {
+                JsonObject level = levelCompletions.get(i).getAsJsonObject();
+                if (level.get("id").getAsLong() == levelId) {
+                    levelCompletions.remove(i);
                     break;
                 }
             }
-            if (!existsAlready) {
-                JSONObject level = new JSONObject();
-                level.put("id", levelId);
-                level.put("completed", completion);
-                level.put("currentCode", currentCode);
-                levelGroup.add(level);
-            }
-            object.replace(groupId, levelGroup);
+            levelCompletions.add(createLevelDataEntry(levelId, completion, currentCode));
         }
         try (PrintWriter file = new PrintWriter(USER_PATH + "data.json")) {
-            file.write(object.toJSONString());
+            file.write(outputObject.toString());
             file.flush();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private static JsonObject createLevelDataEntry(long levelId, boolean completion, String currentCode) {
+        JsonObject level = new JsonObject();
+        level.addProperty("id", levelId);
+        level.addProperty("completed", completion);
+        level.addProperty("currentCode", currentCode);
+        return level;
     }
 
     //Playgrounds

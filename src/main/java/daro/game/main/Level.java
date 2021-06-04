@@ -1,12 +1,7 @@
 package daro.game.main;
 
 import daro.game.validation.Validation;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Level {
 
@@ -88,7 +83,6 @@ public class Level {
         return groupId;
     }
 
-
     /**
      * Checks if level is completed
      *
@@ -96,48 +90,6 @@ public class Level {
      */
     public List<Validation> getTests() {
         return tests;
-    }
-
-    /**
-     * Parses levels from a JsonArray
-     *
-     * @param levels a JsonArray containing levels as JSON Objects
-     * @return a list of levels
-     */
-    public static List<Level> parseFromJson(long parentId, JSONArray levels) {
-        List<Level> levelsList = new ArrayList<>();
-        Map<Long, JSONObject> completionMap = UserData.getLevelGroupData(parentId);
-
-        if (levels != null && levels.size() > 0) {
-            levels.forEach(level -> {
-                JSONObject levelJson = (JSONObject) level;
-
-                levelsList.add(parseLevelFromJSONObject(parentId, levelJson, completionMap));
-            });
-        }
-        return levelsList;
-    }
-
-    public static Level parseLevelFromJSONObject(long parentId, JSONObject levelJson, Map<Long, JSONObject> completionMap) {
-        long id = (long) levelJson.get("id");
-        String name = levelJson.get("name").toString();
-        String description = (String) levelJson.get("description");
-        JSONArray tests = (JSONArray) levelJson.get("tests");
-        List<Validation> testsList = Validation.parseFromJson(tests);
-        String standardCode = levelJson.get("startCode") == null ? "" : levelJson.get("startCode").toString();
-        boolean isCompleted = false;
-        String currentCode = null;
-
-        if (completionMap != null) {
-            JSONObject data = completionMap.get(id);
-            if (data != null) {
-                isCompleted = (boolean) data.get("completed");
-                currentCode = (String) data.get("currentCode");
-            }
-        }
-
-        String code = currentCode == null ? standardCode : currentCode;
-        return new Level(id, name, description, isCompleted, code, testsList, parentId);
     }
 
 }

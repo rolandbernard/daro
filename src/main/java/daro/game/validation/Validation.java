@@ -1,15 +1,11 @@
 package daro.game.validation;
 
-import daro.game.main.Level;
 import daro.lang.interpreter.Interpreter;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.values.DaroArray;
 import daro.lang.values.DaroObject;
 import daro.lang.values.DaroTypeArray;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -190,31 +186,4 @@ public class Validation {
         }
     }
 
-    /**
-     * Parses tests from a json
-     *
-     * @param tests a JsonArray containing tests
-     * @return a list of tests
-     */
-    public static List<Validation> parseFromJson(JSONArray tests) {
-        List<Validation> testsList = new ArrayList<>();
-        if (tests != null && tests.size() > 0) {
-            tests.forEach(test -> {
-                JSONObject testJson = (JSONObject) test;
-                long id = (long) testJson.get("id");
-                String source = testJson.get("source").toString();
-                String expected = (String) testJson.get("expected");
-                ValidationType type = ValidationType.valueOf((String) testJson.get("type"));
-
-                Validation validation;
-                if (expected.isEmpty()) {
-                    validation = new Validation(id, type, source);
-                } else {
-                    validation = new Validation(id, type, source, expected);
-                }
-                testsList.add(validation);
-            });
-        }
-        return testsList;
-    }
 }

@@ -4,8 +4,10 @@ import daro.game.main.Game;
 import daro.game.main.Level;
 import daro.game.pages.Page;
 import daro.game.views.LevelView;
+import javafx.animation.Transition;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -20,18 +22,24 @@ public class LevelItem extends VBox {
      * 
      * @param level the level displayed
      */
-    public LevelItem(long parentId, Level level) {
+    public LevelItem(Level level) {
         this.level = level;
         this.setCursor(Cursor.HAND);
         this.setWidth(Page.INNER_WIDTH);
         this.setMinHeight(200);
         this.setStyle(
-            "-fx-background-radius: 25px; -fx-background-color: #381A90; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+            "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);" +
+                    "-fx-background-color:" + Game.colorTheme.get("lightBackground")
         );
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
         this.setOnMouseClicked(event -> this.getScene().setRoot(new LevelView(level)));
+        this.setOnMousePressed(e -> Interaction.scaleDown(this));
+        this.setOnMouseReleased(e -> Interaction.scaleBack(this));
+        this.setOnMouseEntered(e -> Interaction.translateUp(this));
+        this.setOnMouseExited(e -> Interaction.translateBack(this));
     }
+
 
     /**
      * Generates the the heading for the level item
@@ -49,4 +57,5 @@ public class LevelItem extends VBox {
         box.setSpacing(10);
         return box;
     }
+
 }

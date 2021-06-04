@@ -1,8 +1,9 @@
 package daro.game.views;
 
+import daro.game.io.LevelHandler;
 import daro.game.main.Game;
 import daro.game.main.Level;
-import daro.game.main.UserData;
+import daro.game.io.UserData;
 import daro.game.pages.CoursePage;
 import daro.game.ui.*;
 import daro.game.validation.Validation;
@@ -155,7 +156,7 @@ public class LevelView extends View {
         HBox buttons = new HBox();
         CustomButton mainButton = null;
         if (success) {
-            Level nextLevel = UserData.getNextLevel(level.getGroupId(), level.getId());
+            Level nextLevel = LevelHandler.getNextLevel(level.getGroupId(), level.getId());
             if(nextLevel != null) {
                 mainButton = new CustomButton("\ue16a", "Next Level", buttonWidth, buttonHeight, false);
                 mainButton.setOnMouseClicked(e -> View.updateView(this, new LevelView(nextLevel)));

@@ -1,13 +1,6 @@
 package daro.game.main;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class LevelGroup {
     private final long id;
@@ -83,34 +76,4 @@ public class LevelGroup {
         return (int)levels.stream().filter(Level::isCompleted).count();
     }
 
-    /**
-     * Parses all the Levels and its groups from a JSON-File called levels.json
-     * 
-     * @return A list of all the level groups
-     */
-    public static List<LevelGroup> parseLevels() {
-        List<LevelGroup> groupsList = new ArrayList<>();
-        try {
-            JSONObject jsonObject = PathHandler.getJsonData("levels.json");
-            JSONArray groups = (JSONArray) jsonObject.get("groups");
-
-            if (groups != null && groups.size() > 0) {
-                groups.forEach(group -> {
-                    JSONObject groupJson = (JSONObject) group;
-                    long id = (long) groupJson.get("id");
-                    String name = groupJson.get("name").toString();
-                    String description = groupJson.get("description_short").toString();
-
-                    JSONArray levels = (JSONArray) groupJson.get("levels");
-                    List<Level> levelsList = Level.parseFromJson(id, levels);
-                    groupsList.add(new LevelGroup(id, name, description, levelsList));
-                });
-            }
-        } catch (Exception e) {
-            System.out.println("There was an error with loading the levels.");
-            e.printStackTrace();
-            return null;
-        }
-        return groupsList;
-    }
 }

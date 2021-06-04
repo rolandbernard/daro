@@ -1,17 +1,13 @@
 package daro.game.pages;
 
-import daro.game.main.UserData;
+import daro.game.io.UserData;
 import daro.game.ui.Heading;
 import daro.game.ui.PlaygroundItem;
 import daro.game.views.MenuView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class PlaygroundPage extends Page {
 
@@ -22,7 +18,10 @@ public class PlaygroundPage extends Page {
     public PlaygroundPage() {
         Heading heading = new Heading("Playground", "Play around with the language and use what you've learned.");
         File[] playgrounds = UserData.parsePlaygrounds();
-        this.getChildren().addAll(heading, getCreateButton(), getPlaygroundItems(playgrounds));
+        VBox createButton = getCreateButton();
+        createButton.setLayoutX(20);
+        createButton.setLayoutY(20);
+        this.getChildren().addAll(heading, createButton, getPlaygroundItems(playgrounds));
     }
 
 
@@ -47,9 +46,8 @@ public class PlaygroundPage extends Page {
     private VBox getCreateButton() {
         VBox createButton = new VBox();
         Text plus = new Text("+");
-        Text text = new Text("add a new playground");
         createButton.setSpacing(10);
-        createButton.getChildren().addAll(plus, text);
+        createButton.getChildren().addAll(plus);
         createButton.setOnMouseClicked(e -> MenuView.setContent(new CreatePlaygroundPage()));
         this.getStyleClass().addAll("text", "playground-item");
         return createButton;

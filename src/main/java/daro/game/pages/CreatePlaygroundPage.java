@@ -1,6 +1,6 @@
 package daro.game.pages;
 
-import daro.game.main.UserData;
+import daro.game.io.UserData;
 import daro.game.ui.CustomButton;
 import daro.game.ui.Heading;
 import daro.game.views.EditorView;

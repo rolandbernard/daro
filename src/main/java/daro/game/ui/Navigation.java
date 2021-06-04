@@ -1,13 +1,13 @@
 package daro.game.ui;
 
 import daro.game.main.Game;
+import daro.game.io.PathHandler;
 import daro.game.pages.CoursePage;
 import daro.game.pages.Page;
 import daro.game.pages.PlaygroundPage;
 import daro.game.views.MenuView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
@@ -28,7 +28,7 @@ public class Navigation extends VBox {
     public Navigation(Page defaultPage) {
         this.setPrefHeight(Game.HEIGHT);
         this.setPrefWidth(WIDTH);
-        this.setStyle("-fx-background-color: #1A0A47");
+        this.setStyle("-fx-background-color: " + Game.colorTheme.get("darkBackground"));
         this.setAlignment(Pos.TOP_CENTER);
         this.setPadding(new Insets(80, 30, 80, 30));
         this.setSpacing(40);
@@ -41,7 +41,7 @@ public class Navigation extends VBox {
      * @return imageview containing the logo
      */
     private ImageView getLogo() {
-        ImageView logo = new ImageView(new Image("game/img/logo.png"));
+        ImageView logo = new ImageView(PathHandler.getImage("logo.png"));
         logo.setFitHeight(40);
         logo.setFitWidth(104);
         logo.setPreserveRatio(true);

@@ -27,18 +27,12 @@
 }
 
 .track, .increment-button, .decrement-button {
-    -fx-background-color: #200D57;
-    -fx-border-color: #200D57;
-    -fx-stroke-color: #200D57;
-}
-
-.terminal .track, .terminal .increment-button, .terminal .decrement-button  {
-    -fx-background-color: #1D1F26;
-    -fx-border-color: #1D1F26;
+    -fx-background-color: #1D1044 !important;
+    -fx-border-color: #1D1044 !important;
 }
 
 .thumb {
-    -fx-background-color: #fff;
+    -fx-background-color: #E2E2E2;
 }
 
 /*Heading*/

@@ -13,8 +13,8 @@ public class PlaygroundItem extends VBox {
         text.getStyleClass().add("text");
         this.setPrefWidth(Page.INNER_WIDTH);
         this.setPrefHeight(300);
-        this.setStyle(
-                "-fx-background-radius: 25px; -fx-background-color: #381A90; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);");
+        this.setStyle("-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);" +
+                        "-fx-background-color: #381A90;");
         this.getChildren().addAll(text);
         this.setOnMouseClicked(e -> this.getScene().setRoot(new EditorView(name)));
     }

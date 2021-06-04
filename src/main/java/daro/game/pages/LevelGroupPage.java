@@ -36,7 +36,7 @@ public class LevelGroupPage extends Page {
         list.setSpacing(20);
         List<Level> levelList = levelGroup.getLevels();
         if (levelGroup.getLevels() != null && levelGroup.getLevels().size() > 0) {
-            levelList.stream().map(l -> new LevelItem(levelGroup.getId(), l)).forEach(l -> list.getChildren().add(l));
+            levelList.stream().map(LevelItem::new).forEach(l -> list.getChildren().add(l));
         } else {
             Text errorText = new Text("There was an error with loading the levels.");
             errorText.getStyleClass().add("text");

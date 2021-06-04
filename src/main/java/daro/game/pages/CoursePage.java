@@ -1,5 +1,6 @@
 package daro.game.pages;
 
+import daro.game.io.LevelHandler;
 import daro.game.main.LevelGroup;
 import daro.game.ui.Heading;
 import daro.game.ui.LevelGroupItem;
@@ -32,7 +33,7 @@ public class CoursePage extends Page {
         pane.setVgap(gap);
         pane.setHgap(gap);
 
-        List<LevelGroup> groups = LevelGroup.parseLevels();
+        List<LevelGroup> groups = LevelHandler.getAllLevels();
         if (groups != null && groups.size() > 0) {
             groups.forEach(group -> pane.getChildren().add(new LevelGroupItem(group)));
         } else {

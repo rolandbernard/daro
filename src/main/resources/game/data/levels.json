@@ -15,7 +15,7 @@
               "id": 1,
               "source": "a",
               "expected": "10",
-              "type": "EQUALS",
+              "type": "EQUALS"
             }
           ]
         },
