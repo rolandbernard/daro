@@ -2,6 +2,7 @@ package daro.lang.interpreter;
 
 import daro.lang.values.DaroObject;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -52,7 +53,17 @@ public class ConstantScope extends AbstractScope {
 
     @Override
     public void reset() {
-        // The scope can not change
+        if (!visited) {
+            try {
+                visited = true;
+                parents = Arrays.copyOf(parents, baseParents);
+                for (Scope parent : parents) {
+                    parent.reset();
+                }
+            } finally {
+                visited = false;
+            }
+        }
     }
 
     @Override

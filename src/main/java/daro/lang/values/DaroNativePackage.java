@@ -37,6 +37,15 @@ public class DaroNativePackage extends DaroObject {
     }
 
     /**
+     * Returns the name fragments of this package.
+     * 
+     * @return The name of the package
+     */
+    public String[] getName() {
+        return name;
+    }
+
+    /**
      * Returns the Java class name of this package.
      * 
      * @return The name of the package
