@@ -34,9 +34,9 @@ public class CreatePlaygroundPage extends Page {
     }
 
     private void createPlayground(MouseEvent mouseEvent) {
-        if(validateNameField()) {
+        if (validateNameField()) {
             String error = UserData.createPlayground(nameField.getText());
-            if(error == null) {
+            if (error == null) {
                 this.getScene().setRoot(new EditorView(nameField.getText() + ".daro"));
             } else {
                 form.getChildren().add(0, callout);
@@ -58,7 +58,6 @@ public class CreatePlaygroundPage extends Page {
         callout.getChildren().add(calloutText);
         return callout;
     }
-
 
     private boolean validateNameField() {
         return nameField.getText().matches("^[a-zA-Z0-9_]+$");

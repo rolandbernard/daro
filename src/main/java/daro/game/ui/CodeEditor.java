@@ -19,14 +19,27 @@ public class CodeEditor extends CodeArea {
      */
 
     // Regex for specific groups
-    private static final String[] KEYWORDS = { "fn", "return", "class", "true", "false" };
-    private static final String[] CONTROLS = { "if", "else", "for" };
-    private static final String[] SYMBOLS = { "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&",
-            "\\;", "!?=", ">", "<" };
-    private static final String[] FUNCTIONS = { "([^\\s]+)?(\\s)?(?=((\\s+)?\\())" };
-    private static final String[] COMMENTS = { "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/" };
-    private static final String[] STRINGS = { "\\\".*?\\\"", "\\'.*?\\'" };
-    private static final String[] DIGITS = { "\\d+" };
+    private static final String[] KEYWORDS = {
+        "fn", "return", "class", "true", "false"
+    };
+    private static final String[] CONTROLS = {
+        "if", "else", "for"
+    };
+    private static final String[] SYMBOLS = {
+        "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!?=", ">", "<"
+    };
+    private static final String[] FUNCTIONS = {
+        "([^\\s]+)?(\\s)?(?=((\\s+)?\\())"
+    };
+    private static final String[] COMMENTS = {
+        "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"
+    };
+    private static final String[] STRINGS = {
+        "\\\".*?\\\"", "\\'.*?\\'"
+    };
+    private static final String[] DIGITS = {
+        "\\d+"
+    };
     private static final String TAB = " ".repeat(4);
 
     // Generate Pattern for specific groups
@@ -148,8 +161,10 @@ public class CodeEditor extends CodeArea {
             REPEATING_STRING.keySet().forEach(string -> {
                 try {
                     String lastTyped = newValue.substring(position - string.length(), position);
-                    if ((this.lastTypePosition != position || !this.lastTypeString.equals(lastTyped))
-                            && lastTyped.equals(string)) {
+                    if (
+                        (this.lastTypePosition != position || !this.lastTypeString.equals(lastTyped))
+                            && lastTyped.equals(string)
+                    ) {
                         this.lastTypePosition = position + string.length();
                         this.lastTypeString = lastTyped;
                         this.insertText(position, REPEATING_STRING.get(string));

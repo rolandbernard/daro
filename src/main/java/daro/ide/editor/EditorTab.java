@@ -84,7 +84,7 @@ public class EditorTab extends Tab {
                 Files.writeString(file, editor.getText());
                 unsaved = false;
                 updateTitle();
-            } catch (IOException e) { }
+            } catch (IOException e) {}
         } else {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Save as");
@@ -96,4 +96,3 @@ public class EditorTab extends Tab {
         }
     }
 }
-

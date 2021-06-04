@@ -15,7 +15,6 @@ public class ConfirmDialog extends Alert {
         setContentText(message);
 
         getDialogPane().getStylesheets()
-                .add(ConfirmDialog.class.getResource("/daro/ide/styles/dialog.css").toExternalForm());
+            .add(ConfirmDialog.class.getResource("/daro/ide/styles/dialog.css").toExternalForm());
     }
 }
-

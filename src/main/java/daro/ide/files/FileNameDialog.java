@@ -14,7 +14,6 @@ public class FileNameDialog extends TextInputDialog {
         setTitle("Enter new name");
 
         getDialogPane().getStylesheets()
-                .add(FileNameDialog.class.getResource("/daro/ide/styles/dialog.css").toExternalForm());
+            .add(FileNameDialog.class.getResource("/daro/ide/styles/dialog.css").toExternalForm());
     }
 }
-

@@ -62,7 +62,9 @@ public class Terminal extends ScrollPane {
         OutputStream out = new OutputStream() {
             @Override
             public void write(int b) {
-                currentString.append(new String(new byte[]{(byte) b}, StandardCharsets.UTF_8));
+                currentString.append(new String(new byte[] {
+                    (byte)b
+                }, StandardCharsets.UTF_8));
             }
         };
         stream = new PrintStream(out);
@@ -84,13 +86,13 @@ public class Terminal extends ScrollPane {
             currentString.append("): ");
             interpreter.execute(code);
             status.setText("\n\nProgram terminated.");
-            status.getStyleClass().addAll( "monospace");
-        } catch(Exception e) {
+            status.getStyleClass().addAll("monospace");
+        } catch (Exception e) {
             status.setText("\n\nProgram terminated with errors:\n" + e.getMessage());
-            status.getStyleClass().addAll( "monospace", "terminal-error");
+            status.getStyleClass().addAll("monospace", "terminal-error");
         }
         Text text = new Text(currentString.toString());
-        text.getStyleClass().addAll( "monospace");
+        text.getStyleClass().addAll("monospace");
         text.setWrappingWidth(this.getPrefWidth() - 40);
         currentString = new StringBuffer();
         textContent.getChildren().addAll(text, status);

@@ -22,6 +22,7 @@ public class PathHandler {
 
     /**
      * Returns a stylesheet file that can be added to a scene
+     * 
      * @param filename the name of the css file
      * @return a String containing the url to the file
      */
@@ -42,6 +43,6 @@ public class PathHandler {
         JSONParser parser = new JSONParser();
         Object object = parser.parse(scanner.next());
         scanner.close();
-        return (JSONObject) object;
+        return (JSONObject)object;
     }
 }

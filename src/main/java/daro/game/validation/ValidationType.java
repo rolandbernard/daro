@@ -1,12 +1,7 @@
 package daro.game.validation;
 
 public enum ValidationType {
-    EQUALS(true),
-    NOT_EQUALS(true),
-    TRUE(false),
-    FALSE(false),
-    ARRAY_INCLUDES(true),
-    ARRAY_EXCLUDES(true);
+    EQUALS(true), NOT_EQUALS(true), TRUE(false), FALSE(false), ARRAY_INCLUDES(true), ARRAY_EXCLUDES(true);
 
     private final boolean NEEDS_EXPECTED;
 
@@ -21,6 +16,7 @@ public enum ValidationType {
 
     /**
      * Checks if a validation type needs an expected value
+     * 
      * @return if the validation type needs an expected value
      */
     public boolean needsExpectedValue() {

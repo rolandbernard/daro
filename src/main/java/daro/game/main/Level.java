@@ -27,8 +27,7 @@ public class Level {
      * @param code        code written for the level
      */
 
-    public Level(long id, String name, String description, boolean isCompleted, String code,
-                 List<Validation> tests) {
+    public Level(long id, String name, String description, boolean isCompleted, String code, List<Validation> tests) {
         this.completed = isCompleted;
         this.name = name;
         this.code = code;
@@ -94,22 +93,22 @@ public class Level {
 
         if (levels != null && levels.size() > 0) {
             levels.forEach(level -> {
-                JSONObject levelJson = (JSONObject) level;
-                long id = (long) levelJson.get("id");
+                JSONObject levelJson = (JSONObject)level;
+                long id = (long)levelJson.get("id");
                 String name = levelJson.get("name").toString();
-                String description = (String) levelJson.get("description");
-                JSONArray tests = (JSONArray) levelJson.get("tests");
+                String description = (String)levelJson.get("description");
+                JSONArray tests = (JSONArray)levelJson.get("tests");
                 List<Validation> testsList = Validation.parseFromJson(tests);
                 JSONObject data = completionMap.get(id);
                 boolean isCompleted = false;
                 String currentCode = null;
 
-                if(data != null) {
-                    isCompleted = (boolean) data.get("completed");
-                    currentCode = (String) data.get("currentCode");
+                if (data != null) {
+                    isCompleted = (boolean)data.get("completed");
+                    currentCode = (String)data.get("currentCode");
                 }
 
-                String code = currentCode == null ? (String) levelJson.get("startCode") : currentCode;
+                String code = currentCode == null ? (String)levelJson.get("startCode") : currentCode;
 
                 levelsList.add(new Level(id, name, description, isCompleted, code, testsList));
             });

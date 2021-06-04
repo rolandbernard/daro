@@ -8,17 +8,17 @@ import javafx.scene.input.MouseButton;
 
 public class FileTree extends TreeView<String> {
     private Consumer<Path> onFileOpen = null;
-    private FileContextMenu menu = new FileContextMenu(); 
+    private FileContextMenu menu = new FileContextMenu();
 
     public FileTree(Path root) {
         super(new FileTreeItem(root));
         setShowRoot(false);
         setOnMouseClicked(event -> {
-            menu.hide(); 
-            FileTreeItem selected = (FileTreeItem)getSelectionModel().getSelectedItem(); 
-            if (event.getButton() == MouseButton.SECONDARY) { 
-                openContextMenu(selected, event.getScreenX(), event.getScreenY()); 
-            } else if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) { 
+            menu.hide();
+            FileTreeItem selected = (FileTreeItem)getSelectionModel().getSelectedItem();
+            if (event.getButton() == MouseButton.SECONDARY) {
+                openContextMenu(selected, event.getScreenX(), event.getScreenY());
+            } else if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                 if (selected != null && onFileOpen != null && selected.isLeaf()) {
                     onFileOpen.accept(selected.getFile());
                 }
@@ -30,7 +30,7 @@ public class FileTree extends TreeView<String> {
         ((FileTreeItem)getRoot()).reload(true);
     }
 
-    private void openContextMenu(FileTreeItem item, double x, double y) { 
+    private void openContextMenu(FileTreeItem item, double x, double y) {
         if (item == null) {
             menu.setContext(null, ((FileTreeItem)getRoot()).getFile(), (FileTreeItem)getRoot(), onFileOpen);
         } else {
@@ -41,11 +41,9 @@ public class FileTree extends TreeView<String> {
             }
         }
         menu.show(this, x, y);
-    } 
+    }
 
     public void setOnFileOpen(Consumer<Path> onFileOpen) {
         this.onFileOpen = onFileOpen;
     }
 }
-
-

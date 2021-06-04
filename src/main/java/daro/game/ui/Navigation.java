@@ -57,10 +57,13 @@ public class Navigation extends VBox {
     private VBox getNavigation(Page defaultPage) {
         navItems = new LinkedHashMap<>();
         navItems.put(
-                new NavigationItem("\ue021", "Course", isDefault(CoursePage.class, defaultPage)),
-                getPage(CoursePage.class, defaultPage));
-        navItems.put(new NavigationItem("\uea26", "Playground", isDefault(PlaygroundPage.class, defaultPage)),
-                getPage(PlaygroundPage.class, defaultPage));
+            new NavigationItem("\ue021", "Course", isDefault(CoursePage.class, defaultPage)),
+            getPage(CoursePage.class, defaultPage)
+        );
+        navItems.put(
+            new NavigationItem("\uea26", "Playground", isDefault(PlaygroundPage.class, defaultPage)),
+            getPage(PlaygroundPage.class, defaultPage)
+        );
         navItems.put(new NavigationItem("\ue9ba", "Exit", false), null);
         linkNavLinks();
 
@@ -82,7 +85,8 @@ public class Navigation extends VBox {
     }
 
     /**
-     * Checks if the current default page is the page wanted, else creates a new instance of the class
+     * Checks if the current default page is the page wanted, else creates a new
+     * instance of the class
      *
      * @param currentPage page that is currently created for a nav link
      * @param defaultPage the defaultpage for the navigation
@@ -90,9 +94,8 @@ public class Navigation extends VBox {
      */
     private Page getPage(Class<?> currentPage, Page defaultPage) {
         try {
-            return isDefault(currentPage, defaultPage) ?
-                    defaultPage :
-                    (Page) currentPage.getDeclaredConstructor().newInstance();
+            return isDefault(currentPage, defaultPage) ? defaultPage
+                : (Page)currentPage.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

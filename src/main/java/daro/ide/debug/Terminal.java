@@ -15,11 +15,13 @@ public class Terminal extends ScrollPane {
         getStyleClass().add("terminal");
         textFlow = new TextFlow();
         setContent(textFlow);
+        textFlow.heightProperty().addListener((observable, oldValue, newValue) -> {
+            setVvalue(1.0);
+        });
     }
 
-    private void appendText(Text text) {
+    synchronized private void appendText(Text text) {
         textFlow.getChildren().add(text);
-        setVvalue(1.0);
     }
 
     public void printString(String content) {
@@ -38,6 +40,10 @@ public class Terminal extends ScrollPane {
         Text text = new Text(content);
         text.getStyleClass().addAll("monospace", "terminal-info");
         appendText(text);
+    }
+
+    public void clear() {
+        textFlow.getChildren().clear();
     }
 
     public PrintStream getPrintStream() {

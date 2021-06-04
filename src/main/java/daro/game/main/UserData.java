@@ -33,7 +33,7 @@ public abstract class UserData {
 
             scanner.close();
             try {
-                obj = (JSONObject) parser.parse(jsonString);
+                obj = (JSONObject)parser.parse(jsonString);
 
             } catch (ParseException e) {
                 return obj;
@@ -53,10 +53,10 @@ public abstract class UserData {
         Map<Long, JSONObject> map = new HashMap<>();
         Object levelGroupData = object.get(String.valueOf(groupId));
         if (levelGroupData != null) {
-            JSONArray groupData = (JSONArray) levelGroupData;
+            JSONArray groupData = (JSONArray)levelGroupData;
             for (Object level : groupData) {
-                JSONObject levelData = (JSONObject) level;
-                map.put((long) levelData.get("id"), levelData);
+                JSONObject levelData = (JSONObject)level;
+                map.put((long)levelData.get("id"), levelData);
             }
         }
         return map;
@@ -74,10 +74,10 @@ public abstract class UserData {
             levels.add(level);
             object.put(groupId, levels);
         } else {
-            JSONArray levelGroup = (JSONArray) levelGroupData;
+            JSONArray levelGroup = (JSONArray)levelGroupData;
             for (Object o : levelGroup) {
-                JSONObject level = (JSONObject) o;
-                if ((long) level.get("id") == levelId) {
+                JSONObject level = (JSONObject)o;
+                if ((long)level.get("id") == levelId) {
                     level.replace("completed", completion);
                     level.replace("currentCode", currentCode);
                     break;
@@ -95,10 +95,11 @@ public abstract class UserData {
         return false;
     }
 
-    //Playgrounds
+    // Playgrounds
 
     /**
-     * Creates, if it not already exists, the playgrounds folder and parses the files
+     * Creates, if it not already exists, the playgrounds folder and parses the
+     * files
      *
      * @return an array of playground files
      */

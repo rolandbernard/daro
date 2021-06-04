@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-
 public class Ide extends Application {
 
     public static void main(String[] args) {
@@ -26,13 +25,14 @@ public class Ide extends Application {
 
         Explorer explorer = new Explorer();
         Scene scene = new Scene(explorer);
-        scene.getStylesheets().addAll(
-            Ide.class.getResource("/daro/ide/styles/index.css").toExternalForm(),
-            Ide.class.getResource("/daro/ide/styles/scrollbar.css").toExternalForm(),
-            Ide.class.getResource("/daro/ide/styles/editor.css").toExternalForm(),
-            Ide.class.getResource("/daro/ide/styles/terminal.css").toExternalForm(),
-            Ide.class.getResource("/daro/ide/styles/syntax.css").toExternalForm()
-        );
+        scene.getStylesheets()
+            .addAll(
+                Ide.class.getResource("/daro/ide/styles/index.css").toExternalForm(),
+                Ide.class.getResource("/daro/ide/styles/scrollbar.css").toExternalForm(),
+                Ide.class.getResource("/daro/ide/styles/editor.css").toExternalForm(),
+                Ide.class.getResource("/daro/ide/styles/terminal.css").toExternalForm(),
+                Ide.class.getResource("/daro/ide/styles/syntax.css").toExternalForm()
+            );
 
         stage.setOnCloseRequest(event -> {
             if (!explorer.allowClosing()) {
@@ -47,4 +47,3 @@ public class Ide extends Application {
         stage.setMaximized(true);
     }
 }
-

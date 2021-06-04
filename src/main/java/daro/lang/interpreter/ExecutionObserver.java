@@ -14,8 +14,9 @@ public interface ExecutionObserver {
 
     /**
      * This method is called after an exception is thrown during execution of the
-     * given ast node. If this method does not throw another exception, the return value of the
-     * lasts succeeding observer will be used as the return value of the given ast.
+     * given ast node. If this method does not throw another exception, the return
+     * value of the lasts succeeding observer will be used as the return value of
+     * the given ast.
      * 
      * @param node  The node that was executed
      * @param error The error that was thrown
@@ -45,15 +46,18 @@ public interface ExecutionObserver {
 
     /**
      * This method is called after an exception is thrown during localization of the
-     * given ast node. If this method does not throw another exception, the return value of the
-     * lasts succeeding observer will be used as the return value of the given ast.
+     * given ast node. If this method does not throw another exception, the return
+     * value of the lasts succeeding observer will be used as the return value of
+     * the given ast.
      * 
      * @param node  The node that was executed
      * @param error The error that was thrown
      * @param value The value returned by the previous observer
      * @param scope The scope the ast was executed in
      */
-    public VariableLocation onException(AstNode node, RuntimeException error, VariableLocation value, ExecutionContext context);
+    public VariableLocation onException(
+        AstNode node, RuntimeException error, VariableLocation value, ExecutionContext context
+    );
 
     /**
      * This method will be called before trying to find the {@link VariableLocation}

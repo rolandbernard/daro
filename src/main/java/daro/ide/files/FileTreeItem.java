@@ -36,14 +36,15 @@ public class FileTreeItem extends TreeItem<String> {
     public void reload(boolean recursive) {
         if (loaded && !isLeaf()) {
             if (isExpanded()) {
-                Map<String, TreeItem<String>> children = super.getChildren().stream()
-                    .collect(Collectors.toMap(item -> item.getValue(), item -> item));
+                Map<String, TreeItem<String>> children =
+                    super.getChildren().stream().collect(Collectors.toMap(item -> item.getValue(), item -> item));
                 try {
-                    Map<String, Path> files = Files.list(file)
-                        .collect(Collectors.toMap(file -> file.getFileName().toString(), file -> file));
+                    Map<String, Path> files =
+                        Files.list(file).collect(Collectors.toMap(file -> file.getFileName().toString(), file -> file));
                     super.getChildren().removeIf(item -> !files.containsKey(item.getValue()));
                     super.getChildren().addAll(
-                        files.entrySet().stream()
+                        files.entrySet()
+                            .stream()
                             .filter(entry -> !children.containsKey(entry.getKey()))
                             .map(entry -> new FileTreeItem(entry.getValue()))
                             .collect(Collectors.toList())
@@ -61,7 +62,7 @@ public class FileTreeItem extends TreeItem<String> {
                     if (recursive) {
                         super.getChildren().forEach(item -> ((FileTreeItem)item).reload(true));
                     }
-                } catch (IOException e) { }
+                } catch (IOException e) {}
             } else {
                 loaded = false;
                 super.getChildren().clear();
@@ -75,17 +76,14 @@ public class FileTreeItem extends TreeItem<String> {
             loaded = true;
             List<TreeItem<String>> children;
             try {
-                children = Files.list(file)
-                    .sorted((a, b) -> {
-                        int directory = Boolean.compare(Files.isDirectory(b), Files.isDirectory(a));
-                        if (directory != 0) {
-                            return directory;
-                        } else {
-                            return a.getFileName().toString().compareTo(b.getFileName().toString());
-                        }
-                    })
-                    .map(child -> new FileTreeItem(child))
-                    .collect(Collectors.toList());
+                children = Files.list(file).sorted((a, b) -> {
+                    int directory = Boolean.compare(Files.isDirectory(b), Files.isDirectory(a));
+                    if (directory != 0) {
+                        return directory;
+                    } else {
+                        return a.getFileName().toString().compareTo(b.getFileName().toString());
+                    }
+                }).map(child -> new FileTreeItem(child)).collect(Collectors.toList());
             } catch (IOException e) {
                 children = List.of();
             }

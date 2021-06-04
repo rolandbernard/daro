@@ -17,7 +17,7 @@ public class Game extends Application {
 
     @Override
     public void start(Stage stage) {
-        //load fonts from resources
+        // load fonts from resources
         Font.loadFont(PathHandler.getFont("Montserrat-Regular.ttf"), 16);
         Font.loadFont(PathHandler.getFont("Montserrat-Italic.ttf"), 16);
         Font.loadFont(PathHandler.getFont("Montserrat-Bold.ttf"), 16);
@@ -28,14 +28,14 @@ public class Game extends Application {
         Font.loadFont(PathHandler.getFont("JetBrainsMono-Regular.ttf"), 16);
         Font.loadFont(PathHandler.getFont("JetBrainsMono-Italic.ttf"), 16);
 
-        //generate start page
+        // generate start page
         MenuView root = new MenuView(new CoursePage());
         Scene scene = new Scene(root, WIDTH, HEIGHT);
 
         // load CSS
         try {
             scene.getStylesheets().add(PathHandler.getStyleSheet("index.css"));
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

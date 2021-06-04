@@ -14,21 +14,36 @@ import javafx.scene.input.KeyEvent;
 
 public class CodeEditor extends TextEditor {
 
-    private static final String[] COMMENTS = { "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/" };
-    private static final String[] PUNCTUATION = { "\\{", "\\}", "\\[", "\\]", "\\(", "\\)", "\\.", "\\,", "\\;", "\\:" };
+    private static final String[] COMMENTS = {
+        "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"
+    };
+    private static final String[] PUNCTUATION = {
+        "\\{", "\\}", "\\[", "\\]", "\\(", "\\)", "\\.", "\\,", "\\;", "\\:"
+    };
     private static final String[] OPERATORS = {
         "\\+\\=", "\\-\\=", "\\*\\=", "\\/\\=", "\\%\\=", "\\|\\=", "\\&\\=", "\\^\\=", "\\<\\<\\=", "\\>\\>\\=",
         "\\&\\&", "\\|\\|", "\\=\\=", "\\!\\=", "\\>\\=", "\\<\\=", "\\>", "\\<", "\\|", "\\&", "\\>\\>", "\\<\\<",
         "\\+", "\\-", "\\*", "\\/", "\\%", "\\~", "\\!", "\\=",
     };
     private static final String[] CONSTANTS = {
-        "'.*?'", "\\b0x[0-9a-fA-F]+|0o[0-7]+|0d[0-9]+|0b[01]+|[0-9]+", "\\b[0-9]+(\\.[0-9]*)?(e[+-]?[0-9]+)?", "\\btrue\\b", "\\bfalse\\b", "\\bnull\\“"
+        "'.*?'", "\\b0x[0-9a-fA-F]+|0o[0-7]+|0d[0-9]+|0b[01]+|[0-9]+", "\\b[0-9]+(\\.[0-9]*)?(e[+-]?[0-9]+)?",
+        "\\btrue\\b", "\\bfalse\\b", "\\bnull\\“"
     };
-    private static final String[] STRINGS = { "\".*?\"" };
-    private static final String[] IDENTIFIERS = { "[_a-zA-Z][_a-zA-Z0-9]*" };
-    private static final String[] STATEMENTS = { "if", "else", "for", "in", "return", "new", "use", "match", "default", "from" };
-    private static final String[] TYPES = { "int", "bool", "real", "string", "array", "module", "type", "function", "fn", "class" };
-    private static final String[] FUNCTIONS = { "\\w+(?=(\\s*\\(.*?\\)))" };
+    private static final String[] STRINGS = {
+        "\".*?\""
+    };
+    private static final String[] IDENTIFIERS = {
+        "[_a-zA-Z][_a-zA-Z0-9]*"
+    };
+    private static final String[] STATEMENTS = {
+        "if", "else", "for", "in", "return", "new", "use", "match", "default", "from"
+    };
+    private static final String[] TYPES = {
+        "int", "bool", "real", "string", "array", "module", "type", "function", "fn", "class"
+    };
+    private static final String[] FUNCTIONS = {
+        "\\w+(?=(\\s*\\(.*?\\)))"
+    };
     private static final String TAB = "    ";
 
     private static String generateBoundedPattern(String ...pattern) {
@@ -40,15 +55,11 @@ public class CodeEditor extends TextEditor {
     }
 
     private static final Pattern SYNTAX_PATTERN = Pattern.compile(
-        "(?<COMMENT>" + generatePattern(COMMENTS) + ")"
-        + "|(?<OPERATOR>" + generatePattern(OPERATORS) + ")"
-        + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"
-        + "|(?<PUNCTUATION>" + generatePattern(PUNCTUATION) + ")"
-        + "|(?<CONSTANT>" + generatePattern(CONSTANTS) + ")"
-        + "|(?<STRING>" + generatePattern(STRINGS) + ")"
-        + "|(?<STATEMENT>" + generateBoundedPattern(STATEMENTS) + ")"
-        + "|(?<TYPE>" + generateBoundedPattern(TYPES) + ")"
-        + "|(?<IDENTIFIER>" + generateBoundedPattern(IDENTIFIERS) + ")"
+        "(?<COMMENT>" + generatePattern(COMMENTS) + ")" + "|(?<OPERATOR>" + generatePattern(OPERATORS) + ")"
+            + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")" + "|(?<PUNCTUATION>"
+            + generatePattern(PUNCTUATION) + ")" + "|(?<CONSTANT>" + generatePattern(CONSTANTS) + ")" + "|(?<STRING>"
+            + generatePattern(STRINGS) + ")" + "|(?<STATEMENT>" + generateBoundedPattern(STATEMENTS) + ")" + "|(?<TYPE>"
+            + generateBoundedPattern(TYPES) + ")" + "|(?<IDENTIFIER>" + generateBoundedPattern(IDENTIFIERS) + ")"
     );
 
     public CodeEditor(String initialContent) {
@@ -84,7 +95,9 @@ public class CodeEditor extends TextEditor {
     }
 
     @Override
-    protected void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+    protected void handleTextChange(
+        ObservableValue<? extends String> observableValue, String oldValue, String newValue
+    ) {
         super.handleTextChange(observableValue, oldValue, newValue);
         setStyleSpans(0, computeHighlighting(newValue));
     }

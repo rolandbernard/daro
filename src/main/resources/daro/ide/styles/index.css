@@ -50,6 +50,13 @@
     -fx-cursor: hand;
 }
 
+.button:disabled {
+    -fx-background-color: #433c56;
+    -fx-border-color: #433c56;
+    -fx-stroke-color: #433c56;
+    -fx-cursor: hand;
+}
+
 .tab-pane .tab.add-tab {
     -fx-background-color: #200D57;
     -fx-cursor: hand;
@@ -62,17 +69,22 @@
 }
 
 .button:hover {
-    -fx-background-color: #250f5f;
-    -fx-border-color: #250f5f;
-    -fx-stroke-color: #250f5f;
+    -fx-background-color: #281066;
+    -fx-border-color: #281066;
+    -fx-stroke-color: #281066;
 }
 
 .context-menu {
     -fx-background-color: #303040;
 }
 
-.split-pane > .split-pane-divider {
+.split-pane .split-pane-divider,
+.pane-divider {
     -fx-background-color: #666;
     -fx-padding: 0 1 0 1;  
+}
+
+.execution-palette {
+    -fx-padding: 5;  
 }
 

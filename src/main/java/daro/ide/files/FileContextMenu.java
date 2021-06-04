@@ -20,7 +20,7 @@ public class FileContextMenu extends ContextMenu {
                 try {
                     Files.createFile(Path.of(parent.toString(), name));
                     toReload.reload(false);
-                } catch (IOException e) { }
+                } catch (IOException e) {}
             });
         });
         MenuItem newFolder = new MenuItem("New folder");
@@ -30,7 +30,7 @@ public class FileContextMenu extends ContextMenu {
                 try {
                     Files.createDirectory(Path.of(parent.toString(), name));
                     toReload.reload(false);
-                } catch (IOException e) { }
+                } catch (IOException e) {}
             });
         });
         getItems().addAll(newFile, newFolder);
@@ -40,7 +40,7 @@ public class FileContextMenu extends ContextMenu {
                 try {
                     Files.delete(file);
                     toReload.reload(false);
-                } catch (IOException e) { }
+                } catch (IOException e) {}
             });
             MenuItem rename = new MenuItem("Rename");
             rename.setOnAction(event -> {
@@ -49,7 +49,7 @@ public class FileContextMenu extends ContextMenu {
                     try {
                         Files.move(file, Path.of(parent.toString(), name));
                         toReload.reload(false);
-                    } catch (IOException e) { }
+                    } catch (IOException e) {}
                 });
             });
             getItems().addAll(new SeparatorMenuItem(), rename, delete, new SeparatorMenuItem());

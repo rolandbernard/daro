@@ -70,7 +70,6 @@ public class LevelView extends View {
         return bar;
     }
 
-
     private boolean save(boolean completion) {
         return UserData.writeLevelData(parentId, level.getId(), completion, editor.getText());
     }

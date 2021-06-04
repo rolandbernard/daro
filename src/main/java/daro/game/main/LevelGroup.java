@@ -92,16 +92,16 @@ public class LevelGroup {
         List<LevelGroup> groupsList = new ArrayList<>();
         try {
             JSONObject jsonObject = PathHandler.getJsonData("levels.json");
-            JSONArray groups = (JSONArray) jsonObject.get("groups");
+            JSONArray groups = (JSONArray)jsonObject.get("groups");
 
             if (groups != null && groups.size() > 0) {
                 groups.forEach(group -> {
-                    JSONObject groupJson = (JSONObject) group;
-                    long id = (long) groupJson.get("id");
+                    JSONObject groupJson = (JSONObject)group;
+                    long id = (long)groupJson.get("id");
                     String name = groupJson.get("name").toString();
                     String description = groupJson.get("description_short").toString();
 
-                    JSONArray levels = (JSONArray) groupJson.get("levels");
+                    JSONArray levels = (JSONArray)groupJson.get("levels");
                     List<Level> levelsList = Level.parseFromJson(id, levels);
                     groupsList.add(new LevelGroup(id, name, description, levelsList));
                 });

@@ -35,9 +35,7 @@ public class EditorTabs extends TabPane {
     }
 
     public boolean allowClosing() {
-        boolean hasUnsaved = tabs.values().stream()
-            .map(tab -> (EditorTab)tab)
-            .anyMatch(EditorTab::isUnsaved);
+        boolean hasUnsaved = tabs.values().stream().map(tab -> (EditorTab)tab).anyMatch(EditorTab::isUnsaved);
         if (hasUnsaved) {
             ConfirmDialog alert = new ConfirmDialog("Exit without saving?");
             return alert.showAndWait().orElse(null) == ButtonType.OK;
@@ -47,16 +45,14 @@ public class EditorTabs extends TabPane {
     }
 
     private void addTab(EditorTab tab) {
-        List<Tab> toRemove = getTabs().stream()
-            .filter(t -> {
-                if (t instanceof EditorTab) {
-                    EditorTab editor = (EditorTab) t;
-                    return editor.getFile() == null && !editor.isUnsaved();
-                } else {
-                    return false;
-                }
-            })
-            .collect(Collectors.toList());
+        List<Tab> toRemove = getTabs().stream().filter(t -> {
+            if (t instanceof EditorTab) {
+                EditorTab editor = (EditorTab)t;
+                return editor.getFile() == null && !editor.isUnsaved();
+            } else {
+                return false;
+            }
+        }).collect(Collectors.toList());
         Path file = tab.getFile();
         if (file != null) {
             tabs.put(file, tab);
@@ -76,6 +72,17 @@ public class EditorTabs extends TabPane {
         } else {
             addTab(new EditorTab(path));
         }
+    }
+
+    public void saveOpenIfNamed() {
+        EditorTab tab = (EditorTab)getSelectionModel().getSelectedItem();
+        if (tab.getFile() != null) {
+            tab.saveFile();
+        }
+    }
+
+    public Path getOpenFile() {
+        return ((EditorTab)getSelectionModel().getSelectedItem()).getFile();
     }
 
     public String getOpenContent() {

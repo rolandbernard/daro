@@ -25,15 +25,15 @@ public class PlaygroundPage extends Page {
         this.getChildren().addAll(heading, getCreateButton(), getPlaygroundItems(playgrounds));
     }
 
-
     /**
      * Generates PlaygroundItemList
+     * 
      * @param playgrounds the playgroundfiles
      * @return Playground
      */
     private VBox getPlaygroundItems(File[] playgrounds) {
         VBox playgroundList = new VBox();
-        for(File playground : playgrounds) {
+        for (File playground : playgrounds) {
             playgroundList.getChildren().add(new PlaygroundItem(playground.getName()));
         }
         playgroundList.setSpacing(20);
@@ -42,6 +42,7 @@ public class PlaygroundPage extends Page {
 
     /**
      * Generates a create button for new playgrounds.
+     * 
      * @return a VBox containing the button
      */
     private VBox getCreateButton() {
