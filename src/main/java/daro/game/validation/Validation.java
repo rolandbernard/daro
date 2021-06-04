@@ -78,35 +78,43 @@ public class Validation {
         String givenResult;
         String expectedString = "";
         try {
-            DaroObject codeResult = interpreter.execute(code + "\n" + source);
-            givenResult = codeResult.toString();
+            interpreter.execute(code);
+            try {
+                DaroObject codeResult = interpreter.execute(source);
+                System.out.println(codeResult);
 
-            switch (type) {
-                case EQUALS:
-                    success = codeResult.equals(expected);
-                    expectedString = source + " = " + expected;
-                    break;
-                case NOT_EQUALS:
-                    success = !codeResult.equals(expected);
-                    expectedString = source + " not = " + expected;
-                    break;
-                case TRUE:
-                    success = codeResult.isTrue();
-                    expectedString = source + " to be a truthy value";
-                    break;
-                case FALSE:
-                    success = !codeResult.isTrue();
-                    expectedString = source + " to be a falsy value";
-                    break;
-                case ARRAY_INCLUDES:
-                    success = validateArrayIncludes(codeResult);
-                    expectedString = source + " to contain " + expected;
-                    break;
-                case ARRAY_EXCLUDES:
-                    success = validateArrayExcludes(codeResult);
-                    expectedString = source + " to not contain " + expected;
-                    break;
+                givenResult = codeResult.toString();
 
+                switch (type) {
+                    case EQUALS:
+                        success = codeResult.equals(expected);
+                        expectedString = source + " = " + expected;
+                        break;
+                    case NOT_EQUALS:
+                        success = !codeResult.equals(expected);
+                        expectedString = source + " not = " + expected;
+                        break;
+                    case TRUE:
+                        success = codeResult.isTrue();
+                        expectedString = source + " to be a truthy value";
+                        break;
+                    case FALSE:
+                        success = !codeResult.isTrue();
+                        expectedString = source + " to be a falsy value";
+                        break;
+                    case ARRAY_INCLUDES:
+                        success = validateArrayIncludes(codeResult);
+                        expectedString = source + " to contain " + expected;
+                        break;
+                    case ARRAY_EXCLUDES:
+                        success = validateArrayExcludes(codeResult);
+                        expectedString = source + " to not contain " + expected;
+                        break;
+
+                }
+
+            } catch (Exception e) {
+                givenResult = source + " was not able to be executed or found.";
             }
         } catch (Exception e) {
             givenResult = "There was an issue with your code: " + e.getMessage();

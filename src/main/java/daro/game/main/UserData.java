@@ -62,10 +62,19 @@ public abstract class UserData {
         return map;
     }
 
+    /**
+     * A method that rewrites the user data file by either creating or replacing an old entry of
+     * user data concerning the completion of a level.
+     *
+     * @param groupId the group id of the level
+     * @param levelId the level id
+     * @param completion the completion (if it was solved successfully)
+     * @param currentCode the code written by the user
+     * @return if the writing wsa successful or not.
+     */
     public static boolean writeLevelData(long groupId, long levelId, boolean completion, String currentCode) {
         JSONObject object = parseUserDataJson();
         Object levelGroupData = object.get(String.valueOf(groupId));
-        System.out.println(levelGroupData);
         if (levelGroupData == null) {
             JSONArray levels = new JSONArray();
             JSONObject level = new JSONObject();
@@ -76,13 +85,22 @@ public abstract class UserData {
             object.put(groupId, levels);
         } else {
             JSONArray levelGroup = (JSONArray) levelGroupData;
+            boolean existsAlready = false;
             for (Object o : levelGroup) {
                 JSONObject level = (JSONObject) o;
                 if ((long) level.get("id") == levelId) {
                     level.replace("completed", completion);
                     level.replace("currentCode", currentCode);
+                    existsAlready = true;
                     break;
                 }
+            }
+            if(!existsAlready) {
+                JSONObject level = new JSONObject();
+                level.put("id", levelId);
+                level.put("completed", completion);
+                level.put("currentCode", currentCode);
+                levelGroup.add(level);
             }
             object.replace(groupId, levelGroup);
         }

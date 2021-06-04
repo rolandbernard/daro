@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MultipleValidationTest {
     @Test
     public void shouldRunSimpleTest() {
-        List<ValidationResult> results = Validation.run("fn test() { return 2; }", List.of(
+        List<ValidationResult> results = Validation.run("fn test() { return 2; }/*comment", List.of(
                 new Validation(1, ValidationType.NOT_EQUALS, "test()", "3"),
                 new Validation(1, ValidationType.NOT_EQUALS, "test()", "5"),
                 new Validation(1, ValidationType.EQUALS, "test()", "2"))
