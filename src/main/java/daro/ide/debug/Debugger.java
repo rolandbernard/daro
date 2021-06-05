@@ -20,6 +20,7 @@ public class Debugger implements ExecutionObserver {
     private int lastLine;
     private AstNode lastNode;
 
+    private boolean breakNextNode;
     private boolean breakNextLine;
     private boolean ignoreCalls;
     private boolean waitForCall;
@@ -29,16 +30,35 @@ public class Debugger implements ExecutionObserver {
     public Debugger(ExecutionPalette palette) {
         this.palette = palette;
         this.lineBreakpoints = Map.of();
-        this.lastFile = null;
-        this.lastLine = 0;
-        this.error = false;
+        reset();
     }
 
     public void setBreakpoints(Map<Path, Set<Integer>> lineBreakpoints) {
         this.lineBreakpoints = lineBreakpoints;
     }
 
+    public void reset() {
+        breakNextNode = false;
+        breakNextLine = false;
+        ignoreCalls = false;
+        waitForCall = false;
+        waitFor = null;
+        lastFile = null;
+        lastLine = 0;
+        error = false;
+    }
+
     public synchronized void next() {
+        breakNextNode = false;
+        breakNextLine = false;
+        ignoreCalls = false;
+        waitForCall = false;
+        waitFor = null;
+        notify();
+    }
+
+    public synchronized void step() {
+        breakNextNode = true;
         breakNextLine = false;
         ignoreCalls = false;
         waitForCall = false;
@@ -47,6 +67,7 @@ public class Debugger implements ExecutionObserver {
     }
 
     public synchronized void stepOver() {
+        breakNextNode = false;
         breakNextLine = true;
         ignoreCalls = true;
         waitForCall = false;
@@ -55,6 +76,7 @@ public class Debugger implements ExecutionObserver {
     }
 
     public synchronized void stepInto() {
+        breakNextNode = false;
         breakNextLine = true;
         ignoreCalls = false;
         waitForCall = false;
@@ -63,6 +85,7 @@ public class Debugger implements ExecutionObserver {
     }
 
     public synchronized void stepOut() {
+        breakNextNode = false;
         breakNextLine = false;
         ignoreCalls = false;
         waitForCall = true;
@@ -85,13 +108,12 @@ public class Debugger implements ExecutionObserver {
     private void beforeNode(AstNode node, ExecutionContext context) {
         Path file = node.getPosition().getFile();
         int line = node.getPosition().getLine();
-        if (lastFile != file || lastLine != line || lastNode == node) {
-            if (lineBreakpoints.getOrDefault(file, Set.of()).contains(line - 1)) {
-                lastFile = file;
-                lastLine = line;
-                lastNode = node;
-                breakFor(node, context);
-            } else if (!waitForCall && waitFor == null && breakNextLine) {
+        if (breakNextNode || lastFile != file || lastLine != line || lastNode == node) {
+            if (
+                breakNextNode
+                || lineBreakpoints.getOrDefault(file, Set.of()).contains(line - 1)
+                || !waitForCall && waitFor == null && breakNextLine
+            ) {
                 lastFile = file;
                 lastLine = line;
                 lastNode = node;

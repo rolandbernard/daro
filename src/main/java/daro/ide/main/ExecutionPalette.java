@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -34,6 +35,7 @@ public class ExecutionPalette extends VBox {
     private Button debug;
     private Button stop;
     private Button next;
+    private Button step;
     private Button stepOver;
     private Button stepInto;
     private Button stepOut;
@@ -46,32 +48,41 @@ public class ExecutionPalette extends VBox {
         this.scope = scope;
         this.debugger = new Debugger(this);
 
-        run = buildIconButton("\ue037", event -> executeCode(false));
-        debug = buildIconButton("\ue868", event -> executeCode(true));
+        run = buildIconButton("\ue037", event -> executeCode(false), "Run");
+        debug = buildIconButton("\ue868", event -> executeCode(true), "Debug");
         stop = buildIconButton("\ue047", event -> {
+            editor.resetHighlighting();
             thread.interrupt();
             if (debugger != null) {
                 debugger.next();
             }
-        });
+        }, "Stop");
         next = buildIconButton("\uf1df", event -> {
+            editor.resetHighlighting();
             debugger.next();
-        });
+        }, "Next");
+        step = buildIconButton("\ue409", event -> {
+            editor.resetHighlighting();
+            debugger.step();
+        }, "Step");
         stepOver = buildIconButton("\ue15a", event -> {
+            editor.resetHighlighting();
             debugger.stepOver();
-        });
+        }, "Step over");
         stepInto = buildIconButton("\uea77", event -> {
+            editor.resetHighlighting();
             debugger.stepInto();
-        });
+        }, "Step into");
         stepOut = buildIconButton("\ue9ba", event -> {
+            editor.resetHighlighting();
             debugger.stepOut();
-        });
+        }, "Step out");
         clear = buildIconButton("\ue872", event -> {
+            editor.resetHighlighting();
             terminal.clear();
             interpreter.reset();
             scope.reload();
-            editor.resetHighlighting();
-        });
+        }, "Clear");
 
         stop.setDisable(true);
         stopDebugging();
@@ -84,7 +95,7 @@ public class ExecutionPalette extends VBox {
         setSpacing(5);
         setAlignment(Pos.CENTER);
         getStyleClass().add("execution-palette");
-        getChildren().addAll(run, debug, stop, spacerA, next, stepOver, stepInto, stepOut, spacerB, clear);
+        getChildren().addAll(run, debug, stop, spacerA, next, step, stepOver, stepInto, stepOut, spacerB, clear);
     }
 
     private void executeCode(boolean withDebugger) {
@@ -97,7 +108,7 @@ public class ExecutionPalette extends VBox {
         String content = editor.getOpenContent();
         interpreter.reset();
         debugger.setBreakpoints(editor.getBreakpoints());
-        debugger.next();
+        debugger.reset();
         thread = new Thread(() -> {
             try {
                 ExecutionObserver[] observers;
@@ -111,14 +122,15 @@ public class ExecutionPalette extends VBox {
                 } else {
                     interpreter.execute(content, observers);
                 }
+                terminal.printInfo("Program terminated.\n");
             } catch (DaroException error) {
                 editor.highlightError(error);
                 terminal.printError(error.toString() + "\n");
             } catch (Exception error) {
                 terminal.printError(error.toString() + "\n");
             }
-            stopRunning();
             stopDebugging();
+            stopRunning();
         });
         thread.start();
     }
@@ -128,7 +140,6 @@ public class ExecutionPalette extends VBox {
             run.setDisable(false);
             debug.setDisable(false);
             stop.setDisable(true);
-            terminal.printInfo("Program terminated.\n");
             scope.setScope(interpreter.getContext().getScope());
             scope.reload();
         });
@@ -137,6 +148,7 @@ public class ExecutionPalette extends VBox {
     public void startDebugging(Scope debugScope, Position location) {
         Platform.runLater(() -> {
             next.setDisable(false);
+            step.setDisable(false);
             stepOver.setDisable(false);
             stepInto.setDisable(false);
             stepOut.setDisable(false);
@@ -149,20 +161,21 @@ public class ExecutionPalette extends VBox {
     public void stopDebugging() {
         debugger.setBreakpoints(editor.getBreakpoints());
         Platform.runLater(() -> {
-            editor.resetHighlighting();
             next.setDisable(true);
+            step.setDisable(true);
             stepOver.setDisable(true);
             stepInto.setDisable(true);
             stepOut.setDisable(true);
         });
     }
 
-    private Button buildIconButton(String iconString, EventHandler<ActionEvent> onClick) {
+    private Button buildIconButton(String iconString, EventHandler<ActionEvent> onClick, String tooltip) {
         Text icon = new Text(iconString);
         icon.getStyleClass().add("icon");
         Button button = new Button();
         button.setGraphic(icon);
         button.setOnAction(onClick);
+        button.setTooltip(new Tooltip(tooltip));
         return button;
     }
 
