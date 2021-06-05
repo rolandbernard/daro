@@ -25,6 +25,12 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
 
+/**
+ * This class implements a text editor able to handle breakpoint, error display
+ * and debug visualization.
+ *
+ * @author Roland Bernard
+ */
 public class TextEditor extends CodeArea {
     private Consumer<String> onChange;
     private Set<Integer> breakpoints;
@@ -33,6 +39,11 @@ public class TextEditor extends CodeArea {
 
     private static final String TAB = "    ";
 
+    /**
+     * Create a new {@link TextEditor} with the given initial content.
+     *
+     * @param initialContent The text to start of editing
+     */
     public TextEditor(String initialContent) {
         super(initialContent);
         getStyleClass().add("text-editor");
@@ -75,6 +86,13 @@ public class TextEditor extends CodeArea {
         });
     }
 
+    /**
+     * Set the graphic next to the line number. The graphic can either be empty or a
+     * breakpoint, debug location or error.
+     *
+     * @param line  The line to refresh
+     * @param label The label at that line
+     */
     private void setLineGraphic(int line, Label label) {
         Text icon = new Text();
         icon.getStyleClass().add("breakpoint");
@@ -90,6 +108,12 @@ public class TextEditor extends CodeArea {
         label.setGraphic(icon);
     }
 
+    /**
+     * Handle a {@link KeyEvent} on the text editor. This method should handle
+     * indentation and tab replacement.
+     *
+     * @param keyEvent The event that happened
+     */
     private void handleKeyPress(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ENTER) {
             int position = getCaretPosition();
@@ -116,9 +140,15 @@ public class TextEditor extends CodeArea {
         }
     }
 
-    protected void handleTextChange(
-        ObservableValue<? extends String> observableValue, String oldValue, String newValue
-    ) {
+    /**
+     * Handle a change in the text of the editor. This method handles highlighting
+     * and moving of breakpoints.
+     *
+     * @param observableValue The observable value
+     * @param oldValue        The old text of the editor
+     * @param newValue        The new text of the editor
+     */
+    private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int paragraph = getCurrentParagraph();
         int oldLines = oldValue.split("\n").length;
         int newLines = newValue.split("\n").length;
@@ -138,7 +168,12 @@ public class TextEditor extends CodeArea {
         }
     }
 
-    protected void clearHighlighting(String text) {
+    /**
+     * Clear all of the highlights currently in applied to the editor
+     *
+     * @param text The current text of the editor
+     */
+    private void clearHighlighting(String text) {
         clearStyle(0, text.length());
         if (shownError != null) {
             int line = shownError.getPosition().getLine() - 1;
@@ -154,6 +189,11 @@ public class TextEditor extends CodeArea {
         }
     }
 
+    /**
+     * Apply highlighting to the editor using the given text.
+     *
+     * @param text The text to use for highlighting
+     */
     protected void applyHighlighting(String text) {
         if (shownError != null) {
             int line = shownError.getPosition().getLine() - 1;
@@ -172,11 +212,21 @@ public class TextEditor extends CodeArea {
         }
     }
 
+    /**
+     * Reset the highlighting of the tabs editor. This will also clear the currently
+     * displayed debug position and error.
+     */
     public void resetHighlighting() {
         clearHighlighting(getText());
         applyHighlighting(getText());
     }
 
+    /**
+     * Highlight the given position as the debuggers current position. This will not
+     * consider the positions file.
+     *
+     * @param position The position to mark
+     */
     public void highlightDebug(daro.lang.ast.Position position) {
         Platform.runLater(() -> {
             clearHighlighting(getText());
@@ -187,6 +237,11 @@ public class TextEditor extends CodeArea {
         });
     }
 
+    /**
+     * Highlight the given position as the location of an error.
+     *
+     * @param error The error to mark
+     */
     public void highlightError(DaroException error) {
         Platform.runLater(() -> {
             clearHighlighting(getText());
@@ -197,10 +252,21 @@ public class TextEditor extends CodeArea {
         });
     }
 
+    /**
+     * Set a consumer that should be executed whenever the text of the editor
+     * changes.
+     *
+     * @param onChange The consumer to execute on change
+     */
     public void setOnChange(Consumer<String> onChange) {
         this.onChange = onChange;
     }
 
+    /**
+     * Get all breakpoints currently defined in the editor.
+     *
+     * @return The set breakpoints
+     */
     public Set<Integer> getBreakpoints() {
         return breakpoints;
     }

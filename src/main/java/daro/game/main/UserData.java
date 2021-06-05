@@ -154,6 +154,7 @@ public abstract class UserData {
      *
      * @param filename filename with .daro
      * @return true if successful, false if error
+     * @throws IOException TODO TOFIX
      */
     public static String getPlayground(String filename) throws IOException {
         File file = new File(PLAYGROUNDS_PATH + "/" + filename);
@@ -169,6 +170,7 @@ public abstract class UserData {
      * Get content of a Playgroundfile
      *
      * @param filename filename with .daro
+     * @param code     TODO TOFIX
      * @return true if successful, false if error
      */
     public static boolean savePlayground(String filename, String code) {

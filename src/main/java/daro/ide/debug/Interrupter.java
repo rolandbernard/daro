@@ -7,8 +7,20 @@ import daro.lang.interpreter.VariableLocation;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.values.DaroObject;
 
+/**
+ * This class implements an {@link ExecutionObserver} that will interrupt
+ * execution if the thread it is running in gets interrupted.
+ * 
+ * @author Roland Bernard
+ */
 public class Interrupter implements ExecutionObserver {
 
+    /**
+     * Checks for interruption of the current thread and throw an exception if it
+     * should terminate.
+     *
+     * @param node The node that is being executed
+     */
     private void checkForInterruption(AstNode node) {
         if (Thread.interrupted()) {
             throw new InterpreterException(node.getPosition(), "Interrupted by the interrupter");

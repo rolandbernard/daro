@@ -14,6 +14,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 
+/**
+ * This class implements a {@link SplitPane} containing a number of editors in
+ * the top, a {@link ExecutionPalette}, a {@link Terminal} and a
+ * {@link ScopeViewer}.
+ *
+ * @author Roland Bernard
+ */
 public class Workspace extends SplitPane {
     private EditorTabs editor;
     private Terminal terminal;
@@ -21,6 +28,9 @@ public class Workspace extends SplitPane {
     private Interpreter interpreter;
     private ExecutionPalette palette;
 
+    /**
+     * Create a new {@link Workspace}.
+     */
     public Workspace() {
         editor = new EditorTabs();
         terminal = new Terminal();
@@ -46,12 +56,24 @@ public class Workspace extends SplitPane {
         terminal.printInfo("IDE initialized.\n");
     }
 
+    /**
+     * This method is executed before closing the {@link Explorer} to make sure the
+     * user is aware of potentially unsaved data.
+     *
+     * @return true if closing is allowed, false otherwise
+     */
     public boolean allowClosing() {
         palette.allowClosing();
         return editor.allowClosing();
     }
 
-    public void openNewFile(Path file) {
+    /**
+     * When executed this method will open a new editor for the given file if it is
+     * not yet open. If it is already open simply select the given files editor.
+     *
+     * @param file The file that is to be opened
+     */
+    public void openFile(Path file) {
         editor.openFile(file);
     }
 }

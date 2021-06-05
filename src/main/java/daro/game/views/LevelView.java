@@ -26,7 +26,8 @@ public class LevelView extends View {
      * <strong>UI: <em>View</em></strong><br>
      * A view to display and solve levels.
      *
-     * @param level the level shown in the view
+     * @param parentId TODO TOFIX
+     * @param level    the level shown in the view
      */
     public LevelView(long parentId, Level level) {
         this.level = level;
