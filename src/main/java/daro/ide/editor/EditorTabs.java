@@ -31,7 +31,7 @@ public class EditorTabs extends TabPane {
         getTabs().add(addTab);
         getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             ((EditorTab)newValue).setEditorContextMenu(menu);
-        }); 
+        });
         setContextMenu(menu);
     }
 

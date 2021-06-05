@@ -34,8 +34,7 @@ public class FileTreeItem extends TreeItem<String> {
 
     public void reload(boolean recursive) {
         if (loaded && !isLeaf()) {
-            if (isExpanded()) {
-            } else {
+            if (isExpanded()) {} else {
                 loaded = false;
                 getChildren();
                 if (recursive) {
@@ -56,12 +55,12 @@ public class FileTreeItem extends TreeItem<String> {
                     Files.list(file).collect(Collectors.toMap(file -> file.getFileName().toString(), file -> file));
                 super.getChildren().removeIf(item -> !files.containsKey(item.getValue()));
                 super.getChildren().addAll(
-                        files.entrySet()
+                    files.entrySet()
                         .stream()
                         .filter(entry -> !children.containsKey(entry.getKey()))
                         .map(entry -> new FileTreeItem(entry.getValue()))
                         .collect(Collectors.toList())
-                        );
+                );
                 super.getChildren().sort((itemA, itemB) -> {
                     Path a = ((FileTreeItem)itemA).getFile();
                     Path b = ((FileTreeItem)itemB).getFile();

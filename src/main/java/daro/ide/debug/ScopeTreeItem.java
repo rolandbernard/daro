@@ -43,16 +43,14 @@ public class ScopeTreeItem extends TreeItem<String> {
     public ObservableList<TreeItem<String>> getChildren() {
         if (!loaded) {
             loaded = true;
-            Set<?> children = super.getChildren().stream()
-                .map(item -> {
-                    if (item instanceof ScopeTreeItem) {
-                        return ((ScopeTreeItem)item).getScope();
-                    } else {
-                        VariableTreeItem var = (VariableTreeItem) item;
-                        return new SimpleEntry<>(var.getName(), var.getVariable());
-                    }
-                })
-                .collect(Collectors.toSet());
+            Set<?> children = super.getChildren().stream().map(item -> {
+                if (item instanceof ScopeTreeItem) {
+                    return ((ScopeTreeItem)item).getScope();
+                } else {
+                    VariableTreeItem var = (VariableTreeItem)item;
+                    return new SimpleEntry<>(var.getName(), var.getVariable());
+                }
+            }).collect(Collectors.toSet());
             Set<Scope> parents = new HashSet<>(Arrays.asList(scope.getParents()));
             Set<Entry<String, DaroObject>> variables = scope.getFinalLevel().getCompleteMapping().entrySet();
             super.getChildren().removeIf(item -> {

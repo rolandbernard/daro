@@ -15,8 +15,7 @@ public class DaroException extends IllegalArgumentException {
     private final Position position;
 
     /**
-     * Create a {@link DaroException} for the given message and without a
-     * position.
+     * Create a {@link DaroException} for the given message and without a position.
      * 
      * @param message The message for the exception
      */

@@ -124,11 +124,11 @@ public class TextEditor extends CodeArea {
         int newLines = newValue.split("\n").length;
         if (oldLines > newLines) {
             breakpoints = breakpoints.stream()
-                .map(num -> num > paragraph ? num + newLines - oldLines: num)
+                .map(num -> num > paragraph ? num + newLines - oldLines : num)
                 .collect(Collectors.toSet());
         } else if (oldLines < newLines) {
             breakpoints = breakpoints.stream()
-                .map(num -> num >= paragraph - 1 ? num + newLines - oldLines: num)
+                .map(num -> num >= paragraph - 1 ? num + newLines - oldLines : num)
                 .collect(Collectors.toSet());
         }
         clearHighlighting(newValue);
@@ -181,7 +181,7 @@ public class TextEditor extends CodeArea {
         Platform.runLater(() -> {
             clearHighlighting(getText());
             showParagraphInViewport(position.getLine() - 1);
-            selectRange(position.getStart(), position.getEnd()); 
+            selectRange(position.getStart(), position.getEnd());
             shownPosition = position;
             applyHighlighting(getText());
         });
@@ -191,7 +191,7 @@ public class TextEditor extends CodeArea {
         Platform.runLater(() -> {
             clearHighlighting(getText());
             showParagraphInViewport(error.getPosition().getLine() - 1);
-            selectRange(error.getStart(), error.getEnd()); 
+            selectRange(error.getStart(), error.getEnd());
             shownError = error;
             applyHighlighting(getText());
         });

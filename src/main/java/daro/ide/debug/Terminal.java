@@ -22,8 +22,8 @@ public class Terminal extends ScrollPane {
     }
 
     /**
-     * Append a {@link Text} object to the terminals output. This method may be called from a
-     * non-Javafx thread.
+     * Append a {@link Text} object to the terminals output. This method may be
+     * called from a non-Javafx thread.
      *
      * @param text The text object that should be added
      */

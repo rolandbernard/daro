@@ -57,8 +57,9 @@ public class Executor implements Visitor<DaroObject> {
     }
 
     /**
-     * Run the given file in the given {@link ExecutionContext}. This will use the root scope of the
-     * {@link ExecutionContext} instead of using a new scope for the module.
+     * Run the given file in the given {@link ExecutionContext}. This will use the
+     * root scope of the {@link ExecutionContext} instead of using a new scope for
+     * the module.
      * 
      * @param context The context to execute in
      * @param file    The file to execute
@@ -625,7 +626,8 @@ public class Executor implements Visitor<DaroObject> {
     /**
      * Execute a file in the executors context and return the resulting
      * {@link DaroModule}. This will also add the file as a module in the executors
-     * {@link ExecutionContext}. The given scope will be used as the scope for the module.
+     * {@link ExecutionContext}. The given scope will be used as the scope for the
+     * module.
      *
      * @param scope  Scope to link with the module
      * @param file   The file that should be executed

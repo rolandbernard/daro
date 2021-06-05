@@ -27,7 +27,7 @@ public class EditorContextMenu extends ContextMenu {
         });
         getItems().addAll(save, saveAs);
         if (editor != null) {
-            
+
         }
     }
 }

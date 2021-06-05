@@ -80,13 +80,14 @@ public class NativePackageScope extends ClassLoader implements Scope {
         List<String> keys = new ArrayList<>();
         try {
             keys.addAll(
-                Collections.list(getResources(pkg.getResourceName())).stream()
+                Collections.list(getResources(pkg.getResourceName()))
+                    .stream()
                     .map(url -> url.getFile())
                     .map(file -> file.replace(pkg.getResourceName() + "/", ""))
                     .map(name -> name.endsWith(".class") ? name.substring(0, name.length() - 6) : name)
                     .collect(Collectors.toList())
             );
-        } catch (IOException e) { }
+        } catch (IOException e) {}
         for (Package packs : getPackages()) {
             if (packs.getName().startsWith(pkg.getClassName())) {
                 String[] name = packs.getName().split("\\.");

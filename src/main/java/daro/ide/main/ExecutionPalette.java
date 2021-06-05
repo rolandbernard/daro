@@ -102,9 +102,13 @@ public class ExecutionPalette extends VBox {
             try {
                 ExecutionObserver[] observers;
                 if (withDebugger) {
-                    observers = new ExecutionObserver[] { debugger, new Interrupter() };
+                    observers = new ExecutionObserver[] {
+                        debugger, new Interrupter()
+                    };
                 } else {
-                    observers = new ExecutionObserver[] { new Interrupter() };
+                    observers = new ExecutionObserver[] {
+                        new Interrupter()
+                    };
                 }
                 if (file != null) {
                     interpreter.execute(file, observers);

@@ -75,14 +75,15 @@ public interface Scope {
     abstract public VariableLocation getVariableLocation(String name);
 
     /**
-     * Resets the scope to its default state. This is the state it was initialized in with the
-     * constructor. This will also remove parents that were added after creation.
+     * Resets the scope to its default state. This is the state it was initialized
+     * in with the constructor. This will also remove parents that were added after
+     * creation.
      */
     abstract public void reset();
 
     /**
-     * Returns the scopes that include all the variables that are excluded by the scope by running
-     * getFinalLevel on the same scope.
+     * Returns the scopes that include all the variables that are excluded by the
+     * scope by running getFinalLevel on the same scope.
      *
      * @return The parents of this scope
      */

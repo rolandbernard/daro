@@ -42,7 +42,7 @@ public abstract class AbstractScope implements Scope {
     protected AbstractScope(Map<String, DaroObject> variables, Scope ...parent) {
         this.parents = parent;
         this.variables = variables;
-        this.baseParents = parent.length; 
+        this.baseParents = parent.length;
     }
 
     public void addParent(Scope ...parent) {

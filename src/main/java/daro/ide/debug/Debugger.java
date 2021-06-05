@@ -136,7 +136,9 @@ public class Debugger implements ExecutionObserver {
     }
 
     @Override
-    public VariableLocation onException(AstNode node, RuntimeException error, VariableLocation value, ExecutionContext context) {
+    public VariableLocation onException(
+        AstNode node, RuntimeException error, VariableLocation value, ExecutionContext context
+    ) {
         onException(node, context);
         throw error;
     }
