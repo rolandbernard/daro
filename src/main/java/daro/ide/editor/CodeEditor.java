@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
-import javafx.beans.value.ObservableValue;
-
 public class CodeEditor extends TextEditor {
 
     private static final String[] COMMENTS = {
@@ -61,15 +59,12 @@ public class CodeEditor extends TextEditor {
 
     public CodeEditor(String initialContent) {
         super(initialContent);
-        setStyleSpans(0, computeHighlighting(initialContent));
     }
 
     @Override
-    protected void handleTextChange(
-        ObservableValue<? extends String> observableValue, String oldValue, String newValue
-    ) {
-        super.handleTextChange(observableValue, oldValue, newValue);
-        setStyleSpans(0, computeHighlighting(newValue));
+    protected void applyHighlighting(String text) {
+        setStyleSpans(0, computeHighlighting(text));
+        super.applyHighlighting(text);
     }
 
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {

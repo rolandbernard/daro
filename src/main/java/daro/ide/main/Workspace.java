@@ -47,6 +47,7 @@ public class Workspace extends SplitPane {
     }
 
     public boolean allowClosing() {
+        palette.allowClosing();
         return editor.allowClosing();
     }
 

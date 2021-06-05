@@ -81,15 +81,15 @@
 .split-pane .split-pane-divider,
 .pane-divider {
     -fx-background-color: #666;
-    -fx-padding: 0 1 0 1;  
+    -fx-padding: 0 1 0 1;
 }
 
 .execution-palette {
-    -fx-padding: 5;  
+    -fx-padding: 5;
 }
 
 .popup .label {
     -fx-background-color: #121e20;
-    -fx-padding: 5;  
+    -fx-padding: 5; 
 }
 

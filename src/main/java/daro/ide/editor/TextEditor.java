@@ -1,31 +1,35 @@
 package daro.ide.editor;
 
 import java.time.Duration;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
 
 import daro.lang.interpreter.DaroException;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
+import javafx.geometry.Pos;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.text.Text;
 import javafx.stage.Popup;
 
 public class TextEditor extends CodeArea {
     private Consumer<String> onChange;
-    private List<Label> lineNumbers;
+    private Set<Integer> breakpoints;
     private DaroException shownError;
+    private daro.lang.ast.Position shownPosition;
 
     private static final String TAB = "    ";
 
@@ -34,27 +38,34 @@ public class TextEditor extends CodeArea {
         getStyleClass().add("text-editor");
         setOnKeyPressed(this::handleKeyPress);
         textProperty().addListener(this::handleTextChange);
-        lineNumbers = new ArrayList<>();
-        IntFunction<Node> factory = LineNumberFactory.get(this);
+        applyHighlighting(initialContent);
+        breakpoints = new HashSet<>();
         setParagraphGraphicFactory(number -> {
-            Label ret = (Label)factory.apply(number);
-            while (number >= lineNumbers.size()) {
-                lineNumbers.add(null);
-            }
-            lineNumbers.set(number, ret);
-            // Shape circle = new Circle(4, new Color(0.878, 0.423, 0.458, 1.0));
-            // circle.setTranslateX(-3);
-            // ret.setGraphic(circle);
+            Label ret = new Label(Integer.toString(number + 1));
+            ret.setAlignment(Pos.CENTER_RIGHT);
+            ret.setContentDisplay(ContentDisplay.RIGHT);
+            ret.getStyleClass().add("lineno");
+            ret.setOnMouseClicked(event -> {
+                if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                    if (breakpoints.contains(number)) {
+                        breakpoints.remove(number);
+                    } else {
+                        breakpoints.add(number);
+                    }
+                    setLineGraphic(number, ret);
+                }
+            });
+            setLineGraphic(number, ret);
             return ret;
         });
         Popup popup = new Popup();
         Label popupMessage = new Label();
         popup.getContent().add(popupMessage);
         setMouseOverTextDelay(Duration.ofMillis(200));
-        addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
-            int textPosition = e.getCharacterIndex();
+        addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, event -> {
+            int textPosition = event.getCharacterIndex();
             if (shownError != null && textPosition >= shownError.getStart() && textPosition <= shownError.getEnd()) {
-                Point2D screenPosition = e.getScreenPosition();
+                Point2D screenPosition = event.getScreenPosition();
                 popupMessage.setText(shownError.getMessage());
                 popup.show(this, screenPosition.getX(), screenPosition.getY());
             }
@@ -62,6 +73,21 @@ public class TextEditor extends CodeArea {
         addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
             popup.hide();
         });
+    }
+
+    private void setLineGraphic(int line, Label label) {
+        Text icon = new Text();
+        icon.getStyleClass().add("breakpoint");
+        if (shownPosition != null && line == shownPosition.getLine() - 1) {
+            icon.setText("\ue937");
+        } else if (shownError != null && line == shownError.getPosition().getLine() - 1) {
+            icon.setText("\ue002");
+        } else if (breakpoints.contains(line)) {
+            icon.setText("\ue868");
+        } else {
+            icon.setText(" ");
+        }
+        label.setGraphic(icon);
     }
 
     private void handleKeyPress(KeyEvent keyEvent) {
@@ -93,22 +119,89 @@ public class TextEditor extends CodeArea {
     protected void handleTextChange(
         ObservableValue<? extends String> observableValue, String oldValue, String newValue
     ) {
-        clearStyle(0, newValue.length());
-        shownError = null;
+        int paragraph = getCurrentParagraph();
+        int oldLines = oldValue.split("\n").length;
+        int newLines = newValue.split("\n").length;
+        if (oldLines > newLines) {
+            breakpoints = breakpoints.stream()
+                .map(num -> num > paragraph ? num + newLines - oldLines: num)
+                .collect(Collectors.toSet());
+        } else if (oldLines < newLines) {
+            breakpoints = breakpoints.stream()
+                .map(num -> num >= paragraph - 1 ? num + newLines - oldLines: num)
+                .collect(Collectors.toSet());
+        }
+        clearHighlighting(newValue);
+        applyHighlighting(newValue);
         if (onChange != null) {
             onChange.accept(newValue);
         }
     }
 
+    protected void clearHighlighting(String text) {
+        clearStyle(0, text.length());
+        if (shownError != null) {
+            int line = shownError.getPosition().getLine() - 1;
+            Label node = (Label)getParagraphGraphic(line);
+            setLineGraphic(line, node);
+            shownError = null;
+        }
+        if (shownPosition != null) {
+            int line = shownPosition.getLine() - 1;
+            Label node = (Label)getParagraphGraphic(line);
+            setLineGraphic(line, node);
+            shownPosition = null;
+        }
+    }
+
+    protected void applyHighlighting(String text) {
+        if (shownError != null) {
+            int line = shownError.getPosition().getLine() - 1;
+            Label node = (Label)getParagraphGraphic(line);
+            if (node != null) {
+                setLineGraphic(line, node);
+                setStyle(shownError.getStart(), shownError.getEnd(), List.of("syntax-error"));
+            }
+        }
+        if (shownPosition != null) {
+            int line = shownPosition.getLine() - 1;
+            Label node = (Label)getParagraphGraphic(line);
+            if (node != null) {
+                setLineGraphic(line, node);
+            }
+        }
+    }
+
+    public void resetHighlighting() {
+        clearHighlighting(getText());
+        applyHighlighting(getText());
+    }
+
+    public void highlightDebug(daro.lang.ast.Position position) {
+        Platform.runLater(() -> {
+            clearHighlighting(getText());
+            showParagraphInViewport(position.getLine() - 1);
+            selectRange(position.getStart(), position.getEnd()); 
+            shownPosition = position;
+            applyHighlighting(getText());
+        });
+    }
+
     public void highlightError(DaroException error) {
         Platform.runLater(() -> {
+            clearHighlighting(getText());
+            showParagraphInViewport(error.getPosition().getLine() - 1);
             selectRange(error.getStart(), error.getEnd()); 
-            setStyle(error.getStart(), error.getEnd(), List.of("syntax-error"));
             shownError = error;
+            applyHighlighting(getText());
         });
     }
 
     public void setOnChange(Consumer<String> onChange) {
         this.onChange = onChange;
+    }
+
+    public Set<Integer> getBreakpoints() {
+        return breakpoints;
     }
 }

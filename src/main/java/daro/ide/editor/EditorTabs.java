@@ -1,31 +1,27 @@
 package daro.ide.editor;
 
 import java.nio.file.Path;
+import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import daro.lang.ast.Position;
 import daro.lang.interpreter.DaroException;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 
 public class EditorTabs extends TabPane {
     private Map<Path, EditorTab> tabs;
+    private EditorContextMenu menu;
 
     public EditorTabs() {
         tabs = new HashMap<>();
+        menu = new EditorContextMenu(this);
         setTabClosingPolicy(TabClosingPolicy.ALL_TABS);
-        sceneProperty().addListener((observable, old, scene) -> {
-            KeyCombination keys = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-            scene.getAccelerators().put(keys, () -> {
-                ((EditorTab)getSelectionModel().getSelectedItem()).saveFile();
-            });
-        });
         Tab addTab = new Tab("+");
         addTab.setClosable(false);
         addTab.getStyleClass().add("add-tab");
@@ -33,16 +29,10 @@ public class EditorTabs extends TabPane {
             addTab(new EditorTab(""));
         });
         getTabs().add(addTab);
-    }
-
-    public boolean allowClosing() {
-        boolean hasUnsaved = tabs.values().stream().map(tab -> (EditorTab)tab).anyMatch(EditorTab::isUnsaved);
-        if (hasUnsaved) {
-            ConfirmDialog alert = new ConfirmDialog("Exit without saving?");
-            return alert.showAndWait().orElse(null) == ButtonType.OK;
-        } else {
-            return true;
-        }
+        getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            ((EditorTab)newValue).setEditorContextMenu(menu);
+        }); 
+        setContextMenu(menu);
     }
 
     private void addTab(EditorTab tab) {
@@ -61,9 +51,24 @@ public class EditorTabs extends TabPane {
         tab.setOnClosed(event -> {
             tabs.remove(file);
         });
+        tab.setEditorContextMenu(menu);
         getTabs().add(getTabs().size() - 1, tab);
         getSelectionModel().select(tab);
         getTabs().removeAll(toRemove);
+    }
+
+    private EditorTab getOpenEditor() {
+        return (EditorTab)getSelectionModel().getSelectedItem();
+    }
+
+    public boolean allowClosing() {
+        boolean hasUnsaved = tabs.values().stream().map(tab -> (EditorTab)tab).anyMatch(EditorTab::isUnsaved);
+        if (hasUnsaved) {
+            ConfirmDialog alert = new ConfirmDialog("Exit without saving?");
+            return alert.showAndWait().orElse(null) == ButtonType.OK;
+        } else {
+            return true;
+        }
     }
 
     public void openFile(Path file) {
@@ -75,19 +80,49 @@ public class EditorTabs extends TabPane {
         }
     }
 
+    public void saveOpenAs() {
+        getOpenEditor().saveFileAs();
+    }
+
+    public void saveOpen() {
+        getOpenEditor().saveFile();
+    }
+
     public void saveOpenIfNamed() {
-        EditorTab tab = (EditorTab)getSelectionModel().getSelectedItem();
+        EditorTab tab = getOpenEditor();
         if (tab.getFile() != null) {
             tab.saveFile();
         }
     }
 
     public Path getOpenFile() {
-        return ((EditorTab)getSelectionModel().getSelectedItem()).getFile();
+        return getOpenEditor().getFile();
     }
 
     public String getOpenContent() {
-        return ((EditorTab)getSelectionModel().getSelectedItem()).getEditorContent();
+        return getOpenEditor().getEditorContent();
+    }
+
+    public Map<Path, Set<Integer>> getBreakpoints() {
+        Map<Path, Set<Integer>> ret = new HashMap<>();
+        for (Entry<Path, EditorTab> tab : tabs.entrySet()) {
+            ret.put(tab.getKey(), tab.getValue().getBreakpoints());
+        }
+        return ret;
+    }
+
+    public void resetHighlighting() {
+        for (EditorTab tab : tabs.values()) {
+            tab.resetHighlighting();
+        }
+    }
+
+    public void highlightDebug(Position position) {
+        Path file = position.getFile();
+        if (file != null) {
+            openFile(file);
+        }
+        getOpenEditor().highlightDebug(position);
     }
 
     public void highlightError(DaroException error) {
@@ -95,7 +130,6 @@ public class EditorTabs extends TabPane {
         if (file != null) {
             openFile(file);
         }
-        EditorTab editor = (EditorTab)getSelectionModel().getSelectedItem();
-        editor.highlightError(error);
+        getOpenEditor().highlightError(error);
     }
 }

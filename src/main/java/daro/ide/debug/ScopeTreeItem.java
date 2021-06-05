@@ -32,6 +32,8 @@ public class ScopeTreeItem extends TreeItem<String> {
             for (TreeItem<String> item : getChildren()) {
                 if (item instanceof ScopeTreeItem) {
                     ((ScopeTreeItem)item).reload();
+                } else if (item instanceof VariableTreeItem) {
+                    ((VariableTreeItem)item).reload();
                 }
             }
         }
