@@ -31,7 +31,7 @@ public final class AstClass extends AstNode {
 
     @Override
     public int hashCode() {
-        return (997 * name.hashCode()) ^ (991 * body.hashCode());
+        return (997 * Objects.hashCode(name)) ^ (991 * Objects.hashCode(body));
     }
 
     @Override
