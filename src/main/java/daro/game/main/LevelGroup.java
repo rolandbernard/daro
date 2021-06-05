@@ -4,9 +4,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.FileReader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class LevelGroup {
     private final long id;
@@ -88,48 +89,26 @@ public class LevelGroup {
      * @return A list of all the level groups
      */
     public static List<LevelGroup> parseLevels() {
-        JSONParser parser = new JSONParser();
         List<LevelGroup> groupsList = new ArrayList<>();
         try {
-            // TODO: check pathing
-            Object object = parser.parse(new FileReader("src/main/resources/data/levels.json"));
-            JSONObject jsonObject = (JSONObject)object;
-
+            JSONObject jsonObject = PathHandler.getJsonData("levels.json");
             JSONArray groups = (JSONArray)jsonObject.get("groups");
 
             if (groups != null && groups.size() > 0) {
                 groups.forEach(group -> {
                     JSONObject groupJson = (JSONObject)group;
+                    long id = (long)groupJson.get("id");
+                    String name = groupJson.get("name").toString();
+                    String description = groupJson.get("description_short").toString();
+
                     JSONArray levels = (JSONArray)groupJson.get("levels");
-
-                    // generate level list
-                    List<Level> levelsList = new ArrayList<>();
-                    if (levels != null && levels.size() > 0) {
-                        levels.forEach(level -> {
-                            JSONObject levelJson = (JSONObject)level;
-
-                            // TODO: add make done dynamic
-                            levelsList.add(
-                                new Level(
-                                    (long)levelJson.get("id"), levelJson.get("name").toString(),
-                                    levelJson.get("description").toString(), (boolean)levelJson.get("completed")
-                                )
-                            );
-                        });
-                    }
-
-                    // add everything to group json
-                    groupsList.add(
-                        new LevelGroup(
-                            (long)groupJson.get("id"), groupJson.get("name").toString(),
-                            groupJson.get("description_short").toString(), levelsList
-                        )
-                    );
+                    List<Level> levelsList = Level.parseFromJson(id, levels);
+                    groupsList.add(new LevelGroup(id, name, description, levelsList));
                 });
             }
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println("There was an error with loading the levels.");
+            e.printStackTrace();
             return null;
         }
         return groupsList;

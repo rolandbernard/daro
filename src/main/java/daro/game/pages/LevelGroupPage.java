@@ -31,7 +31,7 @@ public class LevelGroupPage extends Page {
         VBox list = new VBox();
         list.setSpacing(20);
         if (levelGroup.getLevels() != null && levelGroup.getLevels().size() > 0) {
-            levelGroup.getLevels().forEach(level -> list.getChildren().add(new LevelItem(level)));
+            levelGroup.getLevels().forEach(level -> list.getChildren().add(new LevelItem(levelGroup.getId(), level)));
         } else {
             Text errorText = new Text("There was an error with loading the levels.");
             errorText.getStyleClass().add("text");

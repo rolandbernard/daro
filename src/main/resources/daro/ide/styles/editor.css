@@ -1,0 +1,41 @@
+
+.text-editor {
+    -fx-background-color: #21252b;
+    -fx-padding: 8 0 8 0;
+}
+
+.text-editor .selection {
+    -fx-fill: #343f41;
+}
+
+.paragraph-box:has-caret {
+    -fx-background-color: #252930;
+}
+
+.lineno {
+    -fx-background-color: #21252b;
+    -fx-pref-width: 65;
+    -fx-font-size: 16;
+    -fx-padding: 0 4 0 0;
+    -fx-cursor: default;
+}
+
+.breakpoint {
+    -fx-font-family: "Material Icons";
+    -fx-font-size: 12;
+    -fx-fill: #d19a66;
+}
+
+.lineno .text {
+    -fx-fill: #7c8696;
+}
+
+.text-editor .text {
+    -fx-font-family: "IBM Plex Mono", monospace !important;
+    -fx-font-size: 16;
+}
+
+.text-editor .caret {
+    -fx-stroke: white;
+}
+

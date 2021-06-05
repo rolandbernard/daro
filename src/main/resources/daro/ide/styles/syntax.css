@@ -1,0 +1,44 @@
+
+.syntax-comment {
+    -fx-font-style: italic;
+    -fx-fill: #abb2bf;
+}
+
+.syntax-punctuation {
+    -fx-fill: #7c8696;
+}
+
+.syntax-constant {
+    -fx-fill: #56b6c2;
+}
+
+.syntax-string {
+    -fx-fill: #98c379;
+}
+
+.syntax-operator {
+    -fx-fill: #e06c75;
+}
+
+.syntax-identifier {
+    -fx-fill: #d7d7d7;
+}
+
+.syntax-statement {
+    -fx-fill: #e06c75;
+}
+
+.syntax-type {
+    -fx-fill: #61afef;
+}
+
+.syntax-function {
+    -fx-fill: #d19a66;
+}
+
+.syntax-error {
+    -fx-font-weight: 700;
+    -fx-underline: true;
+    -fx-fill: #e06c75;
+}
+

@@ -1,0 +1,35 @@
+
+.dialog-pane {
+    -fx-background-color: #21252b;
+}
+
+.dialog-pane .label {
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-background-color: #200D57;
+    -fx-border-color: #200D57;
+    -fx-stroke-color: #200D57;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #250f5f;
+    -fx-border-color: #250f5f;
+    -fx-stroke-color: #250f5f;
+}
+
+.text {
+    -fx-fill: #d7d7d7;
+    -fx-font-weight: normal;
+}
+
+.text-field {
+    -fx-background-color: #3d434c;
+    -fx-border-color: #3d434c;
+    -fx-stroke-color: #3d434c;
+    -fx-focus-color: #3d434c;
+    -fx-text-fill: #d7d7d7;
+}
+
