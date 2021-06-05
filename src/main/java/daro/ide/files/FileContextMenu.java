@@ -9,8 +9,22 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
+/**
+ * This is the context menu that will be displayed for right clicks on the file
+ * browser.
+ * 
+ * @author Roland Bernard
+ */
 public class FileContextMenu extends ContextMenu {
 
+    /**
+     * Set the current context of the menu.
+     *
+     * @param file       The file the menu refers to
+     * @param parent     The parent of file operations (e.g. new file, new folder)
+     * @param toReload   The node that must be reloaded after execution
+     * @param onFileOpen The function to call for opening files
+     */
     public void setContext(Path file, Path parent, FileTreeItem toReload, Consumer<Path> onFileOpen) {
         getItems().clear();
         MenuItem newFile = new MenuItem("New file");

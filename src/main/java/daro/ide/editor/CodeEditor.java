@@ -8,6 +8,11 @@ import java.util.regex.Pattern;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
+/**
+ * This class extends the {@link TextEditor} by adding syntax highlighting.
+ * 
+ * @author Roland Bernard
+ */
 public class CodeEditor extends TextEditor {
 
     private static final String[] COMMENTS = {
@@ -57,6 +62,11 @@ public class CodeEditor extends TextEditor {
             + generateBoundedPattern(TYPES) + ")" + "|(?<IDENTIFIER>" + generateBoundedPattern(IDENTIFIERS) + ")"
     );
 
+    /**
+     * Create a new {@link CodeEditor} with the given initial content.
+     *
+     * @param initialContent The text to start the editor with
+     */
     public CodeEditor(String initialContent) {
         super(initialContent);
     }
@@ -67,6 +77,12 @@ public class CodeEditor extends TextEditor {
         super.applyHighlighting(text);
     }
 
+    /**
+     * Compute the highlighting spans for the given text.
+     *
+     * @param text The text that should be highlighted
+     * @return The style spans representing the highlighting
+     */
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
         Matcher matcher = SYNTAX_PATTERN.matcher(text);

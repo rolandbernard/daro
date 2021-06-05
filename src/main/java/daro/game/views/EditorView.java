@@ -17,6 +17,8 @@ public class EditorView extends View {
 
     /**
      * A view showing a CodeEditor and a Terminal
+     *
+     * @param filename TODO TOFIX
      */
     public EditorView(String filename) {
         try {

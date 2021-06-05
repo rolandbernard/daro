@@ -5,6 +5,11 @@ import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ * This class implements the main window of the IDE.
+ * 
+ * @author Roland Bernard
+ */
 public class Ide extends Application {
 
     public static void main(String[] args) {

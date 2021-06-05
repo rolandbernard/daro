@@ -12,19 +12,38 @@ import daro.lang.values.DaroObject;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
+/**
+ * This class extends the {@link TreeItem}. This {@link TreeItem} can be used to
+ * display the values inside of a {@link Scope}.
+ * 
+ * @author Roland Bernard
+ */
 public class ScopeTreeItem extends TreeItem<String> {
     private final Scope scope;
     private boolean loaded;
 
+    /**
+     * Create a new {@link ScopeTreeItem} for the given scope.
+     *
+     * @param scope The scope the item represents
+     */
     public ScopeTreeItem(Scope scope) {
         super(scope.getClass().getSimpleName());
         this.scope = scope;
     }
 
+    /**
+     * Return the scope of this {@link ScopeTreeItem}.
+     *
+     * @return The scope
+     */
     public Scope getScope() {
         return scope;
     }
 
+    /**
+     * Reload the data of the scope.
+     */
     public void reload() {
         loaded = false;
         if (isExpanded()) {
@@ -43,16 +62,14 @@ public class ScopeTreeItem extends TreeItem<String> {
     public ObservableList<TreeItem<String>> getChildren() {
         if (!loaded) {
             loaded = true;
-            Set<?> children = super.getChildren().stream()
-                .map(item -> {
-                    if (item instanceof ScopeTreeItem) {
-                        return ((ScopeTreeItem)item).getScope();
-                    } else {
-                        VariableTreeItem var = (VariableTreeItem) item;
-                        return new SimpleEntry<>(var.getName(), var.getVariable());
-                    }
-                })
-                .collect(Collectors.toSet());
+            Set<?> children = super.getChildren().stream().map(item -> {
+                if (item instanceof ScopeTreeItem) {
+                    return ((ScopeTreeItem)item).getScope();
+                } else {
+                    VariableTreeItem var = (VariableTreeItem)item;
+                    return new SimpleEntry<>(var.getName(), var.getVariable());
+                }
+            }).collect(Collectors.toSet());
             Set<Scope> parents = new HashSet<>(Arrays.asList(scope.getParents()));
             Set<Entry<String, DaroObject>> variables = scope.getFinalLevel().getCompleteMapping().entrySet();
             super.getChildren().removeIf(item -> {

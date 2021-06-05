@@ -35,7 +35,7 @@ public class PathHandler {
      *
      * @param filename a json filename
      * @return a JsonObject parsed from the file
-     * @throws ParseException
+     * @throws ParseException TODO TOFIX
      */
     public static JSONObject getJsonData(String filename) throws ParseException {
         Scanner scanner = new Scanner(PathHandler.class.getResourceAsStream(RESOURCE_ROOT + "/data/" + filename));

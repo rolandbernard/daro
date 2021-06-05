@@ -23,6 +23,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+/**
+ * This class implements a simple set of buttons for executing code. The palette
+ * is linked to an {@link EditorTabs}, {@link Terminal}, {@link ScopeViewer} and
+ * {@link Interpreter}.
+ *
+ * @author Roland Bernard
+ */
 public class ExecutionPalette extends VBox {
     private EditorTabs editor;
     private Terminal terminal;
@@ -41,6 +48,15 @@ public class ExecutionPalette extends VBox {
     private Button stepOut;
     private Button clear;
 
+    /**
+     * Create a new {@link ExecutionPalette} linked to the given editor, terminal,
+     * scope, and interpreter.
+     *
+     * @param editor      The editor to link the palette to
+     * @param terminal    The terminal to link the palette to
+     * @param scope       The scope viewer to link the palette to
+     * @param interpreter The interpreter to link the palette to
+     */
     public ExecutionPalette(EditorTabs editor, Terminal terminal, ScopeViewer scope, Interpreter interpreter) {
         this.editor = editor;
         this.terminal = terminal;
@@ -98,6 +114,29 @@ public class ExecutionPalette extends VBox {
         getChildren().addAll(run, debug, stop, spacerA, next, step, stepOver, stepInto, stepOut, spacerB, clear);
     }
 
+    /**
+     * Build a new button with the given icon, tooltip and action.
+     *
+     * @param iconString The icon of the button
+     * @param onClick    The handler to execute on action
+     * @param tooltip    The tooltip for the button
+     * @return The resulting button
+     */
+    private Button buildIconButton(String iconString, EventHandler<ActionEvent> onClick, String tooltip) {
+        Text icon = new Text(iconString);
+        icon.getStyleClass().add("icon");
+        Button button = new Button();
+        button.setGraphic(icon);
+        button.setOnAction(onClick);
+        button.setTooltip(new Tooltip(tooltip));
+        return button;
+    }
+
+    /**
+     * Start execution the code in the currently open editor.
+     *
+     * @param withDebugger Whether we should execute with the debugger or not
+     */
     private void executeCode(boolean withDebugger) {
         run.setDisable(true);
         debug.setDisable(true);
@@ -113,9 +152,13 @@ public class ExecutionPalette extends VBox {
             try {
                 ExecutionObserver[] observers;
                 if (withDebugger) {
-                    observers = new ExecutionObserver[] { debugger, new Interrupter() };
+                    observers = new ExecutionObserver[] {
+                        debugger, new Interrupter()
+                    };
                 } else {
-                    observers = new ExecutionObserver[] { new Interrupter() };
+                    observers = new ExecutionObserver[] {
+                        new Interrupter()
+                    };
                 }
                 if (file != null) {
                     interpreter.execute(file, observers);
@@ -135,6 +178,9 @@ public class ExecutionPalette extends VBox {
         thread.start();
     }
 
+    /**
+     * Executed after execution of the user code has stopped
+     */
     private void stopRunning() {
         Platform.runLater(() -> {
             run.setDisable(false);
@@ -145,6 +191,12 @@ public class ExecutionPalette extends VBox {
         });
     }
 
+    /**
+     * Executed by the debugger to signal that the debugger has halted the program
+     *
+     * @param debugScope The scope the debugger is in
+     * @param location   The position the debugger is at
+     */
     public void startDebugging(Scope debugScope, Position location) {
         Platform.runLater(() -> {
             next.setDisable(false);
@@ -158,6 +210,9 @@ public class ExecutionPalette extends VBox {
         });
     }
 
+    /**
+     * Executed by the debugger to signal that the debugger has continued execution
+     */
     public void stopDebugging() {
         debugger.setBreakpoints(editor.getBreakpoints());
         Platform.runLater(() -> {
@@ -169,19 +224,16 @@ public class ExecutionPalette extends VBox {
         });
     }
 
-    private Button buildIconButton(String iconString, EventHandler<ActionEvent> onClick, String tooltip) {
-        Text icon = new Text(iconString);
-        icon.getStyleClass().add("icon");
-        Button button = new Button();
-        button.setGraphic(icon);
-        button.setOnAction(onClick);
-        button.setTooltip(new Tooltip(tooltip));
-        return button;
-    }
-
+    /**
+     * This method should be executed before allowing the user to close the window.
+     * This will terminate the currently executed program.
+     */
     public void allowClosing() {
         if (thread != null) {
             thread.interrupt();
+            if (debugger != null) {
+                debugger.next();
+            }
         }
     }
 }

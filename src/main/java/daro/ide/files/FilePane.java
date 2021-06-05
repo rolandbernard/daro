@@ -15,13 +15,27 @@ import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 
+/**
+ * This class implements a {@link BorderPane} displaying a file browser.
+ * 
+ * @author Roland Bernard
+ */
 public class FilePane extends BorderPane {
     private Consumer<Path> onFileOpen = null;
 
+    /**
+     * Create a new {@link FilePane}
+     */
     public FilePane() {
         setRoot(null);
     }
 
+    /**
+     * Set the current root of the {@link FilePane}. The given path should be a
+     * directory.
+     *
+     * @param root The {@link Path} that should be set as the root
+     */
     public void setRoot(Path root) {
         Button open = new Button("Open folder");
         open.setOnAction(event -> {
@@ -60,6 +74,11 @@ public class FilePane extends BorderPane {
         }
     }
 
+    /**
+     * Set the function that should be called for opening new files.
+     *
+     * @param onFileOpen The {@link Consumer} to call on file open
+     */
     public void setOnFileOpen(Consumer<Path> onFileOpen) {
         this.onFileOpen = onFileOpen;
     }
