@@ -36,7 +36,7 @@ public class Interaction {
         transition.play();
     }
 
-    public static void scaleDown(Region n) {
+    public static void scaleDown(Node n) {
         ScaleTransition transition = new ScaleTransition();
         transition.setDuration(DURATION);
         transition.setByX(-0.05);
@@ -45,12 +45,24 @@ public class Interaction {
         transition.play();
     }
 
-    public static void scaleBack(Region n) {
+    public static void scaleBack(Node n) {
         ScaleTransition transition = new ScaleTransition();
         transition.setDuration(DURATION);
         transition.setToX(1);
         transition.setToY(1);
         transition.setNode(n);
         transition.play();
+    }
+
+    public static void scaleIn(Node n) {
+        ScaleTransition transition = new ScaleTransition();
+        transition.setDuration(DURATION);
+        transition.setFromX(0);
+        transition.setFromY(0);
+        transition.setToX(1);
+        transition.setToY(1);
+        transition.setNode(n);
+        transition.play();
+
     }
 }

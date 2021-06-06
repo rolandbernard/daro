@@ -1,5 +1,6 @@
 package daro.game.ui;
 
+import daro.game.main.Game;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -14,42 +15,36 @@ public class CustomButton extends HBox {
      * @param text   text for the button
      * @param width  width of the button
      * @param height height of the button
-     * @param dark   if the background is dark
      */
-    public CustomButton(String icon, String text, double width, double height, boolean dark) {
+    public CustomButton(String icon, String text, double width, double height, boolean rounded) {
         this.setPrefWidth(width);
         this.setPrefHeight(height);
-        init(icon, text, dark);
+        this.setStyle("-fx-background-color: " + Game.colorTheme.get("accent"));
+        init(icon, text, rounded);
+    }
+
+    public CustomButton(String icon, String text, double width, double height, boolean rounded, String color) {
+        this.setPrefWidth(width);
+        this.setPrefHeight(height);
+        this.setStyle("-fx-background-color: " + color);
+        init(icon, text, rounded);
     }
 
     /**
-     * Creates a custom button with an icon
-     *
-     * @param icon icon string e.g. \ue037 
-     * @param text text for the button
-     * @param dark if the background is dark
-     */
-    public CustomButton(String icon, String text, boolean dark) {
-        this.setPadding(new Insets(15));
-        this.setStyle("-fx-background-radius: 5px;");
-        init(icon, text, dark);
-    }
-
-    /**
-     * Initializes basic stylings for the button
+     * Initializes basic styles for the button
      *
      * @param icon icon string
      * @param text text string
      */
-    private void init(String icon, String text, boolean dark) {
-        if (dark) {
-            this.setStyle("-fx-background-color: #dd331c");
-        } else {
-            this.setStyle("-fx-background-color: #FF3D23");
+    private void init(String icon, String text, boolean rounded) {
+        if(rounded) {
+            this.setStyle(getStyle() + "; -fx-background-radius: 25px;");
         }
         this.setAlignment(Pos.CENTER);
         this.setCursor(Cursor.HAND);
         this.setSpacing(10);
+        this.setOnMousePressed(e -> Interaction.scaleDown(this));
+        this.setOnMouseReleased(e -> Interaction.scaleBack(this));
         this.getChildren().addAll(generateIcon(icon), generateText(text));
     }
 

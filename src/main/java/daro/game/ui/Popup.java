@@ -36,6 +36,7 @@ public class Popup extends StackPane {
     }
 
     public void open() {
+        Interaction.scaleIn(content);
         this.setVisible(true);
     }
 
