@@ -1,10 +1,10 @@
 package daro.ide.debug;
 
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import daro.ide.main.ExecutionPalette;
 import daro.lang.ast.AstCall;
 import daro.lang.ast.AstNode;
 import daro.lang.interpreter.ExecutionContext;
@@ -21,7 +21,7 @@ import daro.lang.values.DaroObject;
  * @author Roland Bernard
  */
 public class Debugger implements ExecutionObserver {
-    private final ExecutionPalette palette;
+    private final DebugController controller;
     private Map<Path, Set<Integer>> lineBreakpoints;
     private Path lastFile;
     private int lastLine;
@@ -37,16 +37,17 @@ public class Debugger implements ExecutionObserver {
     /**
      * Create a new {@link Debugger} connected to the given execution palette.
      *
-     * @param palette The palette the debugger is connected to
+     * @param controller The palette the debugger is connected to
      */
-    public Debugger(ExecutionPalette palette) {
-        this.palette = palette;
-        this.lineBreakpoints = Map.of();
+    public Debugger(DebugController controller) {
+        this.controller = controller;
+        this.lineBreakpoints = new HashMap<>();
         reset();
     }
 
     /**
-     * Sets the breakpoints that should be used by this debugger.
+     * Sets the breakpoints that should be used by this debugger. Breakpoint line numbers start at 0
+     * for the first line (not 1 as the Ast Position.getLine() returns).
      *
      * @param lineBreakpoints The breakpoint for this debugger
      */
@@ -125,7 +126,7 @@ public class Debugger implements ExecutionObserver {
      */
     public synchronized void stepOut() {
         breakNextNode = false;
-        breakNextLine = false;
+        breakNextLine = true;
         ignoreCalls = false;
         waitForCall = true;
         waitFor = null;
@@ -140,7 +141,7 @@ public class Debugger implements ExecutionObserver {
      * @param context The context to break in
      */
     private synchronized void breakFor(AstNode node, ExecutionContext context) {
-        palette.startDebugging(context.getScope(), node.getPosition());
+        controller.startDebugging(context.getScope(), node.getPosition());
         try {
             synchronized (this) {
                 wait();
@@ -148,7 +149,7 @@ public class Debugger implements ExecutionObserver {
         } catch (InterruptedException e) {
             throw new InterpreterException(node.getPosition(), "Debugger was interrupted");
         }
-        palette.stopDebugging();
+        controller.stopDebugging();
     }
 
     /**
@@ -163,7 +164,7 @@ public class Debugger implements ExecutionObserver {
         if (breakNextNode || lastFile != file || lastLine != line || lastNode == node) {
             if (
                 breakNextNode || lineBreakpoints.getOrDefault(file, Set.of()).contains(line - 1)
-                    || !waitForCall && waitFor == null && breakNextLine
+                    || (!waitForCall && waitFor == null && breakNextLine)
             ) {
                 lastFile = file;
                 lastLine = line;
