@@ -1,5 +1,7 @@
 package daro.game.ui;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import daro.game.io.SettingsHandler;
 import daro.game.main.Game;
 import javafx.beans.value.ObservableValue;
@@ -70,7 +72,7 @@ public class CodeEditor extends CodeArea {
     private static final Character[] WHITESPACE_NL = {
         '{', '[', '('
     };
-    private Map<String, String> settings;
+    private Map<String, JsonElement> settings;
 
     // Workaround to ensure that autocompletions don't go into an infinite loop
     private int lastTypePosition;
@@ -122,7 +124,7 @@ public class CodeEditor extends CodeArea {
         this.setStyleSpans(0, computeHighlighting(this.getText()));
         this.lastTypePosition = -1;
         this.settings = SettingsHandler.getSettingsByKey("editor");
-        this.getStyleClass().add("theme-" + (settings.get("theme") == null ? "dark" : settings.get("theme")));
+        this.getStyleClass().add("theme-" + (settings.get("theme") == null ? "dark" : settings.get("theme").getAsString()));
     }
 
     /**
@@ -132,7 +134,7 @@ public class CodeEditor extends CodeArea {
      */
     private void handleKeyPress(KeyEvent keyEvent) {
         if(settings.get("indent") == null ||
-                (settings.get("indent") != null && settings.get("indent").equals("With indent"))) {
+                (settings.get("indent") != null && settings.get("indent").getAsBoolean())) {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 int position = this.getCaretPosition();
                 int paragraph = this.getCurrentParagraph();
@@ -170,7 +172,7 @@ public class CodeEditor extends CodeArea {
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int position = this.getCaretPosition();
         if(settings.get("auto_completion") == null ||
-                (settings.get("auto_completion") != null && settings.get("auto_completion").equals("With autocompletion"))) {
+                (settings.get("auto_completion") != null && settings.get("auto_completion").getAsBoolean())) {
             if (oldValue.length() < newValue.length()) {
                 REPEATING_STRING.keySet().forEach(string -> {
                     try {

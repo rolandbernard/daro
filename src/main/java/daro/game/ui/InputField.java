@@ -29,5 +29,5 @@ public abstract class InputField extends VBox {
      *
      * @return a string containing the value
      */
-    public abstract String getValue();
+    public abstract Object getValue();
 }

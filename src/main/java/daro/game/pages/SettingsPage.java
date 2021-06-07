@@ -1,15 +1,16 @@
 package daro.game.pages;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import daro.game.io.SettingsHandler;
 import daro.game.ui.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.util.*;
 
 public class SettingsPage extends Page {
-    private Map<String, Map<String, String>> currentSettings;
+    private Map<String, Map<String, JsonElement>> currentSettings;
     private Map<String, Map<String, InputField>> allFields;
     private VBox fieldGroups;
 
@@ -52,21 +53,31 @@ public class SettingsPage extends Page {
         fieldGroups.getChildren().add(fieldList);
     }
 
-    private Map<String, String> getCurrentSettings(String key) {
+    private Map<String, JsonElement> getCurrentSettings(String key) {
         return currentSettings.get(key) == null ? new HashMap<>() : currentSettings.get(key);
     }
 
     private void generateEditorFields() {
-        Map<String, String> editorSettings = getCurrentSettings("editor");
+        Map<String, JsonElement> editorSettings = getCurrentSettings("editor");
         Map<String, InputField> editorFields = new HashMap<>();
 
-        SelectField theme = new SelectField(Arrays.asList(CodeEditor.THEMES), editorSettings.get("theme"), "Theme");
+        LinkedHashMap<String, String> themeOptions = new LinkedHashMap<>();
+        for (String theme : CodeEditor.THEMES) {
+            themeOptions.put(theme, theme);
+        }
+        SelectField<String> theme = new SelectField<>(themeOptions, editorSettings.get("theme") == null ? null : editorSettings.get("theme").getAsString(), "Theme");
         editorFields.put("theme", theme);
 
-        SelectField indent = new SelectField(List.of("With indent", "Without indent"), editorSettings.get("indent"), "Auto Indent");
+        LinkedHashMap<Boolean, String> indentOptions = new LinkedHashMap<>();
+        indentOptions.put(true, "With indent");
+        indentOptions.put(false, "Without indent");
+        SelectField<Boolean> indent = new SelectField<>(indentOptions, editorSettings.get("indent") == null ? null : editorSettings.get("indent").getAsBoolean(), "Auto Indent");
         editorFields.put("indent", indent);
 
-        SelectField autocompletion = new SelectField(List.of("With autocompletion", "Without autocompletion"), editorSettings.get("auto_completion"), "Auto completion");
+        LinkedHashMap<Boolean, String> completionOptions = new LinkedHashMap<>();
+        completionOptions.put(true, "With autocompletion");
+        completionOptions.put(false, "Without autocompletion");
+        SelectField<Boolean> autocompletion = new SelectField<>(completionOptions, editorSettings.get("auto_completion") == null ? null : editorSettings.get("auto_completion").getAsBoolean(), "Auto completion");
         editorFields.put("auto_completion", autocompletion);
 
         allFields.put("editor", editorFields);

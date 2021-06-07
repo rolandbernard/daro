@@ -18,22 +18,22 @@ public abstract class SettingsHandler {
         return UserData.parseUserJson("settings.json");
     }
 
-    public static Map<String, Map<String, String>> getAllSettings() {
+    public static Map<String, Map<String, JsonElement>> getAllSettings() {
         JsonObject settings = getSettings();
-        Map<String, Map<String, String>> settingsMap = new HashMap<>();
+        Map<String, Map<String, JsonElement>> settingsMap = new HashMap<>();
         if (settings != null) {
             for (String key : settings.keySet()) {
                 JsonObject elements = settings.get(key).getAsJsonObject();
-                Map<String, String> keyValue = generateMapFromJson(elements);
+                Map<String, JsonElement> keyValue = generateMapFromJson(elements);
                 settingsMap.put(key, keyValue);
             }
         }
         return settingsMap;
     }
 
-    public static Map<String, String> getSettingsByKey(String key) {
+    public static Map<String, JsonElement> getSettingsByKey(String key) {
         JsonObject settings = getSettings();
-        Map<String, String> settingsMap = new HashMap<>();
+        Map<String, JsonElement> settingsMap = new HashMap<>();
         if (settings != null) {
             JsonObject elements = settings.get(key).getAsJsonObject();
             settingsMap = generateMapFromJson(elements);
@@ -41,10 +41,10 @@ public abstract class SettingsHandler {
         return settingsMap;
     }
 
-    private static Map<String, String> generateMapFromJson(JsonObject elements) {
-        Map<String, String> settingsMap = new HashMap<>();
+    private static Map<String, JsonElement> generateMapFromJson(JsonObject elements) {
+        Map<String, JsonElement> settingsMap = new HashMap<>();
         for (String elementKey : elements.keySet()) {
-            String elementValue = elements.get(elementKey).getAsString();
+            JsonElement elementValue = elements.get(elementKey);
             settingsMap.put(elementKey, elementValue);
         }
         return settingsMap;
@@ -56,7 +56,14 @@ public abstract class SettingsHandler {
             Map<String, InputField> setting = settings.get(key);
             JsonObject innerSettings = new JsonObject();
             for (String settingKey : setting.keySet()) {
-                innerSettings.addProperty(settingKey, setting.get(settingKey).getValue());
+                Object value = setting.get(settingKey).getValue();
+                if (value instanceof Boolean) {
+                    innerSettings.addProperty(settingKey, (boolean) value);
+                } else if (value instanceof String) {
+                    innerSettings.addProperty(settingKey, (String) value);
+                } else if (value instanceof Number) {
+                    innerSettings.addProperty(settingKey, (Number) value);
+                }
             }
             allSettings.add(key, innerSettings);
         }
