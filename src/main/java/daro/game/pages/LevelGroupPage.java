@@ -24,6 +24,7 @@ public class LevelGroupPage extends Page {
         this.levelGroup = levelGroup;
         Heading heading = new Heading(levelGroup.getName(), levelGroup.getDescription());
         this.getChildren().addAll(heading, getLevelList());
+        this.setFillWidth(true);
     }
 
     /**

@@ -14,7 +14,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class LevelGroupItem extends VBox {
-    public static double DIMENSION = 240, H_PADDING = 30, INNER_WIDTH = DIMENSION - H_PADDING * 2;
+    public static double DIMENSION = 240, H_PADDING = 40, INNER_WIDTH = DIMENSION - H_PADDING * 2;
     private LevelGroup levelGroup;
 
     /**
@@ -33,7 +33,7 @@ public class LevelGroupItem extends VBox {
             "-fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);" +
                     "-fx-background-color: #381A90;"
         );
-        this.setPadding(new Insets(40, H_PADDING, 30, H_PADDING));
+        this.setPadding(new Insets(H_PADDING));
         this.getChildren().addAll(getHeading(), getCompleted());
         this.setOnMouseClicked(event -> MenuView.setContent(new LevelGroupPage(levelGroup)));
         Interaction.setClickable(this, true);

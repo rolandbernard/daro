@@ -3,6 +3,8 @@ package daro.game.views;
 import daro.game.pages.Page;
 import daro.game.ui.Container;
 import daro.game.ui.Navigation;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 public class MenuView extends View {
     private final static Container CONTENT = new Container();
@@ -15,6 +17,7 @@ public class MenuView extends View {
      */
     public MenuView(Page defaultPage) {
         setContent(defaultPage);
+        setHgrow(CONTENT, Priority.ALWAYS);
         this.getChildren().addAll(new Navigation(defaultPage), CONTENT);
     }
 

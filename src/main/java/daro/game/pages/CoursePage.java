@@ -26,10 +26,9 @@ public class CoursePage extends Page {
      */
     private FlowPane getLevelGroups() {
         FlowPane pane = new FlowPane();
-        pane.setPrefWidth(Page.INNER_WIDTH);
 
         // The gap between the level groups in the grid
-        double gap = (Page.INNER_WIDTH - (LevelGroupItem.DIMENSION * 3)) / 2;
+        double gap = 20;
         pane.setVgap(gap);
         pane.setHgap(gap);
 
