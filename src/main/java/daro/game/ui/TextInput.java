@@ -1,10 +1,8 @@
 package daro.game.ui;
 
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
-public class TextInput extends VBox {
+public class TextInput extends InputField {
 
     private TextField field;
 
@@ -13,10 +11,7 @@ public class TextInput extends VBox {
     }
 
     public TextInput(String label) {
-        Text text = new Text(label);
-        text.getStyleClass().addAll("text", "bold");
-        this.getChildren().add(text);
-        this.setSpacing(10);
+        super(label);
         render();
     }
 
@@ -26,7 +21,7 @@ public class TextInput extends VBox {
         this.getChildren().add(field);
     }
 
-    public String getText() {
+    public String getValue() {
         return field.getText();
     }
 }

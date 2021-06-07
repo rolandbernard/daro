@@ -38,10 +38,10 @@ public class CreatePlaygroundPage extends Page {
 
     private void createPlayground(MouseEvent mouseEvent) {
         if(validateNameField()) {
-            String error = UserData.createPlayground(nameField.getText());
+            String error = UserData.createPlayground(nameField.getValue());
             if(error == null) {
                 try {
-                    this.getScene().setRoot(new EditorView(UserData.getPlaygroundFile(nameField.getText() + ".daro")));
+                    this.getScene().setRoot(new EditorView(UserData.getPlaygroundFile(nameField.getValue() + ".daro")));
                 } catch (IOException e) {
                     this.getScene().setRoot(new MenuView(new PlaygroundPage()));
                 }
@@ -68,6 +68,6 @@ public class CreatePlaygroundPage extends Page {
 
 
     private boolean validateNameField() {
-        return nameField.getText().matches("^[a-zA-Z0-9_]+$");
+        return nameField.getValue().matches("^[a-zA-Z0-9_]+$");
     }
 }

@@ -15,9 +15,13 @@ import java.util.regex.Pattern;
 
 public class CodeEditor extends CodeArea {
     /**
+     * All the possible themes
+     */
+    public static final String[] THEMES = {"dark", "light"};
+
+    /**
      * Basic constants for syntax highlighting
      */
-
     // Regex for specific groups
     private static final String[] KEYWORDS = {
         "fn", "return", "class", "true", "false"
