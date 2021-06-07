@@ -2,6 +2,7 @@ package daro.ide.main;
 
 import java.nio.file.Path;
 
+import daro.ide.debug.DebugController;
 import daro.ide.debug.Debugger;
 import daro.ide.debug.Interrupter;
 import daro.ide.debug.Terminal;
@@ -30,7 +31,7 @@ import javafx.scene.text.Text;
  *
  * @author Roland Bernard
  */
-public class ExecutionPalette extends VBox {
+public class ExecutionPalette extends VBox implements DebugController {
     private EditorTabs editor;
     private Terminal terminal;
     private ScopeViewer scope;
@@ -191,12 +192,7 @@ public class ExecutionPalette extends VBox {
         });
     }
 
-    /**
-     * Executed by the debugger to signal that the debugger has halted the program
-     *
-     * @param debugScope The scope the debugger is in
-     * @param location   The position the debugger is at
-     */
+    @Override
     public void startDebugging(Scope debugScope, Position location) {
         Platform.runLater(() -> {
             next.setDisable(false);
@@ -210,9 +206,7 @@ public class ExecutionPalette extends VBox {
         });
     }
 
-    /**
-     * Executed by the debugger to signal that the debugger has continued execution
-     */
+    @Override
     public void stopDebugging() {
         debugger.setBreakpoints(editor.getBreakpoints());
         Platform.runLater(() -> {
