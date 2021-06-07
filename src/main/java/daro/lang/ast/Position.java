@@ -187,6 +187,19 @@ public class Position {
         return file;
     }
 
+    /**
+     * Returns the line of the source code {@link Position}
+     * 
+     * @return The line position
+     */
+    public int getLine() {
+        if (text != null) {
+            return lineFromOffset(start, text);
+        } else {
+            return 0;
+        }
+    }
+
     @Override
     public int hashCode() {
         return (997 * Integer.hashCode(start)) ^ (991 * Integer.hashCode(end));

@@ -57,6 +57,19 @@ public class Executor implements Visitor<DaroObject> {
     }
 
     /**
+     * Run the given file in the given {@link ExecutionContext}. This will use the
+     * root scope of the {@link ExecutionContext} instead of using a new scope for
+     * the module.
+     * 
+     * @param context The context to execute in
+     * @param file    The file to execute
+     * @return The result of the execution
+     */
+    public static DaroModule executeRootFile(ExecutionContext context, Path file) {
+        return (new Executor(context)).executeFileInScope(context.getScope(), file);
+    }
+
+    /**
      * Run the {@link AstNode} in the scope of the {@link Executor}
      * 
      * @param program The {@link AstNode} to execute
@@ -64,18 +77,25 @@ public class Executor implements Visitor<DaroObject> {
      */
     public DaroObject execute(AstNode program) {
         if (program != null) {
+            ExecutionObserver[] observers = context.getObservers();
             try {
-                ExecutionObserver[] observers = context.getObservers();
                 if (observers == null) {
                     return program.accept(this);
                 } else {
-                    Scope scope = context.getScope();
                     for (ExecutionObserver observer : observers) {
-                        observer.beforeNodeExecution(program, scope);
+                        observer.beforeExecution(program, context);
                     }
-                    DaroObject result = program.accept(this);
+                    DaroObject result = null;
+                    try {
+                        result = program.accept(this);
+                    } catch (RuntimeException error) {
+                        for (ExecutionObserver observer : observers) {
+                            result = observer.onException(program, error, result, context);
+                        }
+                        return result;
+                    }
                     for (ExecutionObserver observer : observers) {
-                        observer.afterNodeExecution(program, result, scope);
+                        observer.afterExecution(program, result, context);
                     }
                     return result;
                 }
@@ -90,7 +110,12 @@ public class Executor implements Visitor<DaroObject> {
                 }
             } catch (Exception error) {
                 // All other exceptions should be converted to {@link InterpreterException}
-                InterpreterException exception = new InterpreterException(program.getPosition(), error.getMessage());
+                InterpreterException exception;
+                if (error.getMessage() != null) {
+                    exception = new InterpreterException(program.getPosition(), error.getMessage());
+                } else {
+                    exception = new InterpreterException(program.getPosition(), error.getClass().getSimpleName());
+                }
                 exception.initCause(error);
                 throw exception;
             }
@@ -595,10 +620,24 @@ public class Executor implements Visitor<DaroObject> {
      * @return The daro module resulting from execution
      */
     public DaroModule executeFile(Path file, Path ...search) {
+        return executeFileInScope(new BlockScope(new RootScope()), file, search);
+    }
+
+    /**
+     * Execute a file in the executors context and return the resulting
+     * {@link DaroModule}. This will also add the file as a module in the executors
+     * {@link ExecutionContext}. The given scope will be used as the scope for the
+     * module.
+     *
+     * @param scope  Scope to link with the module
+     * @param file   The file that should be executed
+     * @param search The locations to search in
+     * @return The daro module resulting from execution
+     */
+    private DaroModule executeFileInScope(Scope scope, Path file, Path ...search) {
         Path path = searchForImport(file, search);
         Map<Path, DaroModule> modules = context.getModules();
         if (!modules.containsKey(path)) {
-            Scope scope = new BlockScope(new RootScope());
             String content;
             try {
                 content = Files.readString(path);
@@ -629,5 +668,28 @@ public class Executor implements Visitor<DaroObject> {
         } else {
             throw new InterpreterException(ast.getPosition(), "Expected a string object");
         }
+    }
+
+    @Override
+    public DaroObject visit(AstMatch ast) {
+        DaroObject value = require(ast.getValue());
+        for (AstMatchCase option : ast.getCases()) {
+            if (option.getValues() == null) {
+                return execute(option.getStatement());
+            } else {
+                for (AstNode comparison : option.getValues()) {
+                    DaroObject comp = require(comparison);
+                    if (value.equals(comp)) {
+                        return execute(option.getStatement());
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public DaroObject visit(AstMatchCase ast) {
+        throw new InterpreterException(ast.getPosition(), "Execution error");
     }
 }

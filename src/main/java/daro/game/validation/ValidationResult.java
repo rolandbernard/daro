@@ -7,13 +7,13 @@ public class ValidationResult {
     private String expected, actual, source;
     private final long id;
 
-
     /**
      * An object representing the result of a validation
      *
      * @param id       the id of the test
      * @param success  if a test was successful
-     * @param expected a string containing a value or a definition of the expected value
+     * @param expected a string containing a value or a definition of the expected
+     *                 value
      * @param actual   a string containing the actual value
      */
     public ValidationResult(long id, boolean success, String expected, String actual) {
@@ -34,7 +34,8 @@ public class ValidationResult {
 
     /**
      * Returns the name of the validation: e.g. Test n.1
-     * @return
+     * 
+     * @return TODO TOFIX
      */
     public String getName() {
         return "Test n." + id;
@@ -42,15 +43,12 @@ public class ValidationResult {
 
     /**
      * A string describing the result of the validation
+     * 
      * @return either passed or failed and why.
      */
     @Override
     public String toString() {
-        return success
-                ? "Passed!\n" + expected
-                : "Failed!\n" +
-                        "Expected: " + expected + "\n"
-                        + "Actual: " + actual;
+        return success ? "Passed!\n" + expected : "Failed!\n" + "Expected: " + expected + "\n" + "Actual: " + actual;
     }
 
     /**

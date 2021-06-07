@@ -1,6 +1,7 @@
 package daro.lang.values;
 
 import java.util.Map;
+import java.util.Objects;
 
 import daro.lang.ast.AstSequence;
 import daro.lang.interpreter.AbstractScope;
@@ -72,7 +73,7 @@ public class DaroClass extends DaroObject {
 
     @Override
     public int hashCode() {
-        return (971 * scope.hashCode()) ^ (991 * classType.hashCode());
+        return (971 * Objects.hashCode(scope)) ^ (991 * Objects.hashCode(classType));
     }
 
     @Override

@@ -99,4 +99,8 @@ public interface Visitor<T> {
     public T visit(AstUse ast);
 
     public T visit(AstFrom ast);
+
+    public T visit(AstMatch ast);
+
+    public T visit(AstMatchCase ast);
 }

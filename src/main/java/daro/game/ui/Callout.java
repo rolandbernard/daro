@@ -8,6 +8,7 @@ import javafx.scene.text.Text;
 public class Callout extends HBox {
 
     private Text text;
+
     public Callout(String text, String color) {
         this.text = new Text(text);
         this.text.getStyleClass().add("text");

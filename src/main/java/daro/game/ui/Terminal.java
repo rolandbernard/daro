@@ -57,7 +57,9 @@ public class Terminal extends VBox {
         OutputStream out = new OutputStream() {
             @Override
             public void write(int b) {
-                currentString.append(new String(new byte[]{(byte) b}, StandardCharsets.UTF_8));
+                currentString.append(new String(new byte[] {
+                    (byte)b
+                }, StandardCharsets.UTF_8));
             }
         };
         stream = new PrintStream(out);

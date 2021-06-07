@@ -20,9 +20,10 @@ public class ExecutionObserverTest {
         public int assignments = 0;
         public int additions = 0;
         public int localization = 0;
+        public int exceptions = 0;
 
         @Override
-        public void beforeNodeExecution(AstNode node, Scope scope) {
+        public void beforeExecution(AstNode node, ExecutionContext scope) {
             if (node instanceof AstAssignment) {
                 assignments++;
             } else if (node instanceof AstAddition) {
@@ -31,7 +32,7 @@ public class ExecutionObserverTest {
         }
 
         @Override
-        public void afterNodeExecution(AstNode node, DaroObject value, Scope scope) {
+        public void afterExecution(AstNode node, DaroObject value, ExecutionContext scope) {
             if (node instanceof AstAssignment) {
                 assignments++;
             } else if (node instanceof AstAddition) {
@@ -40,17 +41,33 @@ public class ExecutionObserverTest {
         }
 
         @Override
-        public void beforeNodeLocalization(AstNode node, Scope scope) {
+        public void beforeLocalization(AstNode node, ExecutionContext scope) {
             if (node instanceof AstSymbol) {
                 localization++;
             }
         }
 
         @Override
-        public void afterNodeLocalization(AstNode node, VariableLocation location, Scope scope) {
+        public void afterLocalization(AstNode node, VariableLocation location, ExecutionContext scope) {
             if (node instanceof AstSymbol) {
                 localization++;
             }
+        }
+
+        @Override
+        public DaroObject onException(AstNode node, RuntimeException error, DaroObject value, ExecutionContext context) {
+            exceptions++;
+            if (node instanceof AstSymbol) {
+                return new DaroReal(42);
+            } else {
+                throw error;
+            }
+        }
+
+        @Override
+        public VariableLocation onException(AstNode node, RuntimeException error, VariableLocation value, ExecutionContext context) {
+            exceptions++;
+            throw error;
         }
     }
 
@@ -161,5 +178,18 @@ public class ExecutionObserverTest {
     void countLocalization() {
         interpreter.execute("x = 1; y = x + x; z = y + y;", observers);
         assertEquals(6, observer.localization);
+    }
+
+    @Test
+    void exceptionsAreCaught() {
+        try {
+            interpreter.execute("x = 1 / 0", observers);
+        } catch (Exception e) { }
+        assertEquals(3, observer.exceptions);
+    }
+
+    @Test
+    void exceptionsCanBeIgnored() {
+        assertEquals(new DaroReal(42), interpreter.execute("y", observers));
     }
 }

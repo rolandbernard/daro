@@ -33,9 +33,9 @@ public class CreatePlaygroundPage extends Page {
     }
 
     private void createPlayground(MouseEvent mouseEvent) {
-        if(validateNameField()) {
+        if (validateNameField()) {
             String error = UserData.createPlayground(nameField.getValue());
-            if(error == null) {
+            if (error == null) {
                 try {
                     this.getScene().setRoot(new EditorView(UserData.getPlaygroundFile(nameField.getValue() + ".daro")));
                 } catch (IOException e) {

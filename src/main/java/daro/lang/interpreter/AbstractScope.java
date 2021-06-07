@@ -16,6 +16,7 @@ import daro.lang.values.DaroObject;
 public abstract class AbstractScope implements Scope {
     protected final Map<String, DaroObject> variables;
     protected Scope[] parents;
+    protected int baseParents;
 
     /**
      * Used to allow for recursive scopes. Be careful if you use it!
@@ -28,8 +29,7 @@ public abstract class AbstractScope implements Scope {
      * @param parent The parent scope
      */
     public AbstractScope(Scope ...parent) {
-        this.parents = parent;
-        this.variables = new HashMap<>();
+        this(new HashMap<>(), parent);
     }
 
     /**
@@ -39,9 +39,10 @@ public abstract class AbstractScope implements Scope {
      * @param variables The internal variables map
      * @param parent    The parent scope
      */
-    protected AbstractScope(Map<String, DaroObject> variables, Scope[] parent) {
+    protected AbstractScope(Map<String, DaroObject> variables, Scope ...parent) {
         this.parents = parent;
         this.variables = variables;
+        this.baseParents = parent.length;
     }
 
     public void addParent(Scope ...parent) {
@@ -54,6 +55,11 @@ public abstract class AbstractScope implements Scope {
 
     @Override
     abstract public Scope getFinalLevel();
+
+    @Override
+    public Scope[] getParents() {
+        return parents;
+    }
 
     @Override
     public boolean containsVariable(String name) {
@@ -116,16 +122,34 @@ public abstract class AbstractScope implements Scope {
 
     @Override
     public int hashCode() {
-        return (971 * Objects.hashCode(variables)) ^ (991 * Arrays.hashCode(parents));
+        if (!visited) {
+            try {
+                visited = true;
+                return (971 * Objects.hashCode(variables)) ^ (991 * Arrays.hashCode(parents));
+            } finally {
+                visited = false;
+            }
+        } else {
+            return 42;
+        }
     }
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof AbstractScope) {
-            AbstractScope scope = (AbstractScope)object;
-            return Objects.equals(variables, scope.variables) && Arrays.equals(parents, scope.parents);
+        if (!visited) {
+            try {
+                visited = true;
+                if (object instanceof AbstractScope) {
+                    AbstractScope scope = (AbstractScope)object;
+                    return Objects.equals(variables, scope.variables) && Arrays.equals(parents, scope.parents);
+                } else {
+                    return false;
+                }
+            } finally {
+                visited = false;
+            }
         } else {
-            return false;
+            return this == object;
         }
     }
 

@@ -8,9 +8,8 @@ import daro.lang.ast.Position;
  *
  * @author Roland Bernard
  */
-public class InterpreterException extends IllegalArgumentException {
+public class InterpreterException extends DaroException {
     private static final long serialVersionUID = 1L;
-    private final Position position;
 
     /**
      * Create a {@link InterpreterException} for the given message and without a
@@ -19,7 +18,7 @@ public class InterpreterException extends IllegalArgumentException {
      * @param message The message for the exception
      */
     public InterpreterException(String message) {
-        this(null, message);
+        super(message);
     }
 
     /**
@@ -29,43 +28,11 @@ public class InterpreterException extends IllegalArgumentException {
      * @param message  The message for the exception
      */
     public InterpreterException(Position position, String message) {
-        super(message);
-        this.position = position;
+        super(position, message);
     }
 
-    /**
-     * Returns the position the exception applies to.
-     * 
-     * @return The position that caused the exception
-     */
-    public Position getPosition() {
-        return position;
-    }
-
-    /**
-     * Return the starting offset of the position of the error.
-     * 
-     * @return The start of the error
-     */
-    public int getStart() {
-        return position.getStart();
-    }
-
-    /**
-     * Return the end offset of the position of the error.
-     * 
-     * @return The end of the error
-     */
-    public int getEnd() {
-        return position.getEnd();
-    }
-
-    /**
-     * Return the length offset of the position of the error.
-     * 
-     * @return The length of the error
-     */
-    public int getLength() {
-        return position.getLength();
+    @Override
+    public String toString() {
+        return "Runtime error at " + getPosition() + ": " + getMessage();
     }
 }

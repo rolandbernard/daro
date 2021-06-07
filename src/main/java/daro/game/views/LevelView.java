@@ -1,7 +1,6 @@
 package daro.game.views;
 
 import daro.game.io.LevelHandler;
-import daro.game.main.Game;
 import daro.game.main.Level;
 import daro.game.io.UserData;
 import daro.game.pages.CoursePage;
@@ -20,7 +19,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.util.List;
-
 
 public class LevelView extends View {
 
@@ -114,7 +112,6 @@ public class LevelView extends View {
         return btn;
     }
 
-
     private boolean save(boolean completion) {
         return UserData.writeLevelData(level.getGroupId(), level.getId(), completion, editor.getText());
     }
@@ -168,7 +165,7 @@ public class LevelView extends View {
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
         buttons.getChildren().add(backButton);
-        if(mainButton != null) {
+        if (mainButton != null) {
             buttons.getChildren().add(mainButton);
         }
         return buttons;
@@ -177,6 +174,5 @@ public class LevelView extends View {
     private void backToOverview() {
         this.getScene().setRoot(new MenuView(new CoursePage()));
     }
-
 
 }

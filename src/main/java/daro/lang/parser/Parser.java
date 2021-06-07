@@ -284,6 +284,94 @@ public class Parser {
     }
 
     /**
+     * Parse a {@code match} statement.
+     * 
+     * @return The parsed {@code match} statement's ast, or null
+     */
+    private AstMatch parseMatch() {
+        if (scanner.hasNext(TokenKind.MATCH)) {
+            Token matchToken = scanner.next();
+            AstNode value = parseExpression();
+            if (value == null) {
+                throw new ParsingException(matchToken.getPosition(), "Expected value after `match`");
+            }
+            Token opening = scanner.accept(TokenKind.OPEN_BRACE);
+            if (opening == null) {
+                throw new ParsingException(matchToken.getPosition(), "Expected a `{` after `match`-value");
+            }
+            ArrayList<AstMatchCase> cases = new ArrayList<>();
+            AstMatchCase option;
+            do {
+                while (scanner.accept(TokenKind.SEMICOLON) != null) {
+                    // Consume all semicolons
+                }
+                option = parseMatchCase();
+                if (option != null) {
+                    cases.add(option);
+                }
+            } while (option != null);
+            Token closing = scanner.accept(TokenKind.CLOSE_BRACE);
+            if (closing == null) {
+                throw new ParsingException(opening.getPosition(), "Expected a closing `{` after opening `}`");
+            }
+            return new AstMatch(
+                new Position(matchToken.getPosition(), closing.getPosition()), value,
+                cases.toArray(new AstMatchCase[cases.size()])
+            );
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Parse a {@code match} statements case.
+     * 
+     * @return The parsed {@code match} statement's ast, or null
+     */
+    private AstMatchCase parseMatchCase() {
+        if (scanner.hasNext(TokenKind.DEFAULT)) {
+            Token def = scanner.next();
+            Token colon = scanner.accept(TokenKind.COLON);
+            if (colon == null) {
+                throw new ParsingException(def.getPosition(), "Expected a `:` after match `default`");
+            }
+            AstNode statement = parserStatement();
+            if (statement == null) {
+                throw new ParsingException(colon.getPosition(), "Expected a statement after match `:`");
+            }
+            return new AstMatchCase(new Position(def.getPosition(), statement.getPosition()), null, statement);
+        } else {
+            AstNode value = parseExpression();
+            if (value != null) {
+                ArrayList<AstNode> values = new ArrayList<>();
+                values.add(value);
+                while (value != null && scanner.accept(TokenKind.COMMA) != null) {
+                    value = parseExpression();
+                    if (value != null) {
+                        values.add(value);
+                    }
+                }
+                Token colon = scanner.accept(TokenKind.COLON);
+                if (colon == null) {
+                    throw new ParsingException(
+                        values.get(values.size() - 1).getPosition(), "Expected a `:` after match possibilities"
+                    );
+                }
+                AstNode statement = parserStatement();
+                if (statement == null) {
+                    throw new ParsingException(colon.getPosition(), "Expected a statement after match `:`");
+                }
+                return new AstMatchCase(
+                    new Position(values.get(0).getPosition(), statement.getPosition()),
+                    values.toArray(new AstNode[values.size()]), statement
+                );
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
      * Parse a {@code return} statement.
      * 
      * @return The parsed statement's ast, or null
@@ -769,9 +857,9 @@ public class Parser {
      */
     private AstNode parseBaseExpression() {
         return firstNonNull(
-            this::parseIfElse, this::parseForLoop, this::parseCodeBlock, this::parseFunctionDefinition,
-            this::parseClassDefinition, this::parseParenthesis, this::parseNew, this::parseInteger, this::parseReal,
-            this::parseString, this::parseCharacter, this::parseSymbol
+            this::parseIfElse, this::parseForLoop, this::parseMatch, this::parseCodeBlock,
+            this::parseFunctionDefinition, this::parseClassDefinition, this::parseParenthesis, this::parseNew,
+            this::parseInteger, this::parseReal, this::parseString, this::parseCharacter, this::parseSymbol
         );
     }
 

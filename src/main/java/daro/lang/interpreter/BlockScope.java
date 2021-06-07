@@ -1,6 +1,8 @@
 package daro.lang.interpreter;
 
 import daro.lang.values.DaroObject;
+
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -68,6 +70,7 @@ public class BlockScope extends AbstractScope {
         if (!visited) {
             try {
                 visited = true;
+                parents = Arrays.copyOf(parents, baseParents);
                 for (Scope parent : parents) {
                     parent.reset();
                 }

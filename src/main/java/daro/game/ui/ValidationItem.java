@@ -30,7 +30,7 @@ public class ValidationItem extends HBox {
 
     private void render() {
         text.setText(result.toString());
-        if(result.evaluate()) {
+        if (result.evaluate()) {
             icon.setText("\ue876");
             this.getStyleClass().remove("failed");
             this.getStyleClass().add("passed");

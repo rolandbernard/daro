@@ -29,9 +29,7 @@ public enum TokenKind {
     /** A token that represents a character literal. e.g. {@code 'A'} */
     CHARACTER,
 
-    // TODO: implement match
-
-    FOR("for"), IN("in"), MATCH("match"), IF("if"), ELSE("else"), NEW("new"), FN("fn"), IMPORT("import"),
+    FOR("for"), IN("in"), MATCH("match"), IF("if"), ELSE("else"), NEW("new"), FN("fn"), DEFAULT("default"),
     CLASS("class"), RETURN("return"), USE("use"), FROM("from"), COLON(":"), SEMICOLON(";"), COMMA(","), DOT("."),
     OPEN_PAREN("("), CLOSE_PAREN(")"), OPEN_BRACKET("["), CLOSE_BRACKET("]"), OPEN_BRACE("{"), CLOSE_BRACE("}"),
     DEFINE(":="), ASSIGN("="), EQUAL("=="), UNEQUAL("!="), LESS("<"), MORE(">"), LESS_EQUAL("<="), MORE_EQUAL(">="),

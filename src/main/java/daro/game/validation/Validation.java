@@ -15,7 +15,6 @@ public class Validation {
     private String source;
     private DaroObject expected;
 
-
     /**
      * Generates a test for daro without an expected value.
      *
@@ -37,7 +36,8 @@ public class Validation {
      * @param id       number of test for the level
      * @param type     a type of test
      * @param source   variable / function call that has to be tested
-     * @param expected the expected value. Either a simple value or an array in the form of e.g. [2, 3, 4]
+     * @param expected the expected value. Either a simple value or an array in the
+     *                 form of e.g. [2, 3, 4]
      */
     public Validation(long id, ValidationType type, String source, String expected) {
         if (!type.needsExpectedValue())
@@ -48,7 +48,6 @@ public class Validation {
         this.expected = parseExpectedResult(expected);
     }
 
-
     /**
      * Runs all the tests of a list on a specific code
      *
@@ -57,9 +56,7 @@ public class Validation {
      * @return a list of test results
      */
     public static List<ValidationResult> run(String code, List<Validation> validations) {
-        return validations.stream()
-                .map(v -> v.runTest(code))
-                .collect(Collectors.toList());
+        return validations.stream().map(v -> v.runTest(code)).collect(Collectors.toList());
     }
 
     /**
@@ -118,20 +115,21 @@ public class Validation {
     }
 
     /**
-     * Checks if the codeResult is an array and contains a certain element or list of elements
+     * Checks if the codeResult is an array and contains a certain element or list
+     * of elements
      *
      * @param codeResult the actual code result
-     * @return if the expected value of the validation is contained in the code result
+     * @return if the expected value of the validation is contained in the code
+     *         result
      */
     private boolean validateArrayIncludes(DaroObject codeResult) {
         try {
-            DaroArray array = (DaroArray) codeResult;
+            DaroArray array = (DaroArray)codeResult;
             if (expected.getType().equals(new DaroTypeArray())) {
-                DaroArray expectedArray = (DaroArray) expected;
-                return expectedArray.getValues().stream().allMatch(a ->
-                        array.getValues().stream()
-                                .anyMatch(e -> e.equals(a))
-                );
+                DaroArray expectedArray = (DaroArray)expected;
+                return expectedArray.getValues()
+                    .stream()
+                    .allMatch(a -> array.getValues().stream().anyMatch(e -> e.equals(a)));
             }
             return array.getValues().stream().anyMatch(i -> i.equals(expected));
         } catch (Exception e) {
@@ -143,17 +141,17 @@ public class Validation {
      * Checks if the codeResult is an array and doesn't contain a certain element
      *
      * @param codeResult the actual code result
-     * @return if the expected value of the validation is contained in the code result
+     * @return if the expected value of the validation is contained in the code
+     *         result
      */
     private boolean validateArrayExcludes(DaroObject codeResult) {
         try {
-            DaroArray array = (DaroArray) codeResult;
+            DaroArray array = (DaroArray)codeResult;
             if (expected.getType().equals(new DaroTypeArray())) {
-                DaroArray expectedArray = (DaroArray) expected;
-                return expectedArray.getValues().stream().noneMatch(a ->
-                        array.getValues().stream()
-                                .anyMatch(e -> e.equals(a))
-                );
+                DaroArray expectedArray = (DaroArray)expected;
+                return expectedArray.getValues()
+                    .stream()
+                    .noneMatch(a -> array.getValues().stream().anyMatch(e -> e.equals(a)));
             }
             return array.getValues().stream().noneMatch(i -> i.equals(expected));
         } catch (Exception e) {
@@ -162,8 +160,8 @@ public class Validation {
     }
 
     /**
-     * Parses the expected result from a user input and returns the UserObject.
-     * User can input an array with e.g. [10, 20, 30]
+     * Parses the expected result from a user input and returns the UserObject. User
+     * can input an array with e.g. [10, 20, 30]
      *
      * @param expected expected string value
      * @return UserObject to compare to actual value
@@ -182,8 +180,9 @@ public class Validation {
             }
             return expectedResult;
         } catch (InterpreterException e) {
-            throw new IllegalArgumentException("There was an issue with interpreting the expected values of the tests.");
+            throw new IllegalArgumentException(
+                "There was an issue with interpreting the expected values of the tests."
+            );
         }
     }
-
 }

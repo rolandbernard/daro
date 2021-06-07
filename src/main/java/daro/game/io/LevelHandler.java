@@ -58,7 +58,8 @@ public abstract class LevelHandler {
     /**
      * Parses levels from a JsonArray
      *
-     * @param levels a JsonArray containing levels as JSON Objects
+     * @param parentId TODO TOFIX
+     * @param levels   a JsonArray containing levels as JSON Objects
      * @return a list of levels
      */
     private static List<Level> parseLevelFromJson(long parentId, JsonArray levels) {
@@ -74,7 +75,6 @@ public abstract class LevelHandler {
         }
         return levelsList;
     }
-
 
     private static JsonObject findById(JsonArray list, long id) {
         for (JsonElement element : list) {
@@ -101,7 +101,9 @@ public abstract class LevelHandler {
         return new LevelGroup(id, name, description, levelsList);
     }
 
-    private static Level parseLevelFromJsonObject(long parentId, JsonObject levelJson, Map<Long, JsonObject> completionMap) {
+    private static Level parseLevelFromJsonObject(
+        long parentId, JsonObject levelJson, Map<Long, JsonObject> completionMap
+    ) {
         long id = levelJson.get("id").getAsLong();
         String name = levelJson.get("name").getAsString();
         String description = levelJson.get("description").getAsString();

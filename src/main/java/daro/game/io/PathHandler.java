@@ -24,6 +24,7 @@ public abstract class PathHandler {
 
     /**
      * Returns a stylesheet file that can be added to a scene
+     * 
      * @param filename the name of the css file
      * @return a String containing the url to the file
      */
@@ -51,7 +52,7 @@ public abstract class PathHandler {
         Scanner scanner = new Scanner(PathHandler.class.getResourceAsStream(RESOURCE_ROOT + "/data/" + filename));
         scanner.useDelimiter("\\Z");
         JsonElement element;
-        if(scanner.hasNext()) {
+        if (scanner.hasNext()) {
             element = JsonParser.parseReader(new StringReader(scanner.next()));
         } else {
             element = new JsonObject();

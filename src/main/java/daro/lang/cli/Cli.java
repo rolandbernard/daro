@@ -1,11 +1,8 @@
 package daro.lang.cli;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
 
-import daro.lang.ast.Position;
 import daro.lang.interpreter.Interpreter;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.parser.ParsingException;
@@ -21,17 +18,6 @@ import daro.lang.values.DaroObject;
 public class Cli {
 
     /**
-     * This method prints a error onto System.out.err,
-     * 
-     * @param type     The type of error. e.g Syntax error, Runtime error, ...
-     * @param position The position the error occurred at
-     * @param message  The message the error contains
-     */
-    private static void printError(String type, Position position, String message) {
-        System.err.println(type + " at " + position + ": " + message);
-    }
-
-    /**
      * Execute the given files inside a single interpreter.
      * 
      * @param files The filenames of the files that should be executed
@@ -42,11 +28,8 @@ public class Cli {
             Path path = Path.of(file);
             try {
                 interpreter.execute(path);
-            } catch (InterpreterException error) {
-                printError("Runtime error", error.getPosition(), error.getMessage());
-                break;
-            } catch (ParsingException error) {
-                printError("Syntax error", error.getPosition(), error.getMessage());
+            } catch (InterpreterException | ParsingException error) {
+                System.err.println(error);
                 break;
             }
         }
@@ -77,12 +60,12 @@ public class Cli {
                 code.setLength(0);
                 System.out.print("> ");
             } catch (InterpreterException error) {
-                printError("Runtime error", error.getPosition(), error.getMessage());
+                System.err.println(error);
                 code.setLength(0);
                 System.out.print("> ");
             } catch (ParsingException error) {
                 if (line.isEmpty()) {
-                    printError("Syntax error", error.getPosition(), error.getMessage());
+                    System.err.println(error);
                     code.setLength(0);
                     System.out.print("> ");
                 } else {

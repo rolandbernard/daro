@@ -77,8 +77,9 @@ public class NativeScope implements Scope {
     }
 
     /**
-     * Determine if the object can be cast to the given type, returning the amount of loss for the
-     * given casting (0 == no cast, Integer.MAX_VALUE == impossible cast).
+     * Determine if the object can be cast to the given type, returning the amount
+     * of loss for the given casting (0 == no cast, Integer.MAX_VALUE == impossible
+     * cast).
      *
      * @param object   The object that should be cast
      * @param expected The java class that should be cast to
@@ -285,6 +286,11 @@ public class NativeScope implements Scope {
     @Override
     public Scope getFinalLevel() {
         return this;
+    }
+
+    @Override
+    public Scope[] getParents() {
+        return new Scope[0];
     }
 
     @Override

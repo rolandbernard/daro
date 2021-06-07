@@ -21,7 +21,7 @@ public class Game extends Application {
 
     @Override
     public void start(Stage stage) {
-        //load fonts from resources
+        // load fonts from resources
         Font.loadFont(PathHandler.getFont("Montserrat-Regular.ttf"), 16);
         Font.loadFont(PathHandler.getFont("Montserrat-Italic.ttf"), 16);
         Font.loadFont(PathHandler.getFont("Montserrat-Bold.ttf"), 16);
@@ -34,7 +34,7 @@ public class Game extends Application {
 
         initColorScheme();
 
-        //generate start page
+        // generate start page
         MenuView root = new MenuView(new CoursePage());
         Scene scene = new Scene(root, 1280, 720);
         stage.setFullScreen(true);
@@ -43,10 +43,9 @@ public class Game extends Application {
         // load CSS
         try {
             scene.getStylesheets().add(PathHandler.getStyleSheet("index.css"));
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         stage.setTitle("Learn programming with daro!");
         stage.setScene(scene);

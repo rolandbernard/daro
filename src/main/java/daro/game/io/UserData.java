@@ -25,7 +25,6 @@ public abstract class UserData {
                 element = JsonParser.parseString(scanner.next()).getAsJsonObject();
             }
             scanner.close();
-
         } catch (FileNotFoundException ex) {
             try {
                 file.createNewFile();
@@ -51,10 +50,9 @@ public abstract class UserData {
         return map;
     }
 
-
     /**
-     * A method that rewrites the user data file by either creating or replacing an old entry of
-     * user data concerning the completion of a level.
+     * A method that rewrites the user data file by either creating or replacing an
+     * old entry of user data concerning the completion of a level.
      *
      * @param groupId     the group id of the level
      * @param levelId     the level id
@@ -98,10 +96,11 @@ public abstract class UserData {
         return level;
     }
 
-    //Playgrounds
+    // Playgrounds
 
     /**
-     * Creates, if it not already exists, the playgrounds folder and parses the files
+     * Creates, if it not already exists, the playgrounds folder and parses the
+     * files
      *
      * @return an array of playground files
      */
@@ -156,6 +155,7 @@ public abstract class UserData {
      *
      * @param file Playground file
      * @return true if successful, false if error
+     * @throws IOException TODO TOFIX
      */
     public static String getPlayground(File file) throws IOException {
         Scanner scanner = new Scanner(file);
@@ -171,6 +171,7 @@ public abstract class UserData {
      *
      * @param filename Playground filename with .daro
      * @return a file object
+     * @throws IOException TODO TOFIX
      */
     public static File getPlaygroundFile(String filename) throws IOException {
         return new File(PLAYGROUNDS_PATH + "/" + filename);
@@ -180,6 +181,7 @@ public abstract class UserData {
      * Update playground file
      *
      * @param file playground file
+     * @param code TODO TOFIX
      * @return true if successful, false if error
      */
     public static boolean savePlayground(File file, String code) {

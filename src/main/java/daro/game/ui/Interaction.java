@@ -70,7 +70,7 @@ public class Interaction {
     public static void setClickable(Node n, boolean moveUp) {
         n.setOnMousePressed(e -> Interaction.scaleDown(n));
         n.setOnMouseReleased(e -> Interaction.scaleBack(n));
-        if(moveUp) {
+        if (moveUp) {
             n.setOnMouseEntered(e -> Interaction.translateUp(n));
             n.setOnMouseExited(e -> Interaction.translateBack(n));
         }

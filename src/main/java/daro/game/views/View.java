@@ -12,9 +12,9 @@ public abstract class View extends HBox {
      * purpose of showing a menu)
      */
     public View() {
-        //this.setPrefWidth(Game.WIDTH);
-        //this.setPrefHeight(Game.HEIGHT);
-        //this.
+        // this.setPrefWidth(Game.WIDTH);
+        // this.setPrefHeight(Game.HEIGHT);
+        // this.
         this.setFillHeight(true);
         this.setStyle("-fx-background-color: #200D57");
     }
@@ -22,10 +22,11 @@ public abstract class View extends HBox {
     /**
      * Updates the view of the game
      *
-     * @param n a JavaFX node that is within the View you want to update (usually 'this')
+     * @param n       a JavaFX node that is within the View you want to update
+     *                (usually 'this')
      * @param newView the new View you want to set the game to
      */
     public static void updateView(Node n, View newView) {
-         n.getScene().setRoot(newView);
+        n.getScene().setRoot(newView);
     }
 }

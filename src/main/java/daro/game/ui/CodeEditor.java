@@ -20,7 +20,9 @@ public class CodeEditor extends CodeArea {
     /**
      * All the possible themes
      */
-    public static final String[] THEMES = {"dark", "light"};
+    public static final String[] THEMES = {
+        "dark", "light"
+    };
 
     /**
      * Basic constants for syntax highlighting
@@ -107,7 +109,8 @@ public class CodeEditor extends CodeArea {
 
         this.lastTypePosition = -1;
         this.settings = SettingsHandler.getSettingsByKey("editor");
-        this.getStyleClass().add("theme-" + (settings.get("theme") == null ? "dark" : settings.get("theme").getAsString()));
+        this.getStyleClass()
+            .add("theme-" + (settings.get("theme") == null ? "dark" : settings.get("theme").getAsString()));
     }
 
     /**
@@ -116,8 +119,9 @@ public class CodeEditor extends CodeArea {
      * @param keyEvent the key event to operate with
      */
     private void handleKeyPress(KeyEvent keyEvent) {
-        if(settings.get("indent") == null ||
-                (settings.get("indent") != null && settings.get("indent").getAsBoolean())) {
+        if (
+            settings.get("indent") == null || (settings.get("indent") != null && settings.get("indent").getAsBoolean())
+        ) {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 int position = this.getCaretPosition();
                 int paragraph = this.getCurrentParagraph();
@@ -154,14 +158,18 @@ public class CodeEditor extends CodeArea {
      */
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int position = this.getCaretPosition();
-        if(settings.get("auto_completion") == null ||
-                (settings.get("auto_completion") != null && settings.get("auto_completion").getAsBoolean())) {
+        if (
+            settings.get("auto_completion") == null
+                || (settings.get("auto_completion") != null && settings.get("auto_completion").getAsBoolean())
+        ) {
             if (oldValue.length() < newValue.length()) {
                 REPEATING_STRING.keySet().forEach(string -> {
                     try {
                         String lastTyped = newValue.substring(position - string.length(), position);
-                        if ((this.lastTypePosition != position || !this.lastTypeString.equals(lastTyped))
-                                && lastTyped.equals(string)) {
+                        if (
+                            (this.lastTypePosition != position || !this.lastTypeString.equals(lastTyped))
+                                && lastTyped.equals(string)
+                        ) {
                             this.lastTypePosition = position + string.length();
                             this.lastTypeString = lastTyped;
                             this.insertText(position, REPEATING_STRING.get(string));
@@ -194,8 +202,8 @@ public class CodeEditor extends CodeArea {
     }
 
     /**
-     * Parses the Code for its syntax and sets CSS classes for further styling to enable
-     * syntax highlighting
+     * Parses the Code for its syntax and sets CSS classes for further styling to
+     * enable syntax highlighting
      * 
      * @param text TODO TOFIX
      * @return TODO TOFIX

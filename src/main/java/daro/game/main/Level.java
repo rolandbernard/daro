@@ -23,8 +23,9 @@ public class Level {
      * @param groupId     group id of the level
      */
 
-    public Level(long id, String name, String description, boolean isCompleted, String code,
-                 List<Validation> tests, long groupId) {
+    public Level(
+        long id, String name, String description, boolean isCompleted, String code, List<Validation> tests, long groupId
+    ) {
         this.completed = isCompleted;
         this.name = name;
         this.code = code;
