@@ -30,8 +30,8 @@ public class LevelGroupItem extends VBox {
         this.setSpacing(20);
         this.setPrefSize(DIMENSION, DIMENSION);
         this.setStyle(
-            "-fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);" +
-                    "-fx-background-color: #381A90;"
+            "-fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                + "-fx-background-color: #381A90;"
         );
         this.setPadding(new Insets(H_PADDING));
         this.getChildren().addAll(getHeading(), getCompleted());

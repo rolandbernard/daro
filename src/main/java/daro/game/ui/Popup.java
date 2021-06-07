@@ -1,6 +1,5 @@
 package daro.game.ui;
 
-
 import daro.game.main.Game;
 import javafx.geometry.Pos;
 import javafx.scene.Node;

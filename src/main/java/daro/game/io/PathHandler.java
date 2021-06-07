@@ -53,7 +53,7 @@ public abstract class PathHandler {
         Scanner scanner = new Scanner(PathHandler.class.getResourceAsStream(RESOURCE_ROOT + "/data/" + filename));
         scanner.useDelimiter("\\Z");
         JsonElement element;
-        if(scanner.hasNext()) {
+        if (scanner.hasNext()) {
             element = JsonParser.parseReader(new StringReader(scanner.next()));
         } else {
             element = new JsonObject();

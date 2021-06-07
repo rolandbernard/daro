@@ -46,8 +46,9 @@ public class Debugger implements ExecutionObserver {
     }
 
     /**
-     * Sets the breakpoints that should be used by this debugger. Breakpoint line numbers start at 0
-     * for the first line (not 1 as the Ast Position.getLine() returns).
+     * Sets the breakpoints that should be used by this debugger. Breakpoint line
+     * numbers start at 0 for the first line (not 1 as the Ast Position.getLine()
+     * returns).
      *
      * @param lineBreakpoints The breakpoint for this debugger
      */
@@ -153,7 +154,6 @@ public class Debugger implements ExecutionObserver {
     }
 
     /**
-     * 
      * @param node
      * @param context
      * @param before
@@ -163,14 +163,9 @@ public class Debugger implements ExecutionObserver {
         int line = node.getPosition().getLine();
         if (
             (breakNextNode && lastNode != node)
-            || (
-                before && (lastFile != file || lastLine != line || lastNode == node)
-                && (lineBreakpoints.getOrDefault(file, Set.of()).contains(line - 1))
-            )
-            || (
-                (lastFile != file || lastLine != line)
-                && (waitForCall == 0 && waitFor == null && breakNextLine)
-            )
+                || (before && (lastFile != file || lastLine != line || lastNode == node)
+                    && (lineBreakpoints.getOrDefault(file, Set.of()).contains(line - 1)))
+                || ((lastFile != file || lastLine != line) && (waitForCall == 0 && waitFor == null && breakNextLine))
         ) {
             lastFile = file;
             lastLine = line;

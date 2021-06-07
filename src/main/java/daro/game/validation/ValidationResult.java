@@ -34,6 +34,7 @@ public class ValidationResult {
 
     /**
      * Returns the name of the validation: e.g. Test n.1
+     * 
      * @return
      */
     public String getName() {
@@ -42,15 +43,12 @@ public class ValidationResult {
 
     /**
      * A string describing the result of the validation
+     * 
      * @return either passed or failed and why.
      */
     @Override
     public String toString() {
-        return success
-                ? "Passed!\n" + expected
-                : "Failed!\n" +
-                        "Expected: " + expected + "\n"
-                        + "Actual: " + actual;
+        return success ? "Passed!\n" + expected : "Failed!\n" + "Expected: " + expected + "\n" + "Actual: " + actual;
     }
 
     /**

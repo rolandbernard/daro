@@ -8,7 +8,6 @@ import javafx.scene.control.ChoiceBox;
 import java.util.List;
 import java.util.Map;
 
-
 public class SelectField<T> extends InputField {
     private ChoiceBox<String> selectField;
     private Map<T, String> choices;
@@ -26,7 +25,7 @@ public class SelectField<T> extends InputField {
         selectField = new ChoiceBox<>(FXCollections.observableArrayList(choices.values()));
         this.choices = choices;
         selectField.getStyleClass().add("input-field");
-        if(choices.size() > 0) {
+        if (choices.size() > 0) {
             selectField.setValue(value == null ? choices.get(choices.keySet().toArray()[0]) : choices.get(value));
         }
         selectField.setPrefWidth(Page.INNER_WIDTH);
@@ -35,8 +34,8 @@ public class SelectField<T> extends InputField {
     }
 
     public T getValue() {
-        for(T key : choices.keySet()) {
-            if(choices.get(key).equals(selectField.getValue()))
+        for (T key : choices.keySet()) {
+            if (choices.get(key).equals(selectField.getValue()))
                 return key;
         }
         return null;

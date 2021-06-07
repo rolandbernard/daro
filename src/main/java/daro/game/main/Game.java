@@ -36,7 +36,7 @@ public class Game extends Application {
 
         initColorScheme();
 
-        //generate start page
+        // generate start page
         MenuView root = new MenuView(new CoursePage());
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         stage.setFullScreen(true);
@@ -48,7 +48,6 @@ public class Game extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         stage.setTitle("Learn programming with daro!");
         stage.setScene(scene);

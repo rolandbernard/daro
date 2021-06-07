@@ -21,7 +21,6 @@ import javafx.scene.text.TextAlignment;
 
 import java.util.List;
 
-
 public class LevelView extends View {
 
     private static final double SIDEBAR_WIDTH = 340;
@@ -61,7 +60,8 @@ public class LevelView extends View {
         HBox backButton = createBackButton(backBtnHeight, SIDEBAR_WIDTH);
 
         CustomButton runButton = new CustomButton("\ue037", "Run the program", SIDEBAR_WIDTH, buttonHeight, false);
-        CustomButton submitButton = new CustomButton("\ue86c", "Submit your result", SIDEBAR_WIDTH, buttonHeight, false, "#cc2610");
+        CustomButton submitButton =
+            new CustomButton("\ue86c", "Submit your result", SIDEBAR_WIDTH, buttonHeight, false, "#cc2610");
         runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
         submitButton.setOnMouseClicked(this::openValidationPopup);
 
@@ -156,7 +156,7 @@ public class LevelView extends View {
         CustomButton mainButton = null;
         if (success) {
             Level nextLevel = LevelHandler.getNextLevel(level.getGroupId(), level.getId());
-            if(nextLevel != null) {
+            if (nextLevel != null) {
                 mainButton = new CustomButton("\ue16a", "Next Level", buttonWidth, buttonHeight, true);
                 mainButton.setOnMouseClicked(e -> View.updateView(this, new LevelView(nextLevel)));
             }
@@ -164,12 +164,13 @@ public class LevelView extends View {
             mainButton = new CustomButton("\ue5d5", "Try again", buttonWidth, buttonHeight, true);
             mainButton.setOnMouseClicked(e -> popup.close());
         }
-        CustomButton backButton = new CustomButton("\ue5c4", "Back to overview", buttonWidth, buttonHeight, true, "#cc2610");
+        CustomButton backButton =
+            new CustomButton("\ue5c4", "Back to overview", buttonWidth, buttonHeight, true, "#cc2610");
         backButton.setOnMouseClicked(e -> backToOverview());
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
         buttons.getChildren().add(backButton);
-        if(mainButton != null) {
+        if (mainButton != null) {
             buttons.getChildren().add(mainButton);
         }
         return buttons;
@@ -178,6 +179,5 @@ public class LevelView extends View {
     private void backToOverview() {
         this.getScene().setRoot(new MenuView(new CoursePage()));
     }
-
 
 }

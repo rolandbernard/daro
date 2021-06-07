@@ -25,18 +25,17 @@ public class LevelItem extends VBox {
      */
     public LevelItem(Level level) {
         this.level = level;
-        //this.setWidth(Page.INNER_WIDTH);
+        // this.setWidth(Page.INNER_WIDTH);
         this.setMinHeight(200);
         this.setStyle(
-            "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);" +
-                    "-fx-background-color:" + Game.colorTheme.get("lightBackground")
+            "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                + "-fx-background-color:" + Game.colorTheme.get("lightBackground")
         );
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
         this.setOnMouseClicked(event -> this.getScene().setRoot(new LevelView(level)));
         Interaction.setClickable(this, true);
     }
-
 
     /**
      * Generates the the heading for the level item

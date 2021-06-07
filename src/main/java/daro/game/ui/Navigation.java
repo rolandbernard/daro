@@ -68,6 +68,7 @@ public class Navigation extends VBox {
         navigation.setSpacing(5);
         return navigation;
     }
+
     private void addNavItem(String icon, String label, Page defaultPage, Class<? extends Page> pageClass) {
         NavigationItem item = new NavigationItem(icon, label, isDefault(pageClass, defaultPage));
         navItems.put(item, getPage(pageClass, defaultPage));
@@ -94,9 +95,8 @@ public class Navigation extends VBox {
      */
     private Page getPage(Class<? extends Page> currentPage, Page defaultPage) {
         try {
-            return isDefault(currentPage, defaultPage)
-                    ? defaultPage
-                    : currentPage.getDeclaredConstructor().newInstance();
+            return isDefault(currentPage, defaultPage) ? defaultPage
+                : currentPage.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

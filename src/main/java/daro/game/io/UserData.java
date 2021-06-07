@@ -50,10 +50,9 @@ public abstract class UserData {
         return map;
     }
 
-
     /**
-     * A method that rewrites the user data file by either creating or replacing an old entry of
-     * user data concerning the completion of a level.
+     * A method that rewrites the user data file by either creating or replacing an
+     * old entry of user data concerning the completion of a level.
      *
      * @param groupId     the group id of the level
      * @param levelId     the level id
@@ -97,7 +96,7 @@ public abstract class UserData {
         return level;
     }
 
-    //Playgrounds
+    // Playgrounds
 
     /**
      * Creates, if it not already exists, the playgrounds folder and parses the
@@ -181,7 +180,7 @@ public abstract class UserData {
      * Update playground file
      *
      * @param file playground file
-     * @param code     TODO TOFIX
+     * @param code TODO TOFIX
      * @return true if successful, false if error
      */
     public static boolean savePlayground(File file, String code) {

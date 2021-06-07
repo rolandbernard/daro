@@ -4,7 +4,8 @@ import daro.lang.ast.Position;
 import daro.lang.interpreter.Scope;
 
 /**
- * This class interface must be implemented by classes that which to use the debugger.
+ * This class interface must be implemented by classes that which to use the
+ * debugger.
  *
  * @author Roland Bernard
  */

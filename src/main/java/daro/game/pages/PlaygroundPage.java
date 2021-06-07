@@ -36,7 +36,7 @@ public class PlaygroundPage extends Page {
         FlowPane playgroundList = new FlowPane();
         VBox createButton = getCreateButton();
         playgroundList.getChildren().add(createButton);
-        for(File playground : playgrounds) {
+        for (File playground : playgrounds) {
             playgroundList.getChildren().add(new PlaygroundItem(playground));
         }
         playgroundList.setHgap(PlaygroundItem.MARGIN);
@@ -57,7 +57,8 @@ public class PlaygroundPage extends Page {
         createButton.getChildren().addAll(plus);
         createButton.setPrefWidth(Page.INNER_WIDTH);
         createButton.setPrefHeight(60);
-        createButton.setStyle("-fx-background-radius: 15px; -fx-background-color: " + Game.colorTheme.get("lightBackground"));
+        createButton
+            .setStyle("-fx-background-radius: 15px; -fx-background-color: " + Game.colorTheme.get("lightBackground"));
         createButton.setOnMouseClicked(e -> MenuView.setContent(new CreatePlaygroundPage()));
         Interaction.setClickable(createButton, true);
         createButton.setCursor(Cursor.HAND);

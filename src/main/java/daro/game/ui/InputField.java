@@ -9,7 +9,8 @@ public abstract class InputField extends VBox {
      * <strong>UI: <em>Template</em></strong><br>
      * An abstract class defining the key features of an InputField
      */
-    public InputField() { }
+    public InputField() {
+    }
 
     /**
      * <strong>UI: <em>Template</em></strong><br>

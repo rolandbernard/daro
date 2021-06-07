@@ -58,11 +58,11 @@ public abstract class SettingsHandler {
             for (String settingKey : setting.keySet()) {
                 Object value = setting.get(settingKey).getValue();
                 if (value instanceof Boolean) {
-                    innerSettings.addProperty(settingKey, (boolean) value);
+                    innerSettings.addProperty(settingKey, (boolean)value);
                 } else if (value instanceof String) {
-                    innerSettings.addProperty(settingKey, (String) value);
+                    innerSettings.addProperty(settingKey, (String)value);
                 } else if (value instanceof Number) {
-                    innerSettings.addProperty(settingKey, (Number) value);
+                    innerSettings.addProperty(settingKey, (Number)value);
                 }
             }
             allSettings.add(key, innerSettings);

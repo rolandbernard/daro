@@ -28,8 +28,10 @@ public class PlaygroundItem extends VBox {
         this.setPrefHeight(200);
         this.setPrefWidth(Page.INNER_WIDTH / 2 - MARGIN * 0.6);
         this.setPadding(new Insets(40));
-        this.setStyle("-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);" +
-                "-fx-background-color: #381A90;");
+        this.setStyle(
+            "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                + "-fx-background-color: #381A90;"
+        );
         Interaction.setClickable(this, true);
         this.getChildren().addAll(name);
         HBox createDate = getCreateDateInfo(file);
