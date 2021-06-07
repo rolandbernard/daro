@@ -1,39 +1,49 @@
 package daro.game.pages;
 
 import daro.game.io.SettingsHandler;
-import daro.game.ui.CodeEditor;
-import daro.game.ui.Heading;
-import daro.game.ui.InputField;
-import daro.game.ui.SelectField;
+import daro.game.ui.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SettingsPage extends Page {
-    private Map<String, String> currentSettings;
+    private Map<String, Map<String, String>> currentSettings;
+    private Map<String, Map<String, InputField>> allFields;
     private VBox fieldGroups;
 
     /**
      * <strong>UI: <em>Page</em></strong><br>
-     *
+     * <p>
      * A page to handle user settings.
      */
     public SettingsPage() {
+        allFields = new HashMap<>();
         Heading heading = new Heading("Settings", "Customize the game how you want it to be");
         currentSettings = SettingsHandler.getAllSettings();
         fieldGroups = new VBox();
         fieldGroups.setSpacing(40);
         generateEditorFields();
-        this.getChildren().addAll(heading, fieldGroups);
+
+        CustomButton saveButton = new CustomButton("\ue161", "Save your changes", Page.INNER_WIDTH, 50, true);
+        saveButton.setOnMouseClicked(this::save);
+        this.getChildren().addAll(heading, fieldGroups, saveButton);
+    }
+
+    /**
+     * Save the settings
+     *
+     * @param mouseEvent
+     */
+    private void save(MouseEvent mouseEvent) {
+        SettingsHandler.save(allFields);
     }
 
     /**
      * Creates a new field group and adds it to the page
      *
-     * @param name the title of the field group
+     * @param name   the title of the field group
      * @param fields the fields in the field group
      */
     private void createFieldGroup(String name, InputField... fields) {
@@ -46,9 +56,17 @@ public class SettingsPage extends Page {
         fieldGroups.getChildren().add(fieldList);
     }
 
-    private void generateEditorFields() {
-        SelectField field = new SelectField(Arrays.asList(CodeEditor.THEMES), null, "Theme");
+    private Map<String, String> getCurrentSettings(String key) {
+        return currentSettings.get(key) == null ? new HashMap<>() : currentSettings.get(key);
+    }
 
-        createFieldGroup("Editor Settings", field);
+    private void generateEditorFields() {
+        Map<String, String> editorSettings = getCurrentSettings("editor");
+        Map<String, InputField> editorFields = new HashMap<>();
+        SelectField theme = new SelectField(Arrays.asList(CodeEditor.THEMES), editorSettings.get("theme"), "Theme");
+        editorFields.put("theme", theme);
+
+        allFields.put("editor", editorFields);
+        createFieldGroup("Editor Settings", allFields.get("editor").values().toArray(new InputField[]{}));
     }
 }

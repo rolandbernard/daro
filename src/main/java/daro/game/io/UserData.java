@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public abstract class UserData {
-    private static final String USER_PATH = "./user/";
+    static final String USER_PATH = "./user/";
     private static final String PLAYGROUNDS_PATH = USER_PATH + "playgrounds";
 
     // LEVELS
@@ -173,8 +173,7 @@ public abstract class UserData {
      * @return a file object
      */
     public static File getPlaygroundFile(String filename) throws IOException {
-        File file = new File(PLAYGROUNDS_PATH + "/" + filename);
-        return file;
+        return new File(PLAYGROUNDS_PATH + "/" + filename);
     }
 
     /**
