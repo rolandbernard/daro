@@ -11,7 +11,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import jdk.jfr.EventSettings;
 
 import java.util.LinkedHashMap;
 
@@ -28,7 +27,7 @@ public class Navigation extends VBox {
      * @param defaultPage The default active page
      */
     public Navigation(Page defaultPage) {
-        this.setPrefWidth(WIDTH);
+        this.setMinWidth(WIDTH);
         this.setStyle("-fx-background-color: " + Game.colorTheme.get("darkBackground"));
         this.setAlignment(Pos.TOP_CENTER);
         this.setPadding(new Insets(80, 30, 80, 30));

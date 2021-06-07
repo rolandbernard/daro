@@ -1,7 +1,6 @@
 package daro.game.pages;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import daro.game.io.SettingsHandler;
 import daro.game.ui.*;
 import javafx.scene.layout.VBox;

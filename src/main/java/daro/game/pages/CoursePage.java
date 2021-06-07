@@ -30,7 +30,7 @@ public class CoursePage extends Page {
         FlowPane pane = new FlowPane();
 
         // The gap between the level groups in the grid
-        double gap = 20;
+        double gap = 30;
         pane.setVgap(gap);
         pane.setHgap(gap);
 

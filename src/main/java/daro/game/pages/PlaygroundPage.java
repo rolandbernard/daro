@@ -39,8 +39,8 @@ public class PlaygroundPage extends Page {
         for (File playground : playgrounds) {
             playgroundList.getChildren().add(new PlaygroundItem(playground));
         }
-        playgroundList.setHgap(40);
-        playgroundList.setVgap(40);
+        playgroundList.setHgap(30);
+        playgroundList.setVgap(30);
         return playgroundList;
     }
 

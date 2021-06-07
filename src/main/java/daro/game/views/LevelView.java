@@ -161,11 +161,13 @@ public class LevelView extends View {
             mainButton.setOnMouseClicked(e -> popup.close());
         }
         CustomButton backButton = new CustomButton("\ue5c4", "Back to overview", buttonHeight, true, "#cc2610");
+        backButton.setPrefWidth(buttonWidth);
         backButton.setOnMouseClicked(e -> backToOverview());
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
         buttons.getChildren().add(backButton);
         if (mainButton != null) {
+            mainButton.setPrefWidth(buttonWidth);
             buttons.getChildren().add(mainButton);
         }
         return buttons;
