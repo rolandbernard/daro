@@ -37,7 +37,7 @@ public class PlaygroundPage extends Page {
         VBox createButton = getCreateButton();
         playgroundList.getChildren().add(createButton);
         for(File playground : playgrounds) {
-            playgroundList.getChildren().add(new PlaygroundItem(playground.getName()));
+            playgroundList.getChildren().add(new PlaygroundItem(playground));
         }
         playgroundList.setHgap(PlaygroundItem.MARGIN);
         playgroundList.setVgap(PlaygroundItem.MARGIN);

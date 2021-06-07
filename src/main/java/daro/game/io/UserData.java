@@ -154,11 +154,10 @@ public abstract class UserData {
     /**
      * Get content of a Playgroundfile
      *
-     * @param filename filename with .daro
+     * @param file Playground file
      * @return true if successful, false if error
      */
-    public static String getPlayground(String filename) throws IOException {
-        File file = new File(PLAYGROUNDS_PATH + "/" + filename);
+    public static String getPlayground(File file) throws IOException {
         Scanner scanner = new Scanner(file);
         scanner.useDelimiter("\\Z");
         if (scanner.hasNext()) {
@@ -168,15 +167,26 @@ public abstract class UserData {
     }
 
     /**
-     * Get content of a Playgroundfile
+     * Get a playground File
      *
-     * @param filename filename with .daro
+     * @param filename Playground filename with .daro
+     * @return a file object
+     */
+    public static File getPlaygroundFile(String filename) throws IOException {
+        File file = new File(PLAYGROUNDS_PATH + "/" + filename);
+        return file;
+    }
+
+    /**
+     * Update playground file
+     *
+     * @param file playground file
      * @return true if successful, false if error
      */
-    public static boolean savePlayground(String filename, String code) {
-        try (PrintWriter file = new PrintWriter(PLAYGROUNDS_PATH + "/" + filename)) {
-            file.write(code);
-            file.flush();
+    public static boolean savePlayground(File file, String code) {
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.write(code);
+            writer.flush();
             return true;
         } catch (IOException e) {
             return false;

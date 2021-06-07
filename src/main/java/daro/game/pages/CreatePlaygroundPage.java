@@ -5,12 +5,16 @@ import daro.game.ui.CustomButton;
 import daro.game.ui.Heading;
 import daro.game.ui.TextInput;
 import daro.game.views.EditorView;
+import daro.game.views.MenuView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
+import java.io.IOException;
 
 public class CreatePlaygroundPage extends Page {
     private TextInput nameField;
@@ -36,7 +40,11 @@ public class CreatePlaygroundPage extends Page {
         if(validateNameField()) {
             String error = UserData.createPlayground(nameField.getText());
             if(error == null) {
-                this.getScene().setRoot(new EditorView(nameField.getText() + ".daro"));
+                try {
+                    this.getScene().setRoot(new EditorView(UserData.getPlaygroundFile(nameField.getText() + ".daro")));
+                } catch (IOException e) {
+                    this.getScene().setRoot(new MenuView(new PlaygroundPage()));
+                }
             } else {
                 form.getChildren().add(0, callout);
                 calloutText.setText(error);

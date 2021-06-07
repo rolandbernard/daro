@@ -8,6 +8,7 @@ import daro.game.ui.CustomButton;
 import daro.game.ui.Terminal;
 import javafx.scene.layout.VBox;
 
+import java.io.File;
 import java.io.IOException;
 
 public class EditorView extends View {
@@ -17,11 +18,11 @@ public class EditorView extends View {
     /**
      * A view showing a CodeEditor and a Terminal used for playgrounds
      *
-     * @param filename filename of the playground
+     * @param file playground file
      */
-    public EditorView(String filename) {
+    public EditorView(File file) {
         try {
-            String code = UserData.getPlayground(filename);
+            String code = UserData.getPlayground(file);
             double buttonHeight = 50;
             VBox sidebar = new VBox();
             Terminal terminal = new Terminal(TERMINAL_WIDTH, Game.HEIGHT - buttonHeight * 2);
@@ -31,7 +32,7 @@ public class EditorView extends View {
             CustomButton closeButton = new CustomButton("\ue9ba", "Save & Close", TERMINAL_WIDTH, buttonHeight,false, "#cc2610");
             runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
             closeButton.setOnMouseClicked(e -> {
-                UserData.savePlayground(filename, editor.getText());
+                UserData.savePlayground(file, editor.getText());
                 returnToOverview();
             });
 

@@ -69,19 +69,20 @@ public class Terminal extends ScrollPane {
      */
     public void update(String code) {
         Text status = new Text();
-        this.currentString = new StringBuffer("\n\n\n");
+        this.currentString = new StringBuffer();
         status.setWrappingWidth(this.getPrefWidth() - 40);
         try {
             Interpreter interpreter = new Interpreter(stream);
             interpreter.execute(code);
             status.setText("\n\nProgram terminated.");
-            status.getStyleClass().addAll( "monospace");
-        } catch(Exception e) {
+        } catch (Exception e) {
             status.setText("\n\nProgram terminated with errors:\n" + e.getMessage());
-            status.getStyleClass().addAll( "monospace", "terminal-error");
+            status.getStyleClass().add("terminal-error");
         }
+        status.getStyleClass().add("monospace");
+        currentString.append("\n\n\n");
         Text text = new Text(currentString.toString());
-        text.getStyleClass().addAll( "monospace");
+        text.getStyleClass().addAll("monospace");
         text.setWrappingWidth(this.getPrefWidth() - 40);
         currentString = new StringBuffer();
         textContent.getChildren().addAll(text, status);
