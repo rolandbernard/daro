@@ -27,17 +27,13 @@ public class SettingsPage extends Page {
         generateEditorFields();
 
         CustomButton saveButton = new CustomButton("\ue161", "Save your changes", Page.INNER_WIDTH, 50, true);
-        saveButton.setOnMouseClicked(this::save);
+        saveButton.setOnMouseClicked(e -> {
+            if(SettingsHandler.save(allFields)) {
+                Callout saveCallout = new Callout("Saved your changes", "#53F481", "#1D1F26");
+                this.getChildren().add(1, saveCallout);
+            }
+        });
         this.getChildren().addAll(heading, fieldGroups, saveButton);
-    }
-
-    /**
-     * Save the settings
-     *
-     * @param mouseEvent
-     */
-    private void save(MouseEvent mouseEvent) {
-        SettingsHandler.save(allFields);
     }
 
     /**
@@ -63,8 +59,15 @@ public class SettingsPage extends Page {
     private void generateEditorFields() {
         Map<String, String> editorSettings = getCurrentSettings("editor");
         Map<String, InputField> editorFields = new HashMap<>();
+
         SelectField theme = new SelectField(Arrays.asList(CodeEditor.THEMES), editorSettings.get("theme"), "Theme");
         editorFields.put("theme", theme);
+
+        SelectField indent = new SelectField(List.of("With indent", "Without indent"), editorSettings.get("indent"), "Auto Indent");
+        editorFields.put("indent", indent);
+
+        SelectField autocompletion = new SelectField(List.of("With autocompletion", "Without autocompletion"), editorSettings.get("auto_completion"), "Auto completion");
+        editorFields.put("auto_completion", autocompletion);
 
         allFields.put("editor", editorFields);
         createFieldGroup("Editor Settings", allFields.get("editor").values().toArray(new InputField[]{}));

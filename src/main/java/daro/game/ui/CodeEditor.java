@@ -1,5 +1,6 @@
 package daro.game.ui;
 
+import daro.game.io.SettingsHandler;
 import daro.game.main.Game;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyCode;
@@ -69,6 +70,7 @@ public class CodeEditor extends CodeArea {
     private static final Character[] WHITESPACE_NL = {
         '{', '[', '('
     };
+    private Map<String, String> settings;
 
     // Workaround to ensure that autocompletions don't go into an infinite loop
     private int lastTypePosition;
@@ -119,33 +121,39 @@ public class CodeEditor extends CodeArea {
         this.setOnKeyPressed(this::handleKeyPress);
         this.setStyleSpans(0, computeHighlighting(this.getText()));
         this.lastTypePosition = -1;
+        this.settings = SettingsHandler.getSettingsByKey("editor");
+        this.getStyleClass().add("theme-" + (settings.get("theme") == null ? "dark" : settings.get("theme")));
     }
 
     /**
      * EventHandler for key presses: automatic indentation and better TAB size
      * 
-     * @param keyEvent TODO TOFIX
+     * @param keyEvent the key event to operate with
      */
     private void handleKeyPress(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.ENTER) {
-            int position = this.getCaretPosition();
-            int paragraph = this.getCurrentParagraph();
-            char lastCharacter = this.getText().charAt(position - 2);
+        if(settings.get("indent") == null ||
+                (settings.get("indent") != null && settings.get("indent").equals("With indent"))) {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                int position = this.getCaretPosition();
+                int paragraph = this.getCurrentParagraph();
+                char lastCharacter = this.getText().charAt(position - 2);
 
-            Pattern whiteSpace = Pattern.compile("^\\s+");
-            Matcher whitespace = whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0));
-            String additionalSpace = "";
-            if (whitespace.find())
-                additionalSpace = whitespace.group();
-            if (Arrays.stream(WHITESPACE_NL).anyMatch(c -> c == lastCharacter)) {
-                this.insertText(position, additionalSpace + TAB + "\n" + additionalSpace);
-                int anchor = position + TAB.length() + additionalSpace.length();
-                // workaround
-                this.selectRange(anchor, anchor);
-            } else {
-                insertText(position, additionalSpace);
+                Pattern whiteSpace = Pattern.compile("^\\s+");
+                Matcher whitespace = whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0));
+                String additionalSpace = "";
+                if (whitespace.find())
+                    additionalSpace = whitespace.group();
+                if (Arrays.stream(WHITESPACE_NL).anyMatch(c -> c == lastCharacter)) {
+                    this.insertText(position, additionalSpace + TAB + "\n" + additionalSpace);
+                    int anchor = position + TAB.length() + additionalSpace.length();
+                    // workaround
+                    this.selectRange(anchor, anchor);
+                } else {
+                    insertText(position, additionalSpace);
+                }
             }
-        } else if (keyEvent.getCode() == KeyCode.TAB) {
+        }
+        if (keyEvent.getCode() == KeyCode.TAB) {
             // Change TAB width
             this.replaceText(this.getCaretPosition() - 1, this.getCaretPosition(), TAB);
         }
@@ -155,40 +163,43 @@ public class CodeEditor extends CodeArea {
      * EventHandler for Text changes: updates syntax highlighting and enables
      * autocompletion (e.g. "(" is immediately followed by ")")
      * 
-     * @param observableValue TODO TOFIX
-     * @param oldValue        TODO TOFIX
-     * @param newValue        TODO TOFIX
+     * @param observableValue TODO
+     * @param oldValue        the old value of the editor
+     * @param newValue        the new value of the editor
      */
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int position = this.getCaretPosition();
-        if (oldValue.length() < newValue.length()) {
-            REPEATING_STRING.keySet().forEach(string -> {
-                try {
-                    String lastTyped = newValue.substring(position - string.length(), position);
-                    if ((this.lastTypePosition != position || !this.lastTypeString.equals(lastTyped))
-                            && lastTyped.equals(string)) {
-                        this.lastTypePosition = position + string.length();
-                        this.lastTypeString = lastTyped;
-                        this.insertText(position, REPEATING_STRING.get(string));
-                    }
-                } catch (Exception ignored) {
-                    // ignored because if exception, there was no match anyways
-                }
-            });
-        } else if (oldValue.length() > newValue.length()) {
-            REPEATING_STRING.keySet().forEach(string -> {
-                try {
-                    String deletedCharacters = oldValue.substring(position, position + string.length());
-                    String restOfCombination = newValue.substring(position, position + string.length());
-                    if (deletedCharacters.equals(string)) {
-                        if (REPEATING_STRING.get(deletedCharacters).equals(restOfCombination)) {
-                            this.replaceText(position, position + string.length(), "");
+        if(settings.get("auto_completion") == null ||
+                (settings.get("auto_completion") != null && settings.get("auto_completion").equals("With autocompletion"))) {
+            if (oldValue.length() < newValue.length()) {
+                REPEATING_STRING.keySet().forEach(string -> {
+                    try {
+                        String lastTyped = newValue.substring(position - string.length(), position);
+                        if ((this.lastTypePosition != position || !this.lastTypeString.equals(lastTyped))
+                                && lastTyped.equals(string)) {
+                            this.lastTypePosition = position + string.length();
+                            this.lastTypeString = lastTyped;
+                            this.insertText(position, REPEATING_STRING.get(string));
                         }
+                    } catch (Exception ignored) {
+                        // ignored because if exception, there was no match anyways
                     }
-                } catch (Exception ignored) {
-                    // ignored because if exception, there was no match anyways
-                }
-            });
+                });
+            } else if (oldValue.length() > newValue.length()) {
+                REPEATING_STRING.keySet().forEach(string -> {
+                    try {
+                        String deletedCharacters = oldValue.substring(position, position + string.length());
+                        String restOfCombination = newValue.substring(position, position + string.length());
+                        if (deletedCharacters.equals(string)) {
+                            if (REPEATING_STRING.get(deletedCharacters).equals(restOfCombination)) {
+                                this.replaceText(position, position + string.length(), "");
+                            }
+                        }
+                    } catch (Exception ignored) {
+                        // ignored because if exception, there was no match anyways
+                    }
+                });
+            }
         }
         try {
             this.setStyleSpans(0, computeHighlighting(newValue));
@@ -198,7 +209,7 @@ public class CodeEditor extends CodeArea {
     }
 
     /**
-     * Parses the Code for syntax and sets CSS classes for further styling to enable
+     * Parses the Code for its syntax and sets CSS classes for further styling to enable
      * syntax highlighting
      * 
      * @param text TODO TOFIX

@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 
 public class CustomButton extends HBox {
     /**
-     * Creates a custom button with an icon
+     * Creates a custom button with an icon in orange
      *
      * @param icon   icon string e.g. \ue037 
      * @param text   text for the button
@@ -17,27 +17,23 @@ public class CustomButton extends HBox {
      * @param height height of the button
      */
     public CustomButton(String icon, String text, double width, double height, boolean rounded) {
-        this.setPrefWidth(width);
-        this.setPrefHeight(height);
-        this.setStyle("-fx-background-color: " + Game.colorTheme.get("accent"));
-        init(icon, text, rounded);
+        this(icon, text, width, height, rounded, Game.colorTheme.get("accent"));
     }
 
+    /**
+     * Creates a custom button with an icon
+     *
+     * @param icon   icon string e.g. \ue037 
+     * @param text   text for the button
+     * @param width  width of the button
+     * @param height height of the button
+     * @param color  custom color
+     */
     public CustomButton(String icon, String text, double width, double height, boolean rounded, String color) {
         this.setPrefWidth(width);
         this.setPrefHeight(height);
         this.setStyle("-fx-background-color: " + color);
-        init(icon, text, rounded);
-    }
-
-    /**
-     * Initializes basic styles for the button
-     *
-     * @param icon icon string
-     * @param text text string
-     */
-    private void init(String icon, String text, boolean rounded) {
-        if(rounded) {
+        if (rounded) {
             this.setStyle(getStyle() + "; -fx-background-radius: 25px;");
         }
         this.setAlignment(Pos.CENTER);
