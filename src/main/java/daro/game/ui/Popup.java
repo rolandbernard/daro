@@ -1,12 +1,9 @@
 package daro.game.ui;
 
 
-import daro.game.main.Game;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.StackPane;
 
 public class Popup extends StackPane {
@@ -17,7 +14,6 @@ public class Popup extends StackPane {
     public Popup() {
         content = new StackPane();
         content.setAlignment(Pos.CENTER);
-        content.setPrefHeight(Game.HEIGHT);
         wrapper = new ScrollPane(content);
         wrapper.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         wrapper.setMaxWidth(POPUP_WIDTH);

@@ -8,8 +8,6 @@ import javafx.scene.layout.VBox;
 
 public abstract class Page extends VBox {
     public static final double H_PADDING = 90;
-    public static final double WIDTH = Game.WIDTH - Navigation.WIDTH;
-    public static final double INNER_WIDTH = WIDTH - H_PADDING * 2;
 
     /**
      * <strong>UI: <em>Template</em></strong><br>

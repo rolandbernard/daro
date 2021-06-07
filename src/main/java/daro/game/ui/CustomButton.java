@@ -13,11 +13,10 @@ public class CustomButton extends HBox {
      *
      * @param icon   icon string e.g. \ue037 
      * @param text   text for the button
-     * @param width  width of the button
      * @param height height of the button
      */
-    public CustomButton(String icon, String text, double width, double height, boolean rounded) {
-        this(icon, text, width, height, rounded, Game.colorTheme.get("accent"));
+    public CustomButton(String icon, String text, double height, boolean rounded) {
+        this(icon, text, height, rounded, Game.colorTheme.get("accent"));
     }
 
     /**
@@ -25,13 +24,11 @@ public class CustomButton extends HBox {
      *
      * @param icon   icon string e.g. \ue037 
      * @param text   text for the button
-     * @param width  width of the button
      * @param height height of the button
      * @param color  custom color
      */
-    public CustomButton(String icon, String text, double width, double height, boolean rounded, String color) {
-        this.setPrefWidth(width);
-        this.setPrefHeight(height);
+    public CustomButton(String icon, String text, double height, boolean rounded, String color) {
+        this.setMinHeight(height);
         this.setStyle("-fx-background-color: " + color);
         if (rounded) {
             this.setStyle(getStyle() + "; -fx-background-radius: 25px;");

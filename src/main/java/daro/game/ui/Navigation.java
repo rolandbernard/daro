@@ -28,7 +28,6 @@ public class Navigation extends VBox {
      * @param defaultPage The default active page
      */
     public Navigation(Page defaultPage) {
-        this.setPrefHeight(Game.HEIGHT);
         this.setPrefWidth(WIDTH);
         this.setStyle("-fx-background-color: " + Game.colorTheme.get("darkBackground"));
         this.setAlignment(Pos.TOP_CENTER);

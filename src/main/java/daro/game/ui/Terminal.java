@@ -13,18 +13,18 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
-public class Terminal extends ScrollPane {
+public class Terminal extends VBox {
     private TextFlow textContent;
     private StringBuffer currentString;
     private PrintStream stream;
+    private ScrollPane content;
     public static final double STANDARD_WIDTH = 360;
 
     /**
      * A simple terminal that shows prints of code
      */
     public Terminal() {
-        this.setHeight(Game.HEIGHT);
-        this.setPrefWidth(STANDARD_WIDTH);
+        this.setMinWidth(STANDARD_WIDTH);
         init();
     }
 
@@ -32,27 +32,27 @@ public class Terminal extends ScrollPane {
      * A simple terminal that shows prints of code
      *
      * @param width  width of the Terminal
-     * @param height height of the Terminal
      */
-    public Terminal(double width, double height) {
-        this.setMinHeight(height);
-        this.setFitToHeight(true);
-        this.setPrefWidth(width);
+    public Terminal(double width) {
+        this.setMinWidth(width);
+        this.setPrefHeight(Integer.MAX_VALUE);
         init();
     }
 
     private void init() {
-
+        Text title = new Text("Terminal");
+        title.getStyleClass().addAll("heading", "tiny", "text", "monospace");
         this.textContent = new TextFlow();
-
         VBox container = new VBox(textContent);
-        container.setPrefHeight(this.getPrefHeight());
-        container.setPadding(new Insets(20));
-
-        this.setContent(container);
-        this.setHbarPolicy(ScrollBarPolicy.NEVER);
-        this.getStyleClass().add("terminal");
+        container.setPadding(new Insets(10, 0, 0, 0));
+        content = new ScrollPane();
+        content.setContent(container);
+        content.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        content.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        content.setStyle("-fx-background-color: #1D1F26;");
         this.setStyle("-fx-background-color: #1D1F26;");
+        this.setPadding(new Insets(20));
+        this.getChildren().addAll(title, content);
 
         OutputStream out = new OutputStream() {
             @Override

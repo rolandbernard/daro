@@ -82,9 +82,6 @@ public class CodeEditor extends CodeArea {
      * A full-fledged CodeEditor with syntax highlighting and basic features.
      */
     public CodeEditor() {
-        initRepeatingStrings();
-        this.setHeight(Game.HEIGHT);
-        this.setPrefWidth(Game.WIDTH);
         init();
     }
 
@@ -95,33 +92,19 @@ public class CodeEditor extends CodeArea {
      */
     public CodeEditor(String defaultText) {
         super(defaultText);
-        initRepeatingStrings();
-        this.setPrefHeight(Game.HEIGHT);
-        this.setPrefWidth(Game.WIDTH);
-        init();
-    }
-
-    /**
-     * A full-fledged CodeEditor with syntax highlighting and basic features.
-     * 
-     * @param defaultText the code which is rendered as default
-     * @param height      height of the Code Editor
-     * @param width       width of the Code Editor
-     */
-    public CodeEditor(String defaultText, double width, double height) {
-        super(defaultText);
-        initRepeatingStrings();
-        this.setPrefWidth(width);
-        this.setPrefHeight(height);
         init();
     }
 
     private void init() {
+        initRepeatingStrings();
         this.getStyleClass().add("code-editor");
         this.setParagraphGraphicFactory(LineNumberFactory.get(this));
         this.textProperty().addListener(this::handleTextChange);
         this.setOnKeyPressed(this::handleKeyPress);
         this.setStyleSpans(0, computeHighlighting(this.getText()));
+        this.setPrefWidth(Integer.MAX_VALUE);
+        this.setPrefHeight(Integer.MAX_VALUE);
+
         this.lastTypePosition = -1;
         this.settings = SettingsHandler.getSettingsByKey("editor");
         this.getStyleClass().add("theme-" + (settings.get("theme") == null ? "dark" : settings.get("theme").getAsString()));

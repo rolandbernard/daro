@@ -25,9 +25,10 @@ public class SettingsPage extends Page {
         currentSettings = SettingsHandler.getAllSettings();
         fieldGroups = new VBox();
         fieldGroups.setSpacing(40);
+        fieldGroups.setFillWidth(true);
         generateEditorFields();
 
-        CustomButton saveButton = new CustomButton("\ue161", "Save your changes", Page.INNER_WIDTH, 50, true);
+        CustomButton saveButton = new CustomButton("\ue161", "Save your changes", 50, true);
         saveButton.setOnMouseClicked(e -> {
             if(SettingsHandler.save(allFields)) {
                 Callout saveCallout = new Callout("Saved your changes", "#53F481", "#1D1F26");
@@ -45,6 +46,7 @@ public class SettingsPage extends Page {
      */
     private void createFieldGroup(String name, InputField... fields) {
         VBox fieldList = new VBox();
+        fieldList.setFillWidth(true);
         Text title = new Text(name);
         title.getStyleClass().addAll("heading", "small", "text");
         fieldList.setSpacing(20);

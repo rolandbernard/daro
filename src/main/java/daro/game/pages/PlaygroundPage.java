@@ -39,8 +39,8 @@ public class PlaygroundPage extends Page {
         for(File playground : playgrounds) {
             playgroundList.getChildren().add(new PlaygroundItem(playground));
         }
-        playgroundList.setHgap(PlaygroundItem.MARGIN);
-        playgroundList.setVgap(PlaygroundItem.MARGIN);
+        playgroundList.setHgap(40);
+        playgroundList.setVgap(40);
         return playgroundList;
     }
 
@@ -54,7 +54,7 @@ public class PlaygroundPage extends Page {
         plus.getStyleClass().add("icon");
         createButton.setSpacing(10);
         createButton.getChildren().addAll(plus);
-        createButton.setPrefWidth(Page.INNER_WIDTH);
+        createButton.setPrefWidth(PlaygroundItem.WIDTH);
         createButton.setPrefHeight(60);
         createButton.setStyle("-fx-background-radius: 15px; -fx-background-color: " + Game.colorTheme.get("lightBackground"));
         createButton.setOnMouseClicked(e -> MenuView.setContent(new CreatePlaygroundPage()));

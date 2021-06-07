@@ -11,7 +11,7 @@ public class Container extends ScrollPane {
      */
     public Container() {
         this.setHbarPolicy(ScrollBarPolicy.NEVER);
-        this.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        this.setVbarPolicy(ScrollBarPolicy.NEVER);
         this.setFitToWidth(true);
         this.setFitToHeight(true);
         this.setStyle("-fx-background-color: " + Game.colorTheme.get("background"));

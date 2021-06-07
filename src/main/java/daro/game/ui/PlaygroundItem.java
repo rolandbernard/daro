@@ -20,13 +20,13 @@ import java.util.Date;
 
 public class PlaygroundItem extends VBox {
 
-    public static double MARGIN = 30;
+    public static final double WIDTH = 300;
 
     public PlaygroundItem(File file) {
         Text name = new Text(file.getName().split("\\.")[0]);
         name.getStyleClass().addAll("heading", "small", "text");
         this.setPrefHeight(200);
-        this.setPrefWidth(Page.INNER_WIDTH / 2 - MARGIN * 0.6);
+        this.setPrefWidth(WIDTH);
         this.setPadding(new Insets(40));
         this.setStyle("-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);" +
                 "-fx-background-color: #381A90;");

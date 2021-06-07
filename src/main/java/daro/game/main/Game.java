@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Game extends Application {
-    public static final double HEIGHT = 720;
-    public static final double WIDTH = 1280;
     public static final Map<String, String> colorTheme = new HashMap<>();
 
     public static void init(String[] args) {
@@ -38,7 +36,7 @@ public class Game extends Application {
 
         //generate start page
         MenuView root = new MenuView(new CoursePage());
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        Scene scene = new Scene(root, 1280, 720);
         stage.setFullScreen(true);
         stage.getIcons().add(PathHandler.getImage("icon.png"));
 

@@ -5,9 +5,11 @@ import daro.game.main.LevelGroup;
 import daro.game.ui.Heading;
 import daro.game.ui.LevelGroupItem;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 import java.util.List;
+import java.util.concurrent.Flow;
 
 public class CoursePage extends Page {
     /**

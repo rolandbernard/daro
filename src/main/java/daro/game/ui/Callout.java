@@ -12,7 +12,6 @@ public class Callout extends HBox {
         this.text = new Text(text);
         this.text.getStyleClass().add("text");
         this.setPadding(new Insets(20));
-        this.setPrefWidth(Page.INNER_WIDTH);
         this.setStyle("-fx-background-color: " + color);
         this.getChildren().add(this.text);
     }

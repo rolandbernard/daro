@@ -29,7 +29,6 @@ public class SelectField<T> extends InputField {
         if(choices.size() > 0) {
             selectField.setValue(value == null ? choices.get(choices.keySet().toArray()[0]) : choices.get(value));
         }
-        selectField.setPrefWidth(Page.INNER_WIDTH);
         this.getChildren().add(selectField);
         this.setCursor(Cursor.HAND);
     }
