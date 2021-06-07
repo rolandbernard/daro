@@ -1,10 +1,6 @@
-package daro.game.main;
+package daro.game.io;
 
-import javafx.scene.input.MouseEvent;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.*;
 
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
@@ -15,29 +11,20 @@ import java.util.Map;
 import java.util.Scanner;
 
 public abstract class UserData {
-    private static final String USER_PATH = "./user/";
+    static final String USER_PATH = "./user/";
     private static final String PLAYGROUNDS_PATH = USER_PATH + "playgrounds";
 
     // LEVELS
-    private static JSONObject parseUserDataJson() {
-        JSONObject obj = new JSONObject();
-        JSONParser parser = new JSONParser();
-        File file = new File(USER_PATH + "data.json");
+    public static JsonObject parseUserJson(String filename) {
+        File file = new File(USER_PATH + filename);
+        JsonObject element = new JsonObject();
         try {
             Scanner scanner = new Scanner(file);
             scanner.useDelimiter("\\Z");
-            String jsonString = "";
             if (scanner.hasNext()) {
-                jsonString = scanner.next();
+                element = JsonParser.parseString(scanner.next()).getAsJsonObject();
             }
-
             scanner.close();
-            try {
-                obj = (JSONObject)parser.parse(jsonString);
-
-            } catch (ParseException e) {
-                return obj;
-            }
         } catch (FileNotFoundException ex) {
             try {
                 file.createNewFile();
@@ -45,48 +32,55 @@ public abstract class UserData {
                 e.printStackTrace();
             }
         }
-        return obj;
+        return element;
     }
 
-    public static Map<Long, JSONObject> getLevelGroupData(long groupId) {
-        JSONObject object = parseUserDataJson();
-        Map<Long, JSONObject> map = new HashMap<>();
-        Object levelGroupData = object.get(String.valueOf(groupId));
-        if (levelGroupData != null) {
-            JSONArray groupData = (JSONArray)levelGroupData;
-            for (Object level : groupData) {
-                JSONObject levelData = (JSONObject)level;
-                map.put((long)levelData.get("id"), levelData);
+    public static Map<Long, JsonObject> getLevelGroupData(long groupId) {
+        JsonObject object = parseUserJson("data.json");
+        Map<Long, JsonObject> map = new HashMap<>();
+        JsonElement groupData = object.get(String.valueOf(groupId));
+
+        if (groupData != null) {
+            JsonArray groups = groupData.getAsJsonArray();
+            for (JsonElement level : groups) {
+                JsonObject obj = level.getAsJsonObject();
+                map.put(obj.get("id").getAsLong(), obj);
             }
         }
         return map;
     }
 
+
+    /**
+     * A method that rewrites the user data file by either creating or replacing an old entry of
+     * user data concerning the completion of a level.
+     *
+     * @param groupId     the group id of the level
+     * @param levelId     the level id
+     * @param completion  the completion (if it was solved successfully)
+     * @param currentCode the code written by the user
+     * @return if the writing wsa successful or not.
+     */
     public static boolean writeLevelData(long groupId, long levelId, boolean completion, String currentCode) {
-        JSONObject object = parseUserDataJson();
-        Object levelGroupData = object.get(String.valueOf(groupId));
-        if (levelGroupData == null) {
-            JSONArray levels = new JSONArray();
-            JSONObject level = new JSONObject();
-            level.put("id", levelId);
-            level.put("completed", completion);
-            level.put("currentCode", currentCode);
-            levels.add(level);
-            object.put(groupId, levels);
+        JsonObject outputObject = parseUserJson("data.json");
+        JsonElement levelCompObj = outputObject.get(String.valueOf(groupId));
+        if (levelCompObj == null) {
+            JsonArray levels = new JsonArray();
+            levels.add(createLevelDataEntry(levelId, completion, currentCode));
+            outputObject.add(String.valueOf(groupId), levels);
         } else {
-            JSONArray levelGroup = (JSONArray)levelGroupData;
-            for (Object o : levelGroup) {
-                JSONObject level = (JSONObject)o;
-                if ((long)level.get("id") == levelId) {
-                    level.replace("completed", completion);
-                    level.replace("currentCode", currentCode);
+            JsonArray levelCompletions = levelCompObj.getAsJsonArray();
+            for (int i = 0; i < levelCompletions.size(); i++) {
+                JsonObject level = levelCompletions.get(i).getAsJsonObject();
+                if (level.get("id").getAsLong() == levelId) {
+                    levelCompletions.remove(i);
                     break;
                 }
             }
-            object.replace(groupId, levelGroup);
+            levelCompletions.add(createLevelDataEntry(levelId, completion, currentCode));
         }
         try (PrintWriter file = new PrintWriter(USER_PATH + "data.json")) {
-            file.write(object.toJSONString());
+            file.write(outputObject.toString());
             file.flush();
             return true;
         } catch (IOException e) {
@@ -95,7 +89,15 @@ public abstract class UserData {
         return false;
     }
 
-    // Playgrounds
+    private static JsonObject createLevelDataEntry(long levelId, boolean completion, String currentCode) {
+        JsonObject level = new JsonObject();
+        level.addProperty("id", levelId);
+        level.addProperty("completed", completion);
+        level.addProperty("currentCode", currentCode);
+        return level;
+    }
+
+    //Playgrounds
 
     /**
      * Creates, if it not already exists, the playgrounds folder and parses the
@@ -152,12 +154,11 @@ public abstract class UserData {
     /**
      * Get content of a Playgroundfile
      *
-     * @param filename filename with .daro
+     * @param file Playground file
      * @return true if successful, false if error
      * @throws IOException TODO TOFIX
      */
-    public static String getPlayground(String filename) throws IOException {
-        File file = new File(PLAYGROUNDS_PATH + "/" + filename);
+    public static String getPlayground(File file) throws IOException {
         Scanner scanner = new Scanner(file);
         scanner.useDelimiter("\\Z");
         if (scanner.hasNext()) {
@@ -167,16 +168,26 @@ public abstract class UserData {
     }
 
     /**
-     * Get content of a Playgroundfile
+     * Get a playground File
      *
-     * @param filename filename with .daro
+     * @param filename Playground filename with .daro
+     * @return a file object
+     */
+    public static File getPlaygroundFile(String filename) throws IOException {
+        return new File(PLAYGROUNDS_PATH + "/" + filename);
+    }
+
+    /**
+     * Update playground file
+     *
+     * @param file playground file
      * @param code     TODO TOFIX
      * @return true if successful, false if error
      */
-    public static boolean savePlayground(String filename, String code) {
-        try (PrintWriter file = new PrintWriter(PLAYGROUNDS_PATH + "/" + filename)) {
-            file.write(code);
-            file.flush();
+    public static boolean savePlayground(File file, String code) {
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.write(code);
+            writer.flush();
             return true;
         } catch (IOException e) {
             return false;

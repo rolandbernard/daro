@@ -3,6 +3,7 @@ package daro.game.ui;
 import daro.game.validation.ValidationResult;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class ValidationItem extends HBox {
@@ -12,10 +13,18 @@ public class ValidationItem extends HBox {
 
     public ValidationItem(ValidationResult result) {
         this.result = result;
-        this.setSpacing(20);
+        this.setSpacing(5);
         this.setAlignment(Pos.CENTER);
         icon = new Text();
+        icon.getStyleClass().add("icon");
+        Text heading = new Text(result.getName());
+        heading.getStyleClass().addAll("text", "heading", "tiny");
         text = new Text();
+        text.getStyleClass().add("text");
+        text.setWrappingWidth(340);
+        VBox texts = new VBox(heading, text);
+        texts.setSpacing(5);
+        this.getChildren().addAll(icon, texts);
         render();
     }
 
@@ -30,10 +39,5 @@ public class ValidationItem extends HBox {
             this.getStyleClass().remove("passed");
             this.getStyleClass().add("failed");
         }
-    }
-
-    private void updateResult(ValidationResult result) {
-        this.result = result;
-        render();
     }
 }

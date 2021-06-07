@@ -12,14 +12,11 @@ import javafx.scene.text.TextFlow;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Terminal extends ScrollPane {
     private TextFlow textContent;
     private StringBuffer currentString;
     private PrintStream stream;
-    private SimpleDateFormat dateFormatter;
     public static final double STANDARD_WIDTH = 360;
 
     /**
@@ -47,11 +44,8 @@ public class Terminal extends ScrollPane {
 
         this.textContent = new TextFlow();
 
-        this.dateFormatter = new SimpleDateFormat("HH:mm");
-
         VBox container = new VBox(textContent);
         container.setPrefHeight(this.getPrefHeight());
-        container.setAlignment(Pos.BOTTOM_LEFT);
         container.setPadding(new Insets(20));
 
         this.setContent(container);
@@ -77,20 +71,18 @@ public class Terminal extends ScrollPane {
      */
     public void update(String code) {
         Text status = new Text();
-        this.currentString = new StringBuffer("\n\n\n");
+        this.currentString = new StringBuffer();
         status.setWrappingWidth(this.getPrefWidth() - 40);
         try {
             Interpreter interpreter = new Interpreter(stream);
-            currentString.append("(");
-            currentString.append(dateFormatter.format(new Date()));
-            currentString.append("): ");
             interpreter.execute(code);
             status.setText("\n\nProgram terminated.");
-            status.getStyleClass().addAll("monospace");
         } catch (Exception e) {
             status.setText("\n\nProgram terminated with errors:\n" + e.getMessage());
-            status.getStyleClass().addAll("monospace", "terminal-error");
+            status.getStyleClass().add("terminal-error");
         }
+        status.getStyleClass().add("monospace");
+        currentString.append("\n\n\n");
         Text text = new Text(currentString.toString());
         text.getStyleClass().addAll("monospace");
         text.setWrappingWidth(this.getPrefWidth() - 40);

@@ -1,5 +1,6 @@
 package daro.game.ui;
 
+import daro.game.main.Game;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -8,36 +9,36 @@ import javafx.scene.text.Text;
 
 public class CustomButton extends HBox {
     /**
-     * Creates a custom button with an icon
+     * Creates a custom button with an icon in orange
      *
      * @param icon   icon string e.g. \ue037 
      * @param text   text for the button
      * @param width  width of the button
      * @param height height of the button
      */
-    public CustomButton(String icon, String text, double width, double height) {
-        this.setPrefWidth(width);
-        this.setPrefHeight(height);
-        init(icon, text);
-    }
-
-    public CustomButton(String icon, String text) {
-        this.setPadding(new Insets(15));
-        this.setStyle("-fx-background-radius: 5px;");
-        init(icon, text);
+    public CustomButton(String icon, String text, double width, double height, boolean rounded) {
+        this(icon, text, width, height, rounded, Game.colorTheme.get("accent"));
     }
 
     /**
-     * Initializes basic stylings for the button
+     * Creates a custom button with an icon
      *
-     * @param icon icon string
-     * @param text text string
+     * @param icon   icon string e.g. \ue037 
+     * @param text   text for the button
+     * @param width  width of the button
+     * @param height height of the button
+     * @param color  custom color
      */
-    private void init(String icon, String text) {
-        this.setStyle("-fx-background-color: #FF3D23");
+    public CustomButton(String icon, String text, double width, double height, boolean rounded, String color) {
+        this.setPrefWidth(width);
+        this.setPrefHeight(height);
+        this.setStyle("-fx-background-color: " + color);
+        if (rounded) {
+            this.setStyle(getStyle() + "; -fx-background-radius: 25px;");
+        }
         this.setAlignment(Pos.CENTER);
-        this.setCursor(Cursor.HAND);
         this.setSpacing(10);
+        Interaction.setClickable(this, false);
         this.getChildren().addAll(generateIcon(icon), generateText(text));
     }
 
@@ -61,7 +62,7 @@ public class CustomButton extends HBox {
      */
     private Text generateText(String textString) {
         Text text = new Text(textString);
-        text.getStyleClass().add("text");
+        text.getStyleClass().addAll("text", "bold");
         return text;
     }
 }

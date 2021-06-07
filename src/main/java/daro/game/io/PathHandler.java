@@ -1,13 +1,15 @@
-package daro.game.main;
+package daro.game.io;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import javafx.scene.image.Image;
 
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Scanner;
 
-public class PathHandler {
+public abstract class PathHandler {
     private static final String RESOURCE_ROOT = "/game/";
 
     /**
@@ -31,18 +33,32 @@ public class PathHandler {
     }
 
     /**
+     * Returns a JavaFX image to that can be used directly in the app.
+     *
+     * @param filename the name of the image file
+     * @return a JavaFX Image Object
+     */
+    public static Image getImage(String filename) {
+        return new Image(PathHandler.class.getResource(RESOURCE_ROOT + "img/" + filename).toExternalForm());
+    }
+
+    /**
      * Returns a JsonObject from a directory
      *
      * @param filename a json filename
      * @return a JsonObject parsed from the file
      * @throws ParseException TODO TOFIX
      */
-    public static JSONObject getJsonData(String filename) throws ParseException {
+    public static JsonElement getJsonData(String filename) {
         Scanner scanner = new Scanner(PathHandler.class.getResourceAsStream(RESOURCE_ROOT + "/data/" + filename));
         scanner.useDelimiter("\\Z");
-        JSONParser parser = new JSONParser();
-        Object object = parser.parse(scanner.next());
+        JsonElement element;
+        if(scanner.hasNext()) {
+            element = JsonParser.parseReader(new StringReader(scanner.next()));
+        } else {
+            element = new JsonObject();
+        }
         scanner.close();
-        return (JSONObject)object;
+        return element;
     }
 }

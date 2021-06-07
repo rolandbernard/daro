@@ -5,10 +5,15 @@
     -fx-font-size: 16px;
 }
 
+.bold {
+    -fx-font-weight: bold;
+}
+
 .icon {
     -fx-font-family: "Material Icons";
     -fx-font-weight: normal;
-    -fx-fill: #fff;
+    -fx-font-size: 20px;
+    -fx-fill: #eee;
 }
 
 .monospace {
@@ -26,18 +31,12 @@
 }
 
 .track, .increment-button, .decrement-button {
-    -fx-background-color: #200D57;
-    -fx-border-color: #200D57;
-    -fx-stroke-color: #200D57;
-}
-
-.terminal .track, .terminal .increment-button, .terminal .decrement-button  {
-    -fx-background-color: #1D1F26;
-    -fx-border-color: #1D1F26;
+    -fx-background-color: #150F28 !important;
+    -fx-border-color: #150F28 !important;
 }
 
 .thumb {
-    -fx-background-color: #fff;
+    -fx-background-color: #E2E2E2;
 }
 
 /*Heading*/
@@ -53,68 +52,151 @@
     -fx-font-size: 24px;
 }
 
+.heading.tiny {
+    -fx-font-size: 18px;
+}
+
 .heading-description {
     -fx-font-size: 20px;
 }
 
 /*Code editor*/
-.code-editor {
+.code-editor.theme-dark {
     -fx-background-color: #272D3F;
 }
 
-.code-editor .selection {
+.code-editor.theme-dark .text {
+    -fx-fill: #eee;
+}
+
+.code-editor.theme-dark .caret {
+    -fx-stroke: white;
+}
+
+.code-editor.theme-dark .selection {
     -fx-fill: #323B53;
 }
 
-.paragraph-box:has-caret {
+.code-editor.theme-dark .paragraph-box:has-caret {
     -fx-background-color: #293247;
 }
 
+.code-editor.theme-dark .lineno {
+    -fx-background-color: #1C202D;
+}
 
-.syntax-keyword {
+.code-editor.theme-dark .syntax-keyword {
     -fx-font-weight: bold;
 	-fx-fill: #FF76E1;
 }
 
-.syntax-symbol {
+.code-editor.theme-dark .syntax-symbol {
     -fx-fill: #939393;
 }
 
-.syntax-control {
+.code-editor.theme-dark .syntax-control {
     -fx-font-weight: bold;
     -fx-fill: #FFBB56;
 }
 
-.syntax-function {
+.code-editor.theme-dark .syntax-function {
     -fx-fill: #B6CAFF;
 }
 
-.syntax-comment {
+.code-editor.theme-dark .syntax-comment {
     -fx-fill: #595959;
 }
 
-.syntax-string {
+.code-editor.theme-dark .syntax-string {
     -fx-fill: #61EA90;
 }
 
-.syntax-digit {
+.code-editor.theme-dark .syntax-digit {
     -fx-fill: #52C1FF;
 }
 
+.code-editor.theme-light {
+    -fx-background-color: #DEE3F1;
+}
+
+.code-editor.theme-light .text {
+    -fx-fill: #1D1F26;
+}
+
+.code-editor.theme-light .selection {
+    -fx-fill: #DAE1F3;
+}
+
+.code-editor.theme-light .paragraph-box:has-caret {
+    -fx-background-color: #EDF2FF;
+}
+
+.code-editor.theme-light .syntax-keyword {
+    -fx-font-weight: bold;
+	-fx-fill: #FF76E1;
+}
+
+.code-editor.theme-light .syntax-symbol {
+    -fx-fill: #3F3F3F;
+}
+
+.code-editor.theme-light .syntax-control {
+    -fx-font-weight: bold;
+    -fx-fill: #BC7409;
+}
+
+.code-editor.theme-light .syntax-function {
+    -fx-fill: #3E66D0;
+}
+
+.code-editor.theme-light .syntax-comment {
+    -fx-fill: #595959;
+}
+
+.code-editor.theme-light .syntax-string {
+    -fx-fill: #10A543;
+}
+
+.code-editor.theme-light .syntax-digit {
+    -fx-fill: #1494DC;
+}
+
+.code-editor.theme-light .lineno {
+    -fx-background-color: #BEE8FF;
+}
+
 .lineno {
-    -fx-pref-width: 50px;
+    -fx-pref-width: 40px;
     -fx-font-size: 16px;
-    -fx-background-color: #1C202D;
 }
 
 .code-editor .text {
     -fx-font-family: "JetBrains Mono", monospace !important;
     -fx-font-weight: 500;
 }
-.caret {
-    -fx-stroke: white;
+
+.terminal-error, .failed .text, .failed .icon {
+    -fx-fill: #fc323f;
 }
 
-.terminal-error {
-    -fx-fill: #fc323f;
+.scroll-pane {
+    -fx-stroke: transparent;
+}
+
+.input-field {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 10px;
+    -fx-font-size: 18px;
+    -fx-padding: 15px 20px;
+    -fx-text-fill: #eee;
+    -fx-font-family: "Montserrat";
+  -fx-mark-color: #eee;
+}
+
+.input-field .context-menu {
+  -fx-background-color: #381A90;
+}
+
+.input-field .menu-item:focused {
+  -fx-background-color: #FF3D23;
 }

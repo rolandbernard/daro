@@ -1,15 +1,17 @@
 package daro.game.ui;
 
 import daro.game.main.Game;
+import daro.game.io.PathHandler;
 import daro.game.pages.CoursePage;
 import daro.game.pages.Page;
 import daro.game.pages.PlaygroundPage;
+import daro.game.pages.SettingsPage;
 import daro.game.views.MenuView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import jdk.jfr.EventSettings;
 
 import java.util.LinkedHashMap;
 
@@ -28,7 +30,7 @@ public class Navigation extends VBox {
     public Navigation(Page defaultPage) {
         this.setPrefHeight(Game.HEIGHT);
         this.setPrefWidth(WIDTH);
-        this.setStyle("-fx-background-color: #1A0A47");
+        this.setStyle("-fx-background-color: " + Game.colorTheme.get("darkBackground"));
         this.setAlignment(Pos.TOP_CENTER);
         this.setPadding(new Insets(80, 30, 80, 30));
         this.setSpacing(40);
@@ -41,7 +43,7 @@ public class Navigation extends VBox {
      * @return imageview containing the logo
      */
     private ImageView getLogo() {
-        ImageView logo = new ImageView(new Image("game/img/logo.png"));
+        ImageView logo = new ImageView(PathHandler.getImage("logo.png"));
         logo.setFitHeight(40);
         logo.setFitWidth(104);
         logo.setPreserveRatio(true);
@@ -56,21 +58,19 @@ public class Navigation extends VBox {
      */
     private VBox getNavigation(Page defaultPage) {
         navItems = new LinkedHashMap<>();
-        navItems.put(
-            new NavigationItem("\ue021", "Course", isDefault(CoursePage.class, defaultPage)),
-            getPage(CoursePage.class, defaultPage)
-        );
-        navItems.put(
-            new NavigationItem("\uea26", "Playground", isDefault(PlaygroundPage.class, defaultPage)),
-            getPage(PlaygroundPage.class, defaultPage)
-        );
+        addNavItem("\ue021", "Course", defaultPage, CoursePage.class);
+        addNavItem("\uea26", "Playground", defaultPage, PlaygroundPage.class);
+        addNavItem("\ue8b8", "Settings", defaultPage, SettingsPage.class);
         navItems.put(new NavigationItem("\ue9ba", "Exit", false), null);
         linkNavLinks();
-
         VBox navigation = new VBox();
         navigation.getChildren().addAll(navItems.keySet());
         navigation.setSpacing(5);
         return navigation;
+    }
+    private void addNavItem(String icon, String label, Page defaultPage, Class<? extends Page> pageClass) {
+        NavigationItem item = new NavigationItem(icon, label, isDefault(pageClass, defaultPage));
+        navItems.put(item, getPage(pageClass, defaultPage));
     }
 
     /**
@@ -80,7 +80,7 @@ public class Navigation extends VBox {
      * @param defaultPage the default page of the navigation
      * @return boolean if the current page is a default page
      */
-    private boolean isDefault(Class<?> currentPage, Page defaultPage) {
+    private boolean isDefault(Class<? extends Page> currentPage, Page defaultPage) {
         return currentPage.equals(defaultPage.getClass());
     }
 
@@ -92,10 +92,11 @@ public class Navigation extends VBox {
      * @param defaultPage the defaultpage for the navigation
      * @return a page
      */
-    private Page getPage(Class<?> currentPage, Page defaultPage) {
+    private Page getPage(Class<? extends Page> currentPage, Page defaultPage) {
         try {
-            return isDefault(currentPage, defaultPage) ? defaultPage
-                : (Page)currentPage.getDeclaredConstructor().newInstance();
+            return isDefault(currentPage, defaultPage)
+                    ? defaultPage
+                    : currentPage.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

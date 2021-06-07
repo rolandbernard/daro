@@ -17,7 +17,7 @@ public abstract class Page extends VBox {
      */
     public Page() {
         this.setPadding(new Insets(100, H_PADDING, 80, H_PADDING));
-        this.setStyle("-fx-background-color: #200D57");
+        this.setStyle("-fx-background-color: " + Game.colorTheme.get("background"));
         this.setSpacing(60);
         this.setPrefWidth(WIDTH);
         this.setMinHeight(Game.HEIGHT);

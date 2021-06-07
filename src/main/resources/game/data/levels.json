@@ -15,7 +15,7 @@
               "id": 1,
               "source": "a",
               "expected": "10",
-              "type": "EQUALS",
+              "type": "EQUALS"
             }
           ]
         },
@@ -38,7 +38,7 @@
               "type": "EQUALS"
             },
             {
-              "id": 2,
+              "id": 3,
               "source": "c",
               "expected": "15",
               "type": "EQUALS"
@@ -52,6 +52,11 @@
       "name": "If and else",
       "description_short": "Basic control structures",
       "levels": [
+        {
+          "id": 1,
+          "name": "testname",
+          "description": "Assign to a variable 'c', the sum of 'a' and 'b'"
+        }
       ]
     },
     {
