@@ -12,11 +12,18 @@ import daro.lang.values.DaroTypeFunction;
 import daro.lang.values.DaroTypeNativePackage;
 
 import java.math.BigInteger;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NativeTest {
     private Interpreter interpreter;
+
+    public static class DummyClass {
+        public static int test1;
+        public int test2;
+        public static final int test3 = 42;
+    }
 
     @BeforeEach
     void initializeInterpreter() {
@@ -83,5 +90,67 @@ public class NativeTest {
     void additionalClassesCanBeLoaded() {
         interpreter.execute("x = java.lang.ClassLoader.getSystemClassLoader();");
         assertEquals(new DaroNativeClass(Parser.class), interpreter.execute("x.loadClass(\"daro.lang.parser.Parser\")"));
+    }
+
+    @Test
+    void accessNestedClasses() {
+        interpreter.execute("x = java.util.Map");
+        assertEquals(new DaroNativeClass(Map.Entry.class), interpreter.execute("x.Entry"));
+    }
+
+    @Test
+    void writingToStaticFields() {
+        interpreter.execute("x = daro.lang.interpreter.NativeTest.DummyClass");
+        interpreter.execute("x.test1 = 42");
+        assertEquals(new DaroInteger(BigInteger.valueOf(42)), interpreter.execute("x.test1"));
+    }
+
+    @Test
+    void writingToInstanceFields() {
+        interpreter.execute("x = new daro.lang.interpreter.NativeTest.DummyClass");
+        interpreter.execute("x.test2 = 42");
+        assertEquals(new DaroInteger(BigInteger.valueOf(42)), interpreter.execute("x.test1"));
+    }
+
+    @Test
+    void cantWriteStaticallyToInstanceFields() {
+        interpreter.execute("x = daro.lang.interpreter.NativeTest.DummyClass");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x.test2 = 42");
+        });
+    }
+
+    @Test
+    void cantWriteToFinalFields() {
+        interpreter.execute("x = daro.lang.interpreter.NativeTest.DummyClass");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x.test3 = 42");
+        });
+    }
+
+    @Test
+    void cantWriteToMethods() {
+        interpreter.execute("x = new java.util.HashMap");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x.put = fn () { }");
+        });
+    }
+
+    @Test
+    void toIntCast() {
+        interpreter.execute("x = new java.lang.Integer { 42 }");
+        assertEquals(new DaroNativeObject(42), interpreter.execute("x"));
+    }
+
+    @Test
+    void toLongCast() {
+        interpreter.execute("x = new java.lang.Long { 42 }");
+        assertEquals(new DaroNativeObject(42L), interpreter.execute("x"));
+    }
+
+    @Test
+    void toCharCast() {
+        interpreter.execute("x = new java.lang.Character { 'a' }");
+        assertEquals(new DaroNativeObject('a'), interpreter.execute("x"));
     }
 }
