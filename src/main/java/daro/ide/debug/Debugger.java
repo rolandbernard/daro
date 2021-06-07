@@ -30,7 +30,7 @@ public class Debugger implements ExecutionObserver {
     private boolean breakNextNode;
     private boolean breakNextLine;
     private boolean ignoreCalls;
-    private boolean waitForCall;
+    private int waitForCall;
     private boolean error;
     private AstNode waitFor;
 
@@ -63,7 +63,7 @@ public class Debugger implements ExecutionObserver {
         breakNextNode = false;
         breakNextLine = false;
         ignoreCalls = false;
-        waitForCall = false;
+        waitForCall = 0;
         waitFor = null;
         lastFile = null;
         lastLine = 0;
@@ -77,7 +77,7 @@ public class Debugger implements ExecutionObserver {
         breakNextNode = false;
         breakNextLine = false;
         ignoreCalls = false;
-        waitForCall = false;
+        waitForCall = 0;
         waitFor = null;
         notify();
     }
@@ -89,7 +89,7 @@ public class Debugger implements ExecutionObserver {
         breakNextNode = true;
         breakNextLine = false;
         ignoreCalls = false;
-        waitForCall = false;
+        waitForCall = 0;
         waitFor = null;
         notify();
     }
@@ -102,7 +102,7 @@ public class Debugger implements ExecutionObserver {
         breakNextNode = false;
         breakNextLine = true;
         ignoreCalls = true;
-        waitForCall = false;
+        waitForCall = 0;
         waitFor = null;
         notify();
     }
@@ -115,7 +115,7 @@ public class Debugger implements ExecutionObserver {
         breakNextNode = false;
         breakNextLine = true;
         ignoreCalls = false;
-        waitForCall = false;
+        waitForCall = 0;
         waitFor = null;
         notify();
     }
@@ -128,7 +128,7 @@ public class Debugger implements ExecutionObserver {
         breakNextNode = false;
         breakNextLine = true;
         ignoreCalls = false;
-        waitForCall = true;
+        waitForCall = 1;
         waitFor = null;
         notify();
     }
@@ -153,27 +153,47 @@ public class Debugger implements ExecutionObserver {
     }
 
     /**
+     * 
+     * @param node
+     * @param context
+     * @param before
+     */
+    private void testForNodeBreak(AstNode node, ExecutionContext context, boolean before) {
+        Path file = node.getPosition().getFile();
+        int line = node.getPosition().getLine();
+        if (
+            (breakNextNode && lastNode != node)
+            || (
+                before && (lastFile != file || lastLine != line || lastNode == node)
+                && (lineBreakpoints.getOrDefault(file, Set.of()).contains(line - 1))
+            )
+            || (
+                (lastFile != file || lastLine != line)
+                && (waitForCall == 0 && waitFor == null && breakNextLine)
+            )
+        ) {
+            lastFile = file;
+            lastLine = line;
+            lastNode = node;
+            breakFor(node, context);
+        }
+    }
+
+    /**
      * This method is run before every node execution or localization.
      *
      * @param node    The node that is about to be executed
      * @param context The context in which it is to be executed
      */
     private void beforeNode(AstNode node, ExecutionContext context) {
-        Path file = node.getPosition().getFile();
-        int line = node.getPosition().getLine();
-        if (breakNextNode || lastFile != file || lastLine != line || lastNode == node) {
-            if (
-                breakNextNode || lineBreakpoints.getOrDefault(file, Set.of()).contains(line - 1)
-                    || (!waitForCall && waitFor == null && breakNextLine)
-            ) {
-                lastFile = file;
-                lastLine = line;
-                lastNode = node;
-                breakFor(node, context);
+        testForNodeBreak(node, context, true);
+        if (node instanceof AstCall) {
+            if (ignoreCalls) {
+                waitFor = node;
             }
-        }
-        if (ignoreCalls && node instanceof AstCall) {
-            waitFor = node;
+            if (waitForCall > 0) {
+                waitForCall++;
+            }
         }
     }
 
@@ -187,9 +207,10 @@ public class Debugger implements ExecutionObserver {
         if (waitFor == node) {
             waitFor = null;
         }
-        if (waitForCall && node instanceof AstCall) {
-            waitForCall = false;
+        if (waitForCall > 0 && node instanceof AstCall) {
+            waitForCall--;
         }
+        testForNodeBreak(node, context, false);
     }
 
     /**

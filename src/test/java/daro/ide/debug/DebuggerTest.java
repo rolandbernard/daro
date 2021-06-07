@@ -252,7 +252,23 @@ public class DebuggerTest implements DebugController {
         synchronized (this) {
             wait();
         }
-        assertEquals(new Position(24, 33, program), debugLocation);
+        assertEquals(new Position(17, 23, program), debugLocation);
+    }
+
+    @Test
+    void debuggerStepOutReturnsFromProgram() throws InterruptedException, ExecutionException {
+        String program = "x = 5\ny = 4\nz = x + y\n";
+        HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
+        breakpoints.put(null, Set.of(1));
+        debugger.setBreakpoints(breakpoints);
+        Future<DaroObject> future = executor.submit(() -> {
+            return interpreter.execute(program, observers);
+        });
+        synchronized (this) {
+            wait();
+        }
+        debugger.stepOut();
+        assertEquals(new DaroInteger(BigInteger.valueOf(9)), future.get());
     }
 
     @Test
