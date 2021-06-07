@@ -154,9 +154,12 @@ public class Debugger implements ExecutionObserver {
     }
 
     /**
-     * @param node
-     * @param context
-     * @param before
+     * Test if the debugger should break given the current node, context and whether
+     * we are before or after execution.
+     *
+     * @param node    The node that is currently being executed
+     * @param context The context it is being executed in
+     * @param before  true if the node has not yet been executed, false otherwise
      */
     private void testForNodeBreak(AstNode node, ExecutionContext context, boolean before) {
         Path file = node.getPosition().getFile();

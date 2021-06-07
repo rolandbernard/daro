@@ -35,7 +35,7 @@ public class ValidationResult {
     /**
      * Returns the name of the validation: e.g. Test n.1
      * 
-     * @return
+     * @return TODO TOFIX
      */
     public String getName() {
         return "Test n." + id;

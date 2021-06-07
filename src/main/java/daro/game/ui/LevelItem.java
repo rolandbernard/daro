@@ -20,8 +20,7 @@ public class LevelItem extends VBox {
      * An overview item, containing basic information about the level. When clicked
      * it changes the scene to the LevelView
      * 
-     * @param parentId TODO TOFIX
-     * @param level    the level displayed
+     * @param level the level displayed
      */
     public LevelItem(Level level) {
         this.level = level;

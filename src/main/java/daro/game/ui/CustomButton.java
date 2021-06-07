@@ -11,10 +11,11 @@ public class CustomButton extends HBox {
     /**
      * Creates a custom button with an icon in orange
      *
-     * @param icon   icon string e.g. \ue037 
-     * @param text   text for the button
-     * @param width  width of the button
-     * @param height height of the button
+     * @param icon    icon string e.g. \ue037 
+     * @param text    text for the button
+     * @param width   width of the button
+     * @param height  height of the button
+     * @param rounded TODO TOFIX
      */
     public CustomButton(String icon, String text, double width, double height, boolean rounded) {
         this(icon, text, width, height, rounded, Game.colorTheme.get("accent"));
@@ -23,11 +24,12 @@ public class CustomButton extends HBox {
     /**
      * Creates a custom button with an icon
      *
-     * @param icon   icon string e.g. \ue037 
-     * @param text   text for the button
-     * @param width  width of the button
-     * @param height height of the button
-     * @param color  custom color
+     * @param icon    icon string e.g. \ue037 
+     * @param text    text for the button
+     * @param width   width of the button
+     * @param height  height of the button
+     * @param rounded TODO TOFIX
+     * @param color   custom color
      */
     public CustomButton(String icon, String text, double width, double height, boolean rounded, String color) {
         this.setPrefWidth(width);

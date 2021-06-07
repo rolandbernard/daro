@@ -171,6 +171,7 @@ public abstract class UserData {
      *
      * @param filename Playground filename with .daro
      * @return a file object
+     * @throws IOException TODO TOFIX
      */
     public static File getPlaygroundFile(String filename) throws IOException {
         return new File(PLAYGROUNDS_PATH + "/" + filename);
