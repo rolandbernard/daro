@@ -2,6 +2,7 @@ package daro.game.ui;
 
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
@@ -17,7 +18,7 @@ public class Interaction {
     public static void translateUp(Node n) {
         TranslateTransition transition = new TranslateTransition();
         transition.setDuration(DURATION);
-        transition.setByY(-10);
+        transition.setByY(-5);
         transition.setNode(n);
         transition.setAutoReverse(true);
         transition.play();
@@ -64,5 +65,15 @@ public class Interaction {
         transition.setNode(n);
         transition.play();
 
+    }
+
+    public static void setClickable(Node n, boolean moveUp) {
+        n.setOnMousePressed(e -> Interaction.scaleDown(n));
+        n.setOnMouseReleased(e -> Interaction.scaleBack(n));
+        if(moveUp) {
+            n.setOnMouseEntered(e -> Interaction.translateUp(n));
+            n.setOnMouseExited(e -> Interaction.translateBack(n));
+        }
+        n.setCursor(Cursor.HAND);
     }
 }

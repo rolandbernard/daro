@@ -34,13 +34,9 @@ public class LevelGroupItem extends VBox {
                     "-fx-background-color: #381A90;"
         );
         this.setPadding(new Insets(40, H_PADDING, 30, H_PADDING));
-        this.setCursor(Cursor.HAND);
         this.getChildren().addAll(getHeading(), getCompleted());
         this.setOnMouseClicked(event -> MenuView.setContent(new LevelGroupPage(levelGroup)));
-        this.setOnMousePressed(e -> Interaction.scaleDown(this));
-        this.setOnMouseReleased(e -> Interaction.scaleBack(this));
-        this.setOnMouseEntered(e -> Interaction.translateUp(this));
-        this.setOnMouseExited(e -> Interaction.translateBack(this));
+        Interaction.setClickable(this, true);
     }
 
     /**

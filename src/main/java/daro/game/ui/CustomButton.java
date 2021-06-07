@@ -41,10 +41,8 @@ public class CustomButton extends HBox {
             this.setStyle(getStyle() + "; -fx-background-radius: 25px;");
         }
         this.setAlignment(Pos.CENTER);
-        this.setCursor(Cursor.HAND);
         this.setSpacing(10);
-        this.setOnMousePressed(e -> Interaction.scaleDown(this));
-        this.setOnMouseReleased(e -> Interaction.scaleBack(this));
+        Interaction.setClickable(this, false);
         this.getChildren().addAll(generateIcon(icon), generateText(text));
     }
 

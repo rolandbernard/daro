@@ -24,7 +24,6 @@ public class LevelItem extends VBox {
      */
     public LevelItem(Level level) {
         this.level = level;
-        this.setCursor(Cursor.HAND);
         this.setWidth(Page.INNER_WIDTH);
         this.setMinHeight(200);
         this.setStyle(
@@ -34,10 +33,7 @@ public class LevelItem extends VBox {
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
         this.setOnMouseClicked(event -> this.getScene().setRoot(new LevelView(level)));
-        this.setOnMousePressed(e -> Interaction.scaleDown(this));
-        this.setOnMouseReleased(e -> Interaction.scaleBack(this));
-        this.setOnMouseEntered(e -> Interaction.translateUp(this));
-        this.setOnMouseExited(e -> Interaction.translateBack(this));
+        Interaction.setClickable(this, true);
     }
 
 

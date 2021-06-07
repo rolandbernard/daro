@@ -30,11 +30,9 @@ public class NavigationItem extends HBox {
         this.setAlignment(Pos.CENTER_LEFT);
         this.setSpacing(20);
         this.setPrefWidth(240);
-        this.setCursor(Cursor.HAND);
         this.getChildren().addAll(iconText, labelText);
         this.getStyleClass().add("nav-item");
-        this.setOnMousePressed(e -> Interaction.scaleDown(this));
-        this.setOnMouseReleased(e -> Interaction.scaleBack(this));
+        Interaction.setClickable(this, false);
         if (isDefault) {
             this.getStyleClass().add("active");
         }
