@@ -39,7 +39,7 @@ public class Game extends Application {
         //generate start page
         MenuView root = new MenuView(new CoursePage());
         Scene scene = new Scene(root, WIDTH, HEIGHT);
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setFullScreen(true);
         stage.getIcons().add(PathHandler.getImage("icon.png"));
 
         // load CSS

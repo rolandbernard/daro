@@ -26,7 +26,7 @@ public class SelectField<T> extends InputField {
         selectField = new ChoiceBox<>(FXCollections.observableArrayList(choices.values()));
         this.choices = choices;
         selectField.getStyleClass().add("input-field");
-        if(choices != null && choices.size() > 0) {
+        if(choices.size() > 0) {
             selectField.setValue(value == null ? choices.get(choices.keySet().toArray()[0]) : choices.get(value));
         }
         selectField.setPrefWidth(Page.INNER_WIDTH);

@@ -20,6 +20,7 @@ public class Heading extends VBox {
 
         Text descriptionText = new Text(description);
         descriptionText.getStyleClass().addAll("text", "heading-description");
+        this.setFillWidth(true);
         this.getChildren().addAll(headingText, descriptionText);
         this.setSpacing(20);
     }

@@ -10,10 +10,10 @@ public class Container extends ScrollPane {
      * A scrollable container used as a container for pages
      */
     public Container() {
-        this.setHeight(Game.HEIGHT);
-        this.setPrefWidth(Game.WIDTH - Navigation.WIDTH);
         this.setHbarPolicy(ScrollBarPolicy.NEVER);
-        this.setStyle("-fx-background-color: #200D57");
         this.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        this.setFitToWidth(true);
+        this.setFitToHeight(true);
+        this.setStyle("-fx-background-color: " + Game.colorTheme.get("background"));
     }
 }

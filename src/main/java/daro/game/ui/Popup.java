@@ -1,38 +1,41 @@
 package daro.game.ui;
 
 
+import daro.game.main.Game;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.StackPane;
 
 public class Popup extends StackPane {
-    private ScrollPane content;
+    private ScrollPane wrapper;
+    private StackPane content;
     public static final double POPUP_WIDTH = 640;
 
     public Popup() {
-        init();
-    }
-
-    public Popup(Node content) {
-        init();
-        updateContent(content);
-    }
-
-    private void init() {
+        content = new StackPane();
+        content.setAlignment(Pos.CENTER);
+        content.setPrefHeight(Game.HEIGHT);
+        wrapper = new ScrollPane(content);
+        wrapper.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        wrapper.setMaxWidth(POPUP_WIDTH);
+        wrapper.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        wrapper.setStyle("-fx-background-color: transparent");
         this.setStyle("-fx-background-color: rgba(0,0,0,0.5)");
         this.setVisible(false);
         this.setAlignment(Pos.CENTER);
-        content = new ScrollPane();
-        content.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        content.setMaxHeight(400);
-        content.setMaxWidth(POPUP_WIDTH);
-        content.setStyle("-fx-background-color: #2b2e3a; -fx-background-radius: 25px;");
-        this.getChildren().add(content);
+        this.getChildren().add(wrapper);
+    }
+
+    public Popup(Node content) {
+        this();
+        updateContent(content);
     }
 
     public void updateContent(Node content) {
-        this.content.setContent(content);
+        this.content.getChildren().add(content);
     }
 
     public void open() {

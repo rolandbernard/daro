@@ -35,7 +35,8 @@ public class Terminal extends ScrollPane {
      * @param height height of the Terminal
      */
     public Terminal(double width, double height) {
-        this.setPrefHeight(height);
+        this.setMinHeight(height);
+        this.setFitToHeight(true);
         this.setPrefWidth(width);
         init();
     }
@@ -69,22 +70,20 @@ public class Terminal extends ScrollPane {
      */
     public void update(String code) {
         Text status = new Text();
-        this.currentString = new StringBuffer();
+        currentString = new StringBuffer("\n\n");
         status.setWrappingWidth(this.getPrefWidth() - 40);
         try {
             Interpreter interpreter = new Interpreter(stream);
             interpreter.execute(code);
-            status.setText("\n\nProgram terminated.");
+            status.setText("\n\nProgram terminated.\n");
         } catch (Exception e) {
-            status.setText("\n\nProgram terminated with errors:\n" + e.getMessage());
+            status.setText("\n\nProgram terminated with errors:\n" + e.getMessage() + "\n");
             status.getStyleClass().add("terminal-error");
         }
         status.getStyleClass().add("monospace");
-        currentString.append("\n\n\n");
         Text text = new Text(currentString.toString());
         text.getStyleClass().addAll("monospace");
         text.setWrappingWidth(this.getPrefWidth() - 40);
-        currentString = new StringBuffer();
         textContent.getChildren().addAll(text, status);
     }
 }
