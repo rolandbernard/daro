@@ -130,11 +130,11 @@ public class NativeScope implements Scope {
                 return 0;
             } else if (expected.isArray()) {
                 Class<?> elementType = expected.getComponentType();
-                Object result = Array.newInstance(elementType, array.getLength());
+                int loss = 0;
                 for (int i = 0; i < array.getLength(); i++) {
-                    Array.set(result, i, tryToWrap(array.getValueAt(i)));
+                    loss += getCastingLoss(array.getValueAt(i), elementType);
                 }
-                return 0;
+                return loss;
             }
         } else if (object instanceof DaroBoolean) {
             DaroBoolean bool = (DaroBoolean)object;
@@ -210,7 +210,7 @@ public class NativeScope implements Scope {
                 Class<?> elementType = expected.getComponentType();
                 Object result = Array.newInstance(elementType, array.getLength());
                 for (int i = 0; i < array.getLength(); i++) {
-                    Array.set(result, i, tryToWrap(array.getValueAt(i)));
+                    Array.set(result, i, tryToCast(array.getValueAt(i), elementType));
                 }
                 return result;
             }
@@ -352,29 +352,35 @@ public class NativeScope implements Scope {
     public DaroObject getVariableValue(String name) {
         if (methods.containsKey(name)) {
             List<Method> methodList = methods.get(name);
-            Method[] methods = methodList.toArray(new Method[methodList.size()]);
-            return new DaroLambdaFunction(params -> {
-                Method method = findClosestMatch(methods, params);
-                if (method != null) {
-                    try {
-                        Class<?>[] paramTypes = method.getParameterTypes();
-                        Object[] arguments = new Object[params.length];
-                        for (int i = 0; i < params.length; i++) {
-                            arguments[i] = tryToCast(params[i], paramTypes[i]);
+            Method[] methods = methodList.stream()
+                .filter(method -> target != null || Modifier.isStatic(method.getModifiers()))
+                .toArray(size -> new Method[size]);
+            if (methods.length == 0) {
+                return null;
+            } else {
+                return new DaroLambdaFunction(params -> {
+                    Method method = findClosestMatch(methods, params);
+                    if (method != null) {
+                        try {
+                            Class<?>[] paramTypes = method.getParameterTypes();
+                            Object[] arguments = new Object[params.length];
+                            for (int i = 0; i < params.length; i++) {
+                                arguments[i] = tryToCast(params[i], paramTypes[i]);
+                            }
+                            Object result = method.invoke(target, arguments);
+                            if (method.getReturnType().equals(Void.TYPE)) {
+                                return null;
+                            } else {
+                                return tryToWrap(result);
+                            }
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            throw new InterpreterException("Failed to execute native method");
                         }
-                        Object result = method.invoke(target, arguments);
-                        if (method.getReturnType().equals(Void.TYPE)) {
-                            return null;
-                        } else {
-                            return tryToWrap(result);
-                        }
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new InterpreterException("Failed to execute native method");
+                    } else {
+                        throw new InterpreterException("The native method does not support the given parameters");
                     }
-                } else {
-                    throw new InterpreterException("The native method does not support the given parameters");
-                }
-            });
+                });
+            }
         }
         if (fields.containsKey(name)) {
             Field field = fields.get(name);
