@@ -10,7 +10,7 @@ import java.io.StringReader;
 import java.util.Scanner;
 
 public abstract class PathHandler {
-    private static final String RESOURCE_ROOT = "/game/";
+    private static final String RESOURCE_ROOT = "/daro/game/";
 
     /**
      * Returns the Font-File as an InputStream
