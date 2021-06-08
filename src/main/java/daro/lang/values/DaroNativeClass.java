@@ -75,24 +75,21 @@ public class DaroNativeClass extends DaroType {
                 throw new InterpreterException(value.getPosition(), "Value must not be undefined");
             }
         }
-        Constructor<?>[] constructors = nativeClass.getConstructors();
-        for (Constructor<?> constructor : constructors) {
+        Constructor<?> constructor = NativeScope.findClosestMatch(nativeClass.getConstructors(), params);
+        if (constructor != null) {
             try {
                 Class<?>[] paramTypes = constructor.getParameterTypes();
-                if (paramTypes.length == params.length) {
-                    Object[] arguments = new Object[params.length];
-                    for (int i = 0; i < params.length; i++) {
-                        arguments[i] = NativeScope.tryToCast(params[i], paramTypes[i]);
-                    }
-                    return new DaroNativeObject(this, constructor.newInstance(arguments));
+                Object[] arguments = new Object[params.length];
+                for (int i = 0; i < params.length; i++) {
+                    arguments[i] = NativeScope.tryToCast(params[i], paramTypes[i]);
                 }
-            } catch (InterpreterException e) {
-                // Ignore exceptions caused by impossible casting
+                return new DaroNativeObject(this, constructor.newInstance(arguments));
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new InterpreterException("Failed to instantiate native object");
             }
+        } else {
+            throw new InterpreterException("Java class is missing an appropriate constructor");
         }
-        throw new InterpreterException("Java class is missing an appropriate constructor");
     }
 
     @Override

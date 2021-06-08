@@ -1,6 +1,7 @@
 package daro.lang.interpreter;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -283,6 +284,36 @@ public class NativeScope implements Scope {
         }
     }
 
+    public static <T extends Executable> T findClosestMatch(T[] methods, DaroObject[] params) {
+        T bestMethod = null;
+        int bestMatch = Integer.MAX_VALUE;
+        // Find the method that matches the given parameters best
+        for (T method : methods) {
+            try {
+                Class<?>[] paramTypes = method.getParameterTypes();
+                if (paramTypes.length == params.length) {
+                    int match = 0;
+                    for (int i = 0; i < params.length; i++) {
+                        int loss = getCastingLoss(params[i], paramTypes[i]);
+                        if (loss < Integer.MAX_VALUE) {
+                            match += loss;
+                        } else {
+                            match = Integer.MAX_VALUE;
+                            break;
+                        }
+                    }
+                    if (match < bestMatch) {
+                        bestMethod = method;
+                        bestMatch = match;
+                    }
+                }
+            } catch (InterpreterException e) {
+                // Ignore exceptions caused by impossible casting
+            }
+        }
+        return bestMethod;
+    }
+
     @Override
     public Scope getFinalLevel() {
         return this;
@@ -321,43 +352,18 @@ public class NativeScope implements Scope {
     public DaroObject getVariableValue(String name) {
         if (methods.containsKey(name)) {
             List<Method> methodList = methods.get(name);
+            Method[] methods = methodList.toArray(new Method[methodList.size()]);
             return new DaroLambdaFunction(params -> {
-                Method bestMethod = null;
-                int bestMatch = Integer.MAX_VALUE;
-                // Find the method that matches the given parameters best
-                for (Method method : methodList) {
+                Method method = findClosestMatch(methods, params);
+                if (method != null) {
                     try {
                         Class<?>[] paramTypes = method.getParameterTypes();
-                        if (paramTypes.length == params.length) {
-                            int match = 0;
-                            for (int i = 0; i < params.length; i++) {
-                                int loss = getCastingLoss(params[i], paramTypes[i]);
-                                if (loss < Integer.MAX_VALUE) {
-                                    match += loss;
-                                } else {
-                                    match = Integer.MAX_VALUE;
-                                    break;
-                                }
-                            }
-                            if (match < bestMatch) {
-                                bestMethod = method;
-                                bestMatch = match;
-                            }
-                        }
-                    } catch (InterpreterException e) {
-                        // Ignore exceptions caused by impossible casting
-                    }
-                }
-                if (bestMethod != null) {
-                    // Execute the best matching method
-                    try {
                         Object[] arguments = new Object[params.length];
-                        Class<?>[] paramTypes = bestMethod.getParameterTypes();
                         for (int i = 0; i < params.length; i++) {
-                            arguments[i] = NativeScope.tryToCast(params[i], paramTypes[i]);
+                            arguments[i] = tryToCast(params[i], paramTypes[i]);
                         }
-                        Object result = bestMethod.invoke(target, arguments);
-                        if (bestMethod.getReturnType().equals(Void.TYPE)) {
+                        Object result = method.invoke(target, arguments);
+                        if (method.getReturnType().equals(Void.TYPE)) {
                             return null;
                         } else {
                             return tryToWrap(result);
