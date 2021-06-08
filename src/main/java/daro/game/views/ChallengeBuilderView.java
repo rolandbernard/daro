@@ -1,5 +1,7 @@
 package daro.game.views;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import daro.game.main.Game;
 import daro.game.ui.*;
 import daro.game.validation.ValidationType;
@@ -43,12 +45,21 @@ public class ChallengeBuilderView extends View {
         heading.getStyleClass().addAll("heading", "medium", "text");
         heading.setWrappingWidth(SIDEBAR_INNER_WIDTH);
 
-        VBox container = new VBox(heading, createGeneralFields(), createTestFields());
+        tests = new VBox();
+        tests.setSpacing(10);
+        createTestFields();
+        CreateButton newTestBtn = new CreateButton("Add a test");
+        newTestBtn.setOnMouseClicked(e -> createTestFields());
+        CustomButton createBtn = new CustomButton("\ue161", "Save the challenge", 50, true);
+        createBtn.setOnMouseClicked(e -> serializeData());
+
+        VBox container = new VBox(heading, createGeneralFields(), tests, newTestBtn, createBtn);
         container.setPadding(new Insets(PADDING));
         container.setSpacing(30);
         ScrollPane pane = new ScrollPane(container);
         pane.setFitToHeight(true);
         pane.setMinWidth(SIDEBAR_WIDTH);
+        pane.setMaxWidth(SIDEBAR_WIDTH);
         pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         pane.setStyle("-fx-background-color: " + Game.colorTheme.get("backgroundDark"));
@@ -67,16 +78,18 @@ public class ChallengeBuilderView extends View {
         return createFieldGroup("General", nameField, descriptionField);
     }
 
-    private FieldGroup createTestFields() {
+    private void createTestFields() {
         Map<String, InputField> testMap = new HashMap<>();
         InputField source = new TextInput("Source");
-        InputField type = new SelectField<String>(testTypes, null, "Type");
+        InputField type = new SelectField<>(testTypes, null, "Type");
         InputField expected = new TextInput("Expected value");
         testMap.put("source", source);
         testMap.put("type", type);
         testMap.put("expected", expected);
         testFields.add(testMap);
-        return new FieldGroup("Test n." + testFields.size(), source, type, expected);
+        FieldGroup group = new FieldGroup("Test n." + testFields.size(), source, type, expected);
+        group.setMaxWidth(SIDEBAR_INNER_WIDTH);
+        tests.getChildren().add(group);
     }
 
     private static void generateTestTypesMap() {
@@ -84,5 +97,20 @@ public class ChallengeBuilderView extends View {
         Arrays.stream(ValidationType.values()).forEach(t -> testTypes.put(t.name(), t.getLabel()));
     }
 
+    private void serializeData() {
+        JsonObject object = new JsonObject();
+        object.addProperty("name", nameField.getValue().toString());
+        object.addProperty("description", descriptionField.getValue().toString());
+        object.addProperty("startCode", defaultCode.getText());
+        JsonArray tests = new JsonArray();
+        for(Map<String, InputField> map : testFields) {
+            JsonObject test = new JsonObject();
+            for (String key: map.keySet()) {
+                test.addProperty(key, map.get(key).getValue().toString());
+            }
+            tests.add(test);
+        }
+        object.add("tests", tests);
+    }
 
 }
