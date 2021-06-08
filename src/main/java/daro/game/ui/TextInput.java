@@ -21,6 +21,12 @@ public class TextInput extends InputField {
         this.getChildren().add(field);
     }
 
+    /**
+     * Returns the current value of the field
+     *
+     * @return a string containing the value
+     */
+    @Override
     public String getValue() {
         return field.getText();
     }

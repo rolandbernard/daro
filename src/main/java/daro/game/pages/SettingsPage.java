@@ -44,14 +44,7 @@ public class SettingsPage extends Page {
      * @param fields the fields in the field group
      */
     private void createFieldGroup(String name, InputField ...fields) {
-        VBox fieldList = new VBox();
-        fieldList.setFillWidth(true);
-        Text title = new Text(name);
-        title.getStyleClass().addAll("heading", "small", "text");
-        fieldList.setSpacing(20);
-        fieldList.getChildren().add(title);
-        fieldList.getChildren().addAll(fields);
-        fieldGroups.getChildren().add(fieldList);
+        fieldGroups.getChildren().add(new FieldGroup(name, fields));
     }
 
     private Map<String, JsonElement> getCurrentSettings(String key) {
