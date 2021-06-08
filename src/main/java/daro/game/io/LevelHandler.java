@@ -58,7 +58,7 @@ public abstract class LevelHandler {
     /**
      * Parses levels from a JsonArray
      *
-     * @param parentId TODO TOFIX
+     * @param parentId the id of the level group
      * @param levels   a JsonArray containing levels as JSON Objects
      * @return a list of levels
      */

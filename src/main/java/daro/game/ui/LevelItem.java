@@ -4,6 +4,7 @@ import daro.game.main.Game;
 import daro.game.main.Level;
 import daro.game.pages.Page;
 import daro.game.views.LevelView;
+import daro.game.views.View;
 import javafx.animation.Transition;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -32,7 +33,7 @@ public class LevelItem extends VBox {
         );
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
-        this.setOnMouseClicked(event -> this.getScene().setRoot(new LevelView(level)));
+        this.setOnMouseClicked(event -> View.updateView(this, new LevelView(level)));
         Interaction.setClickable(this, true);
     }
 

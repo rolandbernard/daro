@@ -2,10 +2,7 @@ package daro.game.ui;
 
 import daro.game.main.Game;
 import daro.game.io.PathHandler;
-import daro.game.pages.CoursePage;
-import daro.game.pages.Page;
-import daro.game.pages.PlaygroundPage;
-import daro.game.pages.SettingsPage;
+import daro.game.pages.*;
 import daro.game.views.MenuView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,6 +16,7 @@ public class Navigation extends VBox {
     public static final double WIDTH = 320;
 
     private LinkedHashMap<NavigationItem, Page> navItems;
+    private Page defaultPage;
 
     /**
      * <strong>UI: <em>Component</em></strong><br>
@@ -28,11 +26,12 @@ public class Navigation extends VBox {
      */
     public Navigation(Page defaultPage) {
         this.setMinWidth(WIDTH);
+        this.defaultPage = defaultPage;
         this.setStyle("-fx-background-color: " + Game.colorTheme.get("darkBackground"));
         this.setAlignment(Pos.TOP_CENTER);
         this.setPadding(new Insets(80, 30, 80, 30));
         this.setSpacing(40);
-        this.getChildren().addAll(getLogo(), getNavigation(defaultPage));
+        this.getChildren().addAll(getLogo(), getNavigation());
     }
 
     /**
@@ -51,14 +50,14 @@ public class Navigation extends VBox {
     /**
      * Generates the navigation item and links them to the pages.
      *
-     * @param defaultPage defaultPage of the navigation
      * @return a vertical box containing the links
      */
-    private VBox getNavigation(Page defaultPage) {
+    private VBox getNavigation() {
         navItems = new LinkedHashMap<>();
-        addNavItem("\ue021", "Course", defaultPage, CoursePage.class);
-        addNavItem("\uea26", "Playground", defaultPage, PlaygroundPage.class);
-        addNavItem("\ue8b8", "Settings", defaultPage, SettingsPage.class);
+        addNavItem("\ue021", "Course", CoursePage.class);
+        addNavItem("\uea26", "Playground", PlaygroundPage.class);
+        addNavItem("\uea2c", "Challenges", ChallengesPage.class);
+        addNavItem("\ue8b8", "Settings", SettingsPage.class);
         navItems.put(new NavigationItem("\ue9ba", "Exit", false), null);
         linkNavLinks();
         VBox navigation = new VBox();
@@ -67,19 +66,26 @@ public class Navigation extends VBox {
         return navigation;
     }
 
-    private void addNavItem(String icon, String label, Page defaultPage, Class<? extends Page> pageClass) {
-        NavigationItem item = new NavigationItem(icon, label, isDefault(pageClass, defaultPage));
-        navItems.put(item, getPage(pageClass, defaultPage));
+    /**
+     * Method used to create new NavItems that link to pages. Detects if the defaultPage
+     * is the page you want to create and sets it active accordingly
+     *
+     * @param icon icon of the navigation item
+     * @param label label of the navigation item
+     * @param pageClass the class of the page you want to create
+     */
+    private void addNavItem(String icon, String label, Class<? extends Page> pageClass) {
+        NavigationItem item = new NavigationItem(icon, label, isDefault(pageClass));
+        navItems.put(item, getPage(pageClass));
     }
 
     /**
      * Checks if the default page is an instance of the current page
      *
      * @param currentPage current page that you want to create
-     * @param defaultPage the default page of the navigation
      * @return boolean if the current page is a default page
      */
-    private boolean isDefault(Class<? extends Page> currentPage, Page defaultPage) {
+    private boolean isDefault(Class<? extends Page> currentPage) {
         return currentPage.equals(defaultPage.getClass());
     }
 
@@ -88,12 +94,11 @@ public class Navigation extends VBox {
      * instance of the class
      *
      * @param currentPage page that is currently created for a nav link
-     * @param defaultPage the defaultpage for the navigation
      * @return a page
      */
-    private Page getPage(Class<? extends Page> currentPage, Page defaultPage) {
+    private Page getPage(Class<? extends Page> currentPage) {
         try {
-            return isDefault(currentPage, defaultPage) ? defaultPage
+            return isDefault(currentPage) ? defaultPage
                 : currentPage.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();

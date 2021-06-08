@@ -1,6 +1,6 @@
 package daro.game.views;
 
-import daro.game.io.UserData;
+import daro.game.io.PlaygroundHandler;
 import daro.game.pages.PlaygroundPage;
 import daro.game.ui.CodeEditor;
 import daro.game.ui.CustomButton;
@@ -21,7 +21,7 @@ public class EditorView extends View {
      */
     public EditorView(File file) {
         try {
-            String code = UserData.getPlayground(file);
+            String code = PlaygroundHandler.getPlayground(file);
             double buttonHeight = 50;
             VBox sidebar = new VBox();
             Terminal terminal = new Terminal(TERMINAL_WIDTH);
@@ -31,7 +31,7 @@ public class EditorView extends View {
             CustomButton closeButton = new CustomButton("\ue9ba", "Save & Close", buttonHeight, false, "#cc2610");
             runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
             closeButton.setOnMouseClicked(e -> {
-                UserData.savePlayground(file, editor.getText());
+                PlaygroundHandler.savePlayground(file, editor.getText());
                 returnToOverview();
             });
 
@@ -42,7 +42,10 @@ public class EditorView extends View {
         }
     }
 
+    /**
+     * Sets the to menu
+     */
     private void returnToOverview() {
-        this.getScene().setRoot(new MenuView(new PlaygroundPage()));
+        View.updateView(this, new MenuView(new PlaygroundPage()));
     }
 }

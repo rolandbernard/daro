@@ -1,5 +1,6 @@
 package daro.game.pages;
 
+import daro.game.io.PlaygroundHandler;
 import daro.game.io.UserData;
 import daro.game.ui.Callout;
 import daro.game.ui.CustomButton;
@@ -7,6 +8,7 @@ import daro.game.ui.Heading;
 import daro.game.ui.TextInput;
 import daro.game.views.EditorView;
 import daro.game.views.MenuView;
+import daro.game.views.View;
 import javafx.geometry.Pos;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -34,12 +36,12 @@ public class CreatePlaygroundPage extends Page {
 
     private void createPlayground(MouseEvent mouseEvent) {
         if (validateNameField()) {
-            String error = UserData.createPlayground(nameField.getValue());
+            String error = PlaygroundHandler.createPlayground(nameField.getValue());
             if (error == null) {
                 try {
-                    this.getScene().setRoot(new EditorView(UserData.getPlaygroundFile(nameField.getValue() + ".daro")));
+                    View.updateView(this, new EditorView(PlaygroundHandler.getPlaygroundFile(nameField.getValue() + ".daro")));
                 } catch (IOException e) {
-                    this.getScene().setRoot(new MenuView(new PlaygroundPage()));
+                    View.updateView(this, new MenuView(new PlaygroundPage()));
                 }
             } else {
                 form.getChildren().add(0, callout);

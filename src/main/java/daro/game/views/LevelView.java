@@ -23,7 +23,7 @@ import java.util.List;
 public class LevelView extends View {
 
     private static final double SIDEBAR_WIDTH = 340;
-    private static final double BOX_PADDINGS = 30;
+    private static final double BOX_PADDINGS = 20;
 
     private Level level;
     private CodeEditor editor;
@@ -57,7 +57,7 @@ public class LevelView extends View {
         Terminal terminal = new Terminal(SIDEBAR_WIDTH);
         HBox backButton = createBackButton(backBtnHeight, SIDEBAR_WIDTH);
 
-        CustomButton runButton = new CustomButton("\ue037", "Run the program", buttonHeight, false);
+        CustomButton runButton = new CustomButton("\ue037", "Run in terminal", buttonHeight, false);
         CustomButton submitButton = new CustomButton("\ue86c", "Submit your result", buttonHeight, false, "#cc2610");
         runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
         submitButton.setOnMouseClicked(this::openValidationPopup);
@@ -104,7 +104,7 @@ public class LevelView extends View {
         btn.setPrefWidth(width);
         btn.setOnMouseClicked(e -> {
             save(ValidationResult.evaluate(Validation.run(editor.getText(), level.getTests())));
-            this.getScene().setRoot(new MenuView(new CoursePage()));
+            View.updateView(this, new MenuView(new CoursePage()));
         });
         btn.setCursor(Cursor.HAND);
         btn.setAlignment(Pos.CENTER_LEFT);
@@ -152,7 +152,7 @@ public class LevelView extends View {
         CustomButton mainButton = null;
         if (success) {
             Level nextLevel = LevelHandler.getNextLevel(level.getGroupId(), level.getId());
-            if(nextLevel != null) {
+            if (nextLevel != null) {
                 mainButton = new CustomButton("\ue16a", "Next Level", buttonHeight, true);
                 mainButton.setOnMouseClicked(e -> View.updateView(this, new LevelView(nextLevel)));
             }
@@ -174,7 +174,7 @@ public class LevelView extends View {
     }
 
     private void backToOverview() {
-        this.getScene().setRoot(new MenuView(new CoursePage()));
+        View.updateView(this, new MenuView(new CoursePage()));
     }
 
 }

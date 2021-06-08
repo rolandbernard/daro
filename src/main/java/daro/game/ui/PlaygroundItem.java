@@ -1,11 +1,9 @@
 package daro.game.ui;
 
-import daro.game.pages.Page;
 import daro.game.views.EditorView;
+import daro.game.views.View;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -20,13 +18,18 @@ import java.util.Date;
 
 public class PlaygroundItem extends VBox {
 
-    public static final double WIDTH = 300;
 
+    /**
+     * <strong>UI: <em>Component</em></strong><br>
+     * An overview item of a playground, containing basic information about it.
+     *
+     * @param file The file fo the playground
+     */
     public PlaygroundItem(File file) {
         Text name = new Text(file.getName().split("\\.")[0]);
         name.getStyleClass().addAll("heading", "small", "text");
         this.setPrefHeight(200);
-        this.setPrefWidth(WIDTH);
+        this.setFillWidth(true);
         this.setPadding(new Insets(40));
         this.setStyle(
             "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
@@ -34,12 +37,12 @@ public class PlaygroundItem extends VBox {
         );
         Interaction.setClickable(this, true);
         this.getChildren().addAll(name);
-        HBox createDate = getCreateDateInfo(file);
-        if (createDate != null) {
-            this.getChildren().add(createDate);
+        VBox attributes = getAttributes(file);
+        if (attributes != null) {
+            this.getChildren().add(attributes);
         }
         this.setSpacing(10);
-        this.setOnMouseClicked(e -> this.getScene().setRoot(new EditorView(file)));
+        this.setOnMouseClicked(e -> View.updateView(this, new EditorView(file)));
     }
 
     private HBox generateInfoBox(String icon, String label) {
@@ -53,17 +56,32 @@ public class PlaygroundItem extends VBox {
         return infoBox;
     }
 
-    private HBox getCreateDateInfo(File file) {
+    private VBox getAttributes(File file) {
         try {
-            BasicFileAttributes fileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-            FileTime time = fileAttributes.creationTime();
-
             String pattern = "dd.MM.yyyy";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            return generateInfoBox("\ue924", simpleDateFormat.format(new Date(time.toMillis())));
+            SimpleDateFormat format = new SimpleDateFormat(pattern);
+
+            BasicFileAttributes fileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+            FileTime createDate = fileAttributes.creationTime();
+            FileTime modifyDate = fileAttributes.lastModifiedTime();
+
+            String createDateString =  formatDate(format, createDate);
+            String modifyDateString =  formatDate(format, modifyDate);
+
+            VBox attributes = new VBox();
+            attributes.setSpacing(10);
+            HBox createDateBox = generateInfoBox("\ue924","Created: " + createDateString);
+            HBox modifyDateBox = generateInfoBox("\ue924","Last modified: " + modifyDateString);
+
+            attributes.getChildren().addAll(modifyDateBox, createDateBox);
+            return attributes;
         } catch (IOException e) {
             return null;
         }
+    }
+
+    private String formatDate(SimpleDateFormat format, FileTime time) {
+        return format.format(new Date(time.toMillis()));
     }
 
 }

@@ -12,11 +12,8 @@ public abstract class View extends HBox {
      * purpose of showing a menu)
      */
     public View() {
-        // this.setPrefWidth(Game.WIDTH);
-        // this.setPrefHeight(Game.HEIGHT);
-        // this.
         this.setFillHeight(true);
-        this.setStyle("-fx-background-color: #200D57");
+        this.setStyle("-fx-background-color: " + Game.colorTheme.get("background"));
     }
 
     /**
