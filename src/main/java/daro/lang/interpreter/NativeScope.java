@@ -284,6 +284,18 @@ public class NativeScope implements Scope {
         }
     }
 
+    /**
+     * This methods finds the {@link Executable} that best fits the given
+     * parameters. If none of the given executables fits the parameters, null will
+     * be returned.
+     *
+     * @param <T>     The concrete type of {@link Executable} (e.g. {@link Method}
+     *                or {@link Constructor})
+     * @param methods The method to select from against
+     * @param params  The parameters to check against
+     * @return The executable that best matches the given parameters, or null of
+     *         none match
+     */
     public static <T extends Executable> T findClosestMatch(T[] methods, DaroObject[] params) {
         T bestMethod = null;
         int bestMatch = Integer.MAX_VALUE;
