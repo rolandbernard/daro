@@ -16,7 +16,7 @@ public class AstSequence extends AstNode {
         this.statements = statements;
     }
 
-    public AstNode[] getStatemens() {
+    public AstNode[] getStatements() {
         return statements;
     }
 
@@ -33,7 +33,7 @@ public class AstSequence extends AstNode {
     public boolean equals(Object obj) {
         if (obj instanceof AstSequence && getClass() == obj.getClass()) {
             AstSequence node = (AstSequence)obj;
-            return Arrays.equals(statements, node.getStatemens());
+            return Arrays.equals(statements, node.getStatements());
         } else {
             return false;
         }
