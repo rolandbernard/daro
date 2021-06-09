@@ -14,7 +14,7 @@ programming language. The idea is to create simple puzzles with increasing diffi
 player to solve programming-related problems, such as finding the minimum in an array, creating sums
 etc.
 In addition to the game, the language can also be used stand-alone using the cli interface of the
-interpreter.
+interpreter or in the purpose build IDE.
 
 ## Getting Started
 
@@ -62,41 +62,91 @@ For the implementation of this project we used the following third-party librari
 * [JUnit](https://junit.org/junit5/) for the test that execute when running `mvn test`
 * [JavaFX](https://openjfx.io/) to implement the graphical user interface
 * [RichTextFX](https://github.com/FXMisc/RichTextFX) to as a base implementation for the code editor
-* [json-simple](https://code.google.com/archive/p/json-simple/) to serialize and deserialize JSON data
+* [Gson](https://github.com/google/gson) to serialize and deserialize JSON data
 
 ### Programming techniques
 
 #### Interfaces
 
+We use interfaces in multiple places. In the implementation of the programming language, we use the
+interface `daro.lang.ast.Visitor`, that is implemented by all visitors of the AST. Other interfaces
+in the interpreter are `daro.lang.interpreter.Scope` and `daro.lang.interpreter.ExecutionObserver`.
+
 #### Abstract classes
+
+Abstract classes are extensively used in the interpreter. For example `daro.lang.ast.AstNode` and
+`daro.lang.values.DaroObject`, as well as `daro.lang.interpreter.AbstractScope` are abstract
+classes. While there are a lot more abstract classes, these are the most important.
 
 #### Generics
 
+Generics are sparsely used in out program. The `daro.lang.ast.Visitor` interface is one example of a
+generic interface used in the program. An example for a generic method can be found in
+`daro.lang.interpreter.NativeScope.findClosestMatch()`.
+
 #### Collections
+
+Collections are used in many places in our application. Just one of the examples is inside
+`daro.lang.interpreter.NativeScope`. This class uses Maps and List.
 
 #### Custom exceptions
 
+We use custom exceptions for errors during parsing and execution of programs using the DaRo
+interpreter. The implementation of the exception can be found in
+`daro.lang.interpreter.DaroException`. Two subclasses of this exception exist,
+`daro.lang.interpreter.ParsingException` and `daro.lang.interpreter.InterpreterException`.
+
 #### Exception handling
+
+Exception handling is a important part of the interpreter. In
+`daro.lang.interpreter.Executor.execute()` for example we catch all exceptions and handle them based
+on their type.
 
 #### Method overriding
 
+Method overriding is used in multiple locations. For example most classes in `daro.lang.values.`
+override the default `equals()`, `hashCode()` and `toString()` methods.
+
 #### Method overloading
+
+Also method overloading is used in multiple occupations.
+`daro.lang.interpreter.Interpreter.execute()` is an example of an overloaded method.
 
 #### Lambdas
 
+Lambdas are used in many locations. An example in the interpreter can be found in
+`daro.lang.interpreter.RootScope.buildRootVariables()`. In the JavaFX applications lambdas are also
+used in multiple locations for event handlers.
+
 #### Streams
 
-#### Optionals
+Streams are used in our application mainly for short operations like filter or map. An relatively
+extensive example can be found in `daro.lang.interpreter.NativePackageScope.getCompleteMapping()`.
 
 #### File I/O
 
+File I/O is used both by the programming language, the game and the IDE. For example the programming
+language uses file i/o using `java.nio` in `daro.lang.interpreter.Executor.executeFileInScope()`.
+
 #### Serialization
+
+Serialization is used in the game to save user and level data. An example of this can be found in
+`daro.game.io.UserData.writeLevelData()`.
 
 #### Deserialization
 
+Serialization is used in the game to read user and level data. An example of this can be found in
+`daro.game.io.LevelHandler.getAllLevels()`.
+
 #### Regular expressions
 
+While regular expressions are not used for parsing the actual language, they are used in the code
+editor for syntax highlighting. This can be seen in `daro.ide.editor.CodeEditor`.
+
 #### Thread signaling
+
+We used a basic amount of thread signaling in the implementation of the debugger in
+`daro.ide.debug.Debugger`.
 
 ## Experience
 
