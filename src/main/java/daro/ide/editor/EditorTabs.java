@@ -174,8 +174,10 @@ public class EditorTabs extends TabPane {
      * displayed debug position and error.
      */
     public void resetHighlighting() {
-        for (EditorTab tab : tabs.values()) {
-            tab.resetHighlighting();
+        for (Tab tab : getTabs()) {
+            if (tab instanceof EditorTab) {
+                ((EditorTab)tab).resetHighlighting();
+            }
         }
     }
 

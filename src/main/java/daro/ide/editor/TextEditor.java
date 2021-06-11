@@ -177,15 +177,15 @@ public class TextEditor extends CodeArea {
         clearStyle(0, text.length());
         if (shownError != null) {
             int line = shownError.getPosition().getLine() - 1;
+            shownError = null;
             Label node = (Label)getParagraphGraphic(line);
             setLineGraphic(line, node);
-            shownError = null;
         }
         if (shownPosition != null) {
             int line = shownPosition.getLine() - 1;
+            shownPosition = null;
             Label node = (Label)getParagraphGraphic(line);
             setLineGraphic(line, node);
-            shownPosition = null;
         }
     }
 
