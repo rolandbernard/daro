@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public abstract class PlaygroundHandler {
     // Playgrounds
-    private static final String PLAYGROUNDS_PATH = UserData.USER_PATH + "playgrounds";
+    private static final String PLAYGROUNDS_PATH = UserData.USER_PATH + "playgrounds/";
 
     /**
      * Creates, if it not already exists, the playgrounds folder and parses the

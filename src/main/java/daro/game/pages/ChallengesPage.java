@@ -3,7 +3,9 @@ package daro.game.pages;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import daro.game.io.ChallengeHandler;
 import daro.game.io.LevelHandler;
+import daro.game.main.Challenge;
 import daro.game.ui.CreateButton;
 import daro.game.ui.Heading;
 import daro.game.views.ChallengeBuilderView;
@@ -12,6 +14,8 @@ import daro.game.views.View;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class ChallengesPage extends Page {
@@ -33,18 +37,18 @@ public class ChallengesPage extends Page {
 
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
         fileChooser.getExtensionFilters().add(extFilter);
-
         File file = fileChooser.showOpenDialog(this.getScene().getWindow());
-        try {
-            Scanner scanner = new Scanner(file);
-            scanner.useDelimiter("\\Z");
-            JsonObject element = JsonParser.parseString(scanner.next()).getAsJsonObject();
-            System.out.println(element);
-            View.updateView(this, new LevelView(LevelHandler.parseChallengeFromJsonObject(element)));
+        if(file != null) {
+            Path challenge = ChallengeHandler.importChallenge(file);
+            if(challenge != null) {
+                try {
+                    Scanner scanner = new Scanner(challenge);
+                    scanner.useDelimiter("\\Z");
+                    JsonObject element = JsonParser.parseString(scanner.next()).getAsJsonObject();
+                    View.updateView(this, new LevelView(LevelHandler.parseChallengeFromJsonObject(element)));
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
+                } catch (Exception e) { }
+            }
         }
     }
 }
