@@ -230,7 +230,7 @@ public class Position {
         } else {
             String ret = "";
             if (file != null) {
-                ret += Path.of("").toAbsolutePath().relativize(file).toString() + ":";
+                ret += file.toString() + ":";
             }
             ret += lineFromOffset(start, text) + ":" + columnFromOffset(start, text);
             if (start < end - 1) {
