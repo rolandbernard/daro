@@ -3,6 +3,7 @@ package daro.game.io;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import daro.game.main.Challenge;
 import daro.game.main.Level;
 import daro.game.main.LevelGroup;
 import daro.game.validation.Validation;
@@ -105,13 +106,9 @@ public abstract class LevelHandler {
         long parentId, JsonObject levelJson, Map<Long, JsonObject> completionMap
     ) {
         long id = levelJson.get("id").getAsLong();
-        String name = levelJson.get("name").getAsString();
-        String description = levelJson.get("description").getAsString();
-        JsonArray tests = levelJson.get("tests") != null ? levelJson.get("tests").getAsJsonArray() : null;
-        List<Validation> testsList = parseValidationsFromJson(tests);
-        String standardCode = levelJson.get("startCode") == null ? "" : levelJson.get("startCode").getAsString();
         boolean isCompleted = false;
         String currentCode = null;
+        Challenge challenge = parseChallengeFromJsonObject(levelJson);
 
         if (completionMap != null) {
             JsonObject data = completionMap.get(id);
@@ -121,8 +118,16 @@ public abstract class LevelHandler {
             }
         }
 
-        String code = currentCode == null ? standardCode : currentCode;
-        return new Level(id, name, description, isCompleted, code, testsList, parentId);
+        String code = currentCode == null ? challenge.getCode() : currentCode;
+        return new Level(id, challenge.getName(), challenge.getDescription(), isCompleted, code, challenge.getTests(), parentId);
+    }
+    public static Challenge parseChallengeFromJsonObject(JsonObject obj) {
+        String name = obj.get("name").getAsString();
+        String description = obj.get("description").getAsString();
+        JsonArray tests = obj.get("tests") != null ? obj.get("tests").getAsJsonArray() : null;
+        List<Validation> testsList = parseValidationsFromJson(tests);
+        String standardCode = obj.get("startCode") == null ? "" : obj.get("startCode").getAsString();
+        return new Challenge(name, description, standardCode, testsList);
     }
 
     /**

@@ -1,6 +1,7 @@
 package daro.game.views;
 
 import daro.game.io.LevelHandler;
+import daro.game.main.Challenge;
 import daro.game.main.Level;
 import daro.game.io.UserData;
 import daro.game.pages.CoursePage;
@@ -25,7 +26,7 @@ public class LevelView extends View {
     private static final double SIDEBAR_WIDTH = 340;
     private static final double BOX_PADDINGS = 20;
 
-    private Level level;
+    private Challenge level;
     private CodeEditor editor;
     private Popup popup;
 
@@ -35,7 +36,7 @@ public class LevelView extends View {
      *
      * @param level the level shown in the view
      */
-    public LevelView(Level level) {
+    public LevelView(Challenge level) {
         this.level = level;
         editor = new CodeEditor(level.getCode());
         HBox mainContent = new HBox(getSidebar(), editor);
@@ -113,7 +114,11 @@ public class LevelView extends View {
     }
 
     private boolean save(boolean completion) {
-        return UserData.writeLevelData(level.getGroupId(), level.getId(), completion, editor.getText());
+        if(level instanceof Level) {
+            Level l = (Level) level;
+            return UserData.writeLevelData(l.getGroupId(), l.getId(), completion, editor.getText());
+        }
+        return false;
     }
 
     private void openValidationPopup(MouseEvent mouseEvent) {
@@ -151,10 +156,13 @@ public class LevelView extends View {
         HBox buttons = new HBox();
         CustomButton mainButton = null;
         if (success) {
-            Level nextLevel = LevelHandler.getNextLevel(level.getGroupId(), level.getId());
-            if (nextLevel != null) {
-                mainButton = new CustomButton("\ue16a", "Next Level", buttonHeight, true);
-                mainButton.setOnMouseClicked(e -> View.updateView(this, new LevelView(nextLevel)));
+            if(level instanceof Level) {
+                Level l = (Level) level;
+                Level nextLevel = LevelHandler.getNextLevel(l.getGroupId(), l.getId());
+                if (nextLevel != null) {
+                    mainButton = new CustomButton("\ue16a", "Next Level", buttonHeight, true);
+                    mainButton.setOnMouseClicked(e -> View.updateView(this, new LevelView(nextLevel)));
+                }
             }
         } else {
             mainButton = new CustomButton("\ue5d5", "Try again", buttonHeight, true);

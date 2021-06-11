@@ -9,7 +9,11 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class ChallengeBuilderView extends View {
@@ -103,14 +107,33 @@ public class ChallengeBuilderView extends View {
         object.addProperty("description", descriptionField.getValue().toString());
         object.addProperty("startCode", defaultCode.getText());
         JsonArray tests = new JsonArray();
+        int i = 1;
         for(Map<String, InputField> map : testFields) {
             JsonObject test = new JsonObject();
+            test.addProperty("id", i);
+            i++;
             for (String key: map.keySet()) {
                 test.addProperty(key, map.get(key).getValue().toString());
             }
             tests.add(test);
         }
         object.add("tests", tests);
+        FileChooser fileChooser = new FileChooser();
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.setInitialFileName("challenge");
+
+        File file = fileChooser.showSaveDialog(this.getScene().getWindow());
+        try {
+            if(file.createNewFile()) {
+                FileWriter writer = new FileWriter(file);
+                writer.write(object.toString());
+                writer.flush();
+            }
+        } catch (IOException e) {
+
+        }
     }
 
 }
