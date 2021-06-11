@@ -414,7 +414,7 @@ public class Executor implements Visitor<DaroObject> {
     @Override
     public DaroObject visit(AstSequence ast) {
         DaroObject value = null;
-        for (AstNode statement : ast.getStatemens()) {
+        for (AstNode statement : ast.getStatements()) {
             value = execute(statement);
         }
         return value;
