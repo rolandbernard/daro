@@ -237,7 +237,7 @@ public class ScopeInitializer implements Visitor<Void> {
 
     @Override
     public Void visit(AstSequence ast) {
-        for (AstNode statement : ast.getStatemens()) {
+        for (AstNode statement : ast.getStatements()) {
             initialize(statement);
         }
         return null;

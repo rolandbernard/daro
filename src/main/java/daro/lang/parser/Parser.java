@@ -95,7 +95,7 @@ public class Parser {
     }
 
     /**
-     * Parse a sequence of statements optionals separated by semicolons.
+     * Parse a sequence of statements optionally separated by semicolons.
      * 
      * @return The parsed {@link AstSequence}
      */
@@ -421,7 +421,7 @@ public class Parser {
             if (closing == null) {
                 throw new ParsingException(opening.getPosition(), "Expected a closing `{` after opening `}`");
             }
-            return new AstBlock(new Position(opening.getPosition(), closing.getPosition()), sequence.getStatemens());
+            return new AstBlock(new Position(opening.getPosition(), closing.getPosition()), sequence.getStatements());
         } else {
             return null;
         }
@@ -878,8 +878,8 @@ public class Parser {
                     new Position(open.getPosition(), value.getPosition()), "Expected a closing `)` after opening `(`"
                 );
             }
-            if (value.getStatemens().length == 1) {
-                return value.getStatemens()[0];
+            if (value.getStatements().length == 1) {
+                return value.getStatements()[0];
             } else {
                 return value;
             }
@@ -1020,10 +1020,10 @@ public class Parser {
         AstNode value = firstNonNull(this::parseInitializer, this::parseSequence);
         if (value instanceof AstSequence) {
             AstSequence seq = (AstSequence)value;
-            if (seq.getStatemens().length == 0) {
+            if (seq.getStatements().length == 0) {
                 return null;
-            } else if (seq.getStatemens().length == 1) {
-                return seq.getStatemens()[0];
+            } else if (seq.getStatements().length == 1) {
+                return seq.getStatements()[0];
             } else {
                 return seq;
             }

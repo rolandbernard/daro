@@ -414,7 +414,7 @@ public class Executor implements Visitor<DaroObject> {
     @Override
     public DaroObject visit(AstSequence ast) {
         DaroObject value = null;
-        for (AstNode statement : ast.getStatemens()) {
+        for (AstNode statement : ast.getStatements()) {
             value = execute(statement);
         }
         return value;
@@ -646,7 +646,7 @@ public class Executor implements Visitor<DaroObject> {
             }
             DaroModule pack = new DaroModule(scope);
             modules.put(path.normalize(), pack);
-            AstNode program = Parser.parseSourceCode(content, path);
+            AstNode program = Parser.parseSourceCode(content, path.normalize());
             ScopeInitializer.initialize(scope, program);
             execute(context.forScope(scope), program);
         }

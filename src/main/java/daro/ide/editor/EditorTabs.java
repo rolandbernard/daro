@@ -35,7 +35,7 @@ public class EditorTabs extends TabPane {
         addTab.setClosable(false);
         addTab.getStyleClass().add("add-tab");
         addTab.setOnSelectionChanged(event -> {
-            addTab(new EditorTab(""));
+            addTab(new EditorTab("", this));
         });
         getTabs().add(addTab);
         getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -109,7 +109,7 @@ public class EditorTabs extends TabPane {
         if (tabs.containsKey(path)) {
             getSelectionModel().select(tabs.get(path));
         } else {
-            addTab(new EditorTab(path));
+            addTab(new EditorTab(path, this));
         }
     }
 
@@ -174,8 +174,10 @@ public class EditorTabs extends TabPane {
      * displayed debug position and error.
      */
     public void resetHighlighting() {
-        for (EditorTab tab : tabs.values()) {
-            tab.resetHighlighting();
+        for (Tab tab : getTabs()) {
+            if (tab instanceof EditorTab) {
+                ((EditorTab)tab).resetHighlighting();
+            }
         }
     }
 
@@ -205,5 +207,32 @@ public class EditorTabs extends TabPane {
             openFile(file);
         }
         getOpenEditor().highlightError(error);
+    }
+
+    /**
+     * Reload a tab. This should be called after a tabs associated file changes.
+     *
+     * @param tab The tab we want to reload
+     */
+    public void reopen(EditorTab tab) {
+        EditorTab newTab;
+        if (tab.getFile() != null) {
+            newTab = new EditorTab(tab.getFile(), this);
+        } else {
+            newTab = new EditorTab(tab.getEditorContent(), this);
+        }
+        getTabs().replaceAll(t -> t == tab ? newTab : t);
+        Path oldFile = null;
+        for (Entry<Path, EditorTab> t : tabs.entrySet()) {
+            if (t.getValue() == tab) {
+                oldFile = t.getKey();
+                break;
+            }
+        }
+        tabs.remove(oldFile);
+        if (tab.getFile() != null) {
+            tabs.put(tab.getFile(), tab);
+        }
+        getSelectionModel().select(newTab);
     }
 }
