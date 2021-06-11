@@ -19,6 +19,7 @@ import javafx.stage.FileChooser;
  * @author Roland Bernard
  */
 public class EditorTab extends Tab {
+    private final EditorTabs parent;
     private Path file;
     private TextEditor editor;
     private boolean unsaved;
@@ -28,7 +29,8 @@ public class EditorTab extends Tab {
      *
      * @param content The starting content of the tab
      */
-    public EditorTab(String content) {
+    public EditorTab(String content, EditorTabs parent) {
+        this.parent = parent;
         this.file = null;
         this.editor = new TextEditor(content);
         init();
@@ -40,7 +42,8 @@ public class EditorTab extends Tab {
      *
      * @param file The file for this tab
      */
-    public EditorTab(Path file) {
+    public EditorTab(Path file, EditorTabs parent) {
+        this.parent = parent;
         this.file = file;
         String content;
         try {
@@ -178,6 +181,7 @@ public class EditorTab extends Tab {
         if (selected != null) {
             file = Path.of(selected.getAbsolutePath());
             saveFile();
+            parent.reopen(this);
         }
     }
 
