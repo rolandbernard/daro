@@ -48,7 +48,7 @@ public class ScopeTreeItem extends TreeItem<String> {
         loaded = false;
         if (isExpanded()) {
             getChildren();
-            for (TreeItem<String> item : getChildren()) {
+            for (TreeItem<String> item : super.getChildren()) {
                 if (item instanceof ScopeTreeItem) {
                     ((ScopeTreeItem)item).reload();
                 } else if (item instanceof VariableTreeItem) {

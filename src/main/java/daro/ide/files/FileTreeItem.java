@@ -55,11 +55,13 @@ public class FileTreeItem extends TreeItem<String> {
      */
     public void reload(boolean recursive) {
         if (loaded && !isLeaf()) {
-            if (isExpanded()) {} else {
-                loaded = false;
+            loaded = false;
+            if (isExpanded()) {
                 getChildren();
                 if (recursive) {
-                    super.getChildren().forEach(item -> ((FileTreeItem)item).reload(true));
+                    for (TreeItem<String> item : super.getChildren()) {
+                        ((FileTreeItem)item).reload(true);
+                    }
                 }
             }
         }
