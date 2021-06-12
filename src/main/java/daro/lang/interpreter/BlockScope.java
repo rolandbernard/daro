@@ -41,43 +41,34 @@ public class BlockScope extends AbstractScope {
 
     @Override
     public VariableLocation getVariableLocation(String name) {
-        if (visited) {
-            return null;
-        } else {
-            try {
-                visited = true;
-                if (!variables.containsKey(name)) {
-                    for (Scope parent : parents) {
-                        if (parent.containsVariable(name)) {
-                            VariableLocation location = parent.getVariableLocation(name);
-                            if (location != null) {
-                                return location;
-                            }
+        return safeRecursion(() -> {
+            if (!variables.containsKey(name)) {
+                for (Scope parent : parents) {
+                    if (parent.containsVariable(name)) {
+                        // Only if this variable already exists and is writable should we use a
+                        // location in a parent scope.
+                        VariableLocation location = parent.getVariableLocation(name);
+                        if (location != null) {
+                            return location;
                         }
                     }
                 }
-                return value -> {
-                    variables.put(name, value);
-                };
-            } finally {
-                visited = false;
             }
-        }
+            return value -> {
+                variables.put(name, value);
+            };
+        }, null);
     }
 
     @Override
     public void reset() {
-        if (!visited) {
-            try {
-                visited = true;
-                parents = Arrays.copyOf(parents, baseParents);
-                for (Scope parent : parents) {
-                    parent.reset();
-                }
-                variables.clear();
-            } finally {
-                visited = false;
+        safeRecursion(() -> {
+            parents = Arrays.copyOf(parents, baseParents);
+            for (Scope parent : parents) {
+                parent.reset();
             }
-        }
+            variables.clear();
+            return null;
+        }, null);
     }
 }

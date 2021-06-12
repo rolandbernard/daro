@@ -27,43 +27,37 @@ public class ConstantScope extends AbstractScope {
 
     @Override
     public VariableLocation getVariableLocation(String name) {
-        if (!visited && !variables.containsKey(name)) {
-            try {
-                visited = true;
+        return safeRecursion(() -> {
+            // We should not return a location that is not visible (i.e. shadowed by an existing variable)
+            if (!variables.containsKey(name)) {
                 for (Scope parent : parents) {
                     if (parent.containsVariable(name)) {
-                        VariableLocation location = parent.getVariableLocation(name);
-                        if (location != null) {
-                            return location;
-                        }
+                        // If the variable exists here, it will shadow all later parents
+                        // (i.e. return even if null)
+                        return parent.getVariableLocation(name);
                     }
                 }
+                // This scope does not contain the variable, try to get a location in any parent
                 for (Scope parent : parents) {
                     VariableLocation location = parent.getVariableLocation(name);
                     if (location != null) {
                         return location;
                     }
                 }
-            } finally {
-                visited = false;
             }
-        }
-        return null;
+            return null;
+        }, null);
     }
 
     @Override
     public void reset() {
-        if (!visited) {
-            try {
-                visited = true;
-                parents = Arrays.copyOf(parents, baseParents);
-                for (Scope parent : parents) {
-                    parent.reset();
-                }
-            } finally {
-                visited = false;
+        safeRecursion(() -> {
+            parents = Arrays.copyOf(parents, baseParents);
+            for (Scope parent : parents) {
+                parent.reset();
             }
-        }
+            return null;
+        }, null);
     }
 
     @Override
