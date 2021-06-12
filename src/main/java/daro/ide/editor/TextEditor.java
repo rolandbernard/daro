@@ -1,6 +1,7 @@
 package daro.ide.editor;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +13,10 @@ import java.util.stream.Collectors;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
 
+import daro.lang.ast.AstNode;
 import daro.lang.interpreter.DaroException;
+import daro.lang.parser.Parser;
+import daro.lang.parser.ParsingException;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
@@ -263,11 +267,107 @@ public class TextEditor extends CodeArea {
     }
 
     /**
+     * Reset all of the line icons for breakpoints.
+     *
+     * @param newBreakpoints The new breakpoints
+     */
+    private void replaceBreakpoints(Set<Integer> newBreakpoints) {
+        Set<Integer> oldBreakpoints = breakpoints;
+        breakpoints = newBreakpoints;
+        Platform.runLater(() -> {
+            for (int line : oldBreakpoints) {
+                shownError = null;
+                Label node = (Label)getParagraphGraphic(line);
+                setLineGraphic(line, node);
+            }
+            for (int line : newBreakpoints) {
+                shownError = null;
+                Label node = (Label)getParagraphGraphic(line);
+                setLineGraphic(line, node);
+            }
+        });
+    }
+
+    /**
      * Get all breakpoints currently defined in the editor.
      *
      * @return The set breakpoints
      */
     public Set<Integer> getBreakpoints() {
+        replaceBreakpoints(getAstBreakpoints());
         return breakpoints;
+    }
+
+    /**
+     * Get the distance from the node to the given position.
+     *
+     * @param node     The node to test
+     * @param position The position to test with
+     * @return The distance between node and position
+     */
+    private long getNodeDistance(AstNode node, int position) {
+        if (node != null) {
+            int start = node.getPosition().getStart();
+            int end = node.getPosition().getEnd();
+            if (start >= position) {
+                return start - position;
+            } else if (start <= position && end > position) {
+                return (1L << 32) * (position - start);
+            } else {
+                return Long.MAX_VALUE;
+            }
+        } else {
+            return Long.MAX_VALUE;
+        }
+    }
+
+    /**
+     * Get the AST node that most closely matches the given position.
+     *
+     * @param root     The node to start from
+     * @param position The position to search for
+     * @return The closes match {@link AstNode}
+     */
+    private AstNode getClosestNode(AstNode root, int position) {
+        if (root != null) {
+            AstNode[] children = root.getChildren();
+            AstNode bestChild = root;
+            long bestDistance = getNodeDistance(root, position);
+            for (AstNode child : children) {
+                AstNode node = getClosestNode(child, position);
+                long distance = getNodeDistance(node, position);
+                if (distance < bestDistance) {
+                    bestChild = node;
+                    bestDistance = distance;
+                }
+            }
+            return bestChild;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get all the breakpoints but adjusted to match the AST better.
+     *
+     * @return The adjusted breakpoints
+     */
+    public Set<Integer> getAstBreakpoints() {
+        try {
+            AstNode tree = Parser.parseSourceCode(getText());
+            Set<Integer> breaks = new HashSet<>();
+            for (int line : breakpoints) {
+                int position = Arrays.stream(getText().split("\n")).limit(line).mapToInt(String::length).sum() + line;
+                AstNode node = getClosestNode(tree, position);
+                if (node != null) {
+                    breaks.add(node.getPosition().getLine() - 1);
+                } else {
+                    breaks.add(line);
+                }
+            }
+            return breaks;
+        } catch (ParsingException error) {
+            return breakpoints;
+        }
     }
 }

@@ -31,7 +31,9 @@ public final class AstFor extends AstNode {
 
     @Override
     public AstNode[] getChildren() {
-        return new AstNode[] { condition, body };
+        return new AstNode[] {
+            condition, body
+        };
     }
 
     @Override

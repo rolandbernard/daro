@@ -31,7 +31,9 @@ public final class AstClass extends AstNode {
 
     @Override
     public AstNode[] getChildren() {
-        return new AstNode[] { body };
+        return new AstNode[] {
+            body
+        };
     }
 
     @Override

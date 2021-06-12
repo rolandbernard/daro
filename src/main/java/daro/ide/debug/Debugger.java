@@ -155,15 +155,18 @@ public class Debugger implements ExecutionObserver {
         AstNode lastNode = stack.peek().getNode();
         int lastLine = stack.peek().getLine();
         DebuggerState state = getState();
-        if (before && (line != lastLine || node == lastNode) && breakpoints.getOrDefault(file, Set.of()).contains(line - 1)) {
+        if (
+            before && (line != lastLine || node == lastNode)
+                && breakpoints.getOrDefault(file, Set.of()).contains(line - 1)
+        ) {
             stack.peek().setScope(context.getScope());
             stack.peek().setNode(node);
             breakProgram();
         } else if (state != DebuggerState.IGNORE && state != DebuggerState.STEP_OUT && state != DebuggerState.ERROR) {
             if (
                 (state == DebuggerState.STEP && node != lastNode)
-                || before && (state == DebuggerState.STEP_INTO && line != lastLine)
-                || before && (state == DebuggerState.STEP_OVER && line != lastLine)
+                    || before && (state == DebuggerState.STEP_INTO && line != lastLine)
+                    || before && (state == DebuggerState.STEP_OVER && line != lastLine)
             ) {
                 stack.peek().setScope(context.getScope());
                 stack.peek().setNode(node);

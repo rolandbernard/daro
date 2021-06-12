@@ -28,7 +28,9 @@ public abstract class AstBinaryNode extends AstNode {
 
     @Override
     public AstNode[] getChildren() {
-        return new AstNode[] { left, right };
+        return new AstNode[] {
+            left, right
+        };
     }
 
     @Override

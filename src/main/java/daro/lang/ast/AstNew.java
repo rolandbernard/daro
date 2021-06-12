@@ -32,7 +32,9 @@ public final class AstNew extends AstNode {
 
     @Override
     public AstNode[] getChildren() {
-        return new AstNode[] { type, initializer };
+        return new AstNode[] {
+            type, initializer
+        };
     }
 
     @Override

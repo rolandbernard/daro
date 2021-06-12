@@ -22,7 +22,9 @@ public abstract class AstUnaryNode extends AstNode {
 
     @Override
     public AstNode[] getChildren() {
-        return new AstNode[] { operand };
+        return new AstNode[] {
+            operand
+        };
     }
 
     @Override

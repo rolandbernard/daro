@@ -38,7 +38,9 @@ public final class AstIfElse extends AstNode {
 
     @Override
     public AstNode[] getChildren() {
-        return new AstNode[] { condition, ifBlock, elseBlock };
+        return new AstNode[] {
+            condition, ifBlock, elseBlock
+        };
     }
 
     @Override

@@ -34,9 +34,15 @@ public final class AstMatchCase extends AstNode {
 
     @Override
     public AstNode[] getChildren() {
-        AstNode[] ret = Arrays.copyOf(values, values.length + 1);
-        ret[values.length] = statement;
-        return ret;
+        if (values == null) {
+            return new AstNode[] {
+                statement
+            };
+        } else {
+            AstNode[] ret = Arrays.copyOf(values, values.length + 1);
+            ret[values.length] = statement;
+            return ret;
+        }
     }
 
     @Override

@@ -21,10 +21,11 @@ public class StackContext {
     private DebuggerState state;
 
     /**
-     * Create a new {@link StackContext} for the given function starting with the given state.
+     * Create a new {@link StackContext} for the given function starting with the
+     * given state.
      *
      * @param function The function the context is for
-     * @param state The starting state for the context
+     * @param state    The starting state for the context
      */
     public StackContext(DaroFunction function, DebuggerState state) {
         this.function = function;
