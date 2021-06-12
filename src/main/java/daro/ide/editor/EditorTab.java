@@ -28,7 +28,7 @@ public class EditorTab extends Tab {
      * Create a new {@link EditorTab} that is not linked to a file.
      *
      * @param content The starting content of the tab
-     * @param parent The parent tabs handle
+     * @param parent  The parent tabs handle
      */
     public EditorTab(String content, EditorTabs parent) {
         this.parent = parent;
@@ -41,7 +41,7 @@ public class EditorTab extends Tab {
      * Create a new {@link EditorTab} that is linked to the given file. The starting
      * content of the tab will be loaded from the file directly.
      *
-     * @param file The file for this tab
+     * @param file   The file for this tab
      * @param parent The parent tabs handle
      */
     public EditorTab(Path file, EditorTabs parent) {
