@@ -1,13 +1,10 @@
 package daro.lang.interpreter;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import daro.lang.values.DaroNativeClass;
 import daro.lang.values.DaroNativePackage;
@@ -51,10 +48,10 @@ public class NativePackageScope extends ClassLoader implements Scope {
         } else {
             for (Package packs : getPackages()) {
                 if (
-                    packs.getName().startsWith(pack.getClassName() + ".") || packs.getName().equals(pack.getClassName())
-                ) {
+                        packs.getName().startsWith(pack.getClassName() + ".") || packs.getName().equals(pack.getClassName())
+                   ) {
                     return true;
-                }
+                   }
             }
             return false;
         }
@@ -78,16 +75,6 @@ public class NativePackageScope extends ClassLoader implements Scope {
     public Map<String, DaroObject> getCompleteMapping() {
         Map<String, DaroObject> result = new HashMap<>();
         List<String> keys = new ArrayList<>();
-        try {
-            keys.addAll(
-                Collections.list(getResources(pkg.getResourceName()))
-                    .stream()
-                    .map(url -> url.getFile())
-                    .map(file -> file.replace(pkg.getResourceName() + "/", ""))
-                    .map(name -> name.endsWith(".class") ? name.substring(0, name.length() - 6) : name)
-                    .collect(Collectors.toList())
-            );
-        } catch (IOException e) {}
         for (Package packs : getPackages()) {
             if (packs.getName().startsWith(pkg.getClassName())) {
                 String[] name = packs.getName().split("\\.");
