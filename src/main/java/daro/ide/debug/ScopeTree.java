@@ -19,6 +19,7 @@ public class ScopeTree extends TreeView<String> {
     public ScopeTree(Scope root) {
         super(new ScopeTreeItem(root));
         setShowRoot(false);
+        ((ScopeTreeItem)getRoot()).expandBlockScopes();
     }
 
     /**
@@ -26,5 +27,6 @@ public class ScopeTree extends TreeView<String> {
      */
     public void reload() {
         ((ScopeTreeItem)getRoot()).reload();
+        ((ScopeTreeItem)getRoot()).expandBlockScopes();
     }
 }

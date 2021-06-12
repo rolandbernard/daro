@@ -31,8 +31,20 @@ public class ScopeTreeItem extends TreeItem<String> {
     public ScopeTreeItem(Scope scope) {
         super(scope.getClass().getSimpleName());
         this.scope = scope;
+    }
+
+    /**
+     * Expand all scopes starting from this one that are instances of {@link BlockScope}.
+     */
+    public void expandBlockScopes() {
         if (scope instanceof BlockScope) {
-            setExpanded(true);
+            ((BlockScope)scope).safeRecursion(() -> {
+                setExpanded(true);
+                for (TreeItem<String> item : getChildren()) {
+                    ((ScopeTreeItem)item).expandBlockScopes();
+                }
+                return null;
+            }, null);
         }
     }
 
@@ -53,11 +65,7 @@ public class ScopeTreeItem extends TreeItem<String> {
         if (isExpanded()) {
             getChildren();
             for (TreeItem<String> item : super.getChildren()) {
-                if (item instanceof ScopeTreeItem) {
-                    ((ScopeTreeItem)item).reload();
-                } else if (item instanceof VariableTreeItem) {
-                    ((VariableTreeItem)item).reload();
-                }
+                ((ScopeTreeItem)item).reload();
             }
         }
     }
@@ -67,21 +75,21 @@ public class ScopeTreeItem extends TreeItem<String> {
         if (!loaded) {
             loaded = true;
             Set<?> children = super.getChildren().stream().map(item -> {
-                if (item instanceof ScopeTreeItem) {
-                    return ((ScopeTreeItem)item).getScope();
-                } else {
+                if (item instanceof VariableTreeItem) {
                     VariableTreeItem var = (VariableTreeItem)item;
                     return new SimpleEntry<>(var.getName(), var.getVariable());
+                } else {
+                    return ((ScopeTreeItem)item).getScope();
                 }
             }).collect(Collectors.toSet());
             Set<Scope> parents = new HashSet<>(Arrays.asList(scope.getParents()));
             Set<Entry<String, DaroObject>> variables = scope.getFinalLevel().getCompleteMapping().entrySet();
             super.getChildren().removeIf(item -> {
-                if (item instanceof ScopeTreeItem) {
-                    return !parents.contains(((ScopeTreeItem)item).getScope());
-                } else {
+                if (item instanceof VariableTreeItem) {
                     VariableTreeItem var = (VariableTreeItem)item;
                     return !variables.contains(new SimpleEntry<>(var.getName(), var.getVariable()));
+                } else {
+                    return !parents.contains(((ScopeTreeItem)item).getScope());
                 }
             });
             super.getChildren().addAll(
@@ -97,11 +105,11 @@ public class ScopeTreeItem extends TreeItem<String> {
                     .collect(Collectors.toList())
             );
             super.getChildren().sort((itemA, itemB) -> {
-                if (itemA instanceof ScopeTreeItem && itemB instanceof ScopeTreeItem) {
-                    return itemB.getValue().compareTo(itemA.getValue());
-                } else if (itemA instanceof ScopeTreeItem && itemB instanceof VariableTreeItem) {
+                if (itemA instanceof VariableTreeItem && itemB instanceof VariableTreeItem) {
+                    return itemA.getValue().compareTo(itemB.getValue());
+                } else if (itemB instanceof VariableTreeItem) {
                     return 1;
-                } else if (itemA instanceof VariableTreeItem && itemB instanceof ScopeTreeItem) {
+                } else if (itemA instanceof VariableTreeItem) {
                     return -1;
                 } else {
                     return itemA.getValue().compareTo(itemB.getValue());

@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test;
 import daro.lang.interpreter.ConstantScope;
 import daro.lang.interpreter.RootScope;
 import daro.lang.interpreter.Scope;
+import daro.lang.values.DaroArray;
 import daro.lang.values.DaroReal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Map;
 
 public class ScopeTreeTest {
@@ -33,8 +35,14 @@ public class ScopeTreeTest {
     }
 
     @Test
-    void variableTreeItemIsNotALeaf() {
+    void variableTreeItemIsALeaf() {
         VariableTreeItem item = new VariableTreeItem("a", new DaroReal(42));
+        assertTrue(item.isLeaf());
+    }
+
+    @Test
+    void variableTreeItemIsNotALeaf() {
+        VariableTreeItem item = new VariableTreeItem("a", new DaroArray(List.of()));
         assertFalse(item.isLeaf());
     }
 

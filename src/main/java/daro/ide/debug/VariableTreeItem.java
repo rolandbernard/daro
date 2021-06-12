@@ -9,7 +9,7 @@ import javafx.scene.control.TreeItem;
  * 
  * @author Roland Bernard
  */
-public class VariableTreeItem extends TreeItem<String> {
+public class VariableTreeItem extends ScopeTreeItem {
     private final String name;
     private final DaroObject value;
 
@@ -20,17 +20,10 @@ public class VariableTreeItem extends TreeItem<String> {
      * @param value The value of the item
      */
     public VariableTreeItem(String name, DaroObject value) {
-        super(name + " = " + value);
+        super(value.getMemberScope());
+        setValue(name + " = " + value);
         this.name = name;
         this.value = value;
-        super.getChildren().add(new ScopeTreeItem(value.getMemberScope()));
-    }
-
-    /**
-     * Reload the data of the scope.
-     */
-    public void reload() {
-        super.getChildren().forEach(item -> ((ScopeTreeItem)item).reload());
     }
 
     /**
@@ -49,5 +42,10 @@ public class VariableTreeItem extends TreeItem<String> {
      */
     public DaroObject getVariable() {
         return value;
+    }
+
+    @Override
+    public boolean isLeaf() {
+        return getChildren().size() == 0;
     }
 }
