@@ -21,6 +21,7 @@ public class ExecutionObserverTest {
         public int additions = 0;
         public int localization = 0;
         public int exceptions = 0;
+        public int calls = 0;
 
         @Override
         public void beforeExecution(AstNode node, ExecutionContext scope) {
@@ -68,6 +69,18 @@ public class ExecutionObserverTest {
         public VariableLocation onException(AstNode node, RuntimeException error, VariableLocation value, ExecutionContext context) {
             exceptions++;
             throw error;
+        }
+
+        @Override
+        public void beforeCall(AstNode node, DaroFunction function, DaroObject[] params, ExecutionContext context) {
+            calls++;
+        }
+
+        @Override
+        public void afterCall(
+            AstNode node, DaroFunction function, DaroObject[] params, DaroObject value, ExecutionContext context
+        ) {
+            calls++;
         }
     }
 
@@ -191,5 +204,11 @@ public class ExecutionObserverTest {
     @Test
     void exceptionsCanBeIgnored() {
         assertEquals(new DaroReal(42), interpreter.execute("y", observers));
+    }
+
+    @Test
+    void countCalls() {
+        interpreter.execute("fn run(n) { if n > 0 { run(n - 1) } }; run(2);", observers);
+        assertEquals(6, observer.calls);
     }
 }

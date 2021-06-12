@@ -1,6 +1,7 @@
 package daro.lang.interpreter;
 
 import daro.lang.ast.AstNode;
+import daro.lang.values.DaroFunction;
 import daro.lang.values.DaroObject;
 
 /**
@@ -93,6 +94,35 @@ public interface ExecutionObserver {
      * @param context  The context the execution is in
      */
     default public void afterLocalization(AstNode node, VariableLocation location, ExecutionContext context) {
+        // Do nothing by default
+    }
+
+    /**
+     * This method is called before entering a function, and after evaluating all
+     * the parameters.
+     * 
+     * @param node     The node that is being executed
+     * @param function The function that will be called
+     * @param params   The parameters the function will be called with
+     * @param context  The context the execution is in
+     */
+    default public void beforeCall(AstNode node, DaroFunction function, DaroObject[] params, ExecutionContext context) {
+        // Do nothing by default
+    }
+
+    /**
+     * This method is called after exiting a function, and before calling the
+     * respective afterExecution.
+     * 
+     * @param node     The node that is being executed
+     * @param function The function that was executed
+     * @param params   The parameters the function was called with
+     * @param value    The value returned by the function execution
+     * @param context  The context the execution is in
+     */
+    default public void afterCall(
+        AstNode node, DaroFunction function, DaroObject[] params, DaroObject value, ExecutionContext context
+    ) {
         // Do nothing by default
     }
 }

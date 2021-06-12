@@ -23,6 +23,7 @@ import daro.lang.values.*;
  */
 public class Executor implements Visitor<DaroObject> {
     private final ExecutionContext context;
+    private final ExecutionObserver[] observers;
 
     /**
      * Create a new {@link Executor} for execution in the given
@@ -32,6 +33,7 @@ public class Executor implements Visitor<DaroObject> {
      */
     public Executor(ExecutionContext context) {
         this.context = context;
+        this.observers = context.getObservers();
     }
 
     /**
@@ -77,7 +79,6 @@ public class Executor implements Visitor<DaroObject> {
      */
     public DaroObject execute(AstNode program) {
         if (program != null) {
-            ExecutionObserver[] observers = context.getObservers();
             try {
                 if (observers == null) {
                     return program.accept(this);
@@ -462,11 +463,23 @@ public class Executor implements Visitor<DaroObject> {
             if (!function.allowsParamCount(parameters.length)) {
                 throw new InterpreterException(ast.getFunction().getPosition(), "Wrong number of parameters");
             } else {
-                DaroObject[] parameterValues = new DaroObject[parameters.length];
+                DaroObject[] params = new DaroObject[parameters.length];
                 for (int i = 0; i < parameters.length; i++) {
-                    parameterValues[i] = require(parameters[i]);
+                    params[i] = require(parameters[i]);
                 }
-                return function.execute(parameterValues, context);
+                if (observers == null) {
+                    return function.execute(params, context);
+                } else {
+                    for (ExecutionObserver observer : observers) {
+                        observer.beforeCall(ast, function, params, context);
+                    }
+                    DaroObject result = null;
+                    result = function.execute(params, context);
+                    for (ExecutionObserver observer : observers) {
+                        observer.afterCall(ast, function, params, result, context);
+                    }
+                    return result;
+                }
             }
         } else {
             throw new InterpreterException(ast.getFunction().getPosition(), "Value is not a function");
