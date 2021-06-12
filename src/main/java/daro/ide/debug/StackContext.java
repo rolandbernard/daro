@@ -85,6 +85,7 @@ public class StackContext {
      * Set the node of the context.
      *
      * @param position The node to set
+     * @param before   If we are before execution of the node
      */
     public void setNode(AstNode position, boolean before) {
         this.node = position;

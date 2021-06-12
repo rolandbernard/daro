@@ -70,9 +70,6 @@ public class ExecutionPalette extends VBox implements DebugController {
         stop = buildIconButton("\ue047", event -> {
             editor.resetHighlighting();
             thread.interrupt();
-            if (debugger != null) {
-                debugger.next();
-            }
         }, "Stop");
         next = buildIconButton("\uf1df", event -> {
             editor.resetHighlighting();
