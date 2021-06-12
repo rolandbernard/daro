@@ -5,6 +5,7 @@ import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.VariableLocation;
 import daro.lang.interpreter.InterpreterException;
+import daro.lang.values.DaroFunction;
 import daro.lang.values.DaroObject;
 
 /**
@@ -44,6 +45,18 @@ public class Interrupter implements ExecutionObserver {
 
     @Override
     public void afterLocalization(AstNode node, VariableLocation location, ExecutionContext context) {
+        checkForInterruption(node);
+    }
+
+    @Override
+    public void beforeCall(AstNode node, DaroFunction function, DaroObject[] params, ExecutionContext context) {
+        checkForInterruption(node);
+    }
+
+    @Override
+    public void afterCall(
+        AstNode node, DaroFunction function, DaroObject[] params, DaroObject value, ExecutionContext context
+    ) {
         checkForInterruption(node);
     }
 }

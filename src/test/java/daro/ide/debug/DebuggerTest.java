@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -330,9 +331,9 @@ public class DebuggerTest implements DebugController {
     }
 
     @Override
-    public void startDebugging(Scope debugScope, Position debugLocation) {
-        this.debugScope = debugScope;
-        this.debugLocation = debugLocation;
+    public void startDebugging(Stack<StackContext> context) {
+        this.debugScope = context.peek().getScope();
+        this.debugLocation = context.peek().getPosition();
         debugEnded = false;
         synchronized (this) {
             notifyAll();

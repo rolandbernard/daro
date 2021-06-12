@@ -4,13 +4,14 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
-import daro.lang.ast.AstCall;
 import daro.lang.ast.AstNode;
 import daro.lang.interpreter.ExecutionContext;
 import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.VariableLocation;
+import daro.lang.values.DaroFunction;
 import daro.lang.values.DaroObject;
 
 /**
@@ -22,17 +23,12 @@ import daro.lang.values.DaroObject;
  */
 public class Debugger implements ExecutionObserver {
     private final DebugController controller;
-    private Map<Path, Set<Integer>> lineBreakpoints;
-    private Path lastFile;
-    private int lastLine;
-    private AstNode lastNode;
+    private Map<Path, Set<Integer>> breakpoints;
+    private Stack<StackContext> stack;
 
-    private boolean breakNextNode;
-    private boolean breakNextLine;
-    private boolean ignoreCalls;
-    private int waitForCall;
-    private boolean error;
-    private AstNode waitFor;
+    public static enum DebuggerState {
+        NEXT, STEP, STEP_OVER, STEP_INTO, STEP_OUT, IGNORE, ERROR
+    };
 
     /**
      * Create a new {@link Debugger} connected to the given execution palette.
@@ -41,7 +37,7 @@ public class Debugger implements ExecutionObserver {
      */
     public Debugger(DebugController controller) {
         this.controller = controller;
-        this.lineBreakpoints = new HashMap<>();
+        this.breakpoints = new HashMap<>();
         reset();
     }
 
@@ -53,7 +49,7 @@ public class Debugger implements ExecutionObserver {
      * @param lineBreakpoints The breakpoint for this debugger
      */
     public void setBreakpoints(Map<Path, Set<Integer>> lineBreakpoints) {
-        this.lineBreakpoints = lineBreakpoints;
+        this.breakpoints = lineBreakpoints;
     }
 
     /**
@@ -61,25 +57,36 @@ public class Debugger implements ExecutionObserver {
      * reusing the interpreter for multiple executions.
      */
     public void reset() {
-        breakNextNode = false;
-        breakNextLine = false;
-        ignoreCalls = false;
-        waitForCall = 0;
-        waitFor = null;
-        lastFile = null;
-        lastLine = 0;
-        error = false;
+        stack = new Stack<>();
+        stack.push(new StackContext(null, DebuggerState.NEXT));
+    }
+
+    /**
+     * Set the current state of the debugger. This will only change the state if it
+     * is not currently set to {@link DebuggerState}.ERROR.
+     *
+     * @param state The state it should e set to
+     */
+    private void setState(DebuggerState state) {
+        if (getState() != DebuggerState.ERROR) {
+            stack.peek().setState(state);
+        }
+    }
+
+    /**
+     * Get the current state of the debugger.
+     *
+     * @return The current state
+     */
+    private DebuggerState getState() {
+        return stack.peek().getState();
     }
 
     /**
      * Continue running the program until the next breakpoint.
      */
     public synchronized void next() {
-        breakNextNode = false;
-        breakNextLine = false;
-        ignoreCalls = false;
-        waitForCall = 0;
-        waitFor = null;
+        setState(DebuggerState.NEXT);
         notify();
     }
 
@@ -87,11 +94,7 @@ public class Debugger implements ExecutionObserver {
      * Continue running the program until the execution of the next node.
      */
     public synchronized void step() {
-        breakNextNode = true;
-        breakNextLine = false;
-        ignoreCalls = false;
-        waitForCall = 0;
-        waitFor = null;
+        setState(DebuggerState.STEP);
         notify();
     }
 
@@ -100,11 +103,7 @@ public class Debugger implements ExecutionObserver {
      * entering function calls.
      */
     public synchronized void stepOver() {
-        breakNextNode = false;
-        breakNextLine = true;
-        ignoreCalls = true;
-        waitForCall = 0;
-        waitFor = null;
+        setState(DebuggerState.STEP_OVER);
         notify();
     }
 
@@ -113,11 +112,7 @@ public class Debugger implements ExecutionObserver {
      * entering functions if they are called.
      */
     public synchronized void stepInto() {
-        breakNextNode = false;
-        breakNextLine = true;
-        ignoreCalls = false;
-        waitForCall = 0;
-        waitFor = null;
+        setState(DebuggerState.STEP_INTO);
         notify();
     }
 
@@ -126,29 +121,22 @@ public class Debugger implements ExecutionObserver {
      * function.
      */
     public synchronized void stepOut() {
-        breakNextNode = false;
-        breakNextLine = true;
-        ignoreCalls = false;
-        waitForCall = 1;
-        waitFor = null;
+        setState(DebuggerState.STEP_OUT);
         notify();
     }
 
     /**
      * Break the execution and wait for someone to call one of the continuation
      * methods.
-     *
-     * @param node    The node to break on
-     * @param context The context to break in
      */
-    private synchronized void breakFor(AstNode node, ExecutionContext context) {
-        controller.startDebugging(context.getScope(), node.getPosition());
+    private synchronized void breakProgram() {
+        controller.startDebugging(stack);
         try {
             synchronized (this) {
                 wait();
             }
         } catch (InterruptedException e) {
-            throw new InterpreterException(node.getPosition(), "Debugger was interrupted");
+            throw new InterpreterException(stack.peek().getPosition(), "Debugger was interrupted");
         }
         controller.stopDebugging();
     }
@@ -164,16 +152,23 @@ public class Debugger implements ExecutionObserver {
     private void testForNodeBreak(AstNode node, ExecutionContext context, boolean before) {
         Path file = node.getPosition().getFile();
         int line = node.getPosition().getLine();
-        if (
-            (breakNextNode && lastNode != node)
-                || (before && (lastFile != file || lastLine != line || lastNode == node)
-                    && (lineBreakpoints.getOrDefault(file, Set.of()).contains(line - 1)))
-                || ((lastFile != file || lastLine != line) && (waitForCall == 0 && waitFor == null && breakNextLine))
-        ) {
-            lastFile = file;
-            lastLine = line;
-            lastNode = node;
-            breakFor(node, context);
+        AstNode lastNode = stack.peek().getNode();
+        int lastLine = stack.peek().getLine();
+        DebuggerState state = getState();
+        if (before && (line != lastLine || node == lastNode) && breakpoints.getOrDefault(file, Set.of()).contains(line - 1)) {
+            stack.peek().setScope(context.getScope());
+            stack.peek().setNode(node);
+            breakProgram();
+        } else if (state != DebuggerState.IGNORE && state != DebuggerState.STEP_OUT && state != DebuggerState.ERROR) {
+            if (
+                (state == DebuggerState.STEP && node != lastNode)
+                || before && (state == DebuggerState.STEP_INTO && line != lastLine)
+                || before && (state == DebuggerState.STEP_OVER && line != lastLine)
+            ) {
+                stack.peek().setScope(context.getScope());
+                stack.peek().setNode(node);
+                breakProgram();
+            }
         }
     }
 
@@ -185,14 +180,6 @@ public class Debugger implements ExecutionObserver {
      */
     private void beforeNode(AstNode node, ExecutionContext context) {
         testForNodeBreak(node, context, true);
-        if (node instanceof AstCall) {
-            if (ignoreCalls) {
-                waitFor = node;
-            }
-            if (waitForCall > 0) {
-                waitForCall++;
-            }
-        }
     }
 
     /**
@@ -202,12 +189,6 @@ public class Debugger implements ExecutionObserver {
      * @param context The context in which it was executed
      */
     private void afterNode(AstNode node, ExecutionContext context) {
-        if (waitFor == node) {
-            waitFor = null;
-        }
-        if (waitForCall > 0 && node instanceof AstCall) {
-            waitForCall--;
-        }
         testForNodeBreak(node, context, false);
     }
 
@@ -218,9 +199,9 @@ public class Debugger implements ExecutionObserver {
      * @param context The context in which it was executed
      */
     private void onException(AstNode node, ExecutionContext context) {
-        if (!error) {
-            error = true;
-            breakFor(node, context);
+        if (getState() != DebuggerState.ERROR) {
+            setState(DebuggerState.ERROR);
+            breakProgram();
         }
     }
 
@@ -256,5 +237,30 @@ public class Debugger implements ExecutionObserver {
     @Override
     public void afterLocalization(AstNode node, VariableLocation value, ExecutionContext context) {
         afterNode(node, context);
+    }
+
+    @Override
+    public void beforeCall(AstNode node, DaroFunction function, DaroObject[] params, ExecutionContext context) {
+        stack.peek().setScope(context.getScope());
+        stack.peek().setNode(node);
+        DebuggerState state = getState();
+        if (state == DebuggerState.STEP_OVER || state == DebuggerState.STEP_OUT) {
+            stack.push(new StackContext(function, DebuggerState.IGNORE));
+        } else {
+            stack.push(new StackContext(function, getState()));
+        }
+    }
+
+    @Override
+    public void afterCall(
+        AstNode node, DaroFunction function, DaroObject[] params, DaroObject value, ExecutionContext context
+    ) {
+        DebuggerState prev = stack.pop().getState();
+        if (prev == DebuggerState.STEP_OUT) {
+            setState(DebuggerState.NEXT);
+            breakProgram();
+        } else if (prev != DebuggerState.IGNORE) {
+            setState(prev);
+        }
     }
 }

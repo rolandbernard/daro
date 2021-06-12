@@ -1,18 +1,18 @@
 package daro.ide.main;
 
 import java.nio.file.Path;
+import java.util.Stack;
 
 import daro.ide.debug.DebugController;
 import daro.ide.debug.Debugger;
 import daro.ide.debug.Interrupter;
 import daro.ide.debug.Terminal;
 import daro.ide.debug.ScopeViewer;
+import daro.ide.debug.StackContext;
 import daro.ide.editor.EditorTabs;
-import daro.lang.ast.Position;
 import daro.lang.interpreter.DaroException;
 import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.Interpreter;
-import daro.lang.interpreter.Scope;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -193,15 +193,15 @@ public class ExecutionPalette extends VBox implements DebugController {
     }
 
     @Override
-    public void startDebugging(Scope debugScope, Position location) {
+    public void startDebugging(Stack<StackContext> context) {
         Platform.runLater(() -> {
             next.setDisable(false);
             step.setDisable(false);
             stepOver.setDisable(false);
             stepInto.setDisable(false);
             stepOut.setDisable(false);
-            editor.highlightDebug(location);
-            scope.setScope(debugScope);
+            editor.highlightDebug(context.peek().getPosition());
+            scope.setScope(context.peek().getScope());
             scope.reload();
         });
     }

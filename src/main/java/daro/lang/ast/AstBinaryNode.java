@@ -3,7 +3,7 @@ package daro.lang.ast;
 import java.util.Objects;
 
 /**
- * Abstract super class representing an ast node for a binary opreation like
+ * Abstract super class representing an ast node for a binary operation like
  * addition, subtraction, etc.
  * 
  * @author Roland Bernard

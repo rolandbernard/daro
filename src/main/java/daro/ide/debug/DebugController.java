@@ -1,7 +1,6 @@
 package daro.ide.debug;
 
-import daro.lang.ast.Position;
-import daro.lang.interpreter.Scope;
+import java.util.Stack;
 
 /**
  * This class interface must be implemented by classes that which to use the
@@ -17,7 +16,7 @@ public interface DebugController {
      * @param debugScope The scope the debugger is in
      * @param location   The position the debugger is at
      */
-    public void startDebugging(Scope debugScope, Position location);
+    public void startDebugging(Stack<StackContext> stack);
 
     /**
      * Executed by the debugger to signal that the debugger has continued execution

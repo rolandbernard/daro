@@ -49,7 +49,11 @@ public final class AstMatchCase extends AstNode {
 
     @Override
     public String toString() {
-        return "(" + this.getClass().getSimpleName() + " ("
-            + Arrays.stream(values).map(String::valueOf).collect(Collectors.joining(" ")) + ") " + statement + ")";
+        if (values == null) {
+            return "(" + this.getClass().getSimpleName() + " default " + statement + ")";
+        } else {
+            return "(" + this.getClass().getSimpleName() + " ("
+                + Arrays.stream(values).map(String::valueOf).collect(Collectors.joining(" ")) + ") " + statement + ")";
+        }
     }
 }
