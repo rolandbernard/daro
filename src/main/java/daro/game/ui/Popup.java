@@ -30,8 +30,8 @@ public class Popup extends StackPane {
         updateContent(content);
     }
 
-    public void updateContent(Node content) {
-        this.content.getChildren().add(content);
+    public void updateContent(Node... content) {
+        this.content.getChildren().addAll(content);
     }
 
     public void open() {

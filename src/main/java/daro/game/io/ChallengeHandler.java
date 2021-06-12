@@ -8,6 +8,7 @@ import daro.game.validation.Validation;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public abstract class ChallengeHandler {
                     Scanner scanner = new Scanner(file);
                     scanner.useDelimiter("\\Z");
                     JsonObject obj = JsonParser.parseString(scanner.next()).getAsJsonObject();
-                    challenges.add(parseChallengeFromJsonObject(obj));
+                    challenges.add(parseChallenge(obj));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -63,7 +64,7 @@ public abstract class ChallengeHandler {
         return new Date().getTime() + ".json";
     }
 
-    public static Challenge parseChallengeFromJsonObject(JsonObject challengeObj) {
+    public static Challenge parseChallenge(JsonObject challengeObj) {
         String name = challengeObj.get("name").getAsString();
         String creator = challengeObj.get("creator").getAsString();
         String description = challengeObj.get("description").getAsString();
@@ -71,5 +72,33 @@ public abstract class ChallengeHandler {
         List<Validation> testsList = LevelHandler.parseValidationsFromJson(tests);
         String standardCode = challengeObj.get("startCode") == null ? "" : challengeObj.get("startCode").getAsString();
         return new Challenge(name, description, standardCode, testsList, creator);
+    }
+
+    public static boolean hasSimilar(Challenge c) {
+        return getImportedChallenges().stream().anyMatch(c::isSimilar);
+    }
+
+    public static boolean replaceSimilar(Challenge newChallenge, JsonObject newJsonObj) {
+        File challengesFolder = new File(CHALLENGE_PATH);
+        File[] challengeFiles = challengesFolder.listFiles();
+        if (challengeFiles != null) {
+            for (File file : challengeFiles) {
+                try {
+                    Scanner scanner = new Scanner(file);
+                    scanner.useDelimiter("\\Z");
+                    JsonObject obj = JsonParser.parseString(scanner.next()).getAsJsonObject();
+                    Challenge oldChallenge = parseChallenge(obj);
+                    if(oldChallenge.isSimilar(newChallenge)) {
+                        PrintWriter writer = new PrintWriter(file.getPath());
+                        writer.write(newJsonObj.toString());
+                        writer.flush();
+                        return true;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
     }
 }

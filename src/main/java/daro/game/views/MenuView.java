@@ -3,6 +3,7 @@ package daro.game.views;
 import daro.game.pages.Page;
 import daro.game.ui.Container;
 import daro.game.ui.Navigation;
+import daro.game.ui.Popup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
@@ -28,5 +29,9 @@ public class MenuView extends View {
      */
     public static void setContent(Page page) {
         CONTENT.setContent(page);
+    }
+
+    public static Popup getPopup() {
+        return CONTENT.getPopup();
     }
 }

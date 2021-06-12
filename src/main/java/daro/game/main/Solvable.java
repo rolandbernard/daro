@@ -63,5 +63,7 @@ public abstract class Solvable {
         return tests;
     }
 
-
+    public boolean isSimilar(Solvable s) {
+        return name.equals(s.getName()) && description.equals(s.getDescription());
+    }
 }
