@@ -1,5 +1,8 @@
 package daro.ide.main;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
@@ -11,8 +14,15 @@ import javafx.stage.Stage;
  * @author Roland Bernard
  */
 public class Ide extends Application {
+    private static Path startDirectory;
 
     public static void main(String[] args) {
+        for (String arg : args) {
+            Path path = Path.of(arg);
+            if (Files.isDirectory(path)) {
+                startDirectory = path;
+            }
+        }
         launch();
     }
 
@@ -29,6 +39,7 @@ public class Ide extends Application {
         Font.loadFont(Ide.class.getResourceAsStream("/daro/ide/fonts/IBMPlexMono-Italic.ttf"), 16);
 
         Explorer explorer = new Explorer();
+        explorer.openDirectory(startDirectory);
         Scene scene = new Scene(explorer);
         scene.getStylesheets()
             .addAll(

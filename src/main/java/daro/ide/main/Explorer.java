@@ -1,5 +1,7 @@
 package daro.ide.main;
 
+import java.nio.file.Path;
+
 import daro.ide.files.FilePane;
 import javafx.scene.control.SplitPane;
 
@@ -25,6 +27,15 @@ public class Explorer extends SplitPane {
             workspace.openFile(file);
         });
         getItems().addAll(files, workspace);
+    }
+
+    /**
+     * Open the given path as the directory of the file browser.
+     *
+     * @param root The directory to open
+     */
+    public void openDirectory(Path root) {
+        files.setRoot(root);
     }
 
     /**

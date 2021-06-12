@@ -154,16 +154,23 @@ public class TextEditor extends CodeArea {
      */
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int paragraph = getCurrentParagraph();
-        int oldLines = oldValue.split("\n").length;
-        int newLines = newValue.split("\n").length;
+        int oldLines = oldValue.split("\n", -1).length;
+        int newLines = newValue.split("\n", -1).length;
+        int lines = getParagraphs().size();
         if (oldLines > newLines) {
-            breakpoints = breakpoints.stream()
-                .map(num -> num > paragraph ? num + newLines - oldLines : num)
-                .collect(Collectors.toSet());
+            replaceBreakpoints(
+                breakpoints.stream()
+                    .map(num -> num > paragraph ? num + newLines - oldLines : num)
+                    .filter(num -> num < lines)
+                    .collect(Collectors.toSet())
+            );
         } else if (oldLines < newLines) {
-            breakpoints = breakpoints.stream()
-                .map(num -> num >= paragraph - 1 ? num + newLines - oldLines : num)
-                .collect(Collectors.toSet());
+            replaceBreakpoints(
+                breakpoints.stream()
+                    .map(num -> num >= paragraph - 1 ? num + newLines - oldLines : num)
+                    .filter(num -> num < lines)
+                    .collect(Collectors.toSet())
+            );
         }
         clearHighlighting(newValue);
         applyHighlighting(newValue);
@@ -181,15 +188,19 @@ public class TextEditor extends CodeArea {
         clearStyle(0, text.length());
         if (shownError != null) {
             int line = shownError.getPosition().getLine() - 1;
-            shownError = null;
-            Label node = (Label)getParagraphGraphic(line);
-            setLineGraphic(line, node);
+            if (line < getParagraphs().size()) {
+                shownError = null;
+                Label node = (Label)getParagraphGraphic(line);
+                setLineGraphic(line, node);
+            }
         }
         if (shownDebugLine >= 0) {
             int line = shownDebugLine;
-            shownDebugLine = -1;
-            Label node = (Label)getParagraphGraphic(line);
-            setLineGraphic(line, node);
+            if (line < getParagraphs().size()) {
+                shownDebugLine = -1;
+                Label node = (Label)getParagraphGraphic(line);
+                setLineGraphic(line, node);
+            }
         }
     }
 
@@ -201,16 +212,20 @@ public class TextEditor extends CodeArea {
     protected void applyHighlighting(String text) {
         if (shownError != null) {
             int line = shownError.getPosition().getLine() - 1;
-            Label node = (Label)getParagraphGraphic(line);
-            if (node != null) {
-                setLineGraphic(line, node);
-                setStyle(shownError.getStart(), shownError.getEnd(), List.of("syntax-error"));
+            if (line < getParagraphs().size()) {
+                Label node = (Label)getParagraphGraphic(line);
+                if (node != null) {
+                    setLineGraphic(line, node);
+                    setStyle(shownError.getStart(), shownError.getEnd(), List.of("syntax-error"));
+                }
             }
         }
         if (shownDebugLine >= 0) {
-            Label node = (Label)getParagraphGraphic(shownDebugLine);
-            if (node != null) {
-                setLineGraphic(shownDebugLine, node);
+            if (shownDebugLine < getParagraphs().size()) {
+                Label node = (Label)getParagraphGraphic(shownDebugLine);
+                if (node != null) {
+                    setLineGraphic(shownDebugLine, node);
+                }
             }
         }
     }
@@ -276,14 +291,16 @@ public class TextEditor extends CodeArea {
         breakpoints = newBreakpoints;
         Platform.runLater(() -> {
             for (int line : oldBreakpoints) {
-                shownError = null;
-                Label node = (Label)getParagraphGraphic(line);
-                setLineGraphic(line, node);
+                if (line < getParagraphs().size()) {
+                    Label node = (Label)getParagraphGraphic(line);
+                    setLineGraphic(line, node);
+                }
             }
             for (int line : newBreakpoints) {
-                shownError = null;
-                Label node = (Label)getParagraphGraphic(line);
-                setLineGraphic(line, node);
+                if (line < getParagraphs().size()) {
+                    Label node = (Label)getParagraphGraphic(line);
+                    setLineGraphic(line, node);
+                }
             }
         });
     }
