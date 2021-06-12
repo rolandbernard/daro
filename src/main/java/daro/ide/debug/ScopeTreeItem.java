@@ -7,6 +7,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import daro.lang.interpreter.BlockScope;
 import daro.lang.interpreter.Scope;
 import daro.lang.values.DaroObject;
 import javafx.collections.ObservableList;
@@ -30,6 +31,9 @@ public class ScopeTreeItem extends TreeItem<String> {
     public ScopeTreeItem(Scope scope) {
         super(scope.getClass().getSimpleName());
         this.scope = scope;
+        if (scope instanceof BlockScope) {
+            setExpanded(true);
+        }
     }
 
     /**
@@ -96,9 +100,9 @@ public class ScopeTreeItem extends TreeItem<String> {
                 if (itemA instanceof ScopeTreeItem && itemB instanceof ScopeTreeItem) {
                     return itemB.getValue().compareTo(itemA.getValue());
                 } else if (itemA instanceof ScopeTreeItem && itemB instanceof VariableTreeItem) {
-                    return -1;
-                } else if (itemA instanceof VariableTreeItem && itemB instanceof ScopeTreeItem) {
                     return 1;
+                } else if (itemA instanceof VariableTreeItem && itemB instanceof ScopeTreeItem) {
+                    return -1;
                 } else {
                     return itemA.getValue().compareTo(itemB.getValue());
                 }

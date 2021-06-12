@@ -1,6 +1,7 @@
 
 .split-pane,
 .tree-view .tree-cell,
+.list-view .list-cell,
 .tab-pane .tab-header-background,
 .tab-pane .tab,
 .tab-pane .tab-content-area {
@@ -12,12 +13,14 @@
     -fx-cursor: hand;
 }
 
-.tree-view {
+.tree-view,
+.list-view {
     -fx-background-color: #21252b;
     -fx-padding: 10 0 0 0;
 }
 
 .tree-view .tree-cell,
+.list-view .list-cell,
 .tab-pane .tab {
     -fx-focus-color: transparent;
 }
@@ -27,7 +30,8 @@
 }
 
 .tab-pane .tab:selected,
-.tree-view .tree-cell:selected {
+.tree-view .tree-cell:selected,
+.list-view .list-cell:selected {
     -fx-background-color: #3d434c;
 }
 

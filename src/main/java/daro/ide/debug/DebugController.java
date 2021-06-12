@@ -13,8 +13,7 @@ public interface DebugController {
     /**
      * Executed by the debugger to signal that the debugger has halted the program
      *
-     * @param debugScope The scope the debugger is in
-     * @param location   The position the debugger is at
+     * @param stack The stack the debugger is in
      */
     public void startDebugging(Stack<StackContext> stack);
 

@@ -20,6 +20,12 @@ public class StackContext {
     private AstNode node;
     private DebuggerState state;
 
+    /**
+     * Create a new {@link StackContext} for the given function starting with the given state.
+     *
+     * @param function The function the context is for
+     * @param state The starting state for the context
+     */
     public StackContext(DaroFunction function, DebuggerState state) {
         this.function = function;
         this.state = state;
@@ -27,26 +33,56 @@ public class StackContext {
         this.node = null;
     }
 
+    /**
+     * Get the function the context is in.
+     *
+     * @return The context's function
+     */
     public DaroFunction getFunction() {
         return function;
     }
 
+    /**
+     * Get the scope the context is in.
+     *
+     * @return The context's scope
+     */
     public Scope getScope() {
         return scope;
     }
 
+    /**
+     * Set the scope of the context.
+     *
+     * @param scope The scope to set
+     */
     public void setScope(Scope scope) {
         this.scope = scope;
     }
 
+    /**
+     * Get the node the context is currently at.
+     *
+     * @return The context's node
+     */
     public AstNode getNode() {
         return node;
     }
 
+    /**
+     * Set the node of the context.
+     *
+     * @param position The node to set
+     */
     public void setNode(AstNode position) {
         this.node = position;
     }
 
+    /**
+     * Get the position of the node the context is currently at.
+     *
+     * @return The context's position
+     */
     public Position getPosition() {
         if (node != null) {
             return node.getPosition();
@@ -55,6 +91,11 @@ public class StackContext {
         }
     }
 
+    /**
+     * Get the line of the node the context is currently at.
+     *
+     * @return The context's line
+     */
     public int getLine() {
         if (node != null) {
             return node.getPosition().getLine();
@@ -63,6 +104,11 @@ public class StackContext {
         }
     }
 
+    /**
+     * Get the file of the node the context is currently at.
+     *
+     * @return The context's file
+     */
     public Path getFile() {
         if (node != null) {
             return node.getPosition().getFile();
@@ -71,11 +117,39 @@ public class StackContext {
         }
     }
 
+    /**
+     * Get the state the context is currently in.
+     *
+     * @return The context's state
+     */
     public DebuggerState getState() {
         return state;
     }
 
+    /**
+     * Set the state of the context.
+     *
+     * @param state The state to set
+     */
     public void setState(DebuggerState state) {
         this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        String ret = "";
+        if (function != null) {
+            ret += "[" + function.toString() + "]";
+        } else {
+            ret += "[main]";
+        }
+        if (node != null) {
+            ret += " ";
+            if (node.getPosition().getFile() != null) {
+                ret += node.getPosition().getFile().getFileName().toString() + ":";
+            }
+            ret += node.getPosition().getLine();
+        }
+        return ret;
     }
 }

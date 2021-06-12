@@ -188,6 +188,7 @@ public class ExecutionPalette extends VBox implements DebugController {
             debug.setDisable(false);
             stop.setDisable(true);
             scope.setScope(interpreter.getContext().getScope());
+            scope.setStack(new Stack<>());
             scope.reload();
         });
     }
@@ -202,6 +203,7 @@ public class ExecutionPalette extends VBox implements DebugController {
             stepOut.setDisable(false);
             editor.highlightDebug(context.peek().getPosition());
             scope.setScope(context.peek().getScope());
+            scope.setStack(context);
             scope.reload();
         });
     }
