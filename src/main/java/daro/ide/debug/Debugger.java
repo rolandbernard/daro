@@ -26,6 +26,11 @@ public class Debugger implements ExecutionObserver {
     private Map<Path, Set<Integer>> breakpoints;
     private Stack<StackContext> stack;
 
+    private boolean lastBefore;
+    private AstNode lastNode;
+    private Path lastFile;
+    private int lastLine;
+
     public static enum DebuggerState {
         NEXT, STEP, STEP_OVER, STEP_INTO, STEP_OUT, IGNORE, ERROR
     };
@@ -59,6 +64,9 @@ public class Debugger implements ExecutionObserver {
     public void reset() {
         stack = new Stack<>();
         stack.push(new StackContext(null, DebuggerState.NEXT));
+        lastFile = null;
+        lastNode = null;
+        lastLine = 0;
     }
 
     /**
@@ -130,6 +138,10 @@ public class Debugger implements ExecutionObserver {
      * methods.
      */
     private synchronized void breakProgram() {
+        lastBefore = stack.peek().getBefore();
+        lastNode = stack.peek().getNode();
+        lastFile = stack.peek().getFile();
+        lastLine = stack.peek().getLine();
         controller.startDebugging(stack);
         try {
             synchronized (this) {
@@ -150,26 +162,22 @@ public class Debugger implements ExecutionObserver {
      * @param before  true if the node has not yet been executed, false otherwise
      */
     private void testForNodeBreak(AstNode node, ExecutionContext context, boolean before) {
+        stack.peek().setScope(context.getScope());
+        stack.peek().setNode(node, before);
         Path file = node.getPosition().getFile();
-        int line = node.getPosition().getLine();
-        AstNode lastNode = stack.peek().getNode();
-        int lastLine = stack.peek().getLine();
+        int line = before ? node.getPosition().getLine() : node.getPosition().getEndLine();
         DebuggerState state = getState();
         if (
-            before && (line != lastLine || node == lastNode)
+            (file != lastFile || line != lastLine || (before == lastBefore && node == lastNode))
                 && breakpoints.getOrDefault(file, Set.of()).contains(line - 1)
         ) {
-            stack.peek().setScope(context.getScope());
-            stack.peek().setNode(node);
             breakProgram();
-        } else if (state != DebuggerState.IGNORE && state != DebuggerState.STEP_OUT && state != DebuggerState.ERROR) {
+        } else if (state != DebuggerState.IGNORE && state != DebuggerState.STEP_OUT) {
             if (
                 (state == DebuggerState.STEP && node != lastNode)
-                    || before && (state == DebuggerState.STEP_INTO && line != lastLine)
-                    || before && (state == DebuggerState.STEP_OVER && line != lastLine)
+                    || (state == DebuggerState.STEP_INTO && (file != lastFile || line != lastLine))
+                    || (state == DebuggerState.STEP_OVER && (file != lastFile || line != lastLine))
             ) {
-                stack.peek().setScope(context.getScope());
-                stack.peek().setNode(node);
                 breakProgram();
             }
         }
@@ -245,7 +253,7 @@ public class Debugger implements ExecutionObserver {
     @Override
     public void beforeCall(AstNode node, DaroFunction function, DaroObject[] params, ExecutionContext context) {
         stack.peek().setScope(context.getScope());
-        stack.peek().setNode(node);
+        stack.peek().setNode(node, true);
         DebuggerState state = getState();
         if (state == DebuggerState.STEP_OVER || state == DebuggerState.STEP_OUT) {
             stack.push(new StackContext(function, DebuggerState.IGNORE));
@@ -258,6 +266,7 @@ public class Debugger implements ExecutionObserver {
     public void afterCall(
         AstNode node, DaroFunction function, DaroObject[] params, DaroObject value, ExecutionContext context
     ) {
+        stack.peek().setNode(node, false);
         DebuggerState prev = stack.pop().getState();
         if (prev == DebuggerState.STEP_OUT) {
             setState(DebuggerState.NEXT);

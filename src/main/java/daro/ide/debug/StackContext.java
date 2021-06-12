@@ -18,6 +18,7 @@ public class StackContext {
     private final DaroFunction function;
     private Scope scope;
     private AstNode node;
+    private boolean before;
     private DebuggerState state;
 
     /**
@@ -32,6 +33,7 @@ public class StackContext {
         this.state = state;
         this.scope = null;
         this.node = null;
+        this.before = true;
     }
 
     /**
@@ -71,12 +73,22 @@ public class StackContext {
     }
 
     /**
+     * Get if we are at the beginning or end of the node..
+     *
+     * @return true if we are before, false after
+     */
+    public boolean getBefore() {
+        return before;
+    }
+
+    /**
      * Set the node of the context.
      *
      * @param position The node to set
      */
-    public void setNode(AstNode position) {
+    public void setNode(AstNode position, boolean before) {
         this.node = position;
+        this.before = before;
     }
 
     /**
@@ -99,7 +111,11 @@ public class StackContext {
      */
     public int getLine() {
         if (node != null) {
-            return node.getPosition().getLine();
+            if (before) {
+                return node.getPosition().getLine();
+            } else {
+                return node.getPosition().getEndLine();
+            }
         } else {
             return 0;
         }

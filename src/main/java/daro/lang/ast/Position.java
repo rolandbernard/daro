@@ -200,6 +200,19 @@ public class Position {
         }
     }
 
+    /**
+     * Returns the end line of the source code {@link Position}
+     * 
+     * @return The line position
+     */
+    public int getEndLine() {
+        if (text != null) {
+            return lineFromOffset(end, text);
+        } else {
+            return 0;
+        }
+    }
+
     @Override
     public int hashCode() {
         return (997 * Integer.hashCode(start)) ^ (991 * Integer.hashCode(end));

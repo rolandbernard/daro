@@ -39,7 +39,7 @@ public class TextEditor extends CodeArea {
     private Consumer<String> onChange;
     private Set<Integer> breakpoints;
     private DaroException shownError;
-    private daro.lang.ast.Position shownPosition;
+    private int shownDebugLine = -1;
 
     private static final String TAB = "    ";
 
@@ -100,7 +100,7 @@ public class TextEditor extends CodeArea {
     private void setLineGraphic(int line, Label label) {
         Text icon = new Text();
         icon.getStyleClass().add("breakpoint");
-        if (shownPosition != null && line == shownPosition.getLine() - 1) {
+        if (shownDebugLine >= 0 && line == shownDebugLine) {
             icon.setText("\ue937");
         } else if (shownError != null && line == shownError.getPosition().getLine() - 1) {
             icon.setText("\ue002");
@@ -185,9 +185,9 @@ public class TextEditor extends CodeArea {
             Label node = (Label)getParagraphGraphic(line);
             setLineGraphic(line, node);
         }
-        if (shownPosition != null) {
-            int line = shownPosition.getLine() - 1;
-            shownPosition = null;
+        if (shownDebugLine >= 0) {
+            int line = shownDebugLine;
+            shownDebugLine = -1;
             Label node = (Label)getParagraphGraphic(line);
             setLineGraphic(line, node);
         }
@@ -207,11 +207,10 @@ public class TextEditor extends CodeArea {
                 setStyle(shownError.getStart(), shownError.getEnd(), List.of("syntax-error"));
             }
         }
-        if (shownPosition != null) {
-            int line = shownPosition.getLine() - 1;
-            Label node = (Label)getParagraphGraphic(line);
+        if (shownDebugLine >= 0) {
+            Label node = (Label)getParagraphGraphic(shownDebugLine);
             if (node != null) {
-                setLineGraphic(line, node);
+                setLineGraphic(shownDebugLine, node);
             }
         }
     }
@@ -230,13 +229,14 @@ public class TextEditor extends CodeArea {
      * consider the positions file.
      *
      * @param position The position to mark
+     * @param line     The line to mark
      */
-    public void highlightDebug(daro.lang.ast.Position position) {
+    public void highlightDebug(daro.lang.ast.Position position, int line) {
         Platform.runLater(() -> {
             clearHighlighting(getText());
-            showParagraphInViewport(position.getLine() - 1);
+            showParagraphInViewport(line - 1);
             selectRange(position.getStart(), position.getEnd());
-            shownPosition = position;
+            shownDebugLine = line - 1;
             applyHighlighting(getText());
         });
     }
@@ -312,7 +312,7 @@ public class TextEditor extends CodeArea {
             if (start >= position) {
                 return start - position;
             } else if (start <= position && end > position) {
-                return (1L << 32) * (position - start);
+                return Math.min((1L << 32) * (position - start), end - 1 - position);
             } else {
                 return Long.MAX_VALUE;
             }
@@ -360,7 +360,14 @@ public class TextEditor extends CodeArea {
                 int position = Arrays.stream(getText().split("\n")).limit(line).mapToInt(String::length).sum() + line;
                 AstNode node = getClosestNode(tree, position);
                 if (node != null) {
-                    breaks.add(node.getPosition().getLine() - 1);
+                    if (
+                        Math.abs(node.getPosition().getEnd() - position)
+                            >= Math.abs(node.getPosition().getStart() - position)
+                    ) {
+                        breaks.add(node.getPosition().getLine() - 1);
+                    } else {
+                        breaks.add(node.getPosition().getEndLine() - 1);
+                    }
                 } else {
                     breaks.add(line);
                 }

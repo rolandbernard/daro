@@ -158,9 +158,10 @@ public class EditorTab extends Tab {
      * consider the positions file.
      *
      * @param position The position to mark
+     * @param line     The line to mark
      */
-    public void highlightDebug(Position position) {
-        editor.highlightDebug(position);
+    public void highlightDebug(Position position, int line) {
+        editor.highlightDebug(position, line);
     }
 
     /**

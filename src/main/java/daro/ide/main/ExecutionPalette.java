@@ -201,7 +201,7 @@ public class ExecutionPalette extends VBox implements DebugController {
             stepOver.setDisable(false);
             stepInto.setDisable(false);
             stepOut.setDisable(false);
-            editor.highlightDebug(context.peek().getPosition());
+            editor.highlightDebug(context.peek().getPosition(), context.peek().getLine());
             scope.setScope(context.peek().getScope());
             scope.setStack(context);
             scope.reload();

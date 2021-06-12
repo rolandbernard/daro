@@ -186,13 +186,14 @@ public class EditorTabs extends TabPane {
      * automatically open the file associated with the position.
      *
      * @param position The position to mark
+     * @param line     The line to mark
      */
-    public void highlightDebug(Position position) {
+    public void highlightDebug(Position position, int line) {
         Path file = position.getFile();
         if (file != null) {
             openFile(file);
         }
-        getOpenEditor().highlightDebug(position);
+        getOpenEditor().highlightDebug(position, line);
     }
 
     /**
