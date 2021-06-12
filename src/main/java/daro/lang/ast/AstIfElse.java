@@ -37,6 +37,11 @@ public final class AstIfElse extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        return new AstNode[] { condition, ifBlock, elseBlock };
+    }
+
+    @Override
     public int hashCode() {
         return (997 * condition.hashCode()) ^ (991 * ifBlock.hashCode()) ^ (877 * elseBlock.hashCode());
     }

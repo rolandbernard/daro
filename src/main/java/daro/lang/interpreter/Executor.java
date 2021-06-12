@@ -512,8 +512,8 @@ public class Executor implements Visitor<DaroObject> {
         DaroObject kind = require(ast.getType());
         if (kind instanceof DaroType) {
             DaroType type = (DaroType)kind;
-            if (ast.getInitialzer() != null) {
-                return type.instantiate(context, ast.getInitialzer());
+            if (ast.getInitializer() != null) {
+                return type.instantiate(context, ast.getInitializer());
             } else {
                 return type.instantiate(context);
             }
@@ -659,7 +659,7 @@ public class Executor implements Visitor<DaroObject> {
             }
             DaroModule pack = new DaroModule(scope);
             modules.put(path.normalize(), pack);
-            AstNode program = Parser.parseSourceCode(content, path);
+            AstNode program = Parser.parseSourceCode(content, path.normalize());
             ScopeInitializer.initialize(scope, program);
             execute(context.forScope(scope), program);
         }

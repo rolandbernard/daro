@@ -27,6 +27,13 @@ public abstract class AstNode {
     }
 
     /**
+     * Returns all the nodes that are direct children of the given node.
+     *
+     * @return The nodes direct children
+     */
+    abstract public AstNode[] getChildren();
+
+    /**
      * Accepts a ast {@link Visitor} calling a method depending on the base class
      * implementation.
      * 

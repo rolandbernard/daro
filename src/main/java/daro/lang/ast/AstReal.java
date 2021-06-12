@@ -22,6 +22,11 @@ public final class AstReal extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        return new AstNode[0];
+    }
+
+    @Override
     public int hashCode() {
         return Double.hashCode(value);
     }

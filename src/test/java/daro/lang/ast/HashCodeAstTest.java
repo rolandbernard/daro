@@ -175,4 +175,34 @@ public class HashCodeAstTest {
         assertEquals(node1.hashCode(), node1.hashCode());
         assertEquals(node1.hashCode(), node2.hashCode());
     }
+
+    @Test
+    void hashCodeAstMatch() {
+        AstMatch node1 = new AstMatch(null,
+            new AstSymbol(null, "foo"),
+            new AstMatchCase[] {
+                new AstMatchCase(null,
+                    new AstNode[] { new AstInteger(null, 5) },
+                    new AstSymbol(null, "bar")
+                ),
+                new AstMatchCase(null, null,
+                    new AstSymbol(null, "bar")
+                ),
+            }
+        );
+        AstMatch node2 = new AstMatch(null,
+            new AstSymbol(null, "foo"),
+            new AstMatchCase[] {
+                new AstMatchCase(null,
+                    new AstNode[] { new AstInteger(null, 5) },
+                    new AstSymbol(null, "bar")
+                ),
+                new AstMatchCase(null, null,
+                    new AstSymbol(null, "bar")
+                ),
+            }
+        );
+        assertEquals(node1.hashCode(), node1.hashCode());
+        assertEquals(node1.hashCode(), node2.hashCode());
+    }
 }

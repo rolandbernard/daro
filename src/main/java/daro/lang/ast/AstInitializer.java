@@ -26,6 +26,11 @@ public final class AstInitializer extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        return values;
+    }
+
+    @Override
     public int hashCode() {
         return Arrays.hashCode(values);
     }

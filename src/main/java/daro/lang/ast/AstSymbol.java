@@ -24,6 +24,11 @@ public final class AstSymbol extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        return new AstNode[0];
+    }
+
+    @Override
     public int hashCode() {
         return name.hashCode();
     }

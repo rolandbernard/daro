@@ -25,6 +25,11 @@ public class AstSequence extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        return statements;
+    }
+
+    @Override
     public int hashCode() {
         return Arrays.hashCode(statements);
     }

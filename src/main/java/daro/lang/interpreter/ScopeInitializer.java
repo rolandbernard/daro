@@ -278,7 +278,7 @@ public class ScopeInitializer implements Visitor<Void> {
     @Override
     public Void visit(AstNew ast) {
         initialize(ast.getType());
-        initialize(ast.getInitialzer());
+        initialize(ast.getInitializer());
         return null;
     }
 
