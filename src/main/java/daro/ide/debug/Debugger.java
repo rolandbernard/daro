@@ -148,6 +148,7 @@ public class Debugger implements ExecutionObserver {
                 wait();
             }
         } catch (InterruptedException e) {
+            setState(DebuggerState.ERROR);
             throw new InterpreterException(stack.peek().getPosition(), "Debugger was interrupted");
         }
         controller.stopDebugging();
@@ -162,21 +163,24 @@ public class Debugger implements ExecutionObserver {
      * @param before  true if the node has not yet been executed, false otherwise
      */
     private void testForNodeBreak(AstNode node, ExecutionContext context, boolean before) {
+        int lastExecLine = stack.peek().getLine();
         stack.peek().setScope(context.getScope());
         stack.peek().setNode(node, before);
         Path file = node.getPosition().getFile();
         int line = before ? node.getPosition().getLine() : node.getPosition().getEndLine();
         DebuggerState state = getState();
         if (
-            (file != lastFile || line != lastLine || (before == lastBefore && node == lastNode))
+            (file != lastFile || line != lastLine || line != lastExecLine || (before == lastBefore && node == lastNode))
                 && breakpoints.getOrDefault(file, Set.of()).contains(line - 1)
         ) {
             breakProgram();
         } else if (state != DebuggerState.IGNORE && state != DebuggerState.STEP_OUT) {
             if (
                 (state == DebuggerState.STEP && node != lastNode)
-                    || (state == DebuggerState.STEP_INTO && (file != lastFile || line != lastLine))
-                    || (state == DebuggerState.STEP_OVER && (file != lastFile || line != lastLine))
+                    || (state == DebuggerState.STEP_INTO
+                        && (file != lastFile || line != lastLine || line != lastExecLine))
+                    || (state == DebuggerState.STEP_OVER
+                        && (file != lastFile || line != lastLine || line != lastExecLine))
             ) {
                 breakProgram();
             }
