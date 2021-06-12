@@ -33,6 +33,13 @@ public final class AstMatchCase extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        AstNode[] ret = Arrays.copyOf(values, values.length + 1);
+        ret[values.length] = statement;
+        return ret;
+    }
+
+    @Override
     public int hashCode() {
         return (997 * Arrays.hashCode(values)) ^ (991 * Objects.hashCode(statement));
     }

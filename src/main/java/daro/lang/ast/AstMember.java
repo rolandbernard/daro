@@ -30,6 +30,11 @@ public final class AstMember extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        return new AstNode[] { operand };
+    }
+
+    @Override
     public int hashCode() {
         return (997 * operand.hashCode()) ^ (991 * name.hashCode());
     }

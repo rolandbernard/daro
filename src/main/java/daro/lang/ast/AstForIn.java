@@ -37,6 +37,11 @@ public final class AstForIn extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        return new AstNode[] { variable, list, body };
+    }
+
+    @Override
     public int hashCode() {
         return (997 * variable.hashCode()) ^ (991 * list.hashCode()) ^ (877 * body.hashCode());
     }

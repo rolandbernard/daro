@@ -416,4 +416,91 @@ public class EqualsAstTest {
         assertNotEquals(node1, new Object());
         assertNotEquals(node1, null);
     }
+
+    @Test
+    void equalsAstMatch() {
+        AstMatch node1 = new AstMatch(null,
+            new AstSymbol(null, "foo"),
+            new AstMatchCase[] {
+                new AstMatchCase(null,
+                    new AstNode[] { new AstInteger(null, 5) },
+                    new AstSymbol(null, "bar")
+                ),
+                new AstMatchCase(null, null,
+                    new AstSymbol(null, "bar")
+                ),
+            }
+        );
+        AstMatch node2 = new AstMatch(null,
+            new AstSymbol(null, "foo"),
+            new AstMatchCase[] {
+                new AstMatchCase(null,
+                    new AstNode[] { new AstInteger(null, 5) },
+                    new AstSymbol(null, "bar")
+                ),
+                new AstMatchCase(null, null,
+                    new AstSymbol(null, "bar")
+                ),
+            }
+        );
+        assertEquals(node1, node1);
+        assertEquals(node1, node2);
+    }
+
+    @Test
+    void notEqualsAstMatch() {
+        AstMatch node1 = new AstMatch(null,
+            new AstSymbol(null, "foo"),
+            new AstMatchCase[] {
+                new AstMatchCase(null,
+                    new AstNode[] { new AstInteger(null, 5) },
+                    new AstSymbol(null, "bar")
+                ),
+                new AstMatchCase(null, null,
+                    new AstSymbol(null, "bar")
+                ),
+            }
+        );
+        AstMatch node2 = new AstMatch(null,
+            new AstSymbol(null, "bar"),
+            new AstMatchCase[] {
+                new AstMatchCase(null,
+                    new AstNode[] { new AstInteger(null, 5) },
+                    new AstSymbol(null, "bar")
+                ),
+                new AstMatchCase(null, null,
+                    new AstSymbol(null, "bar")
+                ),
+            }
+        );
+        AstMatch node3 = new AstMatch(null,
+            new AstSymbol(null, "foo"),
+            new AstMatchCase[] {
+                new AstMatchCase(null,
+                    new AstNode[] { new AstInteger(null, 5) },
+                    new AstSymbol(null, "foo")
+                ),
+                new AstMatchCase(null, null,
+                    new AstSymbol(null, "bar")
+                ),
+            }
+        );
+        AstMatch node4 = new AstMatch(null,
+            new AstSymbol(null, "foo"),
+            new AstMatchCase[] {
+                new AstMatchCase(null,
+                    new AstNode[] { new AstInteger(null, 6) },
+                    new AstSymbol(null, "bar")
+                ),
+                new AstMatchCase(null, null,
+                    new AstSymbol(null, "bar")
+                ),
+            }
+        );
+        assertNotEquals(node1, node2);
+        assertNotEquals(node1, node3);
+        assertNotEquals(node1, node4);
+        assertNotEquals(node1, new Object());
+        assertNotEquals(node1, null);
+    }
 }

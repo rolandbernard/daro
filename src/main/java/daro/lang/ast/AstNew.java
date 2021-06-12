@@ -22,12 +22,17 @@ public final class AstNew extends AstNode {
         return type;
     }
 
-    public AstInitializer getInitialzer() {
+    public AstInitializer getInitializer() {
         return initializer;
     }
 
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    public AstNode[] getChildren() {
+        return new AstNode[] { type, initializer };
     }
 
     @Override
@@ -39,7 +44,7 @@ public final class AstNew extends AstNode {
     public boolean equals(Object obj) {
         if (obj instanceof AstNew) {
             AstNew node = (AstNew)obj;
-            return Objects.equals(type, node.getType()) && Objects.equals(initializer, node.getInitialzer());
+            return Objects.equals(type, node.getType()) && Objects.equals(initializer, node.getInitializer());
         } else {
             return false;
         }

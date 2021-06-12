@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.nio.file.Path;
+
 public class PositionTest {
 
     @Test
@@ -50,9 +52,27 @@ public class PositionTest {
     }
 
     @Test
-    void toStringPosition() {
+    void toStringWithoutText() {
         Position position1 = new Position(42, 100);
         assertEquals("42..100", position1.toString());
+    }
+
+    @Test
+    void toStringWithoutFile() {
+        Position position1 = new Position(1, 5, "\nTest\n");
+        assertEquals("2:1..2:4", position1.toString());
+    }
+
+    @Test
+    void toStringWithFile() {
+        Position position1 = new Position(1, 5, "\nTest\n", Path.of("test.txt"));
+        assertEquals("test.txt:2:1..2:4", position1.toString());
+    }
+
+    @Test
+    void toStringSingleChar() {
+        Position position1 = new Position(1, 2, "\nTest\n");
+        assertEquals("2:1", position1.toString());
     }
 
     @Test

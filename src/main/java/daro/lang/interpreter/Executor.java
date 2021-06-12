@@ -512,8 +512,8 @@ public class Executor implements Visitor<DaroObject> {
         DaroObject kind = require(ast.getType());
         if (kind instanceof DaroType) {
             DaroType type = (DaroType)kind;
-            if (ast.getInitialzer() != null) {
-                return type.instantiate(context, ast.getInitialzer());
+            if (ast.getInitializer() != null) {
+                return type.instantiate(context, ast.getInitializer());
             } else {
                 return type.instantiate(context);
             }

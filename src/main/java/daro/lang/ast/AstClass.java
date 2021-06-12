@@ -30,6 +30,11 @@ public final class AstClass extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        return new AstNode[] { body };
+    }
+
+    @Override
     public int hashCode() {
         return (997 * Objects.hashCode(name)) ^ (991 * Objects.hashCode(body));
     }

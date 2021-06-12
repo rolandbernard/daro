@@ -27,6 +27,11 @@ public abstract class AstBinaryNode extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        return new AstNode[] { left, right };
+    }
+
+    @Override
     public int hashCode() {
         return (997 * left.hashCode()) ^ (991 * right.hashCode()) ^ (877 * this.getClass().hashCode());
     }

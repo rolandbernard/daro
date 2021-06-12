@@ -32,6 +32,13 @@ public final class AstCall extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        AstNode[] ret = Arrays.copyOf(parameters, parameters.length + 1);
+        ret[parameters.length] = function;
+        return ret;
+    }
+
+    @Override
     public int hashCode() {
         return (997 * function.hashCode()) ^ (991 * Arrays.hashCode(parameters));
     }

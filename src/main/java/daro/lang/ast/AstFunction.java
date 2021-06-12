@@ -39,6 +39,13 @@ public final class AstFunction extends AstNode {
     }
 
     @Override
+    public AstNode[] getChildren() {
+        AstNode[] ret = Arrays.copyOf(parameters, parameters.length + 1, AstNode[].class);
+        ret[parameters.length] = body;
+        return ret;
+    }
+
+    @Override
     public int hashCode() {
         return (997 * name.hashCode()) ^ (877 * Arrays.hashCode(parameters)) ^ (953 * body.hashCode());
     }
