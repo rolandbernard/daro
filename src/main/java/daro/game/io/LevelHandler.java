@@ -108,7 +108,11 @@ public abstract class LevelHandler {
         long id = levelJson.get("id").getAsLong();
         boolean isCompleted = false;
         String currentCode = null;
-        Challenge challenge = parseChallengeFromJsonObject(levelJson);
+        String name = levelJson.get("name").getAsString();
+        String description = levelJson.get("description").getAsString();
+        JsonArray tests = levelJson.get("tests") != null ? levelJson.get("tests").getAsJsonArray() : null;
+        List<Validation> testsList = parseValidationsFromJson(tests);
+        String standardCode = levelJson.get("startCode") == null ? "" : levelJson.get("startCode").getAsString();
 
         if (completionMap != null) {
             JsonObject data = completionMap.get(id);
@@ -118,17 +122,12 @@ public abstract class LevelHandler {
             }
         }
 
-        String code = currentCode == null ? challenge.getCode() : currentCode;
-        return new Level(id, challenge.getName(), challenge.getDescription(), isCompleted, code, challenge.getTests(), parentId);
+        String code = currentCode == null ? standardCode : currentCode;
+        return new Level(id, name, description, isCompleted, code, testsList, parentId);
     }
-    public static Challenge parseChallengeFromJsonObject(JsonObject obj) {
-        String name = obj.get("name").getAsString();
-        String description = obj.get("description").getAsString();
-        JsonArray tests = obj.get("tests") != null ? obj.get("tests").getAsJsonArray() : null;
-        List<Validation> testsList = parseValidationsFromJson(tests);
-        String standardCode = obj.get("startCode") == null ? "" : obj.get("startCode").getAsString();
-        return new Challenge(name, description, standardCode, testsList);
-    }
+
+
+
 
     /**
      * Parses validations from a json
@@ -136,14 +135,14 @@ public abstract class LevelHandler {
      * @param validations a JsonArray containing validations
      * @return a list of tests
      */
-    private static List<Validation> parseValidationsFromJson(JsonArray validations) {
+    public static List<Validation> parseValidationsFromJson(JsonArray validations) {
         List<Validation> testsList = new ArrayList<>();
         if (validations != null && validations.size() > 0) {
             validations.forEach(test -> {
                 JsonObject validation = test.getAsJsonObject();
                 long id = validation.get("id").getAsLong();
                 String source = validation.get("source").getAsString();
-                String expected = validation.get("expected").getAsString();
+                String expected = validation.get("expected") != null ? validation.get("expected").getAsString() : "";
                 ValidationType type = ValidationType.valueOf(validation.get("type").getAsString());
 
                 Validation validationItem;

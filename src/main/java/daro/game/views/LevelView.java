@@ -1,9 +1,9 @@
 package daro.game.views;
 
 import daro.game.io.LevelHandler;
-import daro.game.main.Challenge;
 import daro.game.main.Level;
 import daro.game.io.UserData;
+import daro.game.main.Solvable;
 import daro.game.pages.CoursePage;
 import daro.game.ui.*;
 import daro.game.validation.Validation;
@@ -26,7 +26,7 @@ public class LevelView extends View {
     private static final double SIDEBAR_WIDTH = 340;
     private static final double BOX_PADDINGS = 20;
 
-    private Challenge level;
+    private Solvable level;
     private CodeEditor editor;
     private Popup popup;
 
@@ -36,7 +36,7 @@ public class LevelView extends View {
      *
      * @param level the level shown in the view
      */
-    public LevelView(Challenge level) {
+    public LevelView(Solvable level) {
         this.level = level;
         editor = new CodeEditor(level.getCode());
         HBox mainContent = new HBox(getSidebar(), editor);

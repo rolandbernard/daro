@@ -14,12 +14,13 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class ChallengeBuilderView extends View {
 
     private CodeEditor defaultCode;
-    private InputField nameField, descriptionField;
+    private InputField nameField, descriptionField, creatorField;
     private List<Map<String, InputField>> testFields;
     private VBox tests;
     private static Map<String, String> testTypes;
@@ -78,8 +79,9 @@ public class ChallengeBuilderView extends View {
 
     private FieldGroup createGeneralFields() {
         nameField = new TextInput("Name");
+        creatorField = new TextInput("Creator");
         descriptionField = new TextAreaInput("Description");
-        return createFieldGroup("General", nameField, descriptionField);
+        return createFieldGroup("General", creatorField, nameField, descriptionField);
     }
 
     private void createTestFields() {
@@ -104,15 +106,16 @@ public class ChallengeBuilderView extends View {
     private void serializeData() {
         JsonObject object = new JsonObject();
         object.addProperty("name", nameField.getValue().toString());
+        object.addProperty("creator", creatorField.getValue().toString());
         object.addProperty("description", descriptionField.getValue().toString());
         object.addProperty("startCode", defaultCode.getText());
         JsonArray tests = new JsonArray();
         int i = 1;
-        for(Map<String, InputField> map : testFields) {
+        for (Map<String, InputField> map : testFields) {
             JsonObject test = new JsonObject();
             test.addProperty("id", i);
             i++;
-            for (String key: map.keySet()) {
+            for (String key : map.keySet()) {
                 test.addProperty(key, map.get(key).getValue().toString());
             }
             tests.add(test);
@@ -126,13 +129,13 @@ public class ChallengeBuilderView extends View {
 
         File file = fileChooser.showSaveDialog(this.getScene().getWindow());
         try {
-            if(file.createNewFile()) {
-                FileWriter writer = new FileWriter(file);
+            if (file.exists() || file.createNewFile()) {
+                PrintWriter writer = new PrintWriter(file);
                 writer.write(object.toString());
                 writer.flush();
             }
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 

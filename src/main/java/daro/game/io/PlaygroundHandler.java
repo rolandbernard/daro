@@ -20,7 +20,7 @@ public abstract class PlaygroundHandler {
      */
     public static File[] parsePlaygrounds() {
         File playgrounds = new File(PLAYGROUNDS_PATH);
-        if (!playgrounds.exists()) {
+        if (!playgrounds.exists() && !playgrounds.isDirectory()) {
             try {
                 Files.createDirectories(Path.of(PLAYGROUNDS_PATH));
             } catch (IOException exception) {
