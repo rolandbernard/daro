@@ -47,8 +47,8 @@ public abstract class AbstractScope implements Scope {
     }
 
     /**
-     * Add the given parents to the scope. These parents will be added to the end and therefore have
-     * lower priority that the existing parents.
+     * Add the given parents to the scope. These parents will be added to the end
+     * and therefore have lower priority that the existing parents.
      *
      * @param parent The parents to add
      */
@@ -61,12 +61,12 @@ public abstract class AbstractScope implements Scope {
     }
 
     /**
-     * This function can be used to safely implement recursion that will be able to handle circular
-     * scope graphs.
+     * This function can be used to safely implement recursion that will be able to
+     * handle circular scope graphs.
      *
-     * @param <T> The type the function returns
+     * @param <T>      The type the function returns
      * @param function The function to execute if not already inside the scope
-     * @param def The default value to return if we are already in the scope
+     * @param def      The default value to return if we are already in the scope
      * @return The value the function returns
      */
     public <T> T safeRecursion(Supplier<T> function, T def) {

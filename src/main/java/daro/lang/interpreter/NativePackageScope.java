@@ -59,9 +59,11 @@ public class NativePackageScope extends ClassLoader implements Scope {
             return true;
         } else {
             for (Package packs : getPackages()) {
-                if (packs.getName().startsWith(pack.getClassName() + ".") || packs.getName().equals(pack.getClassName())) {
+                if (
+                    packs.getName().startsWith(pack.getClassName() + ".") || packs.getName().equals(pack.getClassName())
+                ) {
                     return true;
-               }
+                }
             }
             return false;
         }
@@ -81,6 +83,12 @@ public class NativePackageScope extends ClassLoader implements Scope {
         }
     }
 
+    /**
+     * Search for all entries in the directory, finding class files and directories.
+     *
+     * @param directory The roo directory to read
+     * @return A {@link List} of all contained directories and class files
+     */
     private List<String> checkDirectory(Path directory) {
         List<String> ret = new ArrayList<>();
         if (Files.isDirectory(directory)) {
@@ -100,6 +108,12 @@ public class NativePackageScope extends ClassLoader implements Scope {
         return ret;
     }
 
+    /**
+     * Return all children of the package of this scope inside the given JAR file.
+     *
+     * @param connection The connection to the JAR file
+     * @return The list of all child directories and class files of the package
+     */
     private List<String> checkJarFile(JarURLConnection connection) {
         String packName = pkg.getResourceName();
         List<String> ret = new ArrayList<>();
@@ -128,6 +142,13 @@ public class NativePackageScope extends ClassLoader implements Scope {
         return ret;
     }
 
+    /**
+     * Try to find all children of this package. This will only find directories and
+     * class files. Other resources will be ignored. This will also not work for
+     * baseline classes.
+     *
+     * @return The {@link Set} of all children that were found
+     */
     private Set<String> getChildrenForPackage() {
         Set<String> ret = new HashSet<>();
         try {
