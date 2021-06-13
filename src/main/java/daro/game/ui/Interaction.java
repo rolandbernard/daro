@@ -7,7 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
-public class Interaction {
+public abstract class Interaction {
     private static final Duration DURATION = new Duration(300);
 
     /**
@@ -40,8 +40,8 @@ public class Interaction {
     public static void scaleDown(Node n) {
         ScaleTransition transition = new ScaleTransition();
         transition.setDuration(DURATION);
-        transition.setByX(-0.05);
-        transition.setByY(-0.05);
+        transition.setToX(0.95);
+        transition.setToY(0.95);
         transition.setNode(n);
         transition.play();
     }

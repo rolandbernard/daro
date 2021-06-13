@@ -27,7 +27,7 @@ public class SettingsPage extends Page {
         fieldGroups.setFillWidth(true);
         generateEditorFields();
 
-        CustomButton saveButton = new CustomButton("\ue161", "Save your changes", 50, true);
+        CustomButton saveButton = new CustomButton("\ue161", "Save your changes", true);
         saveButton.setOnMouseClicked(e -> {
             if (SettingsHandler.save(allFields)) {
                 Callout saveCallout = new Callout("Saved your changes", "#53F481", "#1D1F26");
@@ -43,7 +43,7 @@ public class SettingsPage extends Page {
      * @param name   the title of the field group
      * @param fields the fields in the field group
      */
-    private void createFieldGroup(String name, InputField ...fields) {
+    private void createFieldGroup(String name, InputField... fields) {
         fieldGroups.getChildren().add(new FieldGroup(name, fields));
     }
 
@@ -60,8 +60,8 @@ public class SettingsPage extends Page {
             themeOptions.put(theme, theme);
         }
         SelectField<String> theme = new SelectField<>(
-            themeOptions, editorSettings.get("theme") == null ? null : editorSettings.get("theme").getAsString(),
-            "Theme"
+                themeOptions, editorSettings.get("theme") == null ? null : editorSettings.get("theme").getAsString(),
+                "Theme"
         );
         editorFields.put("theme", theme);
 
@@ -69,8 +69,8 @@ public class SettingsPage extends Page {
         indentOptions.put(true, "With indent");
         indentOptions.put(false, "Without indent");
         SelectField<Boolean> indent = new SelectField<>(
-            indentOptions, editorSettings.get("indent") == null ? null : editorSettings.get("indent").getAsBoolean(),
-            "Auto Indent"
+                indentOptions, editorSettings.get("indent") == null ? null : editorSettings.get("indent").getAsBoolean(),
+                "Auto Indent"
         );
         editorFields.put("indent", indent);
 
@@ -78,15 +78,15 @@ public class SettingsPage extends Page {
         completionOptions.put(true, "With autocompletion");
         completionOptions.put(false, "Without autocompletion");
         SelectField<Boolean> autocompletion =
-            new SelectField<>(
-                completionOptions,
-                editorSettings.get("auto_completion") == null ? null
-                    : editorSettings.get("auto_completion").getAsBoolean(),
-                "Auto completion"
-            );
+                new SelectField<>(
+                        completionOptions,
+                        editorSettings.get("auto_completion") == null ? null
+                                : editorSettings.get("auto_completion").getAsBoolean(),
+                        "Auto completion"
+                );
         editorFields.put("auto_completion", autocompletion);
 
         allFields.put("editor", editorFields);
-        createFieldGroup("Editor Settings", allFields.get("editor").values().toArray(new InputField[] { }));
+        createFieldGroup("Editor Settings", allFields.get("editor").values().toArray(new InputField[]{}));
     }
 }

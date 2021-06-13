@@ -2,6 +2,7 @@ package daro.game.ui;
 
 import daro.game.main.Game;
 import daro.game.io.PathHandler;
+import daro.game.main.ThemeColor;
 import daro.game.pages.*;
 import daro.game.views.MenuView;
 import javafx.geometry.Insets;
@@ -27,7 +28,7 @@ public class Navigation extends VBox {
     public Navigation(Page defaultPage) {
         this.setMinWidth(WIDTH);
         this.defaultPage = defaultPage;
-        this.setStyle("-fx-background-color: " + Game.colorTheme.get("darkBackground"));
+        this.setStyle("-fx-background-color: " + ThemeColor.DARK_BACKGROUND);
         this.setAlignment(Pos.TOP_CENTER);
         this.setPadding(new Insets(80, 30, 80, 30));
         this.setSpacing(40);

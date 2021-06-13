@@ -2,6 +2,7 @@ package daro.game.ui;
 
 import daro.game.main.Game;
 import daro.game.main.Level;
+import daro.game.main.ThemeColor;
 import daro.game.pages.Page;
 import daro.game.views.LevelView;
 import daro.game.views.View;
@@ -25,11 +26,10 @@ public class LevelItem extends VBox {
      */
     public LevelItem(Level level) {
         this.level = level;
-        // this.setWidth(Page.INNER_WIDTH);
         this.setMinHeight(200);
         this.setStyle(
             "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                + "-fx-background-color:" + Game.colorTheme.get("lightBackground")
+                + "-fx-background-color:" + ThemeColor.LIGHT_BACKGROUND
         );
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));

@@ -1,6 +1,7 @@
 package daro.game.ui;
 
 import daro.game.main.Game;
+import daro.game.main.ThemeColor;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.layout.HBox;
@@ -19,7 +20,7 @@ public class CreateButton extends HBox {
         labelText.getStyleClass().addAll("text", "bold");
         this.setSpacing(10);
         this.setMinHeight(80);
-        this.setStyle("-fx-background-radius: 15px; -fx-background-color: " + Game.colorTheme.get("lightBackground"));
+        this.setStyle("-fx-background-radius: 15px; -fx-background-color: " + ThemeColor.LIGHT_BACKGROUND);
         Interaction.setClickable(this, true);
         this.setCursor(Cursor.HAND);
         this.setAlignment(Pos.CENTER);

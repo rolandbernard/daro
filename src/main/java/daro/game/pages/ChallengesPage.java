@@ -11,7 +11,6 @@ import daro.game.views.MenuView;
 import daro.game.views.View;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -49,7 +48,7 @@ public class ChallengesPage extends Page {
                 Scanner scanner = new Scanner(file);
                 scanner.useDelimiter("\\Z");
                 JsonObject element = JsonParser.parseString(scanner.next()).getAsJsonObject();
-                Challenge newChallenge = ChallengeHandler.parseChallenge(element);
+                Challenge newChallenge = ChallengeHandler.parseChallenge(file, element);
                 if (ChallengeHandler.hasSimilar(newChallenge)) {
                     Text heading = new Text("Error");
                     heading.getStyleClass().addAll("heading", "small", "text");
@@ -59,9 +58,10 @@ public class ChallengesPage extends Page {
                     information.getStyleClass().add("text");
                     information.setTextAlignment(TextAlignment.CENTER);
 
-                    CustomButton cancelBtn = new CustomButton("\ue255", "Cancel", 50, true);
+                    CustomButton cancelBtn = new CustomButton("\ue14c", "Cancel", true);
                     cancelBtn.setOnMouseClicked(e -> MenuView.getPopup().close());
-                    CustomButton replaceBtn = new CustomButton("\ue923", "Replace", 50, true);
+
+                    CustomButton replaceBtn = new CustomButton("\ue923", "Replace", true);
                     replaceBtn.setOnMouseClicked(e -> {
                         if (ChallengeHandler.replaceSimilar(newChallenge, element)) {
                             View.updateView(this, new LevelView(newChallenge));
@@ -69,7 +69,7 @@ public class ChallengesPage extends Page {
                             MenuView.getPopup().close();
                         }
                     });
-                    CustomButton importBtn = new CustomButton("\ue255", "Import anyway", 50, true);
+                    CustomButton importBtn = new CustomButton("\ue255", "Import anyway", true);
                     importBtn.setOnMouseClicked(e -> {
                         ChallengeHandler.importChallenge(file);
                         View.updateView(this, new LevelView(newChallenge));

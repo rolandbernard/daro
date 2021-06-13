@@ -1,6 +1,7 @@
 package daro.game.ui;
 
 import daro.game.main.Game;
+import daro.game.main.ThemeColor;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
@@ -21,7 +22,7 @@ public class Container extends StackPane {
         content.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         content.setFitToHeight(true);
         content.setFitToWidth(true);
-        content.setStyle("-fx-background-color: " + Game.colorTheme.get("background"));
+        content.setStyle("-fx-background-color: " + ThemeColor.BACKGROUND);
     }
 
     public Popup getPopup() {

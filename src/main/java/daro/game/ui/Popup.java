@@ -19,7 +19,7 @@ public class Popup extends StackPane {
         wrapper.setFitToHeight(true);
         wrapper.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         wrapper.setStyle("-fx-background-color: transparent");
-        this.setStyle("-fx-background-color: rgba(0,0,0,0.5)");
+        this.setStyle("-fx-background-color: rgba(0,0,0,0.75)");
         this.setVisible(false);
         this.setAlignment(Pos.CENTER);
         this.getChildren().add(wrapper);

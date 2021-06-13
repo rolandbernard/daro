@@ -22,13 +22,12 @@ public class EditorView extends View {
     public EditorView(File file) {
         try {
             String code = PlaygroundHandler.getPlayground(file);
-            double buttonHeight = 50;
             VBox sidebar = new VBox();
             Terminal terminal = new Terminal(TERMINAL_WIDTH);
             CodeEditor editor = new CodeEditor(code);
 
-            CustomButton runButton = new CustomButton("\ue037", "Run the program", buttonHeight, false);
-            CustomButton closeButton = new CustomButton("\ue9ba", "Save & Close", buttonHeight, false, "#cc2610");
+            CustomButton runButton = new CustomButton("\ue037", "Run the program", false);
+            CustomButton closeButton = new CustomButton("\ue9ba", "Save & Close", false, "#cc2610");
             runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
             closeButton.setOnMouseClicked(e -> {
                 PlaygroundHandler.savePlayground(file, editor.getText());

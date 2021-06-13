@@ -24,7 +24,7 @@ public class CreatePlaygroundPage extends Page {
     public CreatePlaygroundPage() {
         Heading heading = new Heading("Create a new playground", "Give it a name and get started!");
         nameField = new TextInput("Playground name");
-        saveButton = new CustomButton("\ue161", "Create the playground", 60, true);
+        saveButton = new CustomButton("\ue161", "Create the playground", true);
         saveButton.setOnMouseClicked(this::createPlayground);
         callout = new Callout("", "#fc323f");
         form = new VBox(nameField, saveButton);

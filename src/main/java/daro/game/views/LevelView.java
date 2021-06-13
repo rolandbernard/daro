@@ -10,7 +10,6 @@ import daro.game.validation.Validation;
 import daro.game.validation.ValidationResult;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -50,16 +49,17 @@ public class LevelView extends View {
 
     private VBox getSidebar() {
         VBox bar = new VBox();
-        double textBoxHeight = 250;
-        double buttonHeight = 40;
-        double backBtnHeight = 30;
-
-        ScrollPane textBox = createTextBox(textBoxHeight);
+        ScrollPane textBox = createTextBox();
         Terminal terminal = new Terminal(SIDEBAR_WIDTH);
-        HBox backButton = createBackButton(backBtnHeight, SIDEBAR_WIDTH);
 
-        CustomButton runButton = new CustomButton("\ue037", "Run in terminal", buttonHeight, false);
-        CustomButton submitButton = new CustomButton("\ue86c", "Submit your result", buttonHeight, false, "#cc2610");
+        BackButton backButton = new BackButton("Back to all courses");
+        backButton.setOnMouseClicked(e -> {
+            save(ValidationResult.evaluate(Validation.run(editor.getText(), level.getTests())));
+            View.updateView(this, new MenuView(new CoursePage()));
+        });
+
+        CustomButton runButton = new CustomButton("\ue037", "Run in terminal", false);
+        CustomButton submitButton = new CustomButton("\ue86c", "Submit your result", false, "#cc2610");
         runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
         submitButton.setOnMouseClicked(this::openValidationPopup);
 
@@ -69,7 +69,7 @@ public class LevelView extends View {
         return bar;
     }
 
-    private ScrollPane createTextBox(double textBoxHeight) {
+    private ScrollPane createTextBox() {
         Text title = new Text(level.getName());
         title.setWrappingWidth(SIDEBAR_WIDTH - BOX_PADDINGS * 2);
         title.getStyleClass().addAll("text", "heading", "small");
@@ -84,33 +84,11 @@ public class LevelView extends View {
 
         ScrollPane pane = new ScrollPane();
         pane.setStyle("-fx-background-color: #2b2e3a");
-        pane.setMinHeight(textBoxHeight);
+        pane.setMinHeight(250);
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         pane.setContent(textBox);
 
         return pane;
-    }
-
-    private HBox createBackButton(double height, double width) {
-        Text icon = new Text("\ue5c4");
-        icon.getStyleClass().add("icon");
-
-        Text label = new Text("Back to overview");
-        label.getStyleClass().add("text");
-
-        HBox btn = new HBox();
-        btn.setSpacing(10);
-        btn.getChildren().addAll(icon, label);
-        btn.setPrefHeight(height);
-        btn.setPrefWidth(width);
-        btn.setOnMouseClicked(e -> {
-            save(ValidationResult.evaluate(Validation.run(editor.getText(), level.getTests())));
-            View.updateView(this, new MenuView(new CoursePage()));
-        });
-        btn.setCursor(Cursor.HAND);
-        btn.setAlignment(Pos.CENTER_LEFT);
-        btn.setPadding(new Insets(10));
-        return btn;
     }
 
     private boolean save(boolean completion) {
@@ -151,8 +129,6 @@ public class LevelView extends View {
     }
 
     private HBox createControlButtons(boolean success) {
-        double buttonHeight = 40;
-        double buttonWidth = 240;
         HBox buttons = new HBox();
         CustomButton mainButton = null;
         if (success) {
@@ -160,22 +136,20 @@ public class LevelView extends View {
                 Level l = (Level) level;
                 Level nextLevel = LevelHandler.getNextLevel(l.getGroupId(), l.getId());
                 if (nextLevel != null) {
-                    mainButton = new CustomButton("\ue16a", "Next Level", buttonHeight, true);
+                    mainButton = new CustomButton("\ue16a", "Next Level", true);
                     mainButton.setOnMouseClicked(e -> View.updateView(this, new LevelView(nextLevel)));
                 }
             }
         } else {
-            mainButton = new CustomButton("\ue5d5", "Try again", buttonHeight, true);
+            mainButton = new CustomButton("\ue5d5", "Try again", true);
             mainButton.setOnMouseClicked(e -> popup.close());
         }
-        CustomButton backButton = new CustomButton("\ue5c4", "Back to overview", buttonHeight, true, "#cc2610");
-        backButton.setPrefWidth(buttonWidth);
+        CustomButton backButton = new CustomButton("\ue5c4", "Back to overview", true, "#cc2610");
         backButton.setOnMouseClicked(e -> backToOverview());
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
         buttons.getChildren().add(backButton);
         if (mainButton != null) {
-            mainButton.setPrefWidth(buttonWidth);
             buttons.getChildren().add(mainButton);
         }
         return buttons;

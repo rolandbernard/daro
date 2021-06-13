@@ -3,6 +3,8 @@ package daro.game.views;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import daro.game.main.Game;
+import daro.game.main.ThemeColor;
+import daro.game.pages.ChallengesPage;
 import daro.game.ui.*;
 import daro.game.validation.ValidationType;
 import javafx.geometry.Insets;
@@ -40,7 +42,7 @@ public class ChallengeBuilderView extends View {
         defaultCode = new CodeEditor();
         VBox field = new VBox(label, defaultCode);
         field.setSpacing(10);
-        field.setStyle("-fx-background-color: " + Game.colorTheme.get("backgroundDark"));
+        field.setStyle("-fx-background-color: " + ThemeColor.DARK_BACKGROUND);
         field.setPadding(new Insets(PADDING, 0, 0, 0));
         return field;
     }
@@ -55,10 +57,13 @@ public class ChallengeBuilderView extends View {
         createTestFields();
         CreateButton newTestBtn = new CreateButton("Add a test");
         newTestBtn.setOnMouseClicked(e -> createTestFields());
-        CustomButton createBtn = new CustomButton("\ue161", "Save the challenge", 50, true);
+        CustomButton createBtn = new CustomButton("\ue161", "Save the challenge", true);
         createBtn.setOnMouseClicked(e -> serializeData());
 
-        VBox container = new VBox(heading, createGeneralFields(), tests, newTestBtn, createBtn);
+        BackButton backButton = new BackButton("Back to all challenges");
+        backButton.setOnMouseClicked(e -> View.updateView(this, new MenuView(new ChallengesPage())));
+
+        VBox container = new VBox(backButton, heading, createGeneralFields(), tests, newTestBtn, createBtn);
         container.setPadding(new Insets(PADDING));
         container.setSpacing(30);
         ScrollPane pane = new ScrollPane(container);
@@ -67,7 +72,7 @@ public class ChallengeBuilderView extends View {
         pane.setMaxWidth(SIDEBAR_WIDTH);
         pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        pane.setStyle("-fx-background-color: " + Game.colorTheme.get("backgroundDark"));
+        pane.setStyle("-fx-background-color: " + ThemeColor.DARK_BACKGROUND);
         return pane;
     }
 

@@ -46,7 +46,7 @@ public abstract class ChallengeHandler {
                     Scanner scanner = new Scanner(file);
                     scanner.useDelimiter("\\Z");
                     JsonObject obj = JsonParser.parseString(scanner.next()).getAsJsonObject();
-                    challenges.add(parseChallenge(obj));
+                    challenges.add(parseChallenge(file, obj));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -64,14 +64,14 @@ public abstract class ChallengeHandler {
         return new Date().getTime() + ".json";
     }
 
-    public static Challenge parseChallenge(JsonObject challengeObj) {
+    public static Challenge parseChallenge(File source, JsonObject challengeObj) {
         String name = challengeObj.get("name").getAsString();
         String creator = challengeObj.get("creator").getAsString();
         String description = challengeObj.get("description").getAsString();
         JsonArray tests = challengeObj.get("tests") != null ? challengeObj.get("tests").getAsJsonArray() : null;
         List<Validation> testsList = LevelHandler.parseValidationsFromJson(tests);
         String standardCode = challengeObj.get("startCode") == null ? "" : challengeObj.get("startCode").getAsString();
-        return new Challenge(name, description, standardCode, testsList, creator);
+        return new Challenge(name, description, standardCode, testsList, creator, source);
     }
 
     public static boolean hasSimilar(Challenge c) {
@@ -87,7 +87,7 @@ public abstract class ChallengeHandler {
                     Scanner scanner = new Scanner(file);
                     scanner.useDelimiter("\\Z");
                     JsonObject obj = JsonParser.parseString(scanner.next()).getAsJsonObject();
-                    Challenge oldChallenge = parseChallenge(obj);
+                    Challenge oldChallenge = parseChallenge(file, obj);
                     if(oldChallenge.isSimilar(newChallenge)) {
                         PrintWriter writer = new PrintWriter(file.getPath());
                         writer.write(newJsonObj.toString());

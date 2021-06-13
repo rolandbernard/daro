@@ -28,7 +28,6 @@ public class PlaygroundItem extends VBox {
     public PlaygroundItem(File file) {
         Text name = new Text(file.getName().split("\\.")[0]);
         name.getStyleClass().addAll("heading", "small", "text");
-        this.setPrefHeight(200);
         this.setFillWidth(true);
         this.setPadding(new Insets(40));
         this.setStyle(
