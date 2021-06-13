@@ -1,10 +1,22 @@
 package daro.lang.interpreter;
 
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import daro.lang.values.DaroNativeClass;
 import daro.lang.values.DaroNativePackage;
@@ -47,11 +59,9 @@ public class NativePackageScope extends ClassLoader implements Scope {
             return true;
         } else {
             for (Package packs : getPackages()) {
-                if (
-                        packs.getName().startsWith(pack.getClassName() + ".") || packs.getName().equals(pack.getClassName())
-                   ) {
+                if (packs.getName().startsWith(pack.getClassName() + ".") || packs.getName().equals(pack.getClassName())) {
                     return true;
-                   }
+               }
             }
             return false;
         }
@@ -71,10 +81,81 @@ public class NativePackageScope extends ClassLoader implements Scope {
         }
     }
 
+    private List<String> checkDirectory(Path directory) {
+        List<String> ret = new ArrayList<>();
+        if (Files.isDirectory(directory)) {
+            try {
+                Files.list(directory).forEach(file -> {
+                    String fileName = file.getFileName().toString();
+                    if (fileName.endsWith(".class")) {
+                        ret.add(fileName.substring(0, fileName.length() - 6));
+                    } else if (Files.isDirectory(file)) {
+                        ret.add(fileName);
+                    }
+                });
+            } catch (IOException e) {
+                // Ignore errors, simply return the empty list
+            }
+        }
+        return ret;
+    }
+
+    private List<String> checkJarFile(JarURLConnection connection) {
+        String packName = pkg.getResourceName();
+        List<String> ret = new ArrayList<>();
+        try {
+            JarFile jarFile = connection.getJarFile();
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                String name = entry.getName();
+                if (name.contains(packName + "/")) {
+                    String end = name.substring(name.indexOf(packName + "/") + packName.length() + 1);
+                    String[] names = end.split("/");
+                    String fileName = names[0].trim();
+                    if (!fileName.isEmpty()) {
+                        if (fileName.endsWith(".class")) {
+                            ret.add(fileName.substring(0, fileName.length() - 6));
+                        } else if (entry.isDirectory()) {
+                            ret.add(fileName);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // Ignore errors, simply return the empty list
+        }
+        return ret;
+    }
+
+    private Set<String> getChildrenForPackage() {
+        Set<String> ret = new HashSet<>();
+        try {
+            Enumeration<URL> resources = getResources(pkg.getResourceName());
+            while (resources.hasMoreElements()) {
+                try {
+                    URL url = resources.nextElement();
+                    URLConnection connection = url.openConnection();
+                    if (connection instanceof JarURLConnection) {
+                        ret.addAll(checkJarFile((JarURLConnection)connection));
+                    } else {
+                        ret.addAll(checkDirectory(Path.of(URLDecoder.decode(url.getPath(), "UTF-8"))));
+                    }
+                } catch (IOException e) {
+                    // Ignore errors, act as if returning an empty list
+                }
+            }
+        } catch (IOException e) {
+            // Ignore errors, simply return the empty list
+        }
+        return ret;
+    }
+
     @Override
     public Map<String, DaroObject> getCompleteMapping() {
         Map<String, DaroObject> result = new HashMap<>();
-        List<String> keys = new ArrayList<>();
+        Set<String> keys = new HashSet<>();
+        keys.addAll(getChildrenForPackage());
         for (Package packs : getPackages()) {
             if (packs.getName().startsWith(pkg.getClassName())) {
                 String[] name = packs.getName().split("\\.");
@@ -84,8 +165,12 @@ public class NativePackageScope extends ClassLoader implements Scope {
             }
         }
         for (String key : keys) {
-            if (containsVariable(key)) {
-                result.put(key, getVariableValue(key));
+            try {
+                if (containsVariable(key)) {
+                    result.put(key, getVariableValue(key));
+                }
+            } catch (InterpreterException e) {
+                // Ignore the variable
             }
         }
         return result;
