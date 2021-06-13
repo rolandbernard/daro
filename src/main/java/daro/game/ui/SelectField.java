@@ -2,8 +2,11 @@ package daro.game.ui;
 
 import daro.game.pages.Page;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.input.InputEvent;
 
 import java.util.List;
 import java.util.Map;
@@ -39,5 +42,9 @@ public class SelectField<T> extends InputField {
                 return key;
         }
         return null;
+    }
+
+    public void onChange(EventHandler<ActionEvent> handler) {
+        selectField.setOnAction(handler);
     }
 }

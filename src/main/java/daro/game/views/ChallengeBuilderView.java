@@ -1,8 +1,7 @@
 package daro.game.views;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import daro.game.main.Game;
+import daro.game.io.ChallengeHandler;
 import daro.game.main.ThemeColor;
 import daro.game.pages.ChallengesPage;
 import daro.game.ui.*;
@@ -14,7 +13,6 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -22,7 +20,8 @@ import java.util.*;
 public class ChallengeBuilderView extends View {
 
     private CodeEditor defaultCode;
-    private InputField nameField, descriptionField, creatorField;
+    private TextInput nameField, creatorField;
+    private TextAreaInput descriptionField;
     private List<Map<String, InputField>> testFields;
     private VBox tests;
     private static Map<String, String> testTypes;
@@ -58,7 +57,7 @@ public class ChallengeBuilderView extends View {
         CreateButton newTestBtn = new CreateButton("Add a test");
         newTestBtn.setOnMouseClicked(e -> createTestFields());
         CustomButton createBtn = new CustomButton("\ue161", "Save the challenge", true);
-        createBtn.setOnMouseClicked(e -> serializeData());
+        createBtn.setOnMouseClicked(e -> save());
 
         BackButton backButton = new BackButton("Back to all challenges");
         backButton.setOnMouseClicked(e -> View.updateView(this, new MenuView(new ChallengesPage())));
@@ -92,8 +91,12 @@ public class ChallengeBuilderView extends View {
     private void createTestFields() {
         Map<String, InputField> testMap = new HashMap<>();
         InputField source = new TextInput("Source");
-        InputField type = new SelectField<>(testTypes, null, "Type");
+        SelectField<String> type = new SelectField<>(testTypes, null, "Type");
         InputField expected = new TextInput("Expected value");
+        type.onChange(e -> {
+            boolean needsExpected = ValidationType.valueOf(type.getValue()).needsExpectedValue();
+            expected.setDisable(!needsExpected);
+        });
         testMap.put("source", source);
         testMap.put("type", type);
         testMap.put("expected", expected);
@@ -108,40 +111,56 @@ public class ChallengeBuilderView extends View {
         Arrays.stream(ValidationType.values()).forEach(t -> testTypes.put(t.name(), t.getLabel()));
     }
 
-    private void serializeData() {
-        JsonObject object = new JsonObject();
-        object.addProperty("name", nameField.getValue().toString());
-        object.addProperty("creator", creatorField.getValue().toString());
-        object.addProperty("description", descriptionField.getValue().toString());
-        object.addProperty("startCode", defaultCode.getText());
-        JsonArray tests = new JsonArray();
-        int i = 1;
-        for (Map<String, InputField> map : testFields) {
-            JsonObject test = new JsonObject();
-            test.addProperty("id", i);
-            i++;
-            for (String key : map.keySet()) {
-                test.addProperty(key, map.get(key).getValue().toString());
-            }
-            tests.add(test);
-        }
-        object.add("tests", tests);
+    private void save() {
         FileChooser fileChooser = new FileChooser();
+        String name = nameField.getValue();
+        String creator = creatorField.getValue();
+        String description = descriptionField.getValue();
+        List<Map<String, String>> tests = updateTests();
+        if (checkStrings(name, creator, description) && tests.size() > 0) {
+            JsonObject object = ChallengeHandler.serializeChallenge(name, creator, description, defaultCode.getText(), tests);
 
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
-        fileChooser.getExtensionFilters().add(extFilter);
-        fileChooser.setInitialFileName("challenge");
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
+            fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.setInitialFileName("challenge");
 
-        File file = fileChooser.showSaveDialog(this.getScene().getWindow());
-        try {
-            if (file.exists() || file.createNewFile()) {
-                PrintWriter writer = new PrintWriter(file);
-                writer.write(object.toString());
-                writer.flush();
+            File file = fileChooser.showSaveDialog(this.getScene().getWindow());
+            if (file != null) {
+                try {
+                    if (file.exists() || file.createNewFile()) {
+                        PrintWriter writer = new PrintWriter(file);
+                        writer.write(object.toString());
+                        writer.flush();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        } else {
+            System.out.println("error");
         }
+
     }
 
+    private boolean checkStrings(String... values) {
+        return Arrays.stream(values).map(String::trim).noneMatch(String::isEmpty);
+    }
+
+    private List<Map<String, String>> updateTests() {
+        List<Map<String, String>> tests = new ArrayList<>();
+        for (Map<String, InputField> test : testFields) {
+            String source = test.get("source").getValue().toString();
+            String expected = test.get("expected").getValue().toString();
+            ValidationType type = ValidationType.valueOf(test.get("type").getValue().toString());
+            if (!source.trim().isEmpty() && (!type.needsExpectedValue() || !expected.trim().isEmpty())) {
+                HashMap<String, String> map = new HashMap<>();
+                for (String key : test.keySet()) {
+                    map.put(key, test.get(key).getValue().toString());
+                }
+                tests.add(map);
+            }
+        }
+        return tests;
+    }
 }

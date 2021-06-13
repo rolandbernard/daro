@@ -1,5 +1,7 @@
 package daro.game.ui;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 
 public class TextInput extends InputField {
@@ -29,5 +31,10 @@ public class TextInput extends InputField {
     @Override
     public String getValue() {
         return field.getText();
+    }
+
+    @Override
+    public void onChange(EventHandler<ActionEvent> handler) {
+        field.setOnAction(handler);
     }
 }

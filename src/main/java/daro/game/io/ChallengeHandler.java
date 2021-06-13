@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import daro.game.main.Challenge;
+import daro.game.ui.InputField;
 import daro.game.validation.Validation;
 
 import java.io.File;
@@ -11,10 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public abstract class ChallengeHandler {
     private static String CHALLENGE_PATH = UserData.USER_PATH + "challenges/";
@@ -88,7 +86,7 @@ public abstract class ChallengeHandler {
                     scanner.useDelimiter("\\Z");
                     JsonObject obj = JsonParser.parseString(scanner.next()).getAsJsonObject();
                     Challenge oldChallenge = parseChallenge(file, obj);
-                    if(oldChallenge.isSimilar(newChallenge)) {
+                    if (oldChallenge.isSimilar(newChallenge)) {
                         PrintWriter writer = new PrintWriter(file.getPath());
                         writer.write(newJsonObj.toString());
                         writer.flush();
@@ -100,5 +98,27 @@ public abstract class ChallengeHandler {
             }
         }
         return false;
+    }
+
+
+    public static JsonObject serializeChallenge(String name, String creator, String description, String code, List<Map<String, String>> tests) {
+        JsonObject object = new JsonObject();
+        object.addProperty("name", name);
+        object.addProperty("creator", creator);
+        object.addProperty("description", description);
+        object.addProperty("startCode", code);
+        JsonArray testsArray = new JsonArray();
+        int i = 1;
+        for (Map<String, String> map : tests) {
+            JsonObject test = new JsonObject();
+            test.addProperty("id", i);
+            i++;
+            for (String key : map.keySet()) {
+                test.addProperty(key, map.get(key));
+            }
+            testsArray.add(test);
+        }
+        object.add("tests", testsArray);
+        return object;
     }
 }

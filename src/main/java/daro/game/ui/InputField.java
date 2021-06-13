@@ -1,5 +1,8 @@
 package daro.game.ui;
 
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -31,4 +34,6 @@ public abstract class InputField extends VBox {
      * @return a string containing the value
      */
     public abstract Object getValue();
+
+    public abstract void onChange(EventHandler<ActionEvent> handler);
 }
