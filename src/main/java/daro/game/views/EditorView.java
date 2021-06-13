@@ -1,6 +1,7 @@
 package daro.game.views;
 
 import daro.game.io.PlaygroundHandler;
+import daro.game.main.ThemeColor;
 import daro.game.pages.PlaygroundPage;
 import daro.game.ui.CodeEditor;
 import daro.game.ui.CustomButton;
@@ -27,7 +28,7 @@ public class EditorView extends View {
             CodeEditor editor = new CodeEditor(code);
 
             CustomButton runButton = new CustomButton("\ue037", "Run the program", false);
-            CustomButton closeButton = new CustomButton("\ue9ba", "Save & Close", false, "#cc2610");
+            CustomButton closeButton = new CustomButton("\ue9ba", "Save & Close", false, ThemeColor.ACCENT_DARK.toString());
             runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
             closeButton.setOnMouseClicked(e -> {
                 PlaygroundHandler.savePlayground(file, editor.getText());

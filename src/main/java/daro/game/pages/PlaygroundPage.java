@@ -17,8 +17,8 @@ public class PlaygroundPage extends Page {
      */
     public PlaygroundPage() {
         Heading heading = new Heading("Playground", "Play around with the language and use what you've learned.");
-        File[] playgrounds = PlaygroundHandler.parsePlaygrounds();
-        this.getChildren().addAll(heading, getPlaygroundItems(playgrounds));
+        getChildren().addAll(heading);
+        reload();
     }
 
     /**
@@ -33,10 +33,16 @@ public class PlaygroundPage extends Page {
         createButton.setOnMouseClicked(e -> MenuView.setContent(new CreatePlaygroundPage()));
         playgroundList.getChildren().add(createButton);
         for (File playground : playgrounds) {
-            playgroundList.getChildren().add(new PlaygroundItem(playground));
+            playgroundList.getChildren().add(new PlaygroundItem(playground, this));
         }
         playgroundList.setSpacing(30);
         return playgroundList;
     }
 
+    public void reload() {
+        if(getChildren().size() > 1)
+            getChildren().remove(1);
+        File[] playgrounds = PlaygroundHandler.parsePlaygrounds();
+        getChildren().add(getPlaygroundItems(playgrounds));
+    }
 }

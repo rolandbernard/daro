@@ -4,6 +4,7 @@ import daro.game.io.LevelHandler;
 import daro.game.main.Level;
 import daro.game.io.UserData;
 import daro.game.main.Solvable;
+import daro.game.main.ThemeColor;
 import daro.game.pages.CoursePage;
 import daro.game.ui.*;
 import daro.game.validation.Validation;
@@ -59,7 +60,7 @@ public class LevelView extends View {
         });
 
         CustomButton runButton = new CustomButton("\ue037", "Run in terminal", false);
-        CustomButton submitButton = new CustomButton("\ue86c", "Submit your result", false, "#cc2610");
+        CustomButton submitButton = new CustomButton("\ue86c", "Submit your result", false, ThemeColor.ACCENT_DARK.toString());
         runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
         submitButton.setOnMouseClicked(this::openValidationPopup);
 
@@ -144,7 +145,7 @@ public class LevelView extends View {
             mainButton = new CustomButton("\ue5d5", "Try again", true);
             mainButton.setOnMouseClicked(e -> popup.close());
         }
-        CustomButton backButton = new CustomButton("\ue5c4", "Back to overview", true, "#cc2610");
+        CustomButton backButton = new CustomButton("\ue5c4", "Back to overview", true);
         backButton.setOnMouseClicked(e -> backToOverview());
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
