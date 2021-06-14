@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.File;
 
-public class PlaygroundPage extends Page {
+public class PlaygroundPage extends Page implements Reloadable {
 
     /**
      * <strong>UI: <em>Page</em></strong><br>
@@ -39,6 +39,7 @@ public class PlaygroundPage extends Page {
         return playgroundList;
     }
 
+    @Override
     public void reload() {
         if(getChildren().size() > 1)
             getChildren().remove(1);

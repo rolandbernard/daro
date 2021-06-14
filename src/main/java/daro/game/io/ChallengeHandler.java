@@ -15,17 +15,28 @@ import java.nio.file.Path;
 import java.util.*;
 
 public abstract class ChallengeHandler {
-    private static String CHALLENGE_PATH = UserData.USER_PATH + "challenges/";
+    private static final String CHALLENGE_PATH = UserData.USER_PATH + "challenges/";
 
-    public static Path importChallenge(File file) {
+    public static void importChallenge(File file) {
         try {
             String newName = generateUniqueName();
-            return Files.copy(file.toPath(), Path.of(CHALLENGE_PATH + newName));
+            Files.copy(file.toPath(), Path.of(CHALLENGE_PATH + newName));
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
     }
+
+    public static boolean removeChallenge(File file) {
+        System.out.println(file);
+        try {
+            Files.delete(file.toPath());
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     public static List<Challenge> getImportedChallenges() {
         File challengesFolder = new File(CHALLENGE_PATH);
@@ -45,6 +56,7 @@ public abstract class ChallengeHandler {
                     scanner.useDelimiter("\\Z");
                     JsonObject obj = JsonParser.parseString(scanner.next()).getAsJsonObject();
                     challenges.add(parseChallenge(file, obj));
+                    scanner.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -86,6 +98,7 @@ public abstract class ChallengeHandler {
                     scanner.useDelimiter("\\Z");
                     JsonObject obj = JsonParser.parseString(scanner.next()).getAsJsonObject();
                     Challenge oldChallenge = parseChallenge(file, obj);
+                    scanner.close();
                     if (oldChallenge.isSimilar(newChallenge)) {
                         PrintWriter writer = new PrintWriter(file.getPath());
                         writer.write(newJsonObj.toString());

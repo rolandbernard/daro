@@ -1,18 +1,26 @@
 package daro.game.ui;
 
+import daro.game.io.ChallengeHandler;
 import daro.game.main.Challenge;
-import daro.game.main.ThemeColor;
+import daro.game.pages.Reloadable;
 import daro.game.views.LevelView;
+import daro.game.views.MenuView;
 import daro.game.views.View;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
-public class ChallengeItem extends VBox {
+public class ChallengeItem extends StackPane {
 
     private final Challenge challenge;
+    private final Reloadable parent;
 
-    public ChallengeItem(Challenge challenge) {
+    public ChallengeItem(Challenge challenge, Reloadable parent) {
+        this.parent = parent;
         this.challenge = challenge;
         Text name = new Text(challenge.getName());
         name.getStyleClass().addAll("heading", "small", "text");
@@ -22,16 +30,50 @@ public class ChallengeItem extends VBox {
                 "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
                         + "-fx-background-color: #381A90;"
         );
-        setPadding(new Insets(30));
         Interaction.setClickable(this, true);
-        getChildren().addAll(name, creator);
-        setOnMouseClicked(e -> openChallenge());
-        setFillWidth(true);
+        VBox mainContent = new VBox(name, creator);
+        mainContent.setFillWidth(true);
+        mainContent.setPadding(new Insets(30));
+        mainContent.setOnMouseClicked(e -> openChallenge());
+        getChildren().addAll(mainContent, deleteButton());
+        setAlignment(Pos.TOP_RIGHT);
 
     }
 
     private void openChallenge() {
         View.updateView(this, new LevelView(challenge));
+    }
+
+    private DeleteButton deleteButton() {
+        DeleteButton button = new DeleteButton();
+        button.setOnMouseClicked(e -> openConfirmPopup());
+        return button;
+    }
+
+    private void openConfirmPopup() {
+        Text heading = new Text("Warning");
+        heading.getStyleClass().addAll("heading", "small", "text");
+
+        Text info = new Text("You are trying to delete the the challenge " + challenge.getName() + "\nAre you sure?");
+        info.getStyleClass().addAll("text");
+        info.setTextAlignment(TextAlignment.CENTER);
+
+        CustomButton cancel = new CustomButton("\ue14c", "No", true);
+        cancel.setOnMouseClicked(e -> MenuView.getPopup().close());
+        CustomButton yes = new CustomButton("\ue5ca", "Yes", true);
+        HBox confirmButtons = new HBox(cancel, yes);
+        confirmButtons.setSpacing(10);
+        confirmButtons.setAlignment(Pos.CENTER);
+        yes.setOnMouseClicked(e -> {
+            ChallengeHandler.removeChallenge(challenge.getSourceFile());
+            parent.reload();
+            MenuView.getPopup().close();
+        });
+        VBox popup = new VBox(heading, info, confirmButtons);
+        popup.setAlignment(Pos.CENTER);
+        popup.setSpacing(20);
+        MenuView.getPopup().updateContent(popup);
+        MenuView.getPopup().open();
     }
 
 

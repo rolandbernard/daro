@@ -3,6 +3,7 @@ package daro.game.ui;
 import daro.game.io.PlaygroundHandler;
 import daro.game.main.ThemeColor;
 import daro.game.pages.PlaygroundPage;
+import daro.game.pages.Reloadable;
 import daro.game.views.EditorView;
 import daro.game.views.MenuView;
 import daro.game.views.View;
@@ -27,7 +28,7 @@ public class PlaygroundItem extends StackPane {
 
     private VBox mainContent;
     private File file;
-    private final PlaygroundPage parent;
+    private final Reloadable parent;
 
     /**
      * <strong>UI: <em>Component</em></strong><br>
@@ -35,7 +36,7 @@ public class PlaygroundItem extends StackPane {
      *
      * @param file The file fo the playground
      */
-    public PlaygroundItem(File file, PlaygroundPage parent) {
+    public PlaygroundItem(File file, Reloadable parent) {
         this.file = file;
         this.parent = parent;
         Text name = new Text(cleanName());
@@ -49,7 +50,7 @@ public class PlaygroundItem extends StackPane {
         );
         mainContent.setSpacing(10);
         mainContent.setOnMouseClicked(e -> View.updateView(this, new EditorView(file)));
-        Interaction.setClickable(mainContent, true);
+        Interaction.setClickable(this, true);
         VBox attributes = getAttributes(file);
         if (attributes != null) {
             mainContent.getChildren().add(attributes);
@@ -102,18 +103,10 @@ public class PlaygroundItem extends StackPane {
         return format.format(new Date(time.toMillis()));
     }
 
-    private StackPane deleteButton() {
-        Text icon = new Text("\ue872");
-        icon.getStyleClass().add("icon");
-        StackPane deleteButton = new StackPane(icon);
-        deleteButton.setMaxWidth(50);
-        deleteButton.setMaxHeight(50);
-        Interaction.setClickable(deleteButton, false);
-        deleteButton.setLayoutY(-25);
-        deleteButton.setLayoutX(-25);
-        deleteButton.setOnMouseClicked(e -> openConfirmPopup());
-        deleteButton.setStyle("-fx-background-radius: 25px; -fx-background-color: " + ThemeColor.RED);
-        return deleteButton;
+    private DeleteButton deleteButton() {
+        DeleteButton button = new DeleteButton();
+        button.setOnMouseClicked(e -> openConfirmPopup());
+        return button;
     }
 
     private void openConfirmPopup() {
@@ -140,6 +133,5 @@ public class PlaygroundItem extends StackPane {
         popup.setSpacing(20);
         MenuView.getPopup().updateContent(popup);
         MenuView.getPopup().open();
-
     }
 }

@@ -76,7 +76,9 @@ public abstract class PlaygroundHandler {
         Scanner scanner = new Scanner(file);
         scanner.useDelimiter("\\Z");
         if (scanner.hasNext()) {
-            return scanner.next();
+            String playground = scanner.next();
+            scanner.close();
+            return playground;
         }
         return "";
     }
