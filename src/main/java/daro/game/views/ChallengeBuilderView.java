@@ -153,6 +153,7 @@ public class ChallengeBuilderView extends View {
             Callout callout = new Callout("Please fill in all fields and have at least one test.", ThemeColor.RED.toString());
             sidebar.getChildren().add(2, callout);
             sidebarContainer.setVvalue(0);
+            callout.setOnClose(e -> sidebar.getChildren().remove(callout));
         }
 
     }

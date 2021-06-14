@@ -2,6 +2,7 @@ package daro.game.pages;
 
 import daro.game.io.PlaygroundHandler;
 import daro.game.io.UserData;
+import daro.game.main.ThemeColor;
 import daro.game.ui.Callout;
 import daro.game.ui.CustomButton;
 import daro.game.ui.Heading;
@@ -18,7 +19,6 @@ import java.io.IOException;
 public class CreatePlaygroundPage extends Page {
     private TextInput nameField;
     private CustomButton saveButton;
-    private Callout callout;
     private VBox form;
 
     public CreatePlaygroundPage() {
@@ -26,7 +26,6 @@ public class CreatePlaygroundPage extends Page {
         nameField = new TextInput("Playground name");
         saveButton = new CustomButton("\ue161", "Create the playground", true);
         saveButton.setOnMouseClicked(this::createPlayground);
-        callout = new Callout("", "#fc323f");
         form = new VBox(nameField, saveButton);
         form.setAlignment(Pos.TOP_RIGHT);
         form.setSpacing(20);
@@ -35,6 +34,7 @@ public class CreatePlaygroundPage extends Page {
     }
 
     private void createPlayground(MouseEvent mouseEvent) {
+        Callout callout = new Callout("", ThemeColor.RED.toString());
         if (validateNameField()) {
             String error = PlaygroundHandler.createPlayground(nameField.getValue());
             if (error == null) {
@@ -51,6 +51,7 @@ public class CreatePlaygroundPage extends Page {
             form.getChildren().add(0, callout);
             callout.setText("A playground's name can only contain letters, numbers and underlines (_).");
         }
+        callout.setOnClose(e -> form.getChildren().remove(callout));
     }
 
     private boolean validateNameField() {
