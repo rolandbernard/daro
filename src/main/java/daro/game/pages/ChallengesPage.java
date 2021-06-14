@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import daro.game.io.ChallengeHandler;
 import daro.game.main.Challenge;
+import daro.game.main.ThemeColor;
 import daro.game.ui.*;
 import daro.game.views.ChallengeBuilderView;
 import daro.game.views.ExerciseView;
@@ -60,7 +61,9 @@ public class ChallengesPage extends Page implements Reloadable {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Callout callout = new Callout("Could not import challenge", ThemeColor.RED.toString());
+                challenges.getChildren().add(0, callout);
+                callout.setOnClose(event -> challenges.getChildren().remove(callout));
             }
 
         }
