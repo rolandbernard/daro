@@ -1,26 +1,19 @@
-package daro.game.ui;
+package daro.game.ui.fields;
 
-import daro.game.pages.Page;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.input.InputEvent;
 
-import java.util.List;
 import java.util.Map;
 
 public class SelectField<T> extends InputField {
     private ChoiceBox<String> selectField;
     private Map<T, String> choices;
 
-    public SelectField(Map<T, String> choices, T value) {
-        init(choices, value);
-    }
-
-    public SelectField(Map<T, String> choices, T value, String label) {
-        super(label);
+    public SelectField(Map<T, String> choices, T value, String label, String help) {
+        super(label, help);
         init(choices, value);
     }
 

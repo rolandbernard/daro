@@ -9,14 +9,14 @@ import javafx.scene.text.Text;
 public class ValidationItem extends HBox {
 
     private ValidationResult result;
-    private Text icon, text;
+    private Text text;
+    private Icon icon;
 
     public ValidationItem(ValidationResult result) {
         this.result = result;
         this.setSpacing(5);
         this.setAlignment(Pos.CENTER);
-        icon = new Text();
-        icon.getStyleClass().add("icon");
+        icon = new Icon();
         Text heading = new Text(result.getName());
         heading.getStyleClass().addAll("text", "heading", "tiny");
         text = new Text();

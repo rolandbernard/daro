@@ -5,6 +5,7 @@ import daro.game.io.ChallengeHandler;
 import daro.game.main.ThemeColor;
 import daro.game.pages.ChallengesPage;
 import daro.game.ui.*;
+import daro.game.ui.fields.*;
 import daro.game.validation.ValidationType;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -44,7 +45,6 @@ public class ChallengeBuilderView extends View {
         defaultCode = new CodeEditor();
         VBox field = new VBox(label, defaultCode);
         field.setSpacing(10);
-        field.setStyle("-fx-background-color: " + ThemeColor.DARK_BACKGROUND);
         field.setPadding(new Insets(PADDING, 0, 0, 0));
         return field;
     }
@@ -74,7 +74,7 @@ public class ChallengeBuilderView extends View {
         pane.setMaxWidth(SIDEBAR_WIDTH);
         pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        pane.setStyle("-fx-background-color: " + ThemeColor.DARK_BACKGROUND);
+        pane.setStyle("-fx-background-color: " + ThemeColor.BACKGROUND);
         return pane;
     }
 
@@ -85,17 +85,23 @@ public class ChallengeBuilderView extends View {
     }
 
     private FieldGroup createGeneralFields() {
-        nameField = new TextInput("Name");
-        creatorField = new TextInput("Creator");
-        descriptionField = new TextAreaInput("Description");
+        nameField = new TextInput("Name", "Descriptive name for the challenge");
+        creatorField = new TextInput("Creator", "Your name or nickname");
+        descriptionField = new TextAreaInput("Description", "What task should the user solve?");
         return createFieldGroup("General", creatorField, nameField, descriptionField);
     }
 
     private void createTestFields() {
         Map<String, InputField> testMap = new HashMap<>();
-        InputField source = new TextInput("Source");
-        SelectField<String> type = new SelectField<>(testTypes, null, "Type");
-        InputField expected = new TextInput("Expected value");
+        InputField source = new TextInput(
+                "Source expression",
+                "A DaRo expression, e.g. the function 'test(10)' or the variable 'a'"
+        );
+        SelectField<String> type = new SelectField<>(testTypes, null,
+                "Type",
+                null
+        );
+        InputField expected = new TextInput("Expected value", "A value e.g. 10, \"test\" or [10, 20, 30]");
         type.onChange(e -> {
             boolean needsExpected = ValidationType.valueOf(type.getValue()).needsExpectedValue();
             expected.setDisable(!needsExpected);
@@ -108,7 +114,7 @@ public class ChallengeBuilderView extends View {
         DeleteButton button = new DeleteButton();
         group.getChildren().add(0, button);
         group.setPadding(new Insets(20));
-        group.setStyle("-fx-background-radius: 15px; -fx-background-color: " + ThemeColor.BACKGROUND);
+        group.setStyle("-fx-background-radius: 15px; -fx-background-color: " + ThemeColor.MEDIUM_BACKGROUND);
         group.setMaxWidth(SIDEBAR_INNER_WIDTH);
         tests.getChildren().add(group);
         button.setOnMouseClicked(c -> {
@@ -120,8 +126,8 @@ public class ChallengeBuilderView extends View {
 
     private void rearrangeTestNumbering() {
         int i = 1;
-        for(Node o : tests.getChildren()) {
-            if(o instanceof FieldGroup) {
+        for (Node o : tests.getChildren()) {
+            if (o instanceof FieldGroup) {
                 FieldGroup group = (FieldGroup) o;
                 group.setName("Test " + i);
                 i++;

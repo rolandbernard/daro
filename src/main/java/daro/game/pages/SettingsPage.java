@@ -2,9 +2,12 @@ package daro.game.pages;
 
 import com.google.gson.JsonElement;
 import daro.game.io.SettingsHandler;
+import daro.game.main.ThemeColor;
 import daro.game.ui.*;
+import daro.game.ui.fields.FieldGroup;
+import daro.game.ui.fields.InputField;
+import daro.game.ui.fields.SelectField;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import java.util.*;
 
@@ -30,11 +33,12 @@ public class SettingsPage extends Page {
         CustomButton saveButton = new CustomButton("\ue161", "Save your changes", true);
         saveButton.setOnMouseClicked(e -> {
             if (SettingsHandler.save(allFields)) {
-                Callout saveCallout = new Callout("Saved your changes", "#53F481", "#1D1F26");
-                this.getChildren().add(1, saveCallout);
+                Callout saveCallout = new Callout("Saved your changes", ThemeColor.GREEN.toString());
+                getChildren().add(1, saveCallout);
+                saveCallout.setOnClose(event -> getChildren().remove(saveCallout));
             }
         });
-        this.getChildren().addAll(heading, fieldGroups, saveButton);
+        getChildren().addAll(heading, fieldGroups, saveButton);
     }
 
     /**
@@ -61,7 +65,8 @@ public class SettingsPage extends Page {
         }
         SelectField<String> theme = new SelectField<>(
                 themeOptions, editorSettings.get("theme") == null ? null : editorSettings.get("theme").getAsString(),
-                "Theme"
+                "Theme",
+                "Color theme of the code editor"
         );
         editorFields.put("theme", theme);
 
@@ -70,7 +75,8 @@ public class SettingsPage extends Page {
         indentOptions.put(false, "Without indent");
         SelectField<Boolean> indent = new SelectField<>(
                 indentOptions, editorSettings.get("indent") == null ? null : editorSettings.get("indent").getAsBoolean(),
-                "Auto Indent"
+                "Auto Indentation",
+                "Automatic indentation when going into a new line"
         );
         editorFields.put("indent", indent);
 
@@ -82,7 +88,8 @@ public class SettingsPage extends Page {
                         completionOptions,
                         editorSettings.get("auto_completion") == null ? null
                                 : editorSettings.get("auto_completion").getAsBoolean(),
-                        "Auto completion"
+                        "Auto completion",
+                        "e.g. when writing '(' should the editor automatically auto complete ')'"
                 );
         editorFields.put("auto_completion", autocompletion);
 

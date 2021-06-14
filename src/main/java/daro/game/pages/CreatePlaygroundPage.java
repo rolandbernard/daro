@@ -1,12 +1,11 @@
 package daro.game.pages;
 
 import daro.game.io.PlaygroundHandler;
-import daro.game.io.UserData;
 import daro.game.main.ThemeColor;
 import daro.game.ui.Callout;
 import daro.game.ui.CustomButton;
 import daro.game.ui.Heading;
-import daro.game.ui.TextInput;
+import daro.game.ui.fields.TextInput;
 import daro.game.views.EditorView;
 import daro.game.views.MenuView;
 import daro.game.views.View;
@@ -23,7 +22,7 @@ public class CreatePlaygroundPage extends Page {
 
     public CreatePlaygroundPage() {
         Heading heading = new Heading("Create a new playground", "Give it a name and get started!");
-        nameField = new TextInput("Playground name");
+        nameField = new TextInput("Playground name", null);
         saveButton = new CustomButton("\ue161", "Create the playground", true);
         saveButton.setOnMouseClicked(this::createPlayground);
         form = new VBox(nameField, saveButton);

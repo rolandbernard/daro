@@ -66,8 +66,7 @@ public class PlaygroundItem extends StackPane {
     }
 
     private HBox generateInfoBox(String icon, String label) {
-        Text iconText = new Text(icon);
-        iconText.getStyleClass().add("icon");
+        Icon iconText = new Icon(icon);
         Text labelText = new Text(label);
         labelText.getStyleClass().add("text");
         HBox infoBox = new HBox(iconText, labelText);

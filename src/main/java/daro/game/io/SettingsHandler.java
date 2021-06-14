@@ -2,7 +2,7 @@ package daro.game.io;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import daro.game.ui.InputField;
+import daro.game.ui.fields.InputField;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

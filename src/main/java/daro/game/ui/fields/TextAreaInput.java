@@ -1,4 +1,4 @@
-package daro.game.ui;
+package daro.game.ui.fields;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -8,12 +8,8 @@ public class TextAreaInput extends InputField {
 
     private TextArea field;
 
-    public TextAreaInput() {
-        init();
-    }
-
-    public TextAreaInput(String label) {
-        super(label);
+    public TextAreaInput(String label, String help) {
+        super(label, help);
         init();
     }
 

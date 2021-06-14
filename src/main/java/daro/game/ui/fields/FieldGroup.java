@@ -1,4 +1,4 @@
-package daro.game.ui;
+package daro.game.ui.fields;
 
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;

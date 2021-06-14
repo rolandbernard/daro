@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import daro.game.main.Challenge;
-import daro.game.ui.InputField;
 import daro.game.validation.Validation;
 
 import java.io.File;
