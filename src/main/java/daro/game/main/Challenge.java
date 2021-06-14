@@ -6,7 +6,7 @@ import daro.game.validation.Validation;
 import java.io.File;
 import java.util.List;
 
-public class Challenge extends Solvable {
+public class Challenge extends Exercise {
     private final String creator;
     private final File file;
 

@@ -4,7 +4,7 @@ import daro.game.validation.Validation;
 
 import java.util.List;
 
-public class Level extends Solvable {
+public class Level extends Exercise {
     private boolean completed;
     private final long id;
     private final long groupId;

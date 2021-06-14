@@ -103,6 +103,7 @@ public abstract class ChallengeHandler {
                         PrintWriter writer = new PrintWriter(file.getPath());
                         writer.write(newJsonObj.toString());
                         writer.flush();
+                        writer.close();
                         return true;
                     }
                 } catch (IOException e) {

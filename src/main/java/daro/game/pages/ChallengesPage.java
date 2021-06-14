@@ -6,7 +6,7 @@ import daro.game.io.ChallengeHandler;
 import daro.game.main.Challenge;
 import daro.game.ui.*;
 import daro.game.views.ChallengeBuilderView;
-import daro.game.views.LevelView;
+import daro.game.views.ExerciseView;
 import daro.game.views.MenuView;
 import daro.game.views.View;
 import javafx.geometry.Pos;
@@ -56,7 +56,7 @@ public class ChallengesPage extends Page implements Reloadable {
                     openImportWarning(newChallenge, element, file);
                 } else {
                     ChallengeHandler.importChallenge(file);
-                    View.updateView(this, new LevelView(newChallenge));
+                    View.updateView(this, new ExerciseView(newChallenge));
                 }
 
             } catch (Exception e) {
@@ -87,7 +87,7 @@ public class ChallengesPage extends Page implements Reloadable {
         CustomButton replaceBtn = new CustomButton("\ue923", "Replace", true);
         replaceBtn.setOnMouseClicked(e -> {
             if (ChallengeHandler.replaceSimilar(newChallenge, element)) {
-                View.updateView(this, new LevelView(newChallenge));
+                View.updateView(this, new ExerciseView(newChallenge));
             } else {
                 MenuView.getPopup().close();
             }
@@ -95,7 +95,7 @@ public class ChallengesPage extends Page implements Reloadable {
         CustomButton importBtn = new CustomButton("\ue255", "Import anyway", true);
         importBtn.setOnMouseClicked(e -> {
             ChallengeHandler.importChallenge(file);
-            View.updateView(this, new LevelView(newChallenge));
+            View.updateView(this, new ExerciseView(newChallenge));
         });
         HBox buttons = new HBox(cancelBtn, replaceBtn, importBtn);
         buttons.setSpacing(10);

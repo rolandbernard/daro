@@ -2,8 +2,10 @@ package daro.game.ui;
 
 import daro.game.io.ChallengeHandler;
 import daro.game.main.Challenge;
+import daro.game.main.ThemeColor;
+import daro.game.pages.Page;
 import daro.game.pages.Reloadable;
-import daro.game.views.LevelView;
+import daro.game.views.ExerciseView;
 import daro.game.views.MenuView;
 import daro.game.views.View;
 import javafx.geometry.Insets;
@@ -41,7 +43,7 @@ public class ChallengeItem extends StackPane {
     }
 
     private void openChallenge() {
-        View.updateView(this, new LevelView(challenge));
+        View.updateView(this, new ExerciseView(challenge));
     }
 
     private DeleteButton deleteButton() {
@@ -65,9 +67,19 @@ public class ChallengeItem extends StackPane {
         confirmButtons.setSpacing(10);
         confirmButtons.setAlignment(Pos.CENTER);
         yes.setOnMouseClicked(e -> {
-            ChallengeHandler.removeChallenge(challenge.getSourceFile());
+            Callout callout;
+            if(ChallengeHandler.removeChallenge(challenge.getSourceFile())) {
+                callout = new Callout("The challenge was successfully deleted.", ThemeColor.GREEN.toString());
+            } else {
+                callout = new Callout("The challenge could not be deleted, please try again later.", ThemeColor.RED.toString());
+            }
             parent.reload();
             MenuView.getPopup().close();
+            if(parent instanceof Page) {
+                Page p = (Page) parent;
+                p.getChildren().add(1, callout);
+                callout.setOnClose(event -> p.getChildren().remove(callout));
+            }
         });
         VBox popup = new VBox(heading, info, confirmButtons);
         popup.setAlignment(Pos.CENTER);

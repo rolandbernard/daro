@@ -21,11 +21,10 @@ public class BackButton extends HBox {
         Text labelText = new Text(label);
         labelText.getStyleClass().add("text");
 
-        setSpacing(10);
         getChildren().addAll(iconText, labelText);
         setPrefHeight(HEIGHT);
         setCursor(Cursor.HAND);
         setAlignment(Pos.CENTER_LEFT);
-        setPadding(new Insets(10));
+        setSpacing(15);
     }
 }

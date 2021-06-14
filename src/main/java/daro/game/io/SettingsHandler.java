@@ -70,6 +70,7 @@ public abstract class SettingsHandler {
         try (PrintWriter writer = new PrintWriter(SETTINGS_PATH)) {
             writer.write(allSettings.toString());
             writer.flush();
+            writer.close();
         } catch (FileNotFoundException e) {
             return false;
         }

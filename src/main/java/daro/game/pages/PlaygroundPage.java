@@ -11,24 +11,24 @@ import java.io.File;
 
 public class PlaygroundPage extends Page implements Reloadable {
 
+    private VBox playgroundList;
+
     /**
      * <strong>UI: <em>Page</em></strong><br>
      * A page where the user can create daro files to play around with code.
      */
     public PlaygroundPage() {
         Heading heading = new Heading("Playground", "Play around with the language and use what you've learned.");
-        getChildren().addAll(heading);
+        playgroundList = new VBox();
+        playgroundList.setSpacing(20);
         reload();
+        getChildren().addAll(heading, playgroundList);
     }
 
-    /**
-     * Generates PlaygroundItemList
-     * 
-     * @param playgrounds the playgroundfiles
-     * @return Playground
-     */
-    private VBox getPlaygroundItems(File[] playgrounds) {
-        VBox playgroundList = new VBox();
+    @Override
+    public void reload() {
+        File[] playgrounds = PlaygroundHandler.parsePlaygrounds();
+        playgroundList.getChildren().clear();
         CreateButton createButton = new CreateButton("Create a new Playground");
         createButton.setOnMouseClicked(e -> MenuView.setContent(new CreatePlaygroundPage()));
         playgroundList.getChildren().add(createButton);
@@ -36,14 +36,5 @@ public class PlaygroundPage extends Page implements Reloadable {
             playgroundList.getChildren().add(new PlaygroundItem(playground, this));
         }
         playgroundList.setSpacing(30);
-        return playgroundList;
-    }
-
-    @Override
-    public void reload() {
-        if(getChildren().size() > 1)
-            getChildren().remove(1);
-        File[] playgrounds = PlaygroundHandler.parsePlaygrounds();
-        getChildren().add(getPlaygroundItems(playgrounds));
     }
 }

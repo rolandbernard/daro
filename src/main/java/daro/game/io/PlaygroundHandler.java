@@ -60,7 +60,6 @@ public abstract class PlaygroundHandler {
             Files.delete(file);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -105,6 +104,7 @@ public abstract class PlaygroundHandler {
         try (PrintWriter writer = new PrintWriter(file)) {
             writer.write(code);
             writer.flush();
+            writer.close();
             return true;
         } catch (IOException e) {
             return false;

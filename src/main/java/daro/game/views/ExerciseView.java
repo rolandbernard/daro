@@ -1,10 +1,12 @@
 package daro.game.views;
 
 import daro.game.io.LevelHandler;
+import daro.game.main.Challenge;
 import daro.game.main.Level;
 import daro.game.io.UserData;
-import daro.game.main.Solvable;
+import daro.game.main.Exercise;
 import daro.game.main.ThemeColor;
+import daro.game.pages.ChallengesPage;
 import daro.game.pages.CoursePage;
 import daro.game.ui.*;
 import daro.game.validation.Validation;
@@ -21,12 +23,12 @@ import javafx.scene.text.TextAlignment;
 
 import java.util.List;
 
-public class LevelView extends View {
+public class ExerciseView extends View {
 
-    private static final double SIDEBAR_WIDTH = 340;
+    private static final double SIDEBAR_WIDTH = 380;
     private static final double BOX_PADDINGS = 20;
 
-    private Solvable level;
+    private final Exercise exercise;
     private CodeEditor editor;
     private Popup popup;
 
@@ -36,8 +38,8 @@ public class LevelView extends View {
      *
      * @param level the level shown in the view
      */
-    public LevelView(Solvable level) {
-        this.level = level;
+    public ExerciseView(Exercise level) {
+        this.exercise = level;
         editor = new CodeEditor(level.getCode());
         HBox mainContent = new HBox(getSidebar(), editor);
 
@@ -53,10 +55,11 @@ public class LevelView extends View {
         ScrollPane textBox = createTextBox();
         Terminal terminal = new Terminal(SIDEBAR_WIDTH);
 
-        BackButton backButton = new BackButton("Back to all courses");
+        BackButton backButton = new BackButton("Back to overview");
+        backButton.setPadding(new Insets(BOX_PADDINGS));
         backButton.setOnMouseClicked(e -> {
-            save(ValidationResult.evaluate(Validation.run(editor.getText(), level.getTests())));
-            View.updateView(this, new MenuView(new CoursePage()));
+            save(ValidationResult.evaluate(Validation.run(editor.getText(), exercise.getTests())));
+            backToOverview();
         });
 
         CustomButton runButton = new CustomButton("\ue037", "Run in terminal", false);
@@ -71,11 +74,11 @@ public class LevelView extends View {
     }
 
     private ScrollPane createTextBox() {
-        Text title = new Text(level.getName());
+        Text title = new Text(exercise.getName());
         title.setWrappingWidth(SIDEBAR_WIDTH - BOX_PADDINGS * 2);
         title.getStyleClass().addAll("text", "heading", "small");
 
-        Text description = new Text(level.getDescription());
+        Text description = new Text(exercise.getDescription());
         description.getStyleClass().addAll("text");
         description.setWrappingWidth(SIDEBAR_WIDTH - BOX_PADDINGS * 2);
 
@@ -93,16 +96,18 @@ public class LevelView extends View {
     }
 
     private boolean save(boolean completion) {
-        if(level instanceof Level) {
-            Level l = (Level) level;
+        if (exercise instanceof Level) {
+            Level l = (Level) exercise;
             return UserData.writeLevelData(l.getGroupId(), l.getId(), completion, editor.getText());
+        } else if(exercise instanceof Challenge) {
+            Challenge c = (Challenge) exercise;
         }
         return false;
     }
 
     private void openValidationPopup(MouseEvent mouseEvent) {
         popup.open();
-        List<ValidationResult> results = Validation.run(editor.getText(), level.getTests());
+        List<ValidationResult> results = Validation.run(editor.getText(), exercise.getTests());
         boolean success = ValidationResult.evaluate(results);
         save(success);
 
@@ -132,16 +137,14 @@ public class LevelView extends View {
     private HBox createControlButtons(boolean success) {
         HBox buttons = new HBox();
         CustomButton mainButton = null;
-        if (success) {
-            if(level instanceof Level) {
-                Level l = (Level) level;
-                Level nextLevel = LevelHandler.getNextLevel(l.getGroupId(), l.getId());
-                if (nextLevel != null) {
-                    mainButton = new CustomButton("\ue16a", "Next Level", true);
-                    mainButton.setOnMouseClicked(e -> View.updateView(this, new LevelView(nextLevel)));
-                }
+        if (success && exercise instanceof Level) {
+            Level l = (Level) exercise;
+            Level nextLevel = LevelHandler.getNextLevel(l.getGroupId(), l.getId());
+            if (nextLevel != null) {
+                mainButton = new CustomButton("\ue16a", "Next Level", true);
+                mainButton.setOnMouseClicked(e -> View.updateView(this, new ExerciseView(nextLevel)));
             }
-        } else {
+        } else if (!success) {
             mainButton = new CustomButton("\ue5d5", "Try again", true);
             mainButton.setOnMouseClicked(e -> popup.close());
         }
@@ -157,7 +160,12 @@ public class LevelView extends View {
     }
 
     private void backToOverview() {
-        View.updateView(this, new MenuView(new CoursePage()));
+        if(exercise instanceof Level) {
+            System.out.println(exercise);
+            View.updateView(this, new MenuView(new CoursePage()));
+        } else if(exercise instanceof Challenge) {
+            View.updateView(this, new MenuView(new ChallengesPage()));
+        }
     }
 
 }

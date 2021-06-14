@@ -21,6 +21,7 @@ public class TextAreaInput extends InputField {
         field = new TextArea();
         field.getStyleClass().add("input-field");
         field.setWrapText(true);
+        field.setMinHeight(300);
         getChildren().add(field);
     }
 

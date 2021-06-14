@@ -1,15 +1,10 @@
 package daro.game.ui;
 
-import daro.game.main.Game;
 import daro.game.main.Level;
 import daro.game.main.ThemeColor;
-import daro.game.pages.Page;
-import daro.game.views.LevelView;
+import daro.game.views.ExerciseView;
 import daro.game.views.View;
-import javafx.animation.Transition;
 import javafx.geometry.Insets;
-import javafx.scene.Cursor;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -33,7 +28,7 @@ public class LevelItem extends VBox {
         );
         this.getChildren().add(getHeading());
         this.setPadding(new Insets(40));
-        this.setOnMouseClicked(event -> View.updateView(this, new LevelView(level)));
+        this.setOnMouseClicked(event -> View.updateView(this, new ExerciseView(level)));
         Interaction.setClickable(this, true);
     }
 

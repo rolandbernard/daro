@@ -4,7 +4,7 @@ import daro.game.validation.Validation;
 
 import java.util.List;
 
-public abstract class Solvable {
+public abstract class Exercise {
 
     private String name, description, code;
     private List<Validation> tests;
@@ -18,7 +18,7 @@ public abstract class Solvable {
      * @param code        code written for the level
      */
 
-    public Solvable(
+    public Exercise(
             String name, String description, String code, List<Validation> tests
     ) {
         this.name = name;
@@ -63,7 +63,7 @@ public abstract class Solvable {
         return tests;
     }
 
-    public boolean isSimilar(Solvable s) {
+    public boolean isSimilar(Exercise s) {
         return name.equals(s.getName()) && description.equals(s.getDescription());
     }
 }

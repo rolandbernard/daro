@@ -6,16 +6,18 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 public class DeleteButton extends StackPane {
+    private static final double DIMENSION = 50;
+
     public DeleteButton() {
         Text icon = new Text("\ue872");
         icon.getStyleClass().add("icon");
-        setMaxWidth(50);
-        setMaxHeight(50);
+        setMaxWidth(DIMENSION);
+        setMaxHeight(DIMENSION);
+        setMinWidth(DIMENSION);
+        setMinHeight(DIMENSION);
         Interaction.setClickable(this, false);
-        setLayoutY(-25);
-        setLayoutX(-25);
         setAlignment(Pos.CENTER);
         getChildren().add(icon);
-        setStyle("-fx-background-radius: 25px; -fx-background-color: " + ThemeColor.RED);
+        setStyle("-fx-background-radius: " + DIMENSION / 2 + "px; -fx-background-color: " + ThemeColor.RED);
     }
 }

@@ -4,7 +4,6 @@ import daro.game.main.Level;
 import daro.game.main.LevelGroup;
 import daro.game.ui.Heading;
 import daro.game.ui.LevelItem;
-import daro.game.views.LevelView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
