@@ -32,7 +32,7 @@ public class Debugger implements ExecutionObserver {
     private int lastLine;
 
     public static enum DebuggerState {
-        NEXT, STEP, STEP_OVER, STEP_INTO, STEP_OUT, IGNORE, ERROR
+        NEXT, STEP, STEP_OVER, STEP_INTO, STEP_OUT, IGNORE, ERROR, TERMINATED
     };
 
     /**
@@ -76,7 +76,7 @@ public class Debugger implements ExecutionObserver {
      * @param state The state it should e set to
      */
     private void setState(DebuggerState state) {
-        if (getState() != DebuggerState.ERROR) {
+        if (getState() != DebuggerState.ERROR && getState() != DebuggerState.TERMINATED) {
             stack.peek().setState(state);
         }
     }
@@ -134,24 +134,33 @@ public class Debugger implements ExecutionObserver {
     }
 
     /**
+     * After execution of this method, no other break should be taken for any reason.
+     */
+    public void terminate() {
+        setState(DebuggerState.TERMINATED);
+    }
+
+    /**
      * Break the execution and wait for someone to call one of the continuation
      * methods.
      */
-    private synchronized void breakProgram() {
-        lastBefore = stack.peek().getBefore();
-        lastNode = stack.peek().getNode();
-        lastFile = stack.peek().getFile();
-        lastLine = stack.peek().getLine();
-        controller.startDebugging(stack);
-        try {
-            synchronized (this) {
-                wait();
+    private void breakProgram() {
+        if (getState() != DebuggerState.TERMINATED) {
+            lastBefore = stack.peek().getBefore();
+            lastNode = stack.peek().getNode();
+            lastFile = stack.peek().getFile();
+            lastLine = stack.peek().getLine();
+            controller.startDebugging(stack);
+            try {
+                synchronized (this) {
+                    wait();
+                }
+            } catch (InterruptedException e) {
+                setState(DebuggerState.ERROR);
+                throw new InterpreterException(stack.peek().getPosition(), "Debugger was interrupted");
             }
-        } catch (InterruptedException e) {
-            setState(DebuggerState.ERROR);
-            throw new InterpreterException(stack.peek().getPosition(), "Debugger was interrupted");
+            controller.stopDebugging();
         }
-        controller.stopDebugging();
     }
 
     /**

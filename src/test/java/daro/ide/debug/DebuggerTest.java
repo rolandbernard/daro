@@ -330,6 +330,19 @@ public class DebuggerTest implements DebugController {
         assertTrue(future.get());
     }
 
+    @Test
+    void debuggerDoesNotHaltAfterTerminate() throws InterruptedException, ExecutionException {
+        String program = "x = 5\ny = 4\nz = x + y\n";
+        HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
+        breakpoints.put(null, Set.of(1));
+        debugger.setBreakpoints(breakpoints);
+        debugger.terminate();
+        Future<DaroObject> future = executor.submit(() -> {
+            return interpreter.execute(program, observers);
+        });
+        assertEquals(new DaroInteger(BigInteger.valueOf(9)), future.get());
+    }
+
     @Override
     public void startDebugging(Stack<StackContext> context) {
         this.debugScope = context.peek().getScope();

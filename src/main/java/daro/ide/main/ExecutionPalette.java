@@ -169,9 +169,10 @@ public class ExecutionPalette extends VBox implements DebugController {
                 terminal.printError(error.toString() + "\n");
             } catch (Exception error) {
                 terminal.printError(error.toString() + "\n");
+            } finally {
+                stopDebugging();
+                stopRunning();
             }
-            stopDebugging();
-            stopRunning();
         });
         thread.start();
     }
@@ -225,9 +226,12 @@ public class ExecutionPalette extends VBox implements DebugController {
      */
     public void allowClosing() {
         if (thread != null) {
+            debugger.terminate();
             thread.interrupt();
-            if (debugger != null) {
-                debugger.next();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                // Ignore failure
             }
         }
     }

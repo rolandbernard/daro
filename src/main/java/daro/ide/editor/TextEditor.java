@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,12 +46,14 @@ import javafx.stage.Popup;
  */
 public class TextEditor extends CodeArea {
     private Consumer<String> onChange;
-    private ExecutorService executor;
     private Set<Integer> breakpoints;
     private DaroException shownError;
     private Scope shownScope;
     private int shownDebugLine = -1;
+    private Thread thread;
 
+    private static final int HOVER_DELAY = 200;
+    private static final int HOVER_TIMEOUT = 500;
     private static final String TAB = "    ";
 
     /**
@@ -63,7 +63,6 @@ public class TextEditor extends CodeArea {
      */
     public TextEditor(String initialContent) {
         super(initialContent);
-        executor = Executors.newSingleThreadExecutor();
         getStyleClass().add("text-editor");
         setOnKeyPressed(this::handleKeyPress);
         textProperty().addListener(this::handleTextChange);
@@ -90,8 +89,11 @@ public class TextEditor extends CodeArea {
         Popup popup = new Popup();
         Label popupMessage = new Label();
         popup.getContent().add(popupMessage);
-        setMouseOverTextDelay(Duration.ofMillis(200));
+        setMouseOverTextDelay(Duration.ofMillis(HOVER_DELAY));
         addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, event -> {
+            if (thread != null) {
+                thread.interrupt();
+            }
             int textPosition = event.getCharacterIndex();
             Point2D screenPosition = event.getScreenPosition();
             if (shownError != null && textPosition >= shownError.getStart() && textPosition <= shownError.getEnd()) {
@@ -123,9 +125,7 @@ public class TextEditor extends CodeArea {
                     });
                     ExecutionContext context = new ExecutionContext(new ShadowingScope(shownScope), voidStream, new Interrupter());
                     Interpreter interpreter = new Interpreter(context);
-                    executor.shutdownNow();
-                    executor = Executors.newSingleThreadExecutor();
-                    executor.submit(() -> {
+                    thread = new Thread(() -> {
                         try {
                             DaroObject value = interpreter.execute(code);
                             if (value != null) {
@@ -138,6 +138,13 @@ public class TextEditor extends CodeArea {
                             // Ignore exceptions
                         }
                     });
+                    thread.start();
+                    try {
+                        thread.join(HOVER_TIMEOUT);
+                    } catch (InterruptedException error) {
+                        // Ignore errors
+                    }
+                    thread.interrupt();
                 }
             }
         });
