@@ -26,11 +26,11 @@ public class Game extends Application {
         Font.loadFont(PathHandler.getFont("JetBrainsMono-Regular.ttf"), 16);
         Font.loadFont(PathHandler.getFont("JetBrainsMono-Italic.ttf"), 16);
 
+        stage.getIcons().add(PathHandler.getImage("icon.png"));
         // generate start page
         MenuView root = new MenuView(new CoursePage());
         Scene scene = new Scene(root, 1280, 720);
         stage.setFullScreen(true);
-        stage.getIcons().add(PathHandler.getImage("icon.png"));
 
         // load CSS
         try {

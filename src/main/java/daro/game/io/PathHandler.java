@@ -5,8 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.scene.image.Image;
 
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public final class PathHandler {
@@ -51,15 +53,21 @@ public final class PathHandler {
      * @return a JsonObject parsed from the file
      */
     public static JsonElement getJsonData(String filename) {
-        Scanner scanner = new Scanner(PathHandler.class.getResourceAsStream(RESOURCE_ROOT + "/data/" + filename));
-        scanner.useDelimiter("\\Z");
-        JsonElement element;
-        if (scanner.hasNext()) {
-            element = JsonParser.parseReader(new StringReader(scanner.next()));
-        } else {
-            element = new JsonObject();
+        InputStream path = PathHandler.class.getResourceAsStream(RESOURCE_ROOT + "data/" + filename);
+        try {
+            Scanner scanner = new Scanner(path);
+            scanner.useDelimiter("\\Z");
+            JsonElement element;
+            if (scanner.hasNext()) {
+                element = JsonParser.parseReader(new StringReader(scanner.next()));
+            } else {
+                element = new JsonObject();
+            }
+            scanner.close();
+            return element;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        scanner.close();
-        return element;
+        return null;
     }
 }
