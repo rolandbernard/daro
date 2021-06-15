@@ -1,6 +1,8 @@
 package daro.game.ui;
 
+import daro.game.main.ThemeColor;
 import daro.game.validation.ValidationResult;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -14,17 +16,19 @@ public class ValidationItem extends HBox {
 
     public ValidationItem(ValidationResult result) {
         this.result = result;
-        this.setSpacing(5);
-        this.setAlignment(Pos.CENTER);
+        setSpacing(5);
+        setAlignment(Pos.CENTER_LEFT);
         icon = new Icon();
+        icon.setStyle("-fx-font-size: 24px;");
         Text heading = new Text(result.getName());
         heading.getStyleClass().addAll("text", "heading", "tiny");
         text = new Text();
         text.getStyleClass().add("text");
-        text.setWrappingWidth(340);
         VBox texts = new VBox(heading, text);
         texts.setSpacing(5);
-        this.getChildren().addAll(icon, texts);
+        setPadding(new Insets(10));
+        getChildren().addAll(icon, texts);
+        setStyle("-fx-background-radius: 15px;");
         render();
     }
 
@@ -32,12 +36,10 @@ public class ValidationItem extends HBox {
         text.setText(result.toString());
         if (result.evaluate()) {
             icon.setText("\ue876");
-            this.getStyleClass().remove("failed");
-            this.getStyleClass().add("passed");
+            setStyle(getStyle() + "-fx-background-color: " + ThemeColor.GREEN);
         } else {
             icon.setText("\ue5cd");
-            this.getStyleClass().remove("passed");
-            this.getStyleClass().add("failed");
+            setStyle(getStyle() + "-fx-background-color: " + ThemeColor.RED);
         }
     }
 }

@@ -4,14 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import daro.game.io.parser.CompletionParser;
-import daro.game.io.parser.LevelParser;
-import daro.game.io.parser.ValidationParser;
+import daro.game.parser.CompletionParser;
+import daro.game.parser.LevelParser;
 import daro.game.main.Level;
 import daro.game.main.LevelGroup;
-import daro.game.validation.Validation;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

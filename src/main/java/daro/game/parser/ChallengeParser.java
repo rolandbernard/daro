@@ -1,4 +1,4 @@
-package daro.game.io.parser;
+package daro.game.parser;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -28,7 +28,6 @@ public final class ChallengeParser {
             code = obj.get("currentCode").getAsString();
         }
         boolean completed = obj.get("completion") != null && obj.get("completion").getAsBoolean();
-        System.out.println(completed);
         return new Challenge(name, description, code, testsList, creator, source, completed);
     }
 }

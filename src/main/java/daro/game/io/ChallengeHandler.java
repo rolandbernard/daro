@@ -3,7 +3,7 @@ package daro.game.io;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import daro.game.io.parser.ChallengeParser;
+import daro.game.parser.ChallengeParser;
 import daro.game.main.Challenge;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package daro.game.io.parser;
+package daro.game.parser;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

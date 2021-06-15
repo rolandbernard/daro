@@ -7,6 +7,7 @@ import daro.lang.values.DaroObject;
 import daro.lang.values.DaroTypeArray;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Validation {
@@ -75,7 +76,6 @@ public class Validation {
             try {
                 DaroObject codeResult = interpreter.execute(source);
                 givenResult = codeResult.toString();
-
                 switch (type) {
                     case EQUALS:
                         success = codeResult.equals(expected);
@@ -105,10 +105,10 @@ public class Validation {
                 }
 
             } catch (Exception e) {
-                givenResult = source + " was not able to be executed or found.";
+                givenResult = source + " not found.";
             }
         } catch (Exception e) {
-            givenResult = "There was an issue with your code: " + e.getMessage();
+            givenResult = "Error: " + e.getMessage();
         }
 
         return new ValidationResult(id, success, expectedString, givenResult);
@@ -184,5 +184,18 @@ public class Validation {
                 "There was an issue with interpreting the expected values of the tests."
             );
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Validation that = (Validation) o;
+        return id == that.id && type == that.type && Objects.equals(source, that.source) && Objects.equals(expected, that.expected);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, source, expected);
     }
 }

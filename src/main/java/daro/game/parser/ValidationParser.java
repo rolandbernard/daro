@@ -1,10 +1,9 @@
-package daro.game.io.parser;
+package daro.game.parser;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import daro.game.validation.Validation;
 import daro.game.validation.ValidationType;
-import org.reactfx.value.Val;
 
 import java.util.ArrayList;
 import java.util.List;

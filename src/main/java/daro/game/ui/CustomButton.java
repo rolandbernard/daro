@@ -1,10 +1,8 @@
 package daro.game.ui;
 
-import daro.game.main.Game;
 import daro.game.main.ThemeColor;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
@@ -36,6 +34,8 @@ public class CustomButton extends HBox {
         if (rounded) {
             this.setStyle(getStyle() + "; -fx-background-radius: 25px;");
         }
+        setOnMouseEntered(e -> setStyle(getStyle() + "-fx-background-color: derive(" + color + ", -10%);"));
+        setOnMouseExited(e -> setStyle(getStyle() + "-fx-background-color: " + color + ";"));
         this.setAlignment(Pos.CENTER);
         this.setSpacing(10);
         Interaction.setClickable(this, false);

@@ -1,6 +1,7 @@
 package daro.game.main;
 
 import java.util.List;
+import java.util.Objects;
 
 public class LevelGroup {
     private final long id;
@@ -76,4 +77,16 @@ public class LevelGroup {
         return (int)levels.stream().filter(Level::isCompleted).count();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LevelGroup that = (LevelGroup) o;
+        return id == that.id && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(levels, that.levels);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, levels);
+    }
 }

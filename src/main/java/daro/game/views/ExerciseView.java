@@ -132,7 +132,6 @@ public class ExerciseView extends View {
     private VBox createValidationItems(List<ValidationResult> results) {
         VBox items = new VBox();
         items.setSpacing(20);
-        items.setAlignment(Pos.CENTER);
         results.stream().map(ValidationItem::new).forEach(v -> items.getChildren().add(v));
         return items;
     }

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import daro.game.io.ChallengeHandler;
 import daro.game.io.IOHelpers;
-import daro.game.io.parser.ChallengeParser;
+import daro.game.parser.ChallengeParser;
 import daro.game.main.Challenge;
 import daro.game.main.ThemeColor;
 import daro.game.ui.*;
@@ -21,7 +21,6 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.util.List;
-import java.util.Scanner;
 
 public class ChallengesPage extends Page implements Reloadable {
     private VBox content;
