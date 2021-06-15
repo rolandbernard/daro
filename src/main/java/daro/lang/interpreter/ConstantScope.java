@@ -28,7 +28,8 @@ public class ConstantScope extends AbstractScope {
     @Override
     public VariableLocation getVariableLocation(String name) {
         return safeRecursion(() -> {
-            // We should not return a location that is not visible (i.e. shadowed by an existing variable)
+            // We should not return a location that is not visible (i.e. shadowed by an
+            // existing variable)
             if (!variables.containsKey(name)) {
                 for (Scope parent : parents) {
                     if (parent.containsVariable(name)) {

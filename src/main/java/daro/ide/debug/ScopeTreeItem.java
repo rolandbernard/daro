@@ -34,7 +34,8 @@ public class ScopeTreeItem extends TreeItem<String> {
     }
 
     /**
-     * Expand all scopes starting from this one that are instances of {@link BlockScope}.
+     * Expand all scopes starting from this one that are instances of
+     * {@link BlockScope}.
      */
     public void expandBlockScopes() {
         if (scope instanceof BlockScope) {

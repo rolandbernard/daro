@@ -421,8 +421,12 @@ public class NativeScope implements Scope {
         keys.addAll(fields.keySet());
         keys.addAll(classes.keySet());
         for (String key : keys) {
-            if (containsVariable(key)) {
-                result.put(key, getVariableValue(key));
+            try {
+                if (containsVariable(key)) {
+                    result.put(key, getVariableValue(key));
+                }
+            } catch (InterpreterException e) {
+                // Ignore the variable
             }
         }
         return result;
