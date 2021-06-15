@@ -11,6 +11,9 @@
     -fx-border-radius: 2em;
 }
 
+.corner {
+    -fx-background-color: #21252b;
+}
 
 .scroll-bar:horizontal .increment-button,
 .scroll-bar:horizontal .decrement-button {
