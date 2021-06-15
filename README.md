@@ -151,11 +151,21 @@ We used a basic amount of thread signaling in the implementation of the debugger
 ## Experience
 
 ### Organization
-<!-- TODO -->
+
+Given that our team consists only of two people, we organized mainly using direct communication. We
+divided tasks between us and discussed what still has to be done in more or less regular intervals.
 
 ### Git usage
-<!-- TODO -->
+
+We split the development into multiple branches, that have then been merged incrementally into the
+master branch. For example, we have made a branch for the implementation of the game, and another
+ones for the implementation of the interpreter and the IDE.
 
 ### Main challenges
-<!-- TODO -->
+
+We did not face many challenges during the implementation of the program. Most problems were
+connected with JavaFX not always behaving as one would expect. Especially, the CSS styling for
+JavaFX was particularly counterintuitive. Another minor hurtle was that some tests behaved
+differently on Linux and Windows, either because of the different path formats or different line
+endings. 
 
