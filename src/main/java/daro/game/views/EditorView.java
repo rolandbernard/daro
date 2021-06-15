@@ -31,8 +31,9 @@ public class EditorView extends View {
             CustomButton closeButton = new CustomButton("\ue9ba", "Save & Close", false, ThemeColor.ACCENT_DARK.toString());
             runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
             closeButton.setOnMouseClicked(e -> {
-                PlaygroundHandler.savePlayground(file, editor.getText());
-                returnToOverview();
+                if (PlaygroundHandler.savePlayground(file, editor.getText())) {
+                    returnToOverview();
+                }
             });
 
             sidebar.getChildren().addAll(terminal, runButton, closeButton);

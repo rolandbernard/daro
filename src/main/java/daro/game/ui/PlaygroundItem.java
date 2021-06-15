@@ -104,7 +104,7 @@ public class PlaygroundItem extends StackPane {
     }
 
     private DeleteButton deleteButton() {
-        DeleteButton button = new DeleteButton();
+        DeleteButton button = new DeleteButton(true);
         button.setOnMouseClicked(e -> openConfirmPopup());
         return button;
     }

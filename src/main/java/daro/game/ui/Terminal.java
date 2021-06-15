@@ -54,6 +54,10 @@ public class Terminal extends VBox {
         this.setPadding(new Insets(20));
         this.getChildren().addAll(title, content);
 
+        textContent.heightProperty().addListener((observable, oldValue, newValue) -> {
+            content.setVvalue(1.0);
+        });
+
         OutputStream out = new OutputStream() {
             @Override
             public void write(int b) {

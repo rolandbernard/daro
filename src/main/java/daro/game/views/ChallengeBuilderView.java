@@ -111,7 +111,7 @@ public class ChallengeBuilderView extends View {
         testMap.put("expected", expected);
         testFields.add(testMap);
         FieldGroup group = new FieldGroup("Test " + testFields.size(), source, type, expected);
-        DeleteButton button = new DeleteButton();
+        DeleteButton button = new DeleteButton(true);
         group.getChildren().add(0, button);
         group.setPadding(new Insets(20));
         group.setStyle("-fx-background-radius: 15px; -fx-background-color: " + ThemeColor.MEDIUM_BACKGROUND);

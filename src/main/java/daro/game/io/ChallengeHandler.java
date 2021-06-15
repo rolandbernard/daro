@@ -13,8 +13,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public abstract class ChallengeHandler {
+public final class ChallengeHandler {
     private static final String CHALLENGE_PATH = UserData.USER_PATH + "challenges/";
+
+    private ChallengeHandler() {
+    }
 
     public static void importChallenge(File file) {
         try {

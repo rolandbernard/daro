@@ -7,7 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public abstract class UserData {
+public final class UserData {
+    private UserData() {
+    }
+
     static final String USER_PATH = "./user/";
 
     // LEVELS

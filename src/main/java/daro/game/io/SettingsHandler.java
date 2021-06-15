@@ -9,9 +9,11 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class SettingsHandler {
+public final class SettingsHandler {
+    private SettingsHandler() {
+    }
 
-    private static String SETTINGS_PATH = UserData.USER_PATH + "settings.json";
+    private final static String SETTINGS_PATH = UserData.USER_PATH + "settings.json";
 
     private static JsonObject getSettings() {
         return UserData.parseUserJson("settings.json");

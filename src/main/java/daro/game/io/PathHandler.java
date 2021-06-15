@@ -9,8 +9,10 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Scanner;
 
-public abstract class PathHandler {
+public final class PathHandler {
     private static final String RESOURCE_ROOT = "/daro/game/";
+
+    private PathHandler() { }
 
     /**
      * Returns the Font-File as an InputStream
@@ -24,7 +26,7 @@ public abstract class PathHandler {
 
     /**
      * Returns a stylesheet file that can be added to a scene
-     * 
+     *
      * @param filename the name of the css file
      * @return a String containing the url to the file
      */

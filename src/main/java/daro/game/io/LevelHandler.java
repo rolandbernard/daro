@@ -12,7 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class LevelHandler {
+public final class LevelHandler {
+
+    private LevelHandler() {
+    }
+
     public static Level getNextLevel(long groupId, long levelId) {
         JsonArray groups = getLevelGroups();
         JsonObject group = findById(groups, groupId);
@@ -102,7 +106,7 @@ public abstract class LevelHandler {
     }
 
     private static Level parseLevelFromJsonObject(
-        long parentId, JsonObject levelJson, Map<Long, JsonObject> completionMap
+            long parentId, JsonObject levelJson, Map<Long, JsonObject> completionMap
     ) {
         long id = levelJson.get("id").getAsLong();
         boolean isCompleted = false;
@@ -124,8 +128,6 @@ public abstract class LevelHandler {
         String code = currentCode == null ? standardCode : currentCode;
         return new Level(id, name, description, isCompleted, code, testsList, parentId);
     }
-
-
 
 
     /**
