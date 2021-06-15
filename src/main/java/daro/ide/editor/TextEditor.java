@@ -22,10 +22,9 @@ import daro.ide.debug.Interrupter;
 import daro.lang.ast.AstNode;
 import daro.lang.interpreter.DaroException;
 import daro.lang.interpreter.ExecutionContext;
-import daro.lang.interpreter.ExecutionObserver;
 import daro.lang.interpreter.Interpreter;
-import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
+import daro.lang.interpreter.ShadowingScope;
 import daro.lang.parser.Parser;
 import daro.lang.parser.ParsingException;
 import daro.lang.values.DaroObject;
@@ -122,13 +121,7 @@ public class TextEditor extends CodeArea {
                         public void write(int b) throws IOException {
                         }
                     });
-                    ExecutionObserver scopeProtector = new ExecutionObserver(){
-                        @Override
-                        public void beforeLocalization(AstNode node, ExecutionContext context) {
-                            throw new InterpreterException("Do not write to the scope");
-                        }
-                    };
-                    ExecutionContext context = new ExecutionContext(shownScope, voidStream, new Interrupter(), scopeProtector);
+                    ExecutionContext context = new ExecutionContext(new ShadowingScope(shownScope), voidStream, new Interrupter());
                     Interpreter interpreter = new Interpreter(context);
                     executor.shutdownNow();
                     executor = Executors.newSingleThreadExecutor();
