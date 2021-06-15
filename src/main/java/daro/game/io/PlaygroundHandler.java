@@ -73,14 +73,7 @@ public final class PlaygroundHandler {
      * @throws IOException error while accessing the file
      */
     public static String getPlayground(File file) throws IOException {
-        Scanner scanner = new Scanner(file);
-        scanner.useDelimiter("\\Z");
-        if (scanner.hasNext()) {
-            String playground = scanner.next();
-            scanner.close();
-            return playground;
-        }
-        return "";
+        return IOHelpers.getFileContent(file);
     }
 
     /**
@@ -102,10 +95,8 @@ public final class PlaygroundHandler {
      * @return true if successful, false if error
      */
     public static boolean savePlayground(File file, String code) {
-        try (PrintWriter writer = new PrintWriter(file)) {
-            writer.write(code);
-            writer.flush();
-            writer.close();
+        try {
+            IOHelpers.overwriteFile(file, code);
             return true;
         } catch (IOException e) {
             return false;

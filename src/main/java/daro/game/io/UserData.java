@@ -18,12 +18,10 @@ public final class UserData {
         File file = new File(USER_PATH + filename);
         JsonObject element = new JsonObject();
         try {
-            Scanner scanner = new Scanner(file);
-            scanner.useDelimiter("\\Z");
-            if (scanner.hasNext()) {
-                element = JsonParser.parseString(scanner.next()).getAsJsonObject();
+            String jsonContent = IOHelpers.getFileContent(file);
+            if(!jsonContent.isEmpty()) {
+                element = JsonParser.parseString(jsonContent).getAsJsonObject();
             }
-            scanner.close();
         } catch (FileNotFoundException ex) {
             try {
                 file.createNewFile();
@@ -32,21 +30,6 @@ public final class UserData {
             }
         }
         return element;
-    }
-
-    public static Map<Long, JsonObject> getLevelGroupData(long groupId) {
-        JsonObject object = parseUserJson("data.json");
-        Map<Long, JsonObject> map = new HashMap<>();
-        JsonElement groupData = object.get(String.valueOf(groupId));
-
-        if (groupData != null) {
-            JsonArray groups = groupData.getAsJsonArray();
-            for (JsonElement level : groups) {
-                JsonObject obj = level.getAsJsonObject();
-                map.put(obj.get("id").getAsLong(), obj);
-            }
-        }
-        return map;
     }
 
     /**

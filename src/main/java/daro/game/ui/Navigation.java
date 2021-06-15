@@ -1,7 +1,6 @@
 package daro.game.ui;
 
-import daro.game.main.Game;
-import daro.game.io.PathHandler;
+import daro.game.io.ResourceHandler;
 import daro.game.main.ThemeColor;
 import daro.game.pages.*;
 import daro.game.views.MenuView;
@@ -41,7 +40,7 @@ public class Navigation extends VBox {
      * @return imageview containing the logo
      */
     private ImageView getLogo() {
-        ImageView logo = new ImageView(PathHandler.getImage("logo.png"));
+        ImageView logo = new ImageView(ResourceHandler.getImage("logo.png"));
         logo.setFitHeight(40);
         logo.setFitWidth(104);
         logo.setPreserveRatio(true);

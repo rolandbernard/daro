@@ -1,5 +1,6 @@
 package daro.game.views;
 
+import daro.game.io.ChallengeHandler;
 import daro.game.io.LevelHandler;
 import daro.game.main.Challenge;
 import daro.game.main.Level;
@@ -58,8 +59,9 @@ public class ExerciseView extends View {
         BackButton backButton = new BackButton("Back to overview");
         backButton.setPadding(new Insets(BOX_PADDINGS));
         backButton.setOnMouseClicked(e -> {
-            save(ValidationResult.evaluate(Validation.run(editor.getText(), exercise.getTests())));
-            backToOverview();
+            if (save(ValidationResult.evaluate(Validation.run(editor.getText(), exercise.getTests())))) {
+                backToOverview();
+            }
         });
 
         CustomButton runButton = new CustomButton("\ue037", "Run in terminal", false);
@@ -69,7 +71,7 @@ public class ExerciseView extends View {
 
         bar.getChildren().addAll(backButton, textBox, terminal, runButton, submitButton);
         bar.setMinWidth(SIDEBAR_WIDTH);
-        bar.setStyle("-fx-background-color: #2b2e3a");
+        bar.setStyle("-fx-background-color: " + ThemeColor.EDITOR_SIDEBAR);
         return bar;
     }
 
@@ -87,7 +89,7 @@ public class ExerciseView extends View {
         textBox.setSpacing(10);
 
         ScrollPane pane = new ScrollPane();
-        pane.setStyle("-fx-background-color: #2b2e3a");
+        pane.setStyle("-fx-background-color: transparent");
         pane.setMinHeight(250);
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         pane.setContent(textBox);
@@ -99,8 +101,9 @@ public class ExerciseView extends View {
         if (exercise instanceof Level) {
             Level l = (Level) exercise;
             return UserData.writeLevelData(l.getGroupId(), l.getId(), completion, editor.getText());
-        } else if(exercise instanceof Challenge) {
+        } else if (exercise instanceof Challenge) {
             Challenge c = (Challenge) exercise;
+            return ChallengeHandler.saveChallenge(c, editor.getText(), completion);
         }
         return false;
     }
@@ -109,21 +112,21 @@ public class ExerciseView extends View {
         popup.open();
         List<ValidationResult> results = Validation.run(editor.getText(), exercise.getTests());
         boolean success = ValidationResult.evaluate(results);
-        save(success);
+        if (save(success)) {
+            VBox items = createValidationItems(results);
+            Text heading = new Text(success ? "Congratulations!\nYou passed all the tests" : "Ooops! Try again.");
+            heading.getStyleClass().addAll("text", "heading", "small");
+            heading.setTextAlignment(TextAlignment.CENTER);
 
-        VBox items = createValidationItems(results);
-        Text heading = new Text(success ? "Congratulations!\nYou passed all the tests" : "Ooops! Try again.");
-        heading.getStyleClass().addAll("text", "heading", "small");
-        heading.setTextAlignment(TextAlignment.CENTER);
-
-        HBox controls = createControlButtons(success);
-        VBox popupContent = new VBox();
-        popupContent.getChildren().addAll(heading, items, controls);
-        popupContent.setSpacing(30);
-        popupContent.setPadding(new Insets(40));
-        popupContent.setAlignment(Pos.CENTER);
-        popupContent.setPrefWidth(Popup.POPUP_WIDTH);
-        popup.updateContent(popupContent);
+            HBox controls = createControlButtons(success);
+            VBox popupContent = new VBox();
+            popupContent.getChildren().addAll(heading, items, controls);
+            popupContent.setSpacing(30);
+            popupContent.setPadding(new Insets(40));
+            popupContent.setAlignment(Pos.CENTER);
+            popupContent.setPrefWidth(Popup.POPUP_WIDTH);
+            popup.updateContent(popupContent);
+        }
     }
 
     private VBox createValidationItems(List<ValidationResult> results) {
@@ -160,10 +163,10 @@ public class ExerciseView extends View {
     }
 
     private void backToOverview() {
-        if(exercise instanceof Level) {
+        if (exercise instanceof Level) {
             System.out.println(exercise);
             View.updateView(this, new MenuView(new CoursePage()));
-        } else if(exercise instanceof Challenge) {
+        } else if (exercise instanceof Challenge) {
             View.updateView(this, new MenuView(new ChallengesPage()));
         }
     }

@@ -1,9 +1,8 @@
 package daro.game.ui;
 
-import daro.game.main.Game;
+import daro.game.main.ThemeColor;
 import daro.lang.interpreter.Interpreter;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -48,11 +47,11 @@ public class Terminal extends VBox {
         content = new ScrollPane();
         content.setContent(container);
         content.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        content.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        content.setStyle("-fx-background-color: #1D1F26;");
-        this.setStyle("-fx-background-color: #1D1F26;");
-        this.setPadding(new Insets(20));
-        this.getChildren().addAll(title, content);
+        content.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        content.setStyle("-fx-background-color: transparent;");
+        setStyle("-fx-background-color: " + ThemeColor.TERMINAL_BACKGROUND);
+        setPadding(new Insets(20));
+        getChildren().addAll(title, content);
 
         textContent.heightProperty().addListener((observable, oldValue, newValue) -> {
             content.setVvalue(1.0);

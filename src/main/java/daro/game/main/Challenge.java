@@ -18,8 +18,10 @@ public class Challenge extends Exercise {
      * @param code        code written for the level
      * @param tests       tests that have to run in the Level
      */
-    public Challenge(String name, String description, String code, List<Validation> tests, String creator, File source) {
-        super(name, description, code, tests);
+    public Challenge(
+            String name, String description, String code, List<Validation> tests,
+            String creator, File source, boolean isCompleted) {
+        super(name, description, code, tests, isCompleted);
         this.creator = creator;
         this.file = source;
     }

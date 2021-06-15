@@ -4,7 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import daro.game.ui.fields.InputField;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,11 +71,10 @@ public final class SettingsHandler {
             allSettings.add(key, innerSettings);
         }
 
-        try (PrintWriter writer = new PrintWriter(SETTINGS_PATH)) {
-            writer.write(allSettings.toString());
-            writer.flush();
-            writer.close();
-        } catch (FileNotFoundException e) {
+        try {
+            File file = new File(SETTINGS_PATH);
+            IOHelpers.overwriteFile(file, allSettings.toString());
+        } catch (IOException e) {
             return false;
         }
         return true;

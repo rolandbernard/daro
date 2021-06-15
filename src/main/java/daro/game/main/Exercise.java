@@ -8,6 +8,7 @@ public abstract class Exercise {
 
     private String name, description, code;
     private List<Validation> tests;
+    boolean completed;
 
     /**
      * Manages the logic of the Levels
@@ -17,10 +18,10 @@ public abstract class Exercise {
      * @param tests       tests that have to run in the Level
      * @param code        code written for the level
      */
-
     public Exercise(
-            String name, String description, String code, List<Validation> tests
+            String name, String description, String code, List<Validation> tests, boolean isCompleted
     ) {
+        this.completed = isCompleted;
         this.name = name;
         this.code = code;
         this.description = description;
@@ -61,6 +62,15 @@ public abstract class Exercise {
      */
     public List<Validation> getTests() {
         return tests;
+    }
+
+    /**
+     * Checks if level is completed
+     *
+     * @return the completion state of the level
+     */
+    public boolean isCompleted() {
+        return completed;
     }
 
     public boolean isSimilar(Exercise s) {

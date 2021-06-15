@@ -3,6 +3,8 @@ package daro.game.pages;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import daro.game.io.ChallengeHandler;
+import daro.game.io.IOHelpers;
+import daro.game.io.parser.ChallengeParser;
 import daro.game.main.Challenge;
 import daro.game.main.ThemeColor;
 import daro.game.ui.*;
@@ -49,12 +51,10 @@ public class ChallengesPage extends Page implements Reloadable {
         File file = fileChooser.showOpenDialog(this.getScene().getWindow());
         if (file != null) {
             try {
-                Scanner scanner = new Scanner(file);
-                scanner.useDelimiter("\\Z");
-                JsonObject element = JsonParser.parseString(scanner.next()).getAsJsonObject();
-                Challenge newChallenge = ChallengeHandler.parseChallenge(file, element);
+                String challengeString = IOHelpers.getFileContent(file);
+                Challenge newChallenge = ChallengeParser.parse(challengeString, file);
                 if (ChallengeHandler.hasSimilar(newChallenge)) {
-                    openImportWarning(newChallenge, element, file);
+                    openImportWarning(newChallenge, challengeString, file);
                 } else {
                     ChallengeHandler.importChallenge(file);
                     View.updateView(this, new ExerciseView(newChallenge));
@@ -75,7 +75,8 @@ public class ChallengesPage extends Page implements Reloadable {
         challenges.stream().map(c -> new ChallengeItem(c, this)).forEach(c -> this.challenges.getChildren().add(c));
     }
 
-    private void openImportWarning(Challenge newChallenge, JsonObject element, File file) {
+    private void openImportWarning(Challenge newChallenge, String challengeString, File file) {
+        JsonObject challengeJson = JsonParser.parseString(challengeString).getAsJsonObject();
         Text heading = new Text("Error");
         heading.getStyleClass().addAll("heading", "small", "text");
         heading.setTextAlignment(TextAlignment.CENTER);
@@ -89,7 +90,7 @@ public class ChallengesPage extends Page implements Reloadable {
 
         CustomButton replaceBtn = new CustomButton("\ue923", "Replace", true);
         replaceBtn.setOnMouseClicked(e -> {
-            if (ChallengeHandler.replaceSimilar(newChallenge, element)) {
+            if (ChallengeHandler.replaceSimilar(newChallenge, challengeJson)) {
                 View.updateView(this, new ExerciseView(newChallenge));
             } else {
                 MenuView.getPopup().close();

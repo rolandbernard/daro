@@ -30,7 +30,7 @@ public class ChallengeItem extends StackPane {
         creator.getStyleClass().add("text");
         this.setStyle(
                 "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                        + "-fx-background-color: #381A90;"
+                        + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
         );
         Interaction.setClickable(this, true);
         VBox mainContent = new VBox(name, creator);
