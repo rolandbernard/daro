@@ -1,10 +1,15 @@
 package daro.ide.editor;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,8 +18,13 @@ import java.util.stream.Collectors;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
 
+import daro.ide.debug.Interrupter;
 import daro.lang.ast.AstNode;
 import daro.lang.interpreter.DaroException;
+import daro.lang.interpreter.ExecutionContext;
+import daro.lang.interpreter.ExecutionObserver;
+import daro.lang.interpreter.Interpreter;
+import daro.lang.interpreter.InterpreterException;
 import daro.lang.interpreter.Scope;
 import daro.lang.parser.Parser;
 import daro.lang.parser.ParsingException;
@@ -39,6 +49,7 @@ import javafx.stage.Popup;
  */
 public class TextEditor extends CodeArea {
     private Consumer<String> onChange;
+    private ExecutorService executor;
     private Set<Integer> breakpoints;
     private DaroException shownError;
     private Scope shownScope;
@@ -53,6 +64,7 @@ public class TextEditor extends CodeArea {
      */
     public TextEditor(String initialContent) {
         super(initialContent);
+        executor = Executors.newSingleThreadExecutor();
         getStyleClass().add("text-editor");
         setOnKeyPressed(this::handleKeyPress);
         textProperty().addListener(this::handleTextChange);
@@ -87,20 +99,52 @@ public class TextEditor extends CodeArea {
                 popupMessage.setText(shownError.getMessage());
                 popup.show(this, screenPosition.getX(), screenPosition.getY());
             } else if (shownScope != null) {
-                String text = getText();
-                int start = textPosition;
-                int end = textPosition + 1;
-                while (start > 0 && Character.isLetterOrDigit(text.charAt(start))) {
-                    start--;
-                }
-                while (end < text.length() && Character.isLetterOrDigit(text.charAt(end))) {
-                    end++;
-                }
-                String word = text.substring(start + 1, end);
-                DaroObject value = shownScope.getVariableValue(word);
-                if (value != null) {
-                    popupMessage.setText(value.toString());
-                    popup.show(this, screenPosition.getX(), screenPosition.getY());
+                if (getSelectedText().isEmpty()) {
+                    String text = getText();
+                    int start = textPosition;
+                    int end = textPosition + 1;
+                    while (start > 0 && Character.isLetterOrDigit(text.charAt(start))) {
+                        start--;
+                    }
+                    while (end < text.length() && Character.isLetterOrDigit(text.charAt(end))) {
+                        end++;
+                    }
+                    String word = text.substring(start + 1, end);
+                    DaroObject value = shownScope.getVariableValue(word);
+                    if (value != null) {
+                        popupMessage.setText(value.toString());
+                        popup.show(this, screenPosition.getX(), screenPosition.getY());
+                    }
+                } else {
+                    String code = getSelectedText();
+                    PrintStream voidStream = new PrintStream(new OutputStream() {
+                        @Override
+                        public void write(int b) throws IOException {
+                        }
+                    });
+                    ExecutionObserver scopeProtector = new ExecutionObserver(){
+                        @Override
+                        public void beforeLocalization(AstNode node, ExecutionContext context) {
+                            throw new InterpreterException("Do not write to the scope");
+                        }
+                    };
+                    ExecutionContext context = new ExecutionContext(shownScope, voidStream, new Interrupter(), scopeProtector);
+                    Interpreter interpreter = new Interpreter(context);
+                    executor.shutdownNow();
+                    executor = Executors.newSingleThreadExecutor();
+                    executor.submit(() -> {
+                        try {
+                            DaroObject value = interpreter.execute(code);
+                            if (value != null) {
+                                Platform.runLater(() -> {
+                                    popupMessage.setText(value.toString());
+                                    popup.show(this, screenPosition.getX(), screenPosition.getY());
+                                });
+                            }
+                        } catch(DaroException error) {
+                            // Ignore exceptions
+                        }
+                    });
                 }
             }
         });
