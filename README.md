@@ -76,13 +76,17 @@ in the interpreter are `daro.lang.interpreter.Scope` and `daro.lang.interpreter.
 
 Abstract classes are extensively used in the interpreter. For example `daro.lang.ast.AstNode` and
 `daro.lang.values.DaroObject`, as well as `daro.lang.interpreter.AbstractScope` are abstract
-classes. While there are a lot more abstract classes, these are the most important.
+classes. While there are a lot more abstract classes, these are the most important. Yet, also the game
+makes use of abstract classes. They are mainly used to define a general, but not complete `daro.game.ui.fields` 
+input field but also `daro.game.page.Page` and `daro.game.view.View` use abstract classes to define a general
+template for other pages/views.
 
 #### Generics
 
-Generics are sparsely used in out program. The `daro.lang.ast.Visitor` interface is one example of a
+Generics are sparsely used in our program. The `daro.lang.ast.Visitor` interface is one example of a
 generic interface used in the program. An example for a generic method can be found in
-`daro.lang.interpreter.NativeScope.findClosestMatch()`.
+`daro.lang.interpreter.NativeScope.findClosestMatch()`. Generics are also used to define the saved type
+of the `daro.game.ui.fields.SelectField`.
 
 #### Collections
 
@@ -121,12 +125,16 @@ used in multiple locations for event handlers.
 #### Streams
 
 Streams are used in our application mainly for short operations like filter or map. An relatively
-extensive example can be found in `daro.lang.interpreter.NativePackageScope.getCompleteMapping()`.
+extensive example can be found in `daro.lang.interpreter.NativePackageScope.getCompleteMapping()`. In the
+game streams are mainly used to map a list of e.g. ValidationResults to its UI components. Also, the `daro.game.validation`
+validations and its results are evaluated/run using streams.
 
 #### File I/O
 
-File I/O is used both by the programming language, the game and the IDE. For example the programming
+File I/O is used by the programming language, the game and the IDE. For example the programming
 language uses file i/o using `java.nio` in `daro.lang.interpreter.Executor.executeFileInScope()`.
+In the game it is mainly used to enable persistence of user state, their settings and to save challenges,
+import them into the game and to maintain playgrounds. 
 
 #### Serialization
 
@@ -141,7 +149,8 @@ Serialization is used in the game to read user and level data. An example of thi
 #### Regular expressions
 
 While regular expressions are not used for parsing the actual language, they are used in the code
-editor for syntax highlighting. This can be seen in `daro.ide.editor.CodeEditor`.
+editor for syntax highlighting. This can be seen in `daro.ide.editor.CodeEditor`. Also, it is used to
+check user input within the game, for example to check the name of playgrounds.
 
 #### Thread signaling
 

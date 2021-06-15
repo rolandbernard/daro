@@ -29,10 +29,10 @@ public class CustomButton extends HBox {
      */
     public CustomButton(String icon, String text, boolean rounded, String color) {
         this.setMinHeight(HEIGHT);
-        this.setStyle("-fx-background-color: " + color);
+        this.setStyle("-fx-background-color: " + color + ";");
         this.setPadding(new Insets(0, 20, 0, 20));
         if (rounded) {
-            this.setStyle(getStyle() + "; -fx-background-radius: 25px;");
+            this.setStyle(getStyle() + "-fx-background-radius: 25px;");
         }
         setOnMouseEntered(e -> setStyle(getStyle() + "-fx-background-color: derive(" + color + ", -10%);"));
         setOnMouseExited(e -> setStyle(getStyle() + "-fx-background-color: " + color + ";"));
