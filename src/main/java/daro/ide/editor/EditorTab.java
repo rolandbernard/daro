@@ -8,6 +8,7 @@ import java.util.Set;
 
 import daro.lang.ast.Position;
 import daro.lang.interpreter.DaroException;
+import daro.lang.interpreter.Scope;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.stage.FileChooser;
@@ -171,6 +172,15 @@ public class EditorTab extends Tab {
      */
     public void highlightError(DaroException error) {
         editor.highlightError(error);
+    }
+
+    /**
+     * Set the scope that should be used for the tooltip value preview.
+     *
+     * @param scope The scope to use
+     */
+    public void showScope(Scope scope) {
+        editor.showScope(scope);
     }
 
     /**

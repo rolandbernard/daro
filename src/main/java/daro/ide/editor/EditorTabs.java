@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import daro.lang.ast.Position;
 import daro.lang.interpreter.DaroException;
+import daro.lang.interpreter.Scope;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -23,6 +24,7 @@ import javafx.scene.control.TabPane;
 public class EditorTabs extends TabPane {
     private Map<Path, EditorTab> tabs;
     private EditorContextMenu menu;
+    private Scope shownScope;
 
     /**
      * Create a new {@link EditorTabs} object.
@@ -64,6 +66,7 @@ public class EditorTabs extends TabPane {
         if (file != null) {
             tabs.put(file, tab);
         }
+        tab.showScope(shownScope);
         tab.setOnClosed(event -> {
             tabs.remove(file);
         });
@@ -208,6 +211,20 @@ public class EditorTabs extends TabPane {
             openFile(file);
         }
         getOpenEditor().highlightError(error);
+    }
+
+    /**
+     * Set the scope that should be used for the tooltip value preview.
+     *
+     * @param scope The scope to use
+     */
+    public void showScope(Scope scope) {
+        shownScope = scope;
+        for (Tab tab : getTabs()) {
+            if (tab instanceof EditorTab) {
+                ((EditorTab)tab).showScope(scope);
+            }
+        }
     }
 
     /**

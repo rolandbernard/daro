@@ -15,8 +15,10 @@ import org.fxmisc.richtext.event.MouseOverTextEvent;
 
 import daro.lang.ast.AstNode;
 import daro.lang.interpreter.DaroException;
+import daro.lang.interpreter.Scope;
 import daro.lang.parser.Parser;
 import daro.lang.parser.ParsingException;
+import daro.lang.values.DaroObject;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
@@ -39,6 +41,7 @@ public class TextEditor extends CodeArea {
     private Consumer<String> onChange;
     private Set<Integer> breakpoints;
     private DaroException shownError;
+    private Scope shownScope;
     private int shownDebugLine = -1;
 
     private static final String TAB = "    ";
@@ -79,10 +82,26 @@ public class TextEditor extends CodeArea {
         setMouseOverTextDelay(Duration.ofMillis(200));
         addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, event -> {
             int textPosition = event.getCharacterIndex();
+            Point2D screenPosition = event.getScreenPosition();
             if (shownError != null && textPosition >= shownError.getStart() && textPosition <= shownError.getEnd()) {
-                Point2D screenPosition = event.getScreenPosition();
                 popupMessage.setText(shownError.getMessage());
                 popup.show(this, screenPosition.getX(), screenPosition.getY());
+            } else if (shownScope != null) {
+                String text = getText();
+                int start = textPosition;
+                int end = textPosition + 1;
+                while (start > 0 && Character.isLetterOrDigit(text.charAt(start))) {
+                    start--;
+                }
+                while (end < text.length() && Character.isLetterOrDigit(text.charAt(end))) {
+                    end++;
+                }
+                String word = text.substring(start + 1, end);
+                DaroObject value = shownScope.getVariableValue(word);
+                if (value != null) {
+                    popupMessage.setText(value.toString());
+                    popup.show(this, screenPosition.getX(), screenPosition.getY());
+                }
             }
         });
         addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
@@ -269,6 +288,15 @@ public class TextEditor extends CodeArea {
             shownError = error;
             applyHighlighting(getText());
         });
+    }
+
+    /**
+     * Set the scope that should be used for the tooltip value preview.
+     *
+     * @param scope The scope to use
+     */
+    public void showScope(Scope scope) {
+        shownScope = scope;
     }
 
     /**
