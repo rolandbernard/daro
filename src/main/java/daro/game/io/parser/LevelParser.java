@@ -73,7 +73,6 @@ public final class LevelParser {
             }
         }
 
-        System.out.println(isCompleted);
         String code = currentCode == null ? standardCode : currentCode;
         return new Level(id, name, description, isCompleted, code, testsList, parentId);
     }

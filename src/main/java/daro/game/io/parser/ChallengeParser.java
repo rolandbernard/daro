@@ -27,7 +27,8 @@ public final class ChallengeParser {
         } else {
             code = obj.get("currentCode").getAsString();
         }
-        boolean completed = obj.get("completed") != null && obj.get("completed").getAsBoolean();
+        boolean completed = obj.get("completion") != null && obj.get("completion").getAsBoolean();
+        System.out.println(completed);
         return new Challenge(name, description, code, testsList, creator, source, completed);
     }
 }

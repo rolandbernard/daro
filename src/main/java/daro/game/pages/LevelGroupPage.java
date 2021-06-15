@@ -33,7 +33,7 @@ public class LevelGroupPage extends Page {
      */
     private VBox getLevelList() {
         VBox list = new VBox();
-        list.setSpacing(20);
+        list.setSpacing(30);
         List<Level> levelList = levelGroup.getLevels();
         if (levelGroup.getLevels() != null && levelGroup.getLevels().size() > 0) {
             levelList.stream().map(LevelItem::new).forEach(l -> list.getChildren().add(l));

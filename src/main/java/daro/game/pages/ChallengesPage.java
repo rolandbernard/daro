@@ -36,9 +36,9 @@ public class ChallengesPage extends Page implements Reloadable {
         createButton.setOnMouseClicked(e -> View.updateView(this, new ChallengeBuilderView()));
         importButton.setOnMouseClicked(e -> importNewChallenge());
         challenges = new VBox();
-        challenges.setSpacing(10);
+        challenges.setSpacing(30);
         content = new VBox(createButton, importButton, challenges);
-        content.setSpacing(20);
+        content.setSpacing(30);
         getImportedChallenges();
         this.getChildren().addAll(heading, content);
     }
@@ -56,7 +56,8 @@ public class ChallengesPage extends Page implements Reloadable {
                 if (ChallengeHandler.hasSimilar(newChallenge)) {
                     openImportWarning(newChallenge, challengeString, file);
                 } else {
-                    ChallengeHandler.importChallenge(file);
+                    File newFile = ChallengeHandler.importChallenge(file);
+                    newChallenge = ChallengeParser.parse(challengeString, newFile);
                     View.updateView(this, new ExerciseView(newChallenge));
                 }
 
@@ -98,8 +99,9 @@ public class ChallengesPage extends Page implements Reloadable {
         });
         CustomButton importBtn = new CustomButton("\ue255", "Import anyway", true);
         importBtn.setOnMouseClicked(e -> {
-            ChallengeHandler.importChallenge(file);
-            View.updateView(this, new ExerciseView(newChallenge));
+            File newFile = ChallengeHandler.importChallenge(file);
+            Challenge c = ChallengeParser.parse(challengeString, newFile);
+            View.updateView(this, new ExerciseView(c));
         });
         HBox buttons = new HBox(cancelBtn, replaceBtn, importBtn);
         buttons.setSpacing(10);

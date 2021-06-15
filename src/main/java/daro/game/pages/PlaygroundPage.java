@@ -20,7 +20,7 @@ public class PlaygroundPage extends Page implements Reloadable {
     public PlaygroundPage() {
         Heading heading = new Heading("Playground", "Play around with the language and use what you've learned.");
         playgroundList = new VBox();
-        playgroundList.setSpacing(20);
+        playgroundList.setSpacing(30);
         reload();
         getChildren().addAll(heading, playgroundList);
     }
@@ -35,6 +35,5 @@ public class PlaygroundPage extends Page implements Reloadable {
         for (File playground : playgrounds) {
             playgroundList.getChildren().add(new PlaygroundItem(playground, this));
         }
-        playgroundList.setSpacing(30);
     }
 }

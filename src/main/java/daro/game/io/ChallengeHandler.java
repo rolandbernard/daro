@@ -18,17 +18,18 @@ public final class ChallengeHandler {
     private ChallengeHandler() {
     }
 
-    public static void importChallenge(File file) {
+    public static File importChallenge(File file) {
         try {
             String newName = generateUniqueName();
             Files.copy(file.toPath(), Path.of(CHALLENGE_PATH + newName));
+            return new File(CHALLENGE_PATH + newName);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public static boolean removeChallenge(File file) {
-        System.out.println(file);
         try {
             Files.delete(file.toPath());
             return true;

@@ -2,6 +2,7 @@ package daro.game.views;
 
 import com.google.gson.JsonObject;
 import daro.game.io.ChallengeHandler;
+import daro.game.io.IOHelpers;
 import daro.game.main.ThemeColor;
 import daro.game.pages.ChallengesPage;
 import daro.game.ui.*;
@@ -16,7 +17,6 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
 
 public class ChallengeBuilderView extends View {
@@ -111,7 +111,7 @@ public class ChallengeBuilderView extends View {
         testMap.put("expected", expected);
         testFields.add(testMap);
         FieldGroup group = new FieldGroup("Test " + testFields.size(), source, type, expected);
-        DeleteButton button = new DeleteButton(true);
+        IconCircle button = IconCircle.getDeleteButton(false);
         group.getChildren().add(0, button);
         group.setPadding(new Insets(20));
         group.setStyle("-fx-background-radius: 15px; -fx-background-color: " + ThemeColor.MEDIUM_BACKGROUND);
@@ -154,7 +154,9 @@ public class ChallengeBuilderView extends View {
             fileChooser.setInitialFileName("challenge");
 
             File file = fileChooser.showSaveDialog(this.getScene().getWindow());
-            createFile(object.toString(), file);
+            if(createFile(object.toString(), file)) {
+                View.updateView(this, new MenuView(new ChallengesPage()));
+            }
         } else {
             Callout callout = new Callout("Please fill in all fields and have at least one test.", ThemeColor.RED.toString());
             sidebar.getChildren().add(2, callout);
@@ -168,19 +170,18 @@ public class ChallengeBuilderView extends View {
         return Arrays.stream(values).map(String::trim).noneMatch(String::isEmpty);
     }
 
-    private void createFile(String value, File file) {
+    private boolean createFile(String value, File file) {
         if (file != null) {
             try {
                 if (file.exists() || file.createNewFile()) {
-                    PrintWriter writer = new PrintWriter(file);
-                    writer.write(value);
-                    writer.flush();
-                    writer.close();
+                    IOHelpers.overwriteFile(file, value);
+                    return true;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                return false;
             }
         }
+        return false;
     }
 
     private List<Map<String, String>> updateTests() {

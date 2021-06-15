@@ -164,7 +164,6 @@ public class ExerciseView extends View {
 
     private void backToOverview() {
         if (exercise instanceof Level) {
-            System.out.println(exercise);
             View.updateView(this, new MenuView(new CoursePage()));
         } else if (exercise instanceof Challenge) {
             View.updateView(this, new MenuView(new ChallengesPage()));

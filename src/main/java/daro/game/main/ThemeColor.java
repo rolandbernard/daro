@@ -7,7 +7,7 @@ public enum ThemeColor {
     RED("#ff1414"),
     GREEN("#0e9e5d"),
     BACKGROUND("#2a195e"),
-    MEDIUM_BACKGROUND("#31177c"),
+    MEDIUM_BACKGROUND("#301e68"),
     LIGHT_BACKGROUND("#39227c"),
     DARK_BACKGROUND("#1D1044"),
     TERMINAL_BACKGROUND("#1D1F26"),

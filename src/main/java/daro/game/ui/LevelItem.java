@@ -33,13 +33,7 @@ public class LevelItem extends StackPane {
     }
 
     private StackPane getCompletionIcon() {
-        Icon icon = new Icon("\ue876");
-        StackPane pane = new StackPane(icon);
-        pane.setMaxHeight(50);
-        pane.setMaxWidth(50);
-        pane.setTranslateX(-25);
-        pane.setStyle("-fx-background-radius: 50px; -fx-background-color: " + ThemeColor.GREEN);
-        return pane;
+        return IconCircle.getCheckIcon(true);
     }
 
     /**

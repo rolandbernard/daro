@@ -28,28 +28,37 @@ public class ChallengeItem extends StackPane {
         name.getStyleClass().addAll("heading", "small", "text");
         Text creator = new Text("Creator: " + challenge.getCreator());
         creator.getStyleClass().add("text");
-        this.setStyle(
-                "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                        + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
-        );
         Interaction.setClickable(this, true);
         VBox mainContent = new VBox(name, creator);
         mainContent.setFillWidth(true);
-        mainContent.setPadding(new Insets(30));
+        mainContent.setPadding(new Insets(40));
         mainContent.setOnMouseClicked(e -> openChallenge());
-        getChildren().addAll(mainContent, deleteButton());
-        setAlignment(Pos.TOP_RIGHT);
-
+        mainContent.setStyle(
+                "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                        + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
+        );
+        StackPane itemWrapper = new StackPane(mainContent, deleteButton());
+        itemWrapper.setAlignment(Pos.TOP_RIGHT);
+        getChildren().add(itemWrapper);
+        if(challenge.isCompleted()) {
+            itemWrapper.setStyle("-fx-opacity: 0.5");
+            getChildren().add(checkCircle());
+        }
+        setAlignment(Pos.CENTER_LEFT);
     }
 
     private void openChallenge() {
         View.updateView(this, new ExerciseView(challenge));
     }
 
-    private DeleteButton deleteButton() {
-        DeleteButton button = new DeleteButton(true);
+    private IconCircle deleteButton() {
+        IconCircle button = IconCircle.getDeleteButton(true);
         button.setOnMouseClicked(e -> openConfirmPopup());
         return button;
+    }
+
+    private IconCircle checkCircle() {
+        return IconCircle.getCheckIcon(true);
     }
 
     private void openConfirmPopup() {

@@ -3,14 +3,12 @@ package daro.game.ui;
 import daro.game.io.PlaygroundHandler;
 import daro.game.main.ThemeColor;
 import daro.game.pages.Page;
-import daro.game.pages.PlaygroundPage;
 import daro.game.pages.Reloadable;
 import daro.game.views.EditorView;
 import daro.game.views.MenuView;
 import daro.game.views.View;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -103,8 +101,8 @@ public class PlaygroundItem extends StackPane {
         return format.format(new Date(time.toMillis()));
     }
 
-    private DeleteButton deleteButton() {
-        DeleteButton button = new DeleteButton(true);
+    private IconCircle deleteButton() {
+        IconCircle button = IconCircle.getDeleteButton(true);
         button.setOnMouseClicked(e -> openConfirmPopup());
         return button;
     }
