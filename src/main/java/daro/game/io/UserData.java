@@ -3,9 +3,7 @@ package daro.game.io;
 import com.google.gson.*;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.nio.file.Files;
 
 public final class UserData {
     private UserData() {
@@ -19,12 +17,17 @@ public final class UserData {
         JsonObject element = new JsonObject();
         try {
             String jsonContent = IOHelpers.getFileContent(file);
+            System.out.println("here");
             if(!jsonContent.isEmpty()) {
                 element = JsonParser.parseString(jsonContent).getAsJsonObject();
             }
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             try {
-                file.createNewFile();
+                File userDir = new File(USER_PATH);
+                if(!userDir.exists() || !userDir.isDirectory()) {
+                    Files.createDirectories(userDir.toPath());
+                }
+                IOHelpers.overwriteFile(file, "");
             } catch (IOException e) {
                 e.printStackTrace();
             }
