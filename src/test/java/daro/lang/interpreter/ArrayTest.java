@@ -76,6 +76,13 @@ public class ArrayTest {
     }
 
     @Test
+    void foreachArray() {
+        interpreter.execute("x = new array {10, 20, 30}");
+        interpreter.execute("sum = 0; x.foreach(fn(x) { sum += x})");
+        assertEquals(new DaroInteger(BigInteger.valueOf(60)), interpreter.execute("sum"));
+    }
+
+    @Test
     void pushArray() {
         interpreter.execute("x = new array");
         interpreter.execute("x.push(1.0)");

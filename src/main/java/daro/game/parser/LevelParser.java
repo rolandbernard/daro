@@ -36,7 +36,7 @@ public final class LevelParser {
     public static LevelGroup parseGroup(JsonObject groupObj, Map<Long, Map<Long, JsonObject>> completions) {
         long id = groupObj.get("id").getAsLong();
         String name = groupObj.get("name").getAsString();
-        String description = groupObj.get("description_short").getAsString();
+        String description = groupObj.get("description").getAsString();
 
         JsonArray levels = groupObj.get("levels").getAsJsonArray();
         List<Level> levelsList = parseLevels(id, levels, completions.get(id));

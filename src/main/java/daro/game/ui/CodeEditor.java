@@ -29,16 +29,16 @@ public class CodeEditor extends CodeArea {
      */
     // Regex for specific groups
     private static final String[] KEYWORDS = {
-            "fn", "return", "class", "true", "false"
+            "fn", "return", "class", "true", "false", "new", "array", "int", "real", "string", "in"
     };
     private static final String[] CONTROLS = {
             "if", "else", "for", "match"
     };
     private static final String[] SYMBOLS = {
-            "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!?=", ">", "<"
+            "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!=", ">", "<", "\\+", "-", "/", "\\*", "%"
     };
     private static final String[] FUNCTIONS = {
-            "([^\\s]+)?(\\s)?(?=((\\s+)?\\())"
+            "([^\\s]+)?(\\s)?(?=(\\())"
     };
     private static final String[] COMMENTS = {
             "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"
@@ -61,7 +61,7 @@ public class CodeEditor extends CodeArea {
     }
 
     private static final Pattern SYNTAX_PATTERN = Pattern.compile(
-            "(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" + "|(?<COMMENT>" + generatePattern(COMMENTS) + ")" + "|(?<STRING>"
+            "(?<COMMENT>" + generatePattern(COMMENTS) + ")" + "|(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" + "|(?<STRING>"
                     + generatePattern(STRINGS) + ")" + "|(?<DIGIT>" + generatePattern(DIGITS) + ")" + "|(?<CONTROL>"
                     + generateBoundedPattern(CONTROLS) + ")" + "|(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")"
                     + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"

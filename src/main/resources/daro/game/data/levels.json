@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "Variables",
-      "description_short": "Variables and primitive data types",
+      "description": "Variables and primitive data types",
       "levels": [
         {
           "id": 1,
@@ -185,7 +185,7 @@
     {
       "id": 2,
       "name": "Functions",
-      "description_short": "Routines for your code.",
+      "description": "Routines for your code.",
       "levels": [
         {
           "id": 1,
@@ -258,7 +258,7 @@
     {
       "id": 3,
       "name": "Conditions",
-      "description_short": "Conditional statements and expressions",
+      "description": "Conditional statements and expressions",
       "levels": [
         {
           "id": 1,
@@ -484,7 +484,7 @@
     {
       "id": 4,
       "name": "Loops",
-      "description_short": "Run the same multiple times",
+      "description": "Run the same multiple times",
       "levels": [
         {
           "id": 1,
@@ -667,6 +667,98 @@
             }
           ]
         }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Arrays",
+      "description": "Store lists of values",
+      "levels": [
+        {
+          "id": 1,
+          "name": "Creating arrays",
+          "description": "Create a simple array called 'numbers' containing the real numbers 1.5, 2.3 and 3.15",
+          "startCode": "",
+          "help": {
+            "text": "Arrays are used to store a list of values.",
+            "code": "// arrays can be created like that\narr = new array { 1, 2, 3, 4, 5, 6, 7, 8, 10 }\n"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "numbers",
+              "expected": "[1.5, 2.3, 3.15]"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Accessing arrays",
+          "description": "Create a function that returns the first element of an array.",
+          "startCode": "fn getFirst(arr) {\n\t\n}",
+          "help": {
+            "text": "Arrays are accessed by a special syntax. The syntax uses the index of the element, but starts counting from 0",
+            "code": "arr = new array { 1, 2, 3, 4, 5, 6, 7, 8, 10 }\nthird = arr[2];//third = 3\n//the index starts counting from 0, so the second element would have the index 1"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "arr = new array { 1, 2, 3, 4, 5, 6, 7, 8, 10 };\ngetFirst(arr)",
+              "expected": "1"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "arr = new array { 2, 3, 4, 5, 6, 7, 8, 10 };\ngetFirst(arr);",
+              "expected": "2"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "arr = new array { 10 };\ngetFirst(arr);",
+              "expected": "10"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Loops and arrays - for in loops",
+          "description": "Create a function that sums all values of the array. For example [2, 3, 5] => 2 + 3 + 5",
+          "startCode": "fn sumAll(arr) {\n\t\n}",
+          "help": {
+            "text": "For-in loops simplify the process of going through each value of the array.",
+            "code": "arr = new array { 1, 2, 3, 4, 5, 6, 7, 8, 10 }\nfor element in arr {\n\tprintln(element);\n}\n//this code prints each element of the array 'arr'."
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "arr = new array { 1, 2 };\nsumAll(arr)",
+              "expected": "3"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "arr = new array { 2, 3, 4 };\nsumAll(arr);",
+              "expected": "9"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "arr = new array { 10, 200, -5 };\nsumAll(arr);",
+              "expected": "205"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Arrays",
+      "description": "Store lists of values",
+      "levels": [
       ]
     }
   ]
