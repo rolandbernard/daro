@@ -19,7 +19,7 @@ public final class LevelParser {
         JsonArray groups = obj.get("groups").getAsJsonArray();
         List<LevelGroup> groupList = new ArrayList<>();
         Map<Long, Map<Long, JsonObject>> completionMap;
-        if(withCompletion) {
+        if (withCompletion) {
             completionMap = CompletionParser.parseAll();
         } else {
             completionMap = new HashMap<>();
@@ -72,8 +72,15 @@ public final class LevelParser {
                 currentCode = data.get("currentCode").getAsString();
             }
         }
+        String helpText = null;
+        String helpCode = null;
+        if (levelJson.get("help") != null) {
+            JsonObject help = levelJson.get("help").getAsJsonObject();
+            helpText = help.get("text") != null ? help.get("text").getAsString() : null;
+            helpCode = help.get("code") != null ? help.get("code").getAsString() : null;
+        }
 
         String code = currentCode == null ? standardCode : currentCode;
-        return new Level(id, name, description, isCompleted, code, testsList, parentId);
+        return new Level(id, name, description, isCompleted, code, testsList, parentId, helpText, helpCode);
     }
 }

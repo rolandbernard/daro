@@ -3,13 +3,18 @@
     {
       "id": 1,
       "name": "Data",
-      "description_short": "Variables and basic data structures",
+      "description_short": "Variables and primitive data types",
       "levels": [
         {
           "id": 1,
           "name": "Create a variable",
+          "helpText": "Variables are used to store data values. For example, by writing 'x = 5;' the value 5 is assigned to variable x.",
           "description": "Create a variable with the name a and assign it to the value 10",
           "startCode": "// code goes here\n// or here",
+          "help": {
+            "text": "Variables are used to store data values.",
+            "code": "x = 5 //with this line of code, the value 5 is assigned to x."
+          },
           "tests": [
             {
               "id": 1,
@@ -22,7 +27,7 @@
         {
           "id": 2,
           "name": "Sum two numbers",
-          "description": "Assign to a variable 'c', the sum of 'a' and 'b'",
+          "description": "You can also use variables in the assignment of new or current variables. For example 'x = y'; would assign the value of y to x. Task: Assign to a variable 'c', the sum of the variables 'a' and 'b'",
           "startCode": "a = 5;\nb = 10;\n//code goes here",
           "tests": [
             {

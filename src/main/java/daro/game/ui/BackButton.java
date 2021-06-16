@@ -1,11 +1,5 @@
 package daro.game.ui;
 
-import daro.game.pages.CoursePage;
-import daro.game.validation.Validation;
-import daro.game.validation.ValidationResult;
-import daro.game.views.MenuView;
-import daro.game.views.View;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.layout.HBox;

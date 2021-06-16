@@ -17,7 +17,6 @@ public final class UserData {
         JsonObject element = new JsonObject();
         try {
             String jsonContent = IOHelpers.getFileContent(file);
-            System.out.println("here");
             if(!jsonContent.isEmpty()) {
                 element = JsonParser.parseString(jsonContent).getAsJsonObject();
             }

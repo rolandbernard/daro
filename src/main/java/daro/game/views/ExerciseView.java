@@ -55,21 +55,29 @@ public class ExerciseView extends View {
         VBox bar = new VBox();
         ScrollPane textBox = createTextBox();
         Terminal terminal = new Terminal(SIDEBAR_WIDTH);
-
         BackButton backButton = new BackButton("Back to overview");
-        backButton.setPadding(new Insets(BOX_PADDINGS));
         backButton.setOnMouseClicked(e -> {
             if (save(ValidationResult.evaluate(Validation.run(editor.getText(), exercise.getTests())))) {
                 backToOverview();
             }
         });
+        HBox controlsBox = new HBox(backButton);
+        controlsBox.setPadding(new Insets(BOX_PADDINGS, 0 , 0, BOX_PADDINGS));
+        if(exercise instanceof Level) {
+            Level l = (Level) exercise;
+            if(l.getHelpCode() != null && l.getHelpText() != null) {
+                controlsBox.setSpacing(30);
+                controlsBox.getChildren().add(getHelpButton());
+                controlsBox.setAlignment(Pos.CENTER_LEFT);
+            }
+        }
 
         CustomButton runButton = new CustomButton("\ue037", "Run in terminal", false);
         CustomButton submitButton = new CustomButton("\ue86c", "Submit your result", false, ThemeColor.ACCENT_DARK.toString());
         runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
         submitButton.setOnMouseClicked(this::openValidationPopup);
 
-        bar.getChildren().addAll(backButton, textBox, terminal, runButton, submitButton);
+        bar.getChildren().addAll(controlsBox, textBox, terminal, runButton, submitButton);
         bar.setMinWidth(SIDEBAR_WIDTH);
         bar.setStyle("-fx-background-color: " + ThemeColor.EDITOR_SIDEBAR);
         return bar;
@@ -90,7 +98,7 @@ public class ExerciseView extends View {
 
         ScrollPane pane = new ScrollPane();
         pane.setStyle("-fx-background-color: transparent");
-        pane.setMinHeight(250);
+        pane.setMinHeight(300);
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         pane.setContent(textBox);
 
@@ -159,6 +167,46 @@ public class ExerciseView extends View {
             buttons.getChildren().add(mainButton);
         }
         return buttons;
+    }
+
+    private HBox getHelpButton() {
+        Icon icon = new Icon("\ue887");
+        Text info = new Text("Help");
+        info.getStyleClass().add("text");
+        HBox btn = new HBox(icon, info);
+        btn.setSpacing(10);
+        btn.setOnMouseClicked(this::openHelpPopup);
+        Interaction.setClickable(btn, false);
+        return btn;
+    }
+
+    private void openHelpPopup(MouseEvent mouseEvent) {
+        if(exercise instanceof Level) {
+            Level l = (Level) exercise;
+            Text heading = new Text("Help");
+            heading.getStyleClass().addAll("text", "heading", "medium");
+            VBox popupContent = new VBox(heading);
+            popupContent.setAlignment(Pos.CENTER_LEFT);
+            popupContent.setSpacing(20);
+            popup.updateContent(popupContent);
+            popup.open();
+            if(l.getHelpText() != null) {
+                Text helpText = new Text(l.getHelpText());
+                helpText.getStyleClass().add("text");
+                popupContent.getChildren().add(helpText);
+            }
+            if(l.getHelpCode() != null) {
+                CodeEditor editor = new CodeEditor(l.getHelpCode());
+                editor.setEditable(false);
+                editor.setMaxHeight(150);
+                editor.setAutoHeight(true);
+                editor.setMaxWidth(Popup.POPUP_WIDTH);
+                popupContent.getChildren().add(editor);
+            }
+            CustomButton closeBtn = new CustomButton("\ue5cd", "Close", true);
+            closeBtn.setOnMouseClicked(e -> popup.close());
+            popupContent.getChildren().add(closeBtn);
+        }
     }
 
     private void backToOverview() {
