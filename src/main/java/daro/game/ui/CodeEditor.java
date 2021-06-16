@@ -32,7 +32,7 @@ public class CodeEditor extends CodeArea {
             "fn", "return", "class", "true", "false"
     };
     private static final String[] CONTROLS = {
-            "if", "else", "for"
+            "if", "else", "for", "match"
     };
     private static final String[] SYMBOLS = {
             "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!?=", ">", "<"
@@ -49,7 +49,7 @@ public class CodeEditor extends CodeArea {
     private static final String[] DIGITS = {
             "\\d+"
     };
-    private static final String TAB = " ".repeat(4);
+    public static final String TAB = " ".repeat(4);
 
     // Generate Pattern for specific groups
     private static String generateBoundedPattern(String... pattern) {
@@ -63,8 +63,9 @@ public class CodeEditor extends CodeArea {
     private static final Pattern SYNTAX_PATTERN = Pattern.compile(
             "(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" + "|(?<COMMENT>" + generatePattern(COMMENTS) + ")" + "|(?<STRING>"
                     + generatePattern(STRINGS) + ")" + "|(?<DIGIT>" + generatePattern(DIGITS) + ")" + "|(?<CONTROL>"
-                    + generateBoundedPattern(CONTROLS) + ")" + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"
-                    + "|(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")"
+                    + generateBoundedPattern(CONTROLS) + ")" + "|(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")"
+                    + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"
+
     );
 
     /**
@@ -93,7 +94,7 @@ public class CodeEditor extends CodeArea {
      * @param defaultText the code which is rendered as default
      */
     public CodeEditor(String defaultText) {
-        super(defaultText);
+        super(defaultText.replace("\t", TAB));
         init();
     }
 
@@ -248,7 +249,6 @@ public class CodeEditor extends CodeArea {
         REPEATING_STRING.put("(", ")");
         REPEATING_STRING.put("[", "]");
         REPEATING_STRING.put("{", "}");
-        REPEATING_STRING.put("<", ">");
         REPEATING_STRING.put("\"", "\"");
         REPEATING_STRING.put("'", "'");
         REPEATING_STRING.put("/*", "*/");

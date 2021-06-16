@@ -141,6 +141,29 @@
         },
         {
           "id": 8,
+          "name": "true and false",
+          "description": "Create a variable x and make it false",
+          "startCode": "",
+          "help": {
+            "text": "Boolean values are created using the keywords true and false.",
+            "code": "a = false; b = false;"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "x",
+              "type": "FALSE"
+            },
+            {
+              "id": 2,
+              "source": "x",
+              "expected": "false",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 9,
           "name": "Mixing data types",
           "description": "Assign to a variable z concatenated value of x and y.",
           "startCode": "x = \"string\";\ny = 5",
@@ -154,6 +177,305 @@
               "source": "z",
               "expected": "\"string5\"",
               "type": "EQUALS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Functions",
+      "description_short": "Routines for your code.",
+      "levels": [
+        {
+          "id": 1,
+          "name": "Simple functions",
+          "description": "Create a function that returns true.",
+          "startCode": "fn getTrue() {\n\t\n}",
+          "help": {
+            "text": "A function is a routine that is run when it is called. It usually performs a task and returns its result to the place where it has been called.",
+            "code": "//This simple function returns the value 10 when called.\nfn test() {\n\treturn 10;\n}\n\na = test(); //after calling the function like that, the value of a will be 10."
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "getTrue()",
+              "expected": "true",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Summation function",
+          "description": "Create a function that returns the sum of its parameters.",
+          "startCode": "fn sum(a, b) {\n\t\n}",
+          "help": {
+            "text": "The return statement can contain any form of expression.",
+            "code": "fn multiplyBy5(x) {\n\treturn x * 5;\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "sum(2,4)",
+              "expected": "6",
+              "type": "EQUALS"
+            },
+            {
+              "id": 2,
+              "source": "sum(5,6)",
+              "expected": "11",
+              "type": "EQUALS"
+            },
+            {
+              "id": 3,
+              "source": "sum(100, 30000)",
+              "expected": "30100",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Using functions",
+          "description": "Call the given functions with the parameters 77 and assign it to a variable a",
+          "startCode": "fn toCelsius(fahrenheit) {\n\treturn (5.0/9) * (fahrenheit-32);\n}",
+          "help": {
+            "text": "A function is called using its identifier and () containing a list of needed parameters.",
+            "code": "fn multiplyBy5(x) {\n\treturn x * 5;\n}\n\na = multiplyBy5(10) //a = 50"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "a",
+              "expected": "(5.0/9) * (77-32)",
+              "type": "EQUALS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Conditions",
+      "description_short": "Conditional statements and expressions",
+      "levels": [
+        {
+          "id": 1,
+          "name": "Simple if statements",
+          "description": "Create a function that returns true if the age is >= 18, otherwise it returns false.",
+          "startCode": "fn canEnter(age) {\n\t\n}",
+          "help": {
+            "text": "The if-conditional contains a block of code, that is only run, if the condition defined in the statement is true.\nSuch conditions either check equality (==) or inequality (!=, <, >, <=, =>).\nIf the condition is followed by else, then this block of code will be executed if the condition is false.",
+            "code": "//the print statement is only accessed, if the value of age is 18.\nif age == 18 {\n\tprint(\"you are exactly 18 years old\");\n} else {\n\tprint(\"you are not 18, sorry\");\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "canEnter(18)",
+              "type": "TRUE"
+            },
+            {
+              "id": 2,
+              "source": "canEnter(100)",
+              "type": "TRUE"
+            },
+            {
+              "id": 3,
+              "source": "canEnter(10)",
+              "type": "FALSE"
+            },
+            {
+              "id": 3,
+              "source": "canEnter(17)",
+              "type": "FALSE"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Check if number is even",
+          "description": "Create a function, that checks if its parameter is even. Return true if it is even, or else return false.",
+          "startCode": "fn isEven(number) {\n\t\n}",
+          "help": {
+            "text": "The return statement accepts also conditions and returns it outcome.\n\nTip for this level: You can use the % to check the remainder of a division, e.g. 3 % 6 is 3, since the result has a remainder of 3.",
+            "code": "fn isOne(a) {\n\treturn a == 1;\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "isEven(2)",
+              "type": "TRUE"
+            },
+            {
+              "id": 2,
+              "source": "isEven(1)",
+              "type": "FALSE"
+            },
+            {
+              "id": 3,
+              "source": "isEven(100)",
+              "type": "TRUE"
+            },
+            {
+              "id": 4,
+              "source": "isEven(777)",
+              "type": "FALSE"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Simple inequality",
+          "description": "Create a function, that checks if a number is odd",
+          "startCode": "fn isOdd(number) {\n\t\n}",
+          "help": {
+            "text": "The != operator checks if two elements are not equal.",
+            "code": "a = 10 != 11 //a = true"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "isOdd(2)",
+              "type": "FALSE"
+            },
+            {
+              "id": 2,
+              "source": "isOdd(1)",
+              "type": "TRUE"
+            },
+            {
+              "id": 3,
+              "source": "isOdd(100)",
+              "type": "FALSE"
+            },
+            {
+              "id": 4,
+              "source": "isOdd(777)",
+              "type": "TRUE"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Chaining conditions with OR",
+          "description": "Create a function that checks if the number given is either < 1 or > 20.",
+          "startCode": "fn isOutOfRange(number) {\n\t\n}",
+          "help": {
+            "text": "Conditions can also be chained. For example || between two conditions checks, if one of both is true and returns true if that is the case.",
+            "code": "fn isLisaOrMarco(name) {\n\treturn name == \"Lisa\" || name == \"Marco\";\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "isOutOfRange(2)",
+              "type": "FALSE"
+            },
+            {
+              "id": 2,
+              "source": "isOutOfRange(1)",
+              "type": "FALSE"
+            },
+            {
+              "id": 3,
+              "source": "isOutOfRange(100)",
+              "type": "TRUE"
+            },
+            {
+              "id": 4,
+              "source": "isOutOfRange(-10)",
+              "type": "TRUE"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Chaining conditions with AND",
+          "description": "Create a function that checks if is within the range 1 < x < 20.",
+          "startCode": "fn isInRange(number) {\n\t\n}",
+          "help": {
+            "text": "Another way to chain conditions is by using &&, which checks if both of the conditions are true, otherwise it returns false.",
+            "code": "fn isMarco(name, age) {\n\treturn name == \"Marco\" && age == 20;\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "isInRange(2)",
+              "type": "TRUE"
+            },
+            {
+              "id": 2,
+              "source": "isInRange(1)",
+              "type": "FALSE"
+            },
+            {
+              "id": 3,
+              "source": "isInRange(100)",
+              "type": "FALSE"
+            },
+            {
+              "id": 4,
+              "source": "isInRange(-10)",
+              "type": "FALSE"
+            },
+            {
+              "id": 5,
+              "source": "isInRange(10)",
+              "type": "TRUE"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "More complex conditions",
+          "description": "Create a function that maps the numbers from 1 - 7 to a weekday, where 1 is Monday, 2 is Tuesday etc.",
+          "startCode": "fn getWeekDay(day) {\n\t\n}",
+          "help": {
+            "text": "For this exercise the match statement can be used.\nIt takes a value as parameter and contains different blocks of code, yet it only executes the statement where the value is equal to the parameter.",
+            "code": "match 2 {\n\t1: print(\"A\");\n\t2: print(\"B\");//since the parameter is 2, this code would run.\n\t3: print(\"C\");\n\tdefault: print(\"Not a letter\");//this would run if no match was found\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "getWeekDay(1)",
+              "type": "EQUALS",
+              "expected": "\"Monday\""
+            },
+            {
+              "id": 2,
+              "source": "getWeekDay(2)",
+              "type": "EQUALS",
+              "expected": "\"Tuesday\""
+            },
+            {
+              "id": 3,
+              "source": "getWeekDay(3)",
+              "type": "EQUALS",
+              "expected": "\"Wednesday\""
+            },
+            {
+              "id": 4,
+              "source": "getWeekDay(4)",
+              "type": "EQUALS",
+              "expected": "\"Thursday\""
+            },
+            {
+              "id": 5,
+              "source": "getWeekDay(5)",
+              "type": "EQUALS",
+              "expected": "\"Friday\""
+            },
+            {
+              "id": 6,
+              "source": "getWeekDay(6)",
+              "type": "EQUALS",
+              "expected": "\"Saturday\""
+            },
+            {
+              "id": 7,
+              "source": "getWeekDay(7)",
+              "type": "EQUALS",
+              "expected": "\"Sunday\""
             }
           ]
         }

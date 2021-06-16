@@ -193,6 +193,7 @@ public class ExerciseView extends View {
             if(l.getHelpText() != null) {
                 Text helpText = new Text(l.getHelpText());
                 helpText.getStyleClass().add("text");
+                helpText.setWrappingWidth(Popup.POPUP_WIDTH);
                 popupContent.getChildren().add(helpText);
             }
             if(l.getHelpCode() != null) {

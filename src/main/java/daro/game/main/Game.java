@@ -17,9 +17,7 @@ public class Game extends Application {
     public void start(Stage stage) {
         // load fonts from resources
         Font.loadFont(ResourceHandler.getFont("Montserrat-Regular.ttf"), 16);
-        Font.loadFont(ResourceHandler.getFont("Montserrat-Italic.ttf"), 16);
         Font.loadFont(ResourceHandler.getFont("Montserrat-Bold.ttf"), 16);
-        Font.loadFont(ResourceHandler.getFont("Montserrat-BoldItalic.ttf"), 16);
         Font.loadFont(ResourceHandler.getFont("MaterialIcons-Regular.ttf"), 24);
         Font.loadFont(ResourceHandler.getFont("JetBrainsMono-Bold.ttf"), 16);
         Font.loadFont(ResourceHandler.getFont("JetBrainsMono-BoldItalic.ttf"), 16);
