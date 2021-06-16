@@ -14,7 +14,7 @@ public class IconCircle extends StackPane {
         setMaxHeight(DIMENSION);
         setMinWidth(DIMENSION);
         setMinHeight(DIMENSION);
-        if(clickable) {
+        if (clickable) {
             Interaction.setClickable(this, false);
         }
         setAlignment(Pos.CENTER);
@@ -32,7 +32,7 @@ public class IconCircle extends StackPane {
 
     public static IconCircle getCheckIcon(boolean translated) {
         IconCircle check = new IconCircle(ThemeColor.GREEN.toString(), "\ue876", false, false);
-        if(translated) {
+        if (translated) {
             check.setTranslateX(-DIMENSION / 2);
         }
         return check;

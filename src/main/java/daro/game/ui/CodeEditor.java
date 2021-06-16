@@ -21,7 +21,7 @@ public class CodeEditor extends CodeArea {
      * All the possible themes
      */
     public static final String[] THEMES = {
-            "dark", "light"
+        "dark", "light"
     };
 
     /**
@@ -29,42 +29,43 @@ public class CodeEditor extends CodeArea {
      */
     // Regex for specific groups
     private static final String[] KEYWORDS = {
-            "fn", "return", "class", "true", "false", "new", "array", "int", "real", "string", "in"
+        "fn", "return", "class", "true", "false", "new", "array", "int", "real", "string", "in"
     };
     private static final String[] CONTROLS = {
-            "if", "else", "for", "match"
+        "if", "else", "for", "match"
     };
     private static final String[] SYMBOLS = {
-            "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!=", ">", "<", "\\+", "-", "/", "\\*", "%"
+        "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!=", ">", "<", "\\+", "-", "/",
+        "\\*", "%"
     };
     private static final String[] FUNCTIONS = {
-            "([^\\s]+)?(\\s)?(?=(\\())"
+        "([^\\s]+)?(\\s)?(?=(\\())"
     };
     private static final String[] COMMENTS = {
-            "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"
+        "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"
     };
     private static final String[] STRINGS = {
-            "\\\".*?\\\"", "\\'.*?\\'"
+        "\\\".*?\\\"", "\\'.*?\\'"
     };
     private static final String[] DIGITS = {
-            "\\d+"
+        "\\d+"
     };
     public static final String TAB = " ".repeat(4);
 
     // Generate Pattern for specific groups
-    private static String generateBoundedPattern(String... pattern) {
+    private static String generateBoundedPattern(String ...pattern) {
         return "(\\b(" + String.join("|", pattern) + ")\\b)";
     }
 
-    private static String generatePattern(String... pattern) {
+    private static String generatePattern(String ...pattern) {
         return "(" + String.join("|", pattern) + ")";
     }
 
     private static final Pattern SYNTAX_PATTERN = Pattern.compile(
-            "(?<COMMENT>" + generatePattern(COMMENTS) + ")" + "|(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" + "|(?<STRING>"
-                    + generatePattern(STRINGS) + ")" + "|(?<DIGIT>" + generatePattern(DIGITS) + ")" + "|(?<CONTROL>"
-                    + generateBoundedPattern(CONTROLS) + ")" + "|(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")"
-                    + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"
+        "(?<COMMENT>" + generatePattern(COMMENTS) + ")" + "|(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" + "|(?<STRING>"
+            + generatePattern(STRINGS) + ")" + "|(?<DIGIT>" + generatePattern(DIGITS) + ")" + "|(?<CONTROL>"
+            + generateBoundedPattern(CONTROLS) + ")" + "|(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")"
+            + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"
 
     );
 
@@ -73,7 +74,7 @@ public class CodeEditor extends CodeArea {
      */
     private static final HashMap<String, String> REPEATING_STRING = new HashMap<>();
     private static final Character[] WHITESPACE_NL = {
-            '{', '[', '('
+        '{', '[', '('
     };
     private Map<String, JsonElement> settings;
 
@@ -111,7 +112,7 @@ public class CodeEditor extends CodeArea {
         this.lastTypePosition = -1;
         this.settings = SettingsHandler.getSettingsByKey("editor");
         this.getStyleClass()
-                .add("theme-" + (settings.get("theme") == null ? "dark" : settings.get("theme").getAsString()));
+            .add("theme-" + (settings.get("theme") == null ? "dark" : settings.get("theme").getAsString()));
     }
 
     /**
@@ -121,7 +122,7 @@ public class CodeEditor extends CodeArea {
      */
     private void handleKeyPress(KeyEvent keyEvent) {
         if (
-                settings.get("indent") == null || (settings.get("indent") != null && settings.get("indent").getAsBoolean())
+            settings.get("indent") == null || (settings.get("indent") != null && settings.get("indent").getAsBoolean())
         ) {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 int position = this.getCaretPosition();
@@ -160,16 +161,16 @@ public class CodeEditor extends CodeArea {
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int position = this.getCaretPosition();
         if (
-                settings.get("auto_completion") == null
-                        || (settings.get("auto_completion") != null && settings.get("auto_completion").getAsBoolean())
+            settings.get("auto_completion") == null
+                || (settings.get("auto_completion") != null && settings.get("auto_completion").getAsBoolean())
         ) {
             if (oldValue.length() < newValue.length()) {
                 REPEATING_STRING.keySet().forEach(string -> {
                     try {
                         String lastTyped = newValue.substring(position - string.length(), position);
                         if (
-                                (this.lastTypePosition != position || !this.lastTypeString.equals(lastTyped))
-                                        && lastTyped.equals(string)
+                            (this.lastTypePosition != position || !this.lastTypeString.equals(lastTyped))
+                                && lastTyped.equals(string)
                         ) {
                             this.lastTypePosition = position + string.length();
                             this.lastTypeString = lastTyped;
@@ -207,7 +208,8 @@ public class CodeEditor extends CodeArea {
      * enable syntax highlighting
      *
      * @param text the text within the code editor
-     * @return a list containing the text, but with style classes for syntax highlighting
+     * @return a list containing the text, but with style classes for syntax
+     *         highlighting
      */
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
         Matcher matcher = SYNTAX_PATTERN.matcher(text);
@@ -233,7 +235,7 @@ public class CodeEditor extends CodeArea {
                 styleClass += "digit";
 
             spansBuilder.add(
-                    Collections.singleton(styleClass.equals("syntax-") ? null : styleClass), matcher.end() - matcher.start()
+                Collections.singleton(styleClass.equals("syntax-") ? null : styleClass), matcher.end() - matcher.start()
             );
             lastKwEnd = matcher.end();
         }

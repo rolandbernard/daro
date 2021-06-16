@@ -7,7 +7,8 @@ import java.io.*;
 public final class ResourceHandler {
     private static final String RESOURCE_ROOT = "/daro/game/";
 
-    private ResourceHandler() { }
+    private ResourceHandler() {
+    }
 
     /**
      * Returns the Font-File as an InputStream

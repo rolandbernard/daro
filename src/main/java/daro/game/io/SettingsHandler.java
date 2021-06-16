@@ -38,7 +38,7 @@ public final class SettingsHandler {
         JsonObject settings = getSettings();
         Map<String, JsonElement> settingsMap = new HashMap<>();
         if (settings != null) {
-            if(settings.get(key) != null) {
+            if (settings.get(key) != null) {
                 JsonObject elements = settings.get(key).getAsJsonObject();
                 settingsMap = generateMapFromJson(elements);
             }

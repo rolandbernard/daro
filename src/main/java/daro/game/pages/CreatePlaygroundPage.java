@@ -38,7 +38,9 @@ public class CreatePlaygroundPage extends Page {
             String error = PlaygroundHandler.createPlayground(nameField.getValue());
             if (error == null) {
                 try {
-                    View.updateView(this, new EditorView(PlaygroundHandler.getPlaygroundFile(nameField.getValue() + ".daro")));
+                    View.updateView(
+                        this, new EditorView(PlaygroundHandler.getPlaygroundFile(nameField.getValue() + ".daro"))
+                    );
                 } catch (IOException e) {
                     View.updateView(this, new MenuView(new PlaygroundPage()));
                 }

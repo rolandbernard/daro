@@ -19,7 +19,7 @@ public final class LevelHandler {
 
     public static Level getNextLevel(long groupId, long levelId) {
         String levelJson = ResourceHandler.getDataContent("levels.json");
-        if(levelJson != null) {
+        if (levelJson != null) {
             JsonArray groups = JsonParser.parseString(levelJson).getAsJsonObject().get("groups").getAsJsonArray();
             JsonObject group = findById(groups, groupId);
             if (group != null) {

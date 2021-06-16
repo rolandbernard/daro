@@ -9,7 +9,9 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public final class PlaygroundHandler {
-    private PlaygroundHandler() { }
+    private PlaygroundHandler() {
+    }
+
     // Playgrounds
     private static final String PLAYGROUNDS_PATH = UserData.USER_PATH + "playgrounds/";
 

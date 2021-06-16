@@ -22,7 +22,7 @@ public final class ChallengeParser {
         JsonArray tests = obj.get("tests").getAsJsonArray();
         List<Validation> testsList = ValidationParser.parse(tests);
         String code;
-        if(obj.get("currentCode") == null) {
+        if (obj.get("currentCode") == null) {
             code = obj.get("startCode") == null ? "" : obj.get("startCode").getAsString();
         } else {
             code = obj.get("currentCode").getAsString();

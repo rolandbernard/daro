@@ -188,10 +188,13 @@ public class Validation {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Validation that = (Validation) o;
-        return id == that.id && type == that.type && Objects.equals(source, that.source) && Objects.equals(expected, that.expected);
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Validation that = (Validation)o;
+        return id == that.id && type == that.type && Objects.equals(source, that.source)
+            && Objects.equals(expected, that.expected);
     }
 
     @Override

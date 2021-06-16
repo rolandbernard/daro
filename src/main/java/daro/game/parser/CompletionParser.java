@@ -16,7 +16,7 @@ public final class CompletionParser {
     public static Map<Long, Map<Long, JsonObject>> parseAll() {
         JsonObject object = UserData.parseUserJson("data.json");
         Map<Long, Map<Long, JsonObject>> map = new HashMap<>();
-        for(String key : object.keySet()) {
+        for (String key : object.keySet()) {
             JsonArray groups = object.get(key).getAsJsonArray();
             Map<Long, JsonObject> subMap = new HashMap<>();
             for (JsonElement level : groups) {
@@ -33,6 +33,7 @@ public final class CompletionParser {
         JsonElement groupData = object.get(String.valueOf(groupId));
         return parse(groupData);
     }
+
     private static Map<Long, JsonObject> parse(JsonElement groupData) {
         Map<Long, JsonObject> map = new HashMap<>();
         if (groupData != null) {

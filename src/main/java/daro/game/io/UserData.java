@@ -17,13 +17,13 @@ public final class UserData {
         JsonObject element = new JsonObject();
         try {
             String jsonContent = IOHelpers.getFileContent(file);
-            if(!jsonContent.isEmpty()) {
+            if (!jsonContent.isEmpty()) {
                 element = JsonParser.parseString(jsonContent).getAsJsonObject();
             }
         } catch (IOException ex) {
             try {
                 File userDir = new File(USER_PATH);
-                if(!userDir.exists() || !userDir.isDirectory()) {
+                if (!userDir.exists() || !userDir.isDirectory()) {
                     Files.createDirectories(userDir.toPath());
                 }
                 IOHelpers.overwriteFile(file, "");

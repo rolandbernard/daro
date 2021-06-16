@@ -30,7 +30,7 @@ public class Terminal extends VBox {
     /**
      * A simple terminal that shows prints of code
      *
-     * @param width  width of the Terminal
+     * @param width width of the Terminal
      */
     public Terminal(double width) {
         this.setMinWidth(width);

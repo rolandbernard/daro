@@ -1,6 +1,5 @@
 package daro.game.main;
 
-
 import daro.game.validation.Validation;
 
 import java.io.File;
@@ -19,8 +18,9 @@ public class Challenge extends Exercise {
      * @param tests       tests that have to run in the Level
      */
     public Challenge(
-            String name, String description, String code, List<Validation> tests,
-            String creator, File source, boolean isCompleted) {
+        String name, String description, String code, List<Validation> tests, String creator, File source,
+        boolean isCompleted
+    ) {
         super(name, description, code, tests, isCompleted);
         this.creator = creator;
         this.file = source;

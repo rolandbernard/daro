@@ -34,13 +34,13 @@ public class ChallengeItem extends StackPane {
         mainContent.setPadding(new Insets(40));
         mainContent.setOnMouseClicked(e -> openChallenge());
         mainContent.setStyle(
-                "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                        + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
+            "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
         );
         StackPane itemWrapper = new StackPane(mainContent, deleteButton());
         itemWrapper.setAlignment(Pos.TOP_RIGHT);
         getChildren().add(itemWrapper);
-        if(challenge.isCompleted()) {
+        if (challenge.isCompleted()) {
             itemWrapper.setStyle("-fx-opacity: 0.5");
             getChildren().add(checkCircle());
         }
@@ -77,15 +77,17 @@ public class ChallengeItem extends StackPane {
         confirmButtons.setAlignment(Pos.CENTER);
         yes.setOnMouseClicked(e -> {
             Callout callout;
-            if(ChallengeHandler.removeChallenge(challenge.getSourceFile())) {
+            if (ChallengeHandler.removeChallenge(challenge.getSourceFile())) {
                 callout = new Callout("The challenge was successfully deleted.", ThemeColor.GREEN.toString());
             } else {
-                callout = new Callout("The challenge could not be deleted, please try again later.", ThemeColor.RED.toString());
+                callout = new Callout(
+                    "The challenge could not be deleted, please try again later.", ThemeColor.RED.toString()
+                );
             }
             parent.reload();
             MenuView.getPopup().close();
-            if(parent instanceof Page) {
-                Page p = (Page) parent;
+            if (parent instanceof Page) {
+                Page p = (Page)parent;
                 p.getChildren().add(1, callout);
                 callout.setOnClose(event -> p.getChildren().remove(callout));
             }
@@ -96,6 +98,5 @@ public class ChallengeItem extends StackPane {
         MenuView.getPopup().updateContent(popup);
         MenuView.getPopup().open();
     }
-
 
 }

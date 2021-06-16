@@ -8,6 +8,7 @@ import javafx.scene.text.Text;
 
 public class CustomButton extends HBox {
     public static double HEIGHT = 50;
+
     /**
      * Creates a custom button with an icon in orange
      *

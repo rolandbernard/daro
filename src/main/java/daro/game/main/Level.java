@@ -11,9 +11,8 @@ public class Level extends Exercise {
     private String helpText, helpCode;
 
     public Level(
-            long id, String name, String description, boolean isCompleted, String code,
-            List<Validation> tests, long groupId,
-            String helpText, String helpCode
+        long id, String name, String description, boolean isCompleted, String code, List<Validation> tests,
+        long groupId, String helpText, String helpCode
     ) {
         super(name, description, code, tests, isCompleted);
         this.id = id;
@@ -43,12 +42,13 @@ public class Level extends Exercise {
         return helpCode;
     }
 
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Level level = (Level) o;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Level level = (Level)o;
         return id == level.id && groupId == level.groupId;
     }
 

@@ -6,7 +6,7 @@ import javafx.scene.text.Text;
 public class FieldGroup extends VBox {
     private Text title;
 
-    public FieldGroup(String name, InputField... fields) {
+    public FieldGroup(String name, InputField ...fields) {
         title = new Text(name);
         title.getStyleClass().addAll("heading", "small", "text");
         this.setSpacing(20);

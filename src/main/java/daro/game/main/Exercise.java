@@ -18,9 +18,7 @@ public abstract class Exercise {
      * @param tests       tests that have to run in the Level
      * @param code        code written for the level
      */
-    public Exercise(
-            String name, String description, String code, List<Validation> tests, boolean isCompleted
-    ) {
+    public Exercise(String name, String description, String code, List<Validation> tests, boolean isCompleted) {
         this.completed = isCompleted;
         this.name = name;
         this.code = code;

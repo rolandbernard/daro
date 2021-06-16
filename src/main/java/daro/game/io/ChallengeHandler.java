@@ -39,7 +39,6 @@ public final class ChallengeHandler {
         }
     }
 
-
     public static List<Challenge> getImportedChallenges() {
         File challengesFolder = new File(CHALLENGE_PATH);
         ArrayList<Challenge> challenges = new ArrayList<>();
@@ -111,8 +110,9 @@ public final class ChallengeHandler {
         return false;
     }
 
-
-    public static JsonObject serializeChallenge(String name, String creator, String description, String code, List<Map<String, String>> tests) {
+    public static JsonObject serializeChallenge(
+        String name, String creator, String description, String code, List<Map<String, String>> tests
+    ) {
         JsonObject object = new JsonObject();
         object.addProperty("name", name);
         object.addProperty("creator", creator);

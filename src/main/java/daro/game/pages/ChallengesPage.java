@@ -27,8 +27,7 @@ public class ChallengesPage extends Page implements Reloadable {
     private VBox challenges;
 
     public ChallengesPage() {
-        Heading heading = new Heading("Challenges",
-                "Challenge your friends and create your own levels.");
+        Heading heading = new Heading("Challenges", "Challenge your friends and create your own levels.");
 
         CreateButton createButton = new CreateButton("Create a new challenge");
         CreateButton importButton = new CreateButton("Import a new challenge");

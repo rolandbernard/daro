@@ -62,10 +62,10 @@ public class ExerciseView extends View {
             }
         });
         HBox controlsBox = new HBox(backButton);
-        controlsBox.setPadding(new Insets(BOX_PADDINGS, 0 , 0, BOX_PADDINGS));
-        if(exercise instanceof Level) {
-            Level l = (Level) exercise;
-            if(l.getHelpCode() != null && l.getHelpText() != null) {
+        controlsBox.setPadding(new Insets(BOX_PADDINGS, 0, 0, BOX_PADDINGS));
+        if (exercise instanceof Level) {
+            Level l = (Level)exercise;
+            if (l.getHelpCode() != null || l.getHelpText() != null) {
                 controlsBox.setSpacing(30);
                 controlsBox.getChildren().add(getHelpButton());
                 controlsBox.setAlignment(Pos.CENTER_LEFT);
@@ -73,7 +73,8 @@ public class ExerciseView extends View {
         }
 
         CustomButton runButton = new CustomButton("\ue037", "Run in terminal", false);
-        CustomButton submitButton = new CustomButton("\ue86c", "Submit your result", false, ThemeColor.ACCENT_DARK.toString());
+        CustomButton submitButton =
+            new CustomButton("\ue86c", "Submit your result", false, ThemeColor.ACCENT_DARK.toString());
         runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
         submitButton.setOnMouseClicked(this::openValidationPopup);
 
@@ -107,10 +108,10 @@ public class ExerciseView extends View {
 
     private boolean save(boolean completion) {
         if (exercise instanceof Level) {
-            Level l = (Level) exercise;
+            Level l = (Level)exercise;
             return UserData.writeLevelData(l.getGroupId(), l.getId(), completion, editor.getText());
         } else if (exercise instanceof Challenge) {
-            Challenge c = (Challenge) exercise;
+            Challenge c = (Challenge)exercise;
             return ChallengeHandler.saveChallenge(c, editor.getText(), completion);
         }
         return false;
@@ -148,7 +149,7 @@ public class ExerciseView extends View {
         HBox buttons = new HBox();
         CustomButton mainButton = null;
         if (success && exercise instanceof Level) {
-            Level l = (Level) exercise;
+            Level l = (Level)exercise;
             Level nextLevel = LevelHandler.getNextLevel(l.getGroupId(), l.getId());
             if (nextLevel != null) {
                 mainButton = new CustomButton("\ue16a", "Next Level", true);
@@ -181,8 +182,8 @@ public class ExerciseView extends View {
     }
 
     private void openHelpPopup(MouseEvent mouseEvent) {
-        if(exercise instanceof Level) {
-            Level l = (Level) exercise;
+        if (exercise instanceof Level) {
+            Level l = (Level)exercise;
             Text heading = new Text("Help");
             heading.getStyleClass().addAll("text", "heading", "medium");
             VBox popupContent = new VBox(heading);
@@ -190,13 +191,13 @@ public class ExerciseView extends View {
             popupContent.setSpacing(20);
             popup.updateContent(popupContent);
             popup.open();
-            if(l.getHelpText() != null) {
+            if (l.getHelpText() != null) {
                 Text helpText = new Text(l.getHelpText());
                 helpText.getStyleClass().add("text");
                 helpText.setWrappingWidth(Popup.POPUP_WIDTH);
                 popupContent.getChildren().add(helpText);
             }
-            if(l.getHelpCode() != null) {
+            if (l.getHelpCode() != null) {
                 CodeEditor editor = new CodeEditor(l.getHelpCode());
                 editor.setEditable(false);
                 editor.setMaxHeight(150);

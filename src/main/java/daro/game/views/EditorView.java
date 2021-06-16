@@ -28,7 +28,8 @@ public class EditorView extends View {
             CodeEditor editor = new CodeEditor(code);
 
             CustomButton runButton = new CustomButton("\ue037", "Run the program", false);
-            CustomButton closeButton = new CustomButton("\ue9ba", "Save & Close", false, ThemeColor.ACCENT_DARK.toString());
+            CustomButton closeButton =
+                new CustomButton("\ue9ba", "Save & Close", false, ThemeColor.ACCENT_DARK.toString());
             runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
             closeButton.setOnMouseClicked(e -> {
                 if (PlaygroundHandler.savePlayground(file, editor.getText())) {

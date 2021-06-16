@@ -44,8 +44,8 @@ public class PlaygroundItem extends StackPane {
         mainContent.setFillWidth(true);
         mainContent.setPadding(new Insets(40));
         mainContent.setStyle(
-                "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                        + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
+            "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
         );
         mainContent.setSpacing(10);
         mainContent.setOnMouseClicked(e -> View.updateView(this, new EditorView(file)));
@@ -123,15 +123,17 @@ public class PlaygroundItem extends StackPane {
         confirmButtons.setAlignment(Pos.CENTER);
         yes.setOnMouseClicked(e -> {
             Callout callout;
-            if(PlaygroundHandler.removePlayground(file.getName())) {
+            if (PlaygroundHandler.removePlayground(file.getName())) {
                 callout = new Callout("The playground was successfully deleted.", ThemeColor.GREEN.toString());
             } else {
-                callout = new Callout("The playground could not be deleted, please try again later.", ThemeColor.RED.toString());
+                callout = new Callout(
+                    "The playground could not be deleted, please try again later.", ThemeColor.RED.toString()
+                );
             }
             parent.reload();
             MenuView.getPopup().close();
-            if(parent instanceof Page) {
-                Page p = (Page) parent;
+            if (parent instanceof Page) {
+                Page p = (Page)parent;
                 p.getChildren().add(1, callout);
                 callout.setOnClose(event -> p.getChildren().remove(callout));
             }

@@ -41,10 +41,10 @@ public class DaroArray extends DaroObject {
             }
         }));
         variables.put("foreach", new DaroLambdaFunction(1, (params, observers) -> {
-            DaroFunction function = (DaroFunction) params[0];
-            values.forEach(a ->
-                    function.execute(new DaroObject[]{a},
-                            observers));
+            DaroFunction function = (DaroFunction)params[0];
+            values.forEach(a -> function.execute(new DaroObject[] {
+                a
+            }, observers));
         }));
         variables.put("pop", new DaroLambdaFunction(0, params -> {
             if (values.size() > 0) {
@@ -57,16 +57,16 @@ public class DaroArray extends DaroObject {
         }));
         variables.put("sort", new DaroLambdaFunction(1, (params, observers) -> {
             if (params[0] instanceof DaroFunction) {
-                DaroFunction function = (DaroFunction) params[0];
+                DaroFunction function = (DaroFunction)params[0];
                 if (!function.allowsParamCount(2)) {
                     throw new InterpreterException("Sorting function must accept two arguments");
                 } else {
                     values.sort((a, b) -> {
-                        DaroObject less = function.execute(new DaroObject[]{
-                                a, b
+                        DaroObject less = function.execute(new DaroObject[] {
+                            a, b
                         }, observers);
-                        DaroObject more = function.execute(new DaroObject[]{
-                                b, a
+                        DaroObject more = function.execute(new DaroObject[] {
+                            b, a
                         }, observers);
                         if (less != null && less.isTrue() && more != null && more.isTrue()) {
                             return 0;
@@ -151,7 +151,7 @@ public class DaroArray extends DaroObject {
     @Override
     public boolean equals(Object object) {
         if (object instanceof DaroArray) {
-            DaroArray array = (DaroArray) object;
+            DaroArray array = (DaroArray)object;
             return values.equals(array.values);
         } else {
             return false;

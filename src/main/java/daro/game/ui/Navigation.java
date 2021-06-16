@@ -67,11 +67,11 @@ public class Navigation extends VBox {
     }
 
     /**
-     * Method used to create new NavItems that link to pages. Detects if the defaultPage
-     * is the page you want to create and sets it active accordingly
+     * Method used to create new NavItems that link to pages. Detects if the
+     * defaultPage is the page you want to create and sets it active accordingly
      *
-     * @param icon icon of the navigation item
-     * @param label label of the navigation item
+     * @param icon      icon of the navigation item
+     * @param label     label of the navigation item
      * @param pageClass the class of the page you want to create
      */
     private void addNavItem(String icon, String label, Class<? extends Page> pageClass) {
@@ -98,8 +98,7 @@ public class Navigation extends VBox {
      */
     private Page getPage(Class<? extends Page> currentPage) {
         try {
-            return isDefault(currentPage) ? defaultPage
-                : currentPage.getDeclaredConstructor().newInstance();
+            return isDefault(currentPage) ? defaultPage : currentPage.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -751,13 +751,48 @@
               "expected": "205"
             }
           ]
+        },
+        {
+          "id": 4,
+          "name": "Array functions",
+          "description": "Add the value 10 to the array numbers.",
+          "startCode": "numbers = new array {7, 8, 9}",
+          "help": {
+            "text": "Arrays have some special methods, that can even contain lambda expressions. One of these is .push.",
+            "code": "arr = new array { 1, 2, 3, 4, 5, 6, 7, 8, 10 }\narr.push(11);\n//this adds 11 to the array."
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "ARRAY_INCLUDES",
+              "source": "numbers",
+              "expected": "10"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Stricter arrays",
+          "description": "Create an array called 'newNumbers' of type real (for real numbers) and of the length 10",
+          "startCode": "newNumbers = ",
+          "help": {
+            "code": "arr = new [2]int;\n//this creates an array with the length 2 of integers."
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "newNumbers",
+              "expected": "new [10]real"
+            }
+          ]
         }
       ]
     },
     {
       "id": 6,
-      "name": "Arrays",
-      "description": "Store lists of values",
+      "name": "Classes",
+      "description": "Structure your code",
       "levels": [
       ]
     }

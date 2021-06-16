@@ -26,9 +26,7 @@ public final class LevelParser {
         }
 
         if (groups != null && groups.size() > 0) {
-            groups.forEach(group ->
-                    groupList.add(parseGroup(group.getAsJsonObject(), completionMap))
-            );
+            groups.forEach(group -> groupList.add(parseGroup(group.getAsJsonObject(), completionMap)));
         }
         return groupList;
     }
