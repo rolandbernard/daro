@@ -2,15 +2,14 @@
   "groups": [
     {
       "id": 1,
-      "name": "Data",
+      "name": "Variables",
       "description_short": "Variables and primitive data types",
       "levels": [
         {
           "id": 1,
           "name": "Create a variable",
-          "helpText": "Variables are used to store data values. For example, by writing 'x = 5;' the value 5 is assigned to variable x.",
           "description": "Create a variable with the name a and assign it to the value 10",
-          "startCode": "// code goes here\n// or here",
+          "startCode": "// code goes here",
           "help": {
             "text": "Variables are used to store data values.",
             "code": "x = 5 //with this line of code, the value 5 is assigned to x."
@@ -26,9 +25,45 @@
         },
         {
           "id": 2,
-          "name": "Sum two numbers",
-          "description": "You can also use variables in the assignment of new or current variables. For example 'x = y'; would assign the value of y to x. Task: Assign to a variable 'c', the sum of the variables 'a' and 'b'",
+          "name": "Sum of two numbers",
+          "description": "Create a variable called x and assign it the sum of 10 and 15",
+          "startCode": "",
+          "help": {
+            "text": "When assigning to a variable, you can also use arithmetic expressions, such as +, -, /, *.",
+            "code": "x = 10 - 5; //this would first calculate 10 - 5 and then assign it to x;\n y = 20 / 2;"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "x",
+              "expected": "25",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Other arithmetics",
+          "description": "Create a variable x and assign it the 10 * 15",
+          "startCode": "",
+          "tests": [
+            {
+              "id": 1,
+              "source": "x",
+              "expected": "10 * 15",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Sum two variables",
+          "description": "Assign to a variable 'c', the sum of the variables 'a' and 'b'",
           "startCode": "a = 5;\nb = 10;\n//code goes here",
+          "help": {
+            "text": "You can also use variables in the assignment of new or current variables.",
+            "code": "x = y; // this line would assign the value of y to x.\nx = y / z; // this would assign the result of y / z to x."
+          },
           "tests": [
             {
               "id": 1,
@@ -49,33 +84,79 @@
               "type": "EQUALS"
             }
           ]
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "If and else",
-      "description_short": "Basic control structures",
-      "levels": [
+        },
         {
-          "id": 1,
-          "name": "testname",
-          "description": "Assign to a variable 'c', the sum of 'a' and 'b'"
+          "id": 5,
+          "name": "Increment and decrement",
+          "description": "Increment the value of x by 10",
+          "startCode": "x = 5;",
+          "help": {
+            "text": "You are able to reuse the current value in an assignment.",
+            "code": "x = x + 1; //increments the current value of x by 1.\nx -= 2; //would decrease the value of x by 2"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "x",
+              "expected": "15",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Strings",
+          "description": "Create a string variable called test, containing the string \"Hello World\"",
+          "startCode": "",
+          "help": {
+            "text": "Strings are used to store texts. They have to be created within \"\"",
+            "code": "testString = \"This is a typical string, it contain any characters, and also numbers.\""
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "test",
+              "expected": "\"Hello World\"",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Characters",
+          "description": "Create a variable z containing only the character z",
+          "startCode": "",
+          "help": {
+            "text": "Characters are used to store only single characters. They have to be created with ''",
+            "code": "a = 'x'"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "z",
+              "expected": "'z'",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "Mixing data types",
+          "description": "Assign to a variable z concatenated value of x and y.",
+          "startCode": "x = \"string\";\ny = 5",
+          "help": {
+            "text": "When trying to add numbers to strings, they are just concatenated to the string.",
+            "code": "a = \"Hello world\" + 2; //the value of a is now \"Hello world2\""
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "z",
+              "expected": "\"string5\"",
+              "type": "EQUALS"
+            }
+          ]
         }
-      ]
-    },
-    {
-      "id": 3,
-      "name": "Sample group",
-      "description_short": "This is just a test",
-      "levels": [
-      ]
-    },
-    {
-      "id": 4,
-      "name": "Sample group",
-      "description_short": "This is just a test",
-      "levels": [
       ]
     }
   ]
