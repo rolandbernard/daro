@@ -46,7 +46,11 @@ public class LevelItem extends StackPane {
         Text headingText = new Text(level.getName());
         headingText.getStyleClass().addAll("heading", "small", "text");
 
-        Text descriptionText = new Text(level.getDescription());
+        String description = level.getDescription().length() > 100
+                ? level.getDescription().substring(0, 100) + "..."
+                : level.getDescription();
+        
+        Text descriptionText = new Text(description);
         descriptionText.getStyleClass().addAll("text");
         descriptionText.setWrappingWidth(600);
         box.getChildren().addAll(headingText, descriptionText);

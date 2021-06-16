@@ -23,7 +23,8 @@ public class ValidationItem extends HBox {
         Text heading = new Text(result.getName());
         heading.getStyleClass().addAll("text", "heading", "tiny");
         text = new Text();
-        text.getStyleClass().add("text");
+        text.getStyleClass().add("monospace");
+        text.setStyle("-fx-font-size: 16px;");
         VBox texts = new VBox(heading, text);
         texts.setSpacing(5);
         setPadding(new Insets(10));

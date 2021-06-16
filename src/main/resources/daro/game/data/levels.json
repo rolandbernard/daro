@@ -480,6 +480,194 @@
           ]
         }
       ]
+    },
+    {
+      "id": 4,
+      "name": "Loops",
+      "description_short": "Run the same multiple times",
+      "levels": [
+        {
+          "id": 1,
+          "name": "Simple loop",
+          "description": "Create a function that creates a string n 'a's, e.g. getA(3) should return the string \"aaa\"",
+          "startCode": "fn getA(n) {\n\t\n}",
+          "help": {
+            "text": "Loops are used to run the same code with different data multiple times. A for loop in DaRo runs as long as the given condition true is.",
+            "code": "i = 1;\nfor i <= 3 {\n\tprint(\"loop ran\" + i + \" times\");\n\ti += 1;\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "getA(0)",
+              "expected": "\"\"",
+              "type": "EQUALS"
+            },
+            {
+              "id": 2,
+              "source": "getA(10)",
+              "expected": "\"aaaaaaaaaa\"",
+              "type": "EQUALS"
+            },
+            {
+              "id": 3,
+              "source": "getA(2)",
+              "expected": "\"aa\"",
+              "type": "EQUALS"
+            },
+            {
+              "id": 4,
+              "source": "getA(5)",
+              "expected": "\"aaaaa\"",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Factorial",
+          "description": "Create a function that calculates the factorial of n (n * n-1 * n-2 * ... * 1). Note that 0! = 1.",
+          "startCode": "fn factorial(n) {\n\t\n}",
+          "help": {
+            "text": "By creating a counter variable (i), you can always make sure, how often a loop is executed.",
+            "code": "//This simple loop would run 10 times.\ni = 1;\nfor i <= 10 {\n\ti += 1;\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "factorial(1)",
+              "expected": "1",
+              "type": "EQUALS"
+            },
+            {
+              "id": 2,
+              "source": "factorial(0)",
+              "expected": "1",
+              "type": "EQUALS"
+            },
+            {
+              "id": 3,
+              "source": "factorial(4)",
+              "expected": "24",
+              "type": "EQUALS"
+            },
+            {
+              "id": 4,
+              "source": "factorial(8)",
+              "expected": "40320",
+              "type": "EQUALS"
+            },
+            {
+              "id": 5,
+              "source": "factorial(20)",
+              "expected": "2432902008176640000",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Without a certain amount of iterations.",
+          "description": "Create a function that searches the next number that is dividable by the second parameter. For example getNextDividable(4, 3) = 6, since the closest following number from 4 which is dividable by 3 is 6",
+          "startCode": "fn getNextDividable(number, divisor) {\n\t\n}",
+          "help": {
+            "text": "The loop doesn't have to run a fixed amount of times. The condition can also depend from variables that are changed within the loop."
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "getNextDividable(1, 2)",
+              "expected": "2",
+              "type": "EQUALS"
+            },
+            {
+              "id": 2,
+              "source": "getNextDividable(3, 6)",
+              "expected": "6",
+              "type": "EQUALS"
+            },
+            {
+              "id": 3,
+              "source": "getNextDividable(20, 7)",
+              "expected": "21",
+              "type": "EQUALS"
+            },
+            {
+              "id": 4,
+              "source": "getNextDividable(60, 10)",
+              "expected": "70",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Nested loops",
+          "description": "Create a function that returns a string containing a square of stars that has the length given in the parameter. E.g. getSquare(3) should return\n***\n***\n***",
+          "startCode": "fn getSquare(length) {\n\t\n}",
+          "help": {
+            "text": "When nesting loops within each other. For each iteration of the outer loop, every iteration of the inner loop is performed.",
+            "code": "//in for every loop of the i - loop, the j - loop is run fully\ni = 0;\nfor i <= 4 {\n\tj = 0;\n\tfor j <= 2 {\n\t\tj += 1;\n\t}\n\ti += 1;\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "source": "getSquare(1)",
+              "expected": "\"*\n\"",
+              "type": "EQUALS"
+            },
+            {
+              "id": 2,
+              "source": "getSquare(2)",
+              "expected": "\"**\n**\n\"",
+              "type": "EQUALS"
+            },
+            {
+              "id": 3,
+              "source": "getSquare(5)",
+              "expected": "\"*****\n*****\n*****\n*****\n*****\n\"",
+              "type": "EQUALS"
+            },
+            {
+              "id": 4,
+              "source": "getSquare(8)",
+              "expected": "\"********\n********\n********\n********\n********\n********\n********\n********\n\"",
+              "type": "EQUALS"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Pyramids",
+          "description": "Create a function that returns a string containing a pyramid of stars that has the maximum length given in the parameter. E.g. getPyramid(3) should return\n*\n**\n***",
+          "startCode": "fn getPyramid(length) {\n\t\n}",
+          "tests": [
+            {
+              "id": 1,
+              "source": "getPyramid(1)",
+              "expected": "\"*\n\"",
+              "type": "EQUALS"
+            },
+            {
+              "id": 2,
+              "source": "getPyramid(2)",
+              "expected": "\"*\n**\n\"",
+              "type": "EQUALS"
+            },
+            {
+              "id": 3,
+              "source": "getPyramid(5)",
+              "expected": "\"*\n**\n***\n****\n*****\n\"",
+              "type": "EQUALS"
+            },
+            {
+              "id": 4,
+              "source": "getPyramid(8)",
+              "expected": "\"*\n**\n***\n****\n*****\n******\n*******\n********\n\"",
+              "type": "EQUALS"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
