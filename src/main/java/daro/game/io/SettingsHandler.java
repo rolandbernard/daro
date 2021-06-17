@@ -16,7 +16,9 @@ import java.util.Map;
  * @author Daniel Planötscher
  */
 public final class SettingsHandler {
+
     private SettingsHandler() {
+        // Disallow instantiation
     }
 
     private final static String SETTINGS_PATH = UserData.USER_PATH + "settings.json";

@@ -13,7 +13,9 @@ import java.nio.file.Path;
  * @author Daniel Planötscher
  */
 public final class PlaygroundHandler {
+
     private PlaygroundHandler() {
+        // Disallow instantiation
     }
 
     private static final String PLAYGROUNDS_PATH = UserData.USER_PATH + "playgrounds/";
@@ -37,7 +39,7 @@ public final class PlaygroundHandler {
     }
 
     /**
-     * Create a new Playgroundfile
+     * Create a new Playground file
      *
      * @param name name of the new Playground (without .daro)
      * @return a string being null (if successful) or with an error message
@@ -55,7 +57,7 @@ public final class PlaygroundHandler {
     }
 
     /**
-     * Removes a Playgroundfile
+     * Removes a Playground file
      *
      * @param filename filename with .daro
      * @return true if successful, false if error
@@ -71,7 +73,7 @@ public final class PlaygroundHandler {
     }
 
     /**
-     * Get content of a Playgroundfile
+     * Get content of a Playground file
      *
      * @param file Playground file
      * @return true if successful, false if error

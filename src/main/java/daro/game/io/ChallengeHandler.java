@@ -22,6 +22,7 @@ public final class ChallengeHandler {
     private static final String CHALLENGE_PATH = UserData.USER_PATH + "challenges/";
 
     private ChallengeHandler() {
+        // Disallow instantiation
     }
 
     /**

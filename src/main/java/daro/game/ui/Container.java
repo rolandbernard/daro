@@ -1,6 +1,5 @@
 package daro.game.ui;
 
-import daro.game.main.Game;
 import daro.game.main.ThemeColor;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;

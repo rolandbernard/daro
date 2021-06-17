@@ -11,7 +11,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class LevelItem extends StackPane {
-
     private Level level;
 
     /**

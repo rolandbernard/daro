@@ -22,7 +22,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +47,8 @@ public class ChallengesPage extends Page implements Reloadable {
             event.setDropCompleted(db.hasFiles());
             event.consume();
             if (db.hasFiles()) {
-                Optional<File> importFile = db.getFiles().stream().filter(f -> f.getName().endsWith(".json")).findFirst();
+                Optional<File> importFile =
+                    db.getFiles().stream().filter(f -> f.getName().endsWith(".json")).findFirst();
                 importFile.ifPresent(this::importChallenge);
             }
         });

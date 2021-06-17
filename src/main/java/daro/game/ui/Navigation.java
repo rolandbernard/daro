@@ -37,7 +37,7 @@ public class Navigation extends VBox {
     /**
      * Generates the logo for the top part of the navigation
      *
-     * @return imageview containing the logo
+     * @return {@link ImageView} containing the logo
      */
     private ImageView getLogo() {
         ImageView logo = new ImageView(ResourceHandler.getImage("logo.png"));

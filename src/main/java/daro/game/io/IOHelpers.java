@@ -15,6 +15,7 @@ import java.util.Scanner;
 public final class IOHelpers {
 
     private IOHelpers() {
+        // Disallow instantiation
     }
 
     /**

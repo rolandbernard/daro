@@ -112,3 +112,56 @@
     -fx-background-color: #BEE8FF;
 }
 
+.code-editor.theme-plastic {
+    -fx-background-color: #21252b;
+}
+
+.code-editor.theme-plastic .text {
+    -fx-fill: #d7d7d7;
+}
+
+.code-editor.theme-plastic .selection {
+    -fx-fill: #343f41;
+}
+
+.code-editor.theme-plastic .paragraph-box:has-caret {
+    -fx-background-color: #252930;
+}
+
+.code-editor.theme-plastic .syntax-keyword {
+	-fx-fill: #e06c75;
+}
+
+.code-editor.theme-plastic .syntax-symbol {
+    -fx-fill: #7c8696;
+}
+
+.code-editor.theme-plastic .syntax-control {
+    -fx-fill: #e06c75;
+}
+
+.code-editor.theme-plastic .syntax-function {
+    -fx-fill: #d19a66;
+}
+
+.code-editor.theme-plastic .syntax-comment {
+    -fx-font-style: italic;
+    -fx-fill: #abb2bf;
+}
+
+.code-editor.theme-plastic .syntax-string {
+    -fx-fill: #98c379;
+}
+
+.code-editor.theme-plastic .syntax-digit {
+    -fx-fill: #56b6c2;
+}
+
+.code-editor.theme-plastic .lineno {
+    -fx-background-color: #21252b;
+}
+
+.code-editor.theme-plastic .lineno .text {
+    -fx-fill: #7c8696;
+}
+

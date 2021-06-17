@@ -14,6 +14,7 @@ import javafx.stage.Stage;
  * @author Daniel Planötscher
  */
 public class Game extends Application {
+
     public static void init(String[] args) {
         launch(args);
     }

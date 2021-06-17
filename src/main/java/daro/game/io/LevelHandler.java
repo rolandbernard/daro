@@ -23,6 +23,7 @@ import java.util.Map;
 public final class LevelHandler {
 
     private LevelHandler() {
+        // Disallow instantiation
     }
 
     /**

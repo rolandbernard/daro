@@ -1,6 +1,5 @@
 package daro.game.views;
 
-import daro.game.main.Game;
 import daro.game.main.ThemeColor;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;

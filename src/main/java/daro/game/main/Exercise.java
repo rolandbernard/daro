@@ -10,7 +10,6 @@ import java.util.List;
  * @author Daniel Planötscher
  */
 public abstract class Exercise {
-
     private String name, description, code;
     private List<Validation> tests;
     boolean completed;

@@ -1,7 +1,6 @@
 package daro.game.ui;
 
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 

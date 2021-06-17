@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ValidationParser {
-    private ValidationParser() {
 
+    private ValidationParser() {
+        // Disallow instantiation
     }
 
     /**

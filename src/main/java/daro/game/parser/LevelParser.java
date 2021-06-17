@@ -24,7 +24,6 @@ public final class LevelParser {
         } else {
             completionMap = new HashMap<>();
         }
-
         if (groups != null && groups.size() > 0) {
             groups.forEach(group -> groupList.add(parseGroup(group.getAsJsonObject(), completionMap)));
         }

@@ -10,7 +10,6 @@ import javafx.scene.text.Text;
 import java.util.List;
 
 public class LevelGroupPage extends Page {
-
     private LevelGroup levelGroup;
 
     /**

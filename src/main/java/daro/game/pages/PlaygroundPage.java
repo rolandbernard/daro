@@ -10,7 +10,6 @@ import javafx.scene.layout.VBox;
 import java.io.File;
 
 public class PlaygroundPage extends Page implements Reloadable {
-
     private VBox playgroundList;
 
     /**

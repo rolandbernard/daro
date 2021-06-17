@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class EditorView extends View {
-
     private final static double TERMINAL_WIDTH = 360;
 
     /**

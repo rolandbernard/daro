@@ -2,7 +2,6 @@ package daro.game.ui.fields;
 
 import daro.game.ui.Icon;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
@@ -10,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public abstract class InputField extends VBox {
+
     /**
      * <strong>UI: <em>Template</em></strong><br>
      * An abstract class defining the key features of an InputField

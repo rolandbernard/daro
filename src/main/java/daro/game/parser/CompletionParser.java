@@ -9,8 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class CompletionParser {
-    private CompletionParser() {
 
+    private CompletionParser() {
+        // Disallow instantiation
     }
 
     public static Map<Long, Map<Long, JsonObject>> parseAll() {
@@ -44,6 +45,5 @@ public final class CompletionParser {
             }
         }
         return map;
-
     }
 }

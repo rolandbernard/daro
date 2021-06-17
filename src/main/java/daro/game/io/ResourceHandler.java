@@ -14,6 +14,7 @@ public final class ResourceHandler {
     private static final String RESOURCE_ROOT = "/daro/game/";
 
     private ResourceHandler() {
+        // Disallow instantiation
     }
 
     /**

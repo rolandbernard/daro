@@ -12,7 +12,9 @@ import java.nio.file.Files;
  * @author Daniel Planötscher
  */
 public final class UserData {
+
     private UserData() {
+        // Disallow instantiation
     }
 
     static final String USER_PATH = "./user/";

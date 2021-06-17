@@ -1,9 +1,7 @@
 package daro.game.ui;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import daro.game.io.SettingsHandler;
-import daro.game.main.Game;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -21,7 +19,7 @@ public class CodeEditor extends CodeArea {
      * All the possible themes
      */
     public static final String[] THEMES = {
-        "dark", "light"
+        "dark", "light", "plastic"
     };
 
     /**
@@ -127,23 +125,28 @@ public class CodeEditor extends CodeArea {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 int position = this.getCaretPosition();
                 int paragraph = this.getCurrentParagraph();
-                char lastCharacter = position - 2 >= 0 ?  this.getText().charAt(position - 2) : ' ';
-                String nextCharacter = getText().length() > position ? String.valueOf(getText().charAt(position)) : null;
+                char lastCharacter = position - 2 >= 0 ? this.getText().charAt(position - 2) : ' ';
+                String nextCharacter =
+                    getText().length() > position ? String.valueOf(getText().charAt(position)) : null;
 
                 Pattern whiteSpace = Pattern.compile("^\\s+");
-                Matcher whitespace = getParagraphs().size() > 0 ? whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0)) : null;
+                Matcher whitespace = getParagraphs().size() > 0
+                    ? whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0))
+                    : null;
                 String additionalSpace = "";
                 if (whitespace != null && whitespace.find())
                     additionalSpace = whitespace.group();
                 if (Arrays.stream(WHITESPACE_NL).anyMatch(c -> c == lastCharacter)) {
 
-                    //ensures that pressing enter e.g. after {, yet without } following, there is no additional new line
+                    // ensures that pressing enter e.g. after {, yet without } following, there is
+                    // no additional new line
                     String lastCharString = String.valueOf(lastCharacter);
-                    boolean isNextCharacterFollowing = REPEATING_STRING.get(lastCharString) != null &&
-                            REPEATING_STRING.get(lastCharString).equals(nextCharacter);
+                    boolean isNextCharacterFollowing = REPEATING_STRING.get(lastCharString) != null
+                        && REPEATING_STRING.get(lastCharString).equals(nextCharacter);
 
-                    this.insertText(position, additionalSpace + TAB +
-                            (isNextCharacterFollowing ? "\n": "") + additionalSpace);
+                    this.insertText(
+                        position, additionalSpace + TAB + (isNextCharacterFollowing ? "\n" : "") + additionalSpace
+                    );
                     int anchor = position + TAB.length() + additionalSpace.length();
                     // workaround
                     this.selectRange(anchor, anchor);

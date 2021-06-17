@@ -16,5 +16,4 @@ public class Icon extends Text {
     private void init() {
         getStyleClass().add("icon");
     }
-
 }
