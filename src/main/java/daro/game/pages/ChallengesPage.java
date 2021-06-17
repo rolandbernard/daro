@@ -13,6 +13,8 @@ import daro.game.views.ExerciseView;
 import daro.game.views.MenuView;
 import daro.game.views.View;
 import javafx.geometry.Pos;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -20,7 +22,9 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ChallengesPage extends Page implements Reloadable {
     private VBox content;
@@ -39,34 +43,54 @@ public class ChallengesPage extends Page implements Reloadable {
         content.setSpacing(30);
         getImportedChallenges();
         this.getChildren().addAll(heading, content);
+        setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            event.setDropCompleted(db.hasFiles());
+            event.consume();
+            if (db.hasFiles()) {
+                Optional<File> importFile = db.getFiles().stream().filter(f -> f.getName().endsWith(".json")).findFirst();
+                importFile.ifPresent(this::importChallenge);
+            }
+        });
+
+        setOnDragOver(event -> {
+            Dragboard db = event.getDragboard();
+            if (db.hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            } else {
+                event.consume();
+            }
+        });
     }
 
     public void importNewChallenge() {
         FileChooser fileChooser = new FileChooser();
-
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(this.getScene().getWindow());
         if (file != null) {
-            try {
-                String challengeString = IOHelpers.getFileContent(file);
-                Challenge newChallenge = ChallengeParser.parse(challengeString, file);
-                if (ChallengeHandler.hasSimilar(newChallenge)) {
-                    openImportWarning(newChallenge, challengeString, file);
-                } else {
-                    File newFile = ChallengeHandler.importChallenge(file);
-                    newChallenge = ChallengeParser.parse(challengeString, newFile);
-                    View.updateView(this, new ExerciseView(newChallenge));
-                }
-
-            } catch (Exception e) {
-                Callout callout = new Callout("Could not import challenge", ThemeColor.RED.toString());
-                challenges.getChildren().add(0, callout);
-                callout.setOnClose(event -> challenges.getChildren().remove(callout));
-            }
-
+            importChallenge(file);
         }
 
+    }
+
+    private void importChallenge(File file) {
+        try {
+            String challengeString = IOHelpers.getFileContent(file);
+            Challenge newChallenge = ChallengeParser.parse(challengeString, file);
+            if (ChallengeHandler.hasSimilar(newChallenge)) {
+                openImportWarning(newChallenge, challengeString, file);
+            } else {
+                File newFile = ChallengeHandler.importChallenge(file);
+                newChallenge = ChallengeParser.parse(challengeString, newFile);
+                View.updateView(this, new ExerciseView(newChallenge));
+            }
+
+        } catch (Exception e) {
+            Callout callout = new Callout("Could not import challenge", ThemeColor.RED.toString());
+            challenges.getChildren().add(0, callout);
+            callout.setOnClose(event -> challenges.getChildren().remove(callout));
+        }
     }
 
     private void getImportedChallenges() {
