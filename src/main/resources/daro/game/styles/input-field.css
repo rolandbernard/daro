@@ -1,0 +1,22 @@
+.input-field {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-fill:  rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 10px;
+    -fx-font-size: 18px;
+    -fx-padding: 15px 20px;
+    -fx-text-fill: #eee;
+    -fx-font-family: "Montserrat";
+    -fx-mark-color: #eee;
+}
+
+.input-field .content {
+    -fx-background-color: transparent;
+}
+
+.input-field .context-menu {
+  -fx-background-color: #381A90;
+}
+
+.input-field .menu-item:focused {
+  -fx-background-color: #FF3D23;
+}

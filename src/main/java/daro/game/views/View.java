@@ -1,6 +1,7 @@
 package daro.game.views;
 
 import daro.game.main.Game;
+import daro.game.main.ThemeColor;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 
@@ -12,11 +13,8 @@ public abstract class View extends HBox {
      * purpose of showing a menu)
      */
     public View() {
-        // this.setPrefWidth(Game.WIDTH);
-        // this.setPrefHeight(Game.HEIGHT);
-        // this.
         this.setFillHeight(true);
-        this.setStyle("-fx-background-color: #200D57");
+        this.setStyle("-fx-background-color: " + ThemeColor.BACKGROUND);
     }
 
     /**

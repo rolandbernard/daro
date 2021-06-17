@@ -4,7 +4,6 @@ import daro.game.main.Level;
 import daro.game.main.LevelGroup;
 import daro.game.ui.Heading;
 import daro.game.ui.LevelItem;
-import daro.game.views.LevelView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -34,7 +33,7 @@ public class LevelGroupPage extends Page {
      */
     private VBox getLevelList() {
         VBox list = new VBox();
-        list.setSpacing(20);
+        list.setSpacing(30);
         List<Level> levelList = levelGroup.getLevels();
         if (levelGroup.getLevels() != null && levelGroup.getLevels().size() > 0) {
             levelList.stream().map(LevelItem::new).forEach(l -> list.getChildren().add(l));

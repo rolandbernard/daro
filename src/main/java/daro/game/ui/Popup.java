@@ -1,11 +1,8 @@
 package daro.game.ui;
 
-import daro.game.main.Game;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.StackPane;
 
 public class Popup extends StackPane {
@@ -16,13 +13,13 @@ public class Popup extends StackPane {
     public Popup() {
         content = new StackPane();
         content.setAlignment(Pos.CENTER);
-        content.setPrefHeight(Game.HEIGHT);
         wrapper = new ScrollPane(content);
         wrapper.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         wrapper.setMaxWidth(POPUP_WIDTH);
+        wrapper.setFitToHeight(true);
         wrapper.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         wrapper.setStyle("-fx-background-color: transparent");
-        this.setStyle("-fx-background-color: rgba(0,0,0,0.5)");
+        this.setStyle("-fx-background-color: rgba(0,0,0,0.75)");
         this.setVisible(false);
         this.setAlignment(Pos.CENTER);
         this.getChildren().add(wrapper);
@@ -33,8 +30,9 @@ public class Popup extends StackPane {
         updateContent(content);
     }
 
-    public void updateContent(Node content) {
-        this.content.getChildren().add(content);
+    public void updateContent(Node ...content) {
+        this.content.getChildren().clear();
+        this.content.getChildren().addAll(content);
     }
 
     public void open() {

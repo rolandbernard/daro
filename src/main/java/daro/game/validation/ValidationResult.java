@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ValidationResult {
     private boolean success;
-    private String expected, actual, source;
+    private String expected, actual;
     private final long id;
 
     /**
@@ -34,8 +34,8 @@ public class ValidationResult {
 
     /**
      * Returns the name of the validation: e.g. Test n.1
-     * 
-     * @return TODO TOFIX
+     *
+     * @return a string containing the value
      */
     public String getName() {
         return "Test n." + id;
@@ -43,7 +43,7 @@ public class ValidationResult {
 
     /**
      * A string describing the result of the validation
-     * 
+     *
      * @return either passed or failed and why.
      */
     @Override

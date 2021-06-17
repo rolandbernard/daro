@@ -1,23 +1,19 @@
-package daro.game.ui;
+package daro.game.ui.fields;
 
-import daro.game.pages.Page;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.ChoiceBox;
 
-import java.util.List;
 import java.util.Map;
 
 public class SelectField<T> extends InputField {
     private ChoiceBox<String> selectField;
     private Map<T, String> choices;
 
-    public SelectField(Map<T, String> choices, T value) {
-        init(choices, value);
-    }
-
-    public SelectField(Map<T, String> choices, T value, String label) {
-        super(label);
+    public SelectField(Map<T, String> choices, T value, String label, String help) {
+        super(label, help);
         init(choices, value);
     }
 
@@ -28,8 +24,8 @@ public class SelectField<T> extends InputField {
         if (choices.size() > 0) {
             selectField.setValue(value == null ? choices.get(choices.keySet().toArray()[0]) : choices.get(value));
         }
-        selectField.setPrefWidth(Page.INNER_WIDTH);
         this.getChildren().add(selectField);
+        selectField.setPrefWidth(Integer.MAX_VALUE);
         this.setCursor(Cursor.HAND);
     }
 
@@ -39,5 +35,9 @@ public class SelectField<T> extends InputField {
                 return key;
         }
         return null;
+    }
+
+    public void onChange(EventHandler<ActionEvent> handler) {
+        selectField.setOnAction(handler);
     }
 }

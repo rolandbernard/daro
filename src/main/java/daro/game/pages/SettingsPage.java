@@ -1,11 +1,13 @@
 package daro.game.pages;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import daro.game.io.SettingsHandler;
+import daro.game.main.ThemeColor;
 import daro.game.ui.*;
+import daro.game.ui.fields.FieldGroup;
+import daro.game.ui.fields.InputField;
+import daro.game.ui.fields.SelectField;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import java.util.*;
 
@@ -25,16 +27,18 @@ public class SettingsPage extends Page {
         currentSettings = SettingsHandler.getAllSettings();
         fieldGroups = new VBox();
         fieldGroups.setSpacing(40);
+        fieldGroups.setFillWidth(true);
         generateEditorFields();
 
-        CustomButton saveButton = new CustomButton("\ue161", "Save your changes", Page.INNER_WIDTH, 50, true);
+        CustomButton saveButton = new CustomButton("\ue161", "Save your changes", true);
         saveButton.setOnMouseClicked(e -> {
             if (SettingsHandler.save(allFields)) {
-                Callout saveCallout = new Callout("Saved your changes", "#53F481", "#1D1F26");
-                this.getChildren().add(1, saveCallout);
+                Callout saveCallout = new Callout("Saved your changes", ThemeColor.GREEN.toString());
+                getChildren().add(1, saveCallout);
+                saveCallout.setOnClose(event -> getChildren().remove(saveCallout));
             }
         });
-        this.getChildren().addAll(heading, fieldGroups, saveButton);
+        getChildren().addAll(heading, fieldGroups, saveButton);
     }
 
     /**
@@ -44,13 +48,7 @@ public class SettingsPage extends Page {
      * @param fields the fields in the field group
      */
     private void createFieldGroup(String name, InputField ...fields) {
-        VBox fieldList = new VBox();
-        Text title = new Text(name);
-        title.getStyleClass().addAll("heading", "small", "text");
-        fieldList.setSpacing(20);
-        fieldList.getChildren().add(title);
-        fieldList.getChildren().addAll(fields);
-        fieldGroups.getChildren().add(fieldList);
+        fieldGroups.getChildren().add(new FieldGroup(name, fields));
     }
 
     private Map<String, JsonElement> getCurrentSettings(String key) {
@@ -67,7 +65,7 @@ public class SettingsPage extends Page {
         }
         SelectField<String> theme = new SelectField<>(
             themeOptions, editorSettings.get("theme") == null ? null : editorSettings.get("theme").getAsString(),
-            "Theme"
+            "Theme", "Color theme of the code editor"
         );
         editorFields.put("theme", theme);
 
@@ -76,20 +74,18 @@ public class SettingsPage extends Page {
         indentOptions.put(false, "Without indent");
         SelectField<Boolean> indent = new SelectField<>(
             indentOptions, editorSettings.get("indent") == null ? null : editorSettings.get("indent").getAsBoolean(),
-            "Auto Indent"
+            "Auto Indentation", "Automatic indentation when going into a new line"
         );
         editorFields.put("indent", indent);
 
         LinkedHashMap<Boolean, String> completionOptions = new LinkedHashMap<>();
         completionOptions.put(true, "With autocompletion");
         completionOptions.put(false, "Without autocompletion");
-        SelectField<Boolean> autocompletion =
-            new SelectField<>(
-                completionOptions,
-                editorSettings.get("auto_completion") == null ? null
-                    : editorSettings.get("auto_completion").getAsBoolean(),
-                "Auto completion"
-            );
+        SelectField<Boolean> autocompletion = new SelectField<>(
+            completionOptions,
+            editorSettings.get("auto_completion") == null ? null : editorSettings.get("auto_completion").getAsBoolean(),
+            "Auto completion", "e.g. when writing '(' should the editor automatically auto complete ')'"
+        );
         editorFields.put("auto_completion", autocompletion);
 
         allFields.put("editor", editorFields);

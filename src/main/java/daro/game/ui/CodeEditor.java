@@ -29,16 +29,17 @@ public class CodeEditor extends CodeArea {
      */
     // Regex for specific groups
     private static final String[] KEYWORDS = {
-        "fn", "return", "class", "true", "false"
+        "fn", "return", "class", "true", "false", "new", "array", "int", "real", "string", "in"
     };
     private static final String[] CONTROLS = {
-        "if", "else", "for"
+        "if", "else", "for", "match"
     };
     private static final String[] SYMBOLS = {
-        "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!?=", ">", "<"
+        "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!=", ">", "<", "\\+", "-", "/",
+        "\\*", "%"
     };
     private static final String[] FUNCTIONS = {
-        "([^\\s]+)?(\\s)?(?=((\\s+)?\\())"
+        "([^\\s]+)?(\\s)?(?=(\\())"
     };
     private static final String[] COMMENTS = {
         "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"
@@ -49,7 +50,7 @@ public class CodeEditor extends CodeArea {
     private static final String[] DIGITS = {
         "\\d+"
     };
-    private static final String TAB = " ".repeat(4);
+    public static final String TAB = " ".repeat(4);
 
     // Generate Pattern for specific groups
     private static String generateBoundedPattern(String ...pattern) {
@@ -61,10 +62,11 @@ public class CodeEditor extends CodeArea {
     }
 
     private static final Pattern SYNTAX_PATTERN = Pattern.compile(
-        "(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" + "|(?<COMMENT>" + generatePattern(COMMENTS) + ")" + "|(?<STRING>"
+        "(?<COMMENT>" + generatePattern(COMMENTS) + ")" + "|(?<SYMBOL>" + generatePattern(SYMBOLS) + ")" + "|(?<STRING>"
             + generatePattern(STRINGS) + ")" + "|(?<DIGIT>" + generatePattern(DIGITS) + ")" + "|(?<CONTROL>"
-            + generateBoundedPattern(CONTROLS) + ")" + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"
-            + "|(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")"
+            + generateBoundedPattern(CONTROLS) + ")" + "|(?<KEYWORD>" + generateBoundedPattern(KEYWORDS) + ")"
+            + "|(?<FUNCTION>" + generateBoundedPattern(FUNCTIONS) + ")"
+
     );
 
     /**
@@ -84,46 +86,29 @@ public class CodeEditor extends CodeArea {
      * A full-fledged CodeEditor with syntax highlighting and basic features.
      */
     public CodeEditor() {
-        initRepeatingStrings();
-        this.setHeight(Game.HEIGHT);
-        this.setPrefWidth(Game.WIDTH);
         init();
     }
 
     /**
      * A full-fledged CodeEditor with syntax highlighting and basic features.
-     * 
+     *
      * @param defaultText the code which is rendered as default
      */
     public CodeEditor(String defaultText) {
-        super(defaultText);
-        initRepeatingStrings();
-        this.setPrefHeight(Game.HEIGHT);
-        this.setPrefWidth(Game.WIDTH);
-        init();
-    }
-
-    /**
-     * A full-fledged CodeEditor with syntax highlighting and basic features.
-     * 
-     * @param defaultText the code which is rendered as default
-     * @param height      height of the Code Editor
-     * @param width       width of the Code Editor
-     */
-    public CodeEditor(String defaultText, double width, double height) {
-        super(defaultText);
-        initRepeatingStrings();
-        this.setPrefWidth(width);
-        this.setPrefHeight(height);
+        super(defaultText.replace("\t", TAB));
         init();
     }
 
     private void init() {
+        initRepeatingStrings();
         this.getStyleClass().add("code-editor");
         this.setParagraphGraphicFactory(LineNumberFactory.get(this));
         this.textProperty().addListener(this::handleTextChange);
         this.setOnKeyPressed(this::handleKeyPress);
         this.setStyleSpans(0, computeHighlighting(this.getText()));
+        this.setPrefWidth(Integer.MAX_VALUE);
+        this.setPrefHeight(Integer.MAX_VALUE);
+
         this.lastTypePosition = -1;
         this.settings = SettingsHandler.getSettingsByKey("editor");
         this.getStyleClass()
@@ -132,7 +117,7 @@ public class CodeEditor extends CodeArea {
 
     /**
      * EventHandler for key presses: automatic indentation and better TAB size
-     * 
+     *
      * @param keyEvent the key event to operate with
      */
     private void handleKeyPress(KeyEvent keyEvent) {
@@ -168,8 +153,8 @@ public class CodeEditor extends CodeArea {
     /**
      * EventHandler for Text changes: updates syntax highlighting and enables
      * autocompletion (e.g. "(" is immediately followed by ")")
-     * 
-     * @param observableValue TODO
+     *
+     * @param observableValue the value that can be observed for changes
      * @param oldValue        the old value of the editor
      * @param newValue        the new value of the editor
      */
@@ -221,9 +206,10 @@ public class CodeEditor extends CodeArea {
     /**
      * Parses the Code for its syntax and sets CSS classes for further styling to
      * enable syntax highlighting
-     * 
-     * @param text TODO TOFIX
-     * @return TODO TOFIX
+     *
+     * @param text the text within the code editor
+     * @return a list containing the text, but with style classes for syntax
+     *         highlighting
      */
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
         Matcher matcher = SYNTAX_PATTERN.matcher(text);
@@ -265,7 +251,6 @@ public class CodeEditor extends CodeArea {
         REPEATING_STRING.put("(", ")");
         REPEATING_STRING.put("[", "]");
         REPEATING_STRING.put("{", "}");
-        REPEATING_STRING.put("<", ">");
         REPEATING_STRING.put("\"", "\"");
         REPEATING_STRING.put("'", "'");
         REPEATING_STRING.put("/*", "*/");

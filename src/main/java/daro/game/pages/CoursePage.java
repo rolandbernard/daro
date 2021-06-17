@@ -5,9 +5,11 @@ import daro.game.main.LevelGroup;
 import daro.game.ui.Heading;
 import daro.game.ui.LevelGroupItem;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 import java.util.List;
+import java.util.concurrent.Flow;
 
 public class CoursePage extends Page {
     /**
@@ -28,7 +30,7 @@ public class CoursePage extends Page {
         FlowPane pane = new FlowPane();
 
         // The gap between the level groups in the grid
-        double gap = 20;
+        double gap = 30;
         pane.setVgap(gap);
         pane.setHgap(gap);
 

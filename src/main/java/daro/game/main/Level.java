@@ -1,96 +1,59 @@
 package daro.game.main;
 
 import daro.game.validation.Validation;
+
 import java.util.List;
+import java.util.Objects;
 
-public class Level {
-
-    private boolean completed;
-    private String name, description, code;
-    private List<Validation> tests;
+public class Level extends Exercise {
     private final long id;
     private final long groupId;
-
-    /**
-     * Manages the logic of the Levels
-     *
-     * @param id          The id of the level
-     * @param name        The name of the level
-     * @param description A short description of the task
-     * @param isCompleted If a level is completed
-     * @param tests       tests that have to run in the Level
-     * @param code        code written for the level
-     * @param groupId     group id of the level
-     */
+    private String helpText, helpCode;
 
     public Level(
-        long id, String name, String description, boolean isCompleted, String code, List<Validation> tests, long groupId
+        long id, String name, String description, boolean isCompleted, String code, List<Validation> tests,
+        long groupId, String helpText, String helpCode
     ) {
-        this.completed = isCompleted;
-        this.name = name;
-        this.code = code;
+        super(name, description, code, tests, isCompleted);
         this.id = id;
-        this.description = description;
-        this.tests = tests;
         this.groupId = groupId;
+        this.helpCode = helpCode;
+        this.helpText = helpText;
     }
 
-    /**
-     * Get the ID of the level
-     *
-     * @return ID of the level
-     */
     public long getId() {
         return id;
     }
 
     /**
-     * Get the name of the level
+     * Returns the id of parent group
      *
-     * @return name of the level
+     * @return id
      */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Get a short description of the level
-     *
-     * @return description of the level
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Get a current code written for the level
-     *
-     * @return code of the level
-     */
-    public String getCode() {
-        return code;
-    }
-
-    /**
-     * Checks if level is completed
-     *
-     * @return the completion state of the level
-     */
-    public boolean isCompleted() {
-        return completed;
-    }
-
     public long getGroupId() {
         return groupId;
     }
 
-    /**
-     * Checks if level is completed
-     *
-     * @return the completion state of the level
-     */
-    public List<Validation> getTests() {
-        return tests;
+    public String getHelpText() {
+        return helpText;
     }
 
+    public String getHelpCode() {
+        return helpCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Level level = (Level)o;
+        return id == level.id && groupId == level.groupId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, groupId);
+    }
 }

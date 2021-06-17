@@ -2,6 +2,7 @@ package daro.game.ui;
 
 import daro.game.main.Game;
 import daro.game.main.LevelGroup;
+import daro.game.main.ThemeColor;
 import daro.game.pages.LevelGroupPage;
 import daro.game.views.MenuView;
 import javafx.geometry.Insets;
@@ -14,7 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class LevelGroupItem extends VBox {
-    public static double DIMENSION = 240, H_PADDING = 40, INNER_WIDTH = DIMENSION - H_PADDING * 2;
+    public static double DIMENSION = 235, H_PADDING = 30, INNER_WIDTH = DIMENSION - H_PADDING * 2;
     private LevelGroup levelGroup;
 
     /**
@@ -22,27 +23,29 @@ public class LevelGroupItem extends VBox {
      * A grid item that displays basic information about a level group (name,
      * description, completed levels) When clicked it leads to the level group
      * detail page
-     * 
+     *
      * @param levelGroup the level group that is displayed
      */
     public LevelGroupItem(LevelGroup levelGroup) {
         this.levelGroup = levelGroup;
-        this.setSpacing(20);
-        this.setPrefSize(DIMENSION, DIMENSION);
-        this.setStyle(
+        setSpacing(20);
+        setMaxSize(DIMENSION, DIMENSION);
+        setMinSize(DIMENSION, DIMENSION);
+        setAlignment(Pos.CENTER);
+        setStyle(
             "-fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                + "-fx-background-color: #381A90;"
+                + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
         );
-        this.setPadding(new Insets(H_PADDING));
-        this.getChildren().addAll(getHeading(), getCompleted());
-        this.setOnMouseClicked(event -> MenuView.setContent(new LevelGroupPage(levelGroup)));
+        setPadding(new Insets(H_PADDING));
+        getChildren().addAll(getHeading(), getCompleted());
+        setOnMouseClicked(event -> MenuView.setContent(new LevelGroupPage(levelGroup)));
         Interaction.setClickable(this, true);
     }
 
     /**
      * The top part of the item, containing the name and the description of the
      * level group
-     * 
+     *
      * @return a vertical box with the information
      */
     private VBox getHeading() {
@@ -61,7 +64,7 @@ public class LevelGroupItem extends VBox {
     /**
      * The bottom part of the item, containing information about the completion of a
      * level group
-     * 
+     *
      * @return a vertical box containing a graph and a label
      */
     private VBox getCompleted() {
@@ -74,7 +77,7 @@ public class LevelGroupItem extends VBox {
 
     /**
      * Generates a bar graph
-     * 
+     *
      * @param percent percentage of completion (e.g. 0.5 for 50%)
      * @return a stackpane containing the graph
      */
@@ -93,18 +96,18 @@ public class LevelGroupItem extends VBox {
 
     /**
      * Generates a label containing how many levels are completed
-     * 
+     *
      * @param completed amount of completed levels
      * @param allLevels amount of all levels
      * @return a vbox containing the label
      */
     private VBox getRatioLabel(int completed, int allLevels) {
         Text ratio = new Text(completed + "/" + allLevels);
-        ratio.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-fill: #fff");
+        ratio.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-fill: " + ThemeColor.WHITE);
         ratio.getStyleClass().add("text");
 
         Text completedLabel = new Text("Levels completed");
-        completedLabel.setStyle("-fx-font-size: 10px; -fx-fill: #eee");
+        completedLabel.setStyle("-fx-font-size: 10px; -fx-fill: " + ThemeColor.WHITE);
         completedLabel.getStyleClass().add("text");
         return new VBox(ratio, completedLabel);
     }

@@ -1,7 +1,7 @@
 package daro.game.views;
 
-import daro.game.main.Game;
-import daro.game.io.UserData;
+import daro.game.io.PlaygroundHandler;
+import daro.game.main.ThemeColor;
 import daro.game.pages.PlaygroundPage;
 import daro.game.ui.CodeEditor;
 import daro.game.ui.CustomButton;
@@ -22,19 +22,19 @@ public class EditorView extends View {
      */
     public EditorView(File file) {
         try {
-            String code = UserData.getPlayground(file);
-            double buttonHeight = 50;
+            String code = PlaygroundHandler.getPlayground(file);
             VBox sidebar = new VBox();
-            Terminal terminal = new Terminal(TERMINAL_WIDTH, Game.HEIGHT - buttonHeight * 2);
-            CodeEditor editor = new CodeEditor(code, Game.WIDTH - TERMINAL_WIDTH, Game.HEIGHT);
+            Terminal terminal = new Terminal(TERMINAL_WIDTH);
+            CodeEditor editor = new CodeEditor(code);
 
-            CustomButton runButton = new CustomButton("\ue037", "Run the program", TERMINAL_WIDTH, buttonHeight, false);
+            CustomButton runButton = new CustomButton("\ue037", "Run the program", false);
             CustomButton closeButton =
-                new CustomButton("\ue9ba", "Save & Close", TERMINAL_WIDTH, buttonHeight, false, "#cc2610");
+                new CustomButton("\ue9ba", "Save & Close", false, ThemeColor.ACCENT_DARK.toString());
             runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
             closeButton.setOnMouseClicked(e -> {
-                UserData.savePlayground(file, editor.getText());
-                returnToOverview();
+                if (PlaygroundHandler.savePlayground(file, editor.getText())) {
+                    returnToOverview();
+                }
             });
 
             sidebar.getChildren().addAll(terminal, runButton, closeButton);
@@ -44,7 +44,10 @@ public class EditorView extends View {
         }
     }
 
+    /**
+     * Sets the to menu
+     */
     private void returnToOverview() {
-        this.getScene().setRoot(new MenuView(new PlaygroundPage()));
+        View.updateView(this, new MenuView(new PlaygroundPage()));
     }
 }

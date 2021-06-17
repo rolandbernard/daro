@@ -1,6 +1,7 @@
 package daro.game.pages;
 
 import daro.game.main.Game;
+import daro.game.main.ThemeColor;
 import daro.game.ui.Navigation;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,8 +9,6 @@ import javafx.scene.layout.VBox;
 
 public abstract class Page extends VBox {
     public static final double H_PADDING = 90;
-    public static final double WIDTH = Game.WIDTH - Navigation.WIDTH;
-    public static final double INNER_WIDTH = WIDTH - H_PADDING * 2;
 
     /**
      * <strong>UI: <em>Template</em></strong><br>
@@ -19,7 +18,7 @@ public abstract class Page extends VBox {
     public Page() {
         this.setAlignment(Pos.TOP_CENTER);
         this.setPadding(new Insets(100, H_PADDING, 80, H_PADDING));
-        this.setStyle("-fx-background-color: " + Game.colorTheme.get("background"));
+        this.setStyle("-fx-background-color: " + ThemeColor.BACKGROUND);
         this.setSpacing(60);
         this.setFillWidth(true);
     }

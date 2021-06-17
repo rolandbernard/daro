@@ -1,24 +1,23 @@
 package daro.game.ui;
 
-import daro.game.main.Game;
+import daro.game.main.ThemeColor;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 public class CustomButton extends HBox {
+    public static double HEIGHT = 50;
+
     /**
      * Creates a custom button with an icon in orange
      *
      * @param icon    icon string e.g. \ue037 
      * @param text    text for the button
-     * @param width   width of the button
-     * @param height  height of the button
-     * @param rounded TODO TOFIX
+     * @param rounded if the button is rounded
      */
-    public CustomButton(String icon, String text, double width, double height, boolean rounded) {
-        this(icon, text, width, height, rounded, Game.colorTheme.get("accent"));
+    public CustomButton(String icon, String text, boolean rounded) {
+        this(icon, text, rounded, ThemeColor.ACCENT.toString());
     }
 
     /**
@@ -26,18 +25,18 @@ public class CustomButton extends HBox {
      *
      * @param icon    icon string e.g. \ue037 
      * @param text    text for the button
-     * @param width   width of the button
-     * @param height  height of the button
-     * @param rounded TODO TOFIX
      * @param color   custom color
+     * @param rounded if the button is rounded
      */
-    public CustomButton(String icon, String text, double width, double height, boolean rounded, String color) {
-        this.setPrefWidth(width);
-        this.setPrefHeight(height);
-        this.setStyle("-fx-background-color: " + color);
+    public CustomButton(String icon, String text, boolean rounded, String color) {
+        this.setMinHeight(HEIGHT);
+        this.setStyle("-fx-background-color: " + color + ";");
+        this.setPadding(new Insets(0, 20, 0, 20));
         if (rounded) {
-            this.setStyle(getStyle() + "; -fx-background-radius: 25px;");
+            this.setStyle(getStyle() + "-fx-background-radius: 25px;");
         }
+        setOnMouseEntered(e -> setStyle(getStyle() + "-fx-background-color: derive(" + color + ", -10%);"));
+        setOnMouseExited(e -> setStyle(getStyle() + "-fx-background-color: " + color + ";"));
         this.setAlignment(Pos.CENTER);
         this.setSpacing(10);
         Interaction.setClickable(this, false);

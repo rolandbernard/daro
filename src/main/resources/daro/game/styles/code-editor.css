@@ -1,66 +1,13 @@
-/*General*/
-.text {
-    -fx-fill: #eee;
-    -fx-font-family: "Montserrat";
+.lineno {
+    -fx-pref-width: 40px;
     -fx-font-size: 16px;
 }
 
-.bold {
-    -fx-font-weight: bold;
+.code-editor .text {
+    -fx-font-family: "JetBrains Mono", monospace !important;
+    -fx-font-weight: 500;
 }
 
-.icon {
-    -fx-font-family: "Material Icons";
-    -fx-font-weight: normal;
-    -fx-font-size: 20px;
-    -fx-fill: #eee;
-}
-
-.monospace {
-    -fx-font-family: "JetBrains Mono", monospace;
-    -fx-font-weight: normal;
-    -fx-fill: #eee;
-}
-
-/*Navigation*/
-.nav-item.active {
-    -fx-background-color: #FF3D23;
-}
-.scroll-pane > .viewport {
-   -fx-background-color: transparent;
-}
-
-.track, .increment-button, .decrement-button {
-    -fx-background-color: #150F28 !important;
-    -fx-border-color: #150F28 !important;
-}
-
-.thumb {
-    -fx-background-color: #E2E2E2;
-}
-
-/*Heading*/
-.heading {
-    -fx-font-weight: bold;
-}
-
-.heading.large {
-    -fx-font-size: 48px;
-}
-
-.heading.small {
-    -fx-font-size: 24px;
-}
-
-.heading.tiny {
-    -fx-font-size: 18px;
-}
-
-.heading-description {
-    -fx-font-size: 20px;
-}
-
-/*Code editor*/
 .code-editor.theme-dark {
     -fx-background-color: #272D3F;
 }
@@ -165,38 +112,3 @@
     -fx-background-color: #BEE8FF;
 }
 
-.lineno {
-    -fx-pref-width: 40px;
-    -fx-font-size: 16px;
-}
-
-.code-editor .text {
-    -fx-font-family: "JetBrains Mono", monospace !important;
-    -fx-font-weight: 500;
-}
-
-.terminal-error, .failed .text, .failed .icon {
-    -fx-fill: #fc323f;
-}
-
-.scroll-pane {
-    -fx-stroke: transparent;
-}
-
-.input-field {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-background-radius: 10px;
-    -fx-font-size: 18px;
-    -fx-padding: 15px 20px;
-    -fx-text-fill: #eee;
-    -fx-font-family: "Montserrat";
-  -fx-mark-color: #eee;
-}
-
-.input-field .context-menu {
-  -fx-background-color: #381A90;
-}
-
-.input-field .menu-item:focused {
-  -fx-background-color: #FF3D23;
-}

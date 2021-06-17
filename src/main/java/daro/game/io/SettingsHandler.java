@@ -1,18 +1,21 @@
 package daro.game.io;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import daro.game.ui.InputField;
+import daro.game.ui.fields.InputField;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class SettingsHandler {
+public final class SettingsHandler {
+    private SettingsHandler() {
+    }
 
-    private static String SETTINGS_PATH = UserData.USER_PATH + "settings.json";
+    private final static String SETTINGS_PATH = UserData.USER_PATH + "settings.json";
 
     private static JsonObject getSettings() {
         return UserData.parseUserJson("settings.json");
@@ -35,8 +38,10 @@ public abstract class SettingsHandler {
         JsonObject settings = getSettings();
         Map<String, JsonElement> settingsMap = new HashMap<>();
         if (settings != null) {
-            JsonObject elements = settings.get(key).getAsJsonObject();
-            settingsMap = generateMapFromJson(elements);
+            if (settings.get(key) != null) {
+                JsonObject elements = settings.get(key).getAsJsonObject();
+                settingsMap = generateMapFromJson(elements);
+            }
         }
         return settingsMap;
     }
@@ -68,10 +73,10 @@ public abstract class SettingsHandler {
             allSettings.add(key, innerSettings);
         }
 
-        try (PrintWriter writer = new PrintWriter(SETTINGS_PATH)) {
-            writer.write(allSettings.toString());
-            writer.flush();
-        } catch (FileNotFoundException e) {
+        try {
+            File file = new File(SETTINGS_PATH);
+            IOHelpers.overwriteFile(file, allSettings.toString());
+        } catch (IOException e) {
             return false;
         }
         return true;

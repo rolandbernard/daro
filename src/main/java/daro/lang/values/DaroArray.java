@@ -11,7 +11,7 @@ import daro.lang.interpreter.Scope;
 
 /**
  * This {@link DaroObject} represents an array value.
- * 
+ *
  * @author Roland Bernard
  */
 public class DaroArray extends DaroObject {
@@ -20,7 +20,7 @@ public class DaroArray extends DaroObject {
 
     /**
      * Create a new {@link DaroArray} with the values inside the given list.
-     * 
+     *
      * @param values The values of the array
      */
     public DaroArray(List<DaroObject> values) {
@@ -30,7 +30,7 @@ public class DaroArray extends DaroObject {
 
     /**
      * Build the member scope for this array.
-     * 
+     *
      * @return The member scope
      */
     private Scope buildMemberScope() {
@@ -39,6 +39,12 @@ public class DaroArray extends DaroObject {
             for (DaroObject value : params) {
                 pushValue(value);
             }
+        }));
+        variables.put("foreach", new DaroLambdaFunction(1, (params, observers) -> {
+            DaroFunction function = (DaroFunction)params[0];
+            values.forEach(a -> function.execute(new DaroObject[] {
+                a
+            }, observers));
         }));
         variables.put("pop", new DaroLambdaFunction(0, params -> {
             if (values.size() > 0) {
@@ -82,7 +88,7 @@ public class DaroArray extends DaroObject {
 
     /**
      * Returns the length of the array.
-     * 
+     *
      * @return The length of the array
      */
     public int getLength() {
@@ -100,7 +106,7 @@ public class DaroArray extends DaroObject {
 
     /**
      * Returns the value inside the array at index i.
-     * 
+     *
      * @param i The index to query
      * @return The value at index i
      */
@@ -110,7 +116,7 @@ public class DaroArray extends DaroObject {
 
     /**
      * Put the given value inside the array at the given index.
-     * 
+     *
      * @param i     The index to write to
      * @param value The value that should be written
      */
@@ -120,7 +126,7 @@ public class DaroArray extends DaroObject {
 
     /**
      * Adds a new element to the end of the array.
-     * 
+     *
      * @param value The value that should be added
      */
     public void pushValue(DaroObject value) {

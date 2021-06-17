@@ -1,14 +1,19 @@
 package daro.game.ui;
 
+import daro.game.io.PlaygroundHandler;
+import daro.game.main.ThemeColor;
 import daro.game.pages.Page;
+import daro.game.pages.Reloadable;
 import daro.game.views.EditorView;
+import daro.game.views.MenuView;
+import daro.game.views.View;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,33 +23,48 @@ import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PlaygroundItem extends VBox {
+public class PlaygroundItem extends StackPane {
 
-    public static double MARGIN = 30;
+    private VBox mainContent;
+    private File file;
+    private final Reloadable parent;
 
-    public PlaygroundItem(File file) {
-        Text name = new Text(file.getName().split("\\.")[0]);
+    /**
+     * <strong>UI: <em>Component</em></strong><br>
+     * An overview item of a playground, containing basic information about it.
+     *
+     * @param file The file fo the playground
+     */
+    public PlaygroundItem(File file, Reloadable parent) {
+        this.file = file;
+        this.parent = parent;
+        Text name = new Text(cleanName());
         name.getStyleClass().addAll("heading", "small", "text");
-        this.setPrefHeight(200);
-        this.setPrefWidth(Page.INNER_WIDTH / 2 - MARGIN * 0.6);
-        this.setPadding(new Insets(40));
-        this.setStyle(
+        mainContent = new VBox(name);
+        mainContent.setFillWidth(true);
+        mainContent.setPadding(new Insets(40));
+        mainContent.setStyle(
             "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                + "-fx-background-color: #381A90;"
+                + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
         );
+        mainContent.setSpacing(10);
+        mainContent.setOnMouseClicked(e -> View.updateView(this, new EditorView(file)));
         Interaction.setClickable(this, true);
-        this.getChildren().addAll(name);
-        HBox createDate = getCreateDateInfo(file);
-        if (createDate != null) {
-            this.getChildren().add(createDate);
+        VBox attributes = getAttributes(file);
+        if (attributes != null) {
+            mainContent.getChildren().add(attributes);
         }
-        this.setSpacing(10);
-        this.setOnMouseClicked(e -> this.getScene().setRoot(new EditorView(file)));
+
+        getChildren().addAll(mainContent, deleteButton());
+        setAlignment(Pos.TOP_RIGHT);
+    }
+
+    private String cleanName() {
+        return file.getName().split("\\.")[0];
     }
 
     private HBox generateInfoBox(String icon, String label) {
-        Text iconText = new Text(icon);
-        iconText.getStyleClass().add("icon");
+        Icon iconText = new Icon(icon);
         Text labelText = new Text(label);
         labelText.getStyleClass().add("text");
         HBox infoBox = new HBox(iconText, labelText);
@@ -53,17 +73,75 @@ public class PlaygroundItem extends VBox {
         return infoBox;
     }
 
-    private HBox getCreateDateInfo(File file) {
+    private VBox getAttributes(File file) {
         try {
-            BasicFileAttributes fileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-            FileTime time = fileAttributes.creationTime();
-
             String pattern = "dd.MM.yyyy";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            return generateInfoBox("\ue924", simpleDateFormat.format(new Date(time.toMillis())));
+            SimpleDateFormat format = new SimpleDateFormat(pattern);
+
+            BasicFileAttributes fileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+            FileTime createDate = fileAttributes.creationTime();
+            FileTime modifyDate = fileAttributes.lastModifiedTime();
+
+            String createDateString = formatDate(format, createDate);
+            String modifyDateString = formatDate(format, modifyDate);
+
+            VBox attributes = new VBox();
+            attributes.setSpacing(10);
+            HBox createDateBox = generateInfoBox("\ue924", "Created: " + createDateString);
+            HBox modifyDateBox = generateInfoBox("\ue924", "Last modified: " + modifyDateString);
+
+            attributes.getChildren().addAll(modifyDateBox, createDateBox);
+            return attributes;
         } catch (IOException e) {
             return null;
         }
     }
 
+    private String formatDate(SimpleDateFormat format, FileTime time) {
+        return format.format(new Date(time.toMillis()));
+    }
+
+    private IconCircle deleteButton() {
+        IconCircle button = IconCircle.getDeleteButton(true);
+        button.setOnMouseClicked(e -> openConfirmPopup());
+        return button;
+    }
+
+    private void openConfirmPopup() {
+        Text heading = new Text("Warning");
+        heading.getStyleClass().addAll("heading", "small", "text");
+
+        Text info = new Text("You are trying to delete the playground " + cleanName() + "\nAre you sure?");
+        info.getStyleClass().addAll("text");
+        info.setTextAlignment(TextAlignment.CENTER);
+
+        CustomButton cancel = new CustomButton("\ue14c", "No", true);
+        cancel.setOnMouseClicked(e -> MenuView.getPopup().close());
+        CustomButton yes = new CustomButton("\ue5ca", "Yes", true);
+        HBox confirmButtons = new HBox(cancel, yes);
+        confirmButtons.setSpacing(10);
+        confirmButtons.setAlignment(Pos.CENTER);
+        yes.setOnMouseClicked(e -> {
+            Callout callout;
+            if (PlaygroundHandler.removePlayground(file.getName())) {
+                callout = new Callout("The playground was successfully deleted.", ThemeColor.GREEN.toString());
+            } else {
+                callout = new Callout(
+                    "The playground could not be deleted, please try again later.", ThemeColor.RED.toString()
+                );
+            }
+            parent.reload();
+            MenuView.getPopup().close();
+            if (parent instanceof Page) {
+                Page p = (Page)parent;
+                p.getChildren().add(1, callout);
+                callout.setOnClose(event -> p.getChildren().remove(callout));
+            }
+        });
+        VBox popup = new VBox(heading, info, confirmButtons);
+        popup.setAlignment(Pos.CENTER);
+        popup.setSpacing(20);
+        MenuView.getPopup().updateContent(popup);
+        MenuView.getPopup().open();
+    }
 }
