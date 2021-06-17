@@ -19,7 +19,7 @@ public class CodeEditor extends CodeArea {
      * All the possible themes
      */
     public static final String[] THEMES = {
-        "dark", "light"
+        "dark", "light", "plastic"
     };
 
     /**
