@@ -39,7 +39,7 @@ public class CodeEditor extends CodeArea {
         "\\*", "%"
     };
     private static final String[] FUNCTIONS = {
-        "([^\\s]+)?(\\s)?(?=(\\())"
+        "([_a-zA-Z][_a-zA-Z0-9]*)(?=(\\())"
     };
     private static final String[] COMMENTS = {
         "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"

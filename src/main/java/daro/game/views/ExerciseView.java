@@ -109,7 +109,7 @@ public class ExerciseView extends View {
     private boolean save(boolean completion) {
         if (exercise instanceof Level) {
             Level l = (Level)exercise;
-            return UserData.writeLevelData(l.getGroupId(), l.getId(), completion, editor.getText());
+            return LevelHandler.writeLevelData(l.getGroupId(), l.getId(), completion, editor.getText());
         } else if (exercise instanceof Challenge) {
             Challenge c = (Challenge)exercise;
             return ChallengeHandler.saveChallenge(c, editor.getText(), completion);
@@ -153,7 +153,7 @@ public class ExerciseView extends View {
         CustomButton mainButton = null;
         if (success && exercise instanceof Level) {
             Level l = (Level)exercise;
-            Level nextLevel = LevelHandler.getNextLevel(l.getGroupId(), l.getId());
+            Level nextLevel = LevelHandler.getNextLevel(l);
             if (nextLevel != null) {
                 mainButton = new CustomButton("\ue16a", "Next Level", true);
                 mainButton.setOnMouseClicked(e -> View.updateView(this, new ExerciseView(nextLevel)));

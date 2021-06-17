@@ -95,7 +95,9 @@ public class ChallengesPage extends Page implements Reloadable {
 
     private void getImportedChallenges() {
         List<Challenge> challenges = ChallengeHandler.getImportedChallenges();
-        challenges.stream().map(c -> new ChallengeItem(c, this)).forEach(c -> this.challenges.getChildren().add(c));
+        if(challenges != null) {
+            challenges.stream().map(c -> new ChallengeItem(c, this)).forEach(c -> this.challenges.getChildren().add(c));
+        }
     }
 
     private void openImportWarning(Challenge newChallenge, String challengeString, File file) {

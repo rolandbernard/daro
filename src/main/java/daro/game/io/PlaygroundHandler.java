@@ -2,17 +2,20 @@ package daro.game.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Scanner;
 
+/**
+ * Utility class:
+ * Helps handling Playgrounds.
+ *
+ * @author Daniel Planötscher
+ */
 public final class PlaygroundHandler {
     private PlaygroundHandler() {
     }
 
-    // Playgrounds
     private static final String PLAYGROUNDS_PATH = UserData.USER_PATH + "playgrounds/";
 
     /**

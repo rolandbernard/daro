@@ -1,5 +1,11 @@
 package daro.game.main;
 
+/**
+ * A simple enum containing all the theme colors of the game, that
+ * can easily be used.
+ *
+ * @author Daniel Planötscher
+ */
 public enum ThemeColor {
     WHITE("#eee"), ACCENT("#FF3D23"), ACCENT_DARK("#e2341d"), RED("#ff1414"), GREEN("#0e9e5d"), BACKGROUND("#2a195e"),
     MEDIUM_BACKGROUND("#301e68"), LIGHT_BACKGROUND("#39227c"), DARK_BACKGROUND("#1D1044"),

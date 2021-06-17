@@ -4,6 +4,11 @@ import daro.game.validation.Validation;
 
 import java.util.List;
 
+/**
+ * An abstract class defining default definitions for exercises such as Challenges and Levels
+ *
+ * @author Daniel Planötscher
+ */
 public abstract class Exercise {
 
     private String name, description, code;
@@ -26,20 +31,10 @@ public abstract class Exercise {
         this.tests = tests;
     }
 
-    /**
-     * Get the name of the level
-     *
-     * @return name of the level
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Get a short description of the level
-     *
-     * @return description of the level
-     */
     public String getDescription() {
         return description;
     }
@@ -53,11 +48,6 @@ public abstract class Exercise {
         return code;
     }
 
-    /**
-     * Checks if level is completed
-     *
-     * @return the completion state of the level
-     */
     public List<Validation> getTests() {
         return tests;
     }
@@ -71,7 +61,13 @@ public abstract class Exercise {
         return completed;
     }
 
-    public boolean isSimilar(Exercise s) {
-        return name.equals(s.getName()) && description.equals(s.getDescription());
+    /**
+     * Compares one exercise with another and checks if they are similar (same name and description)
+     *
+     * @param exercise the exercise you want it to compare it with
+     * @return if they are similar or not
+     */
+    public boolean isSimilar(Exercise exercise) {
+        return name.equals(exercise.getName()) && description.equals(exercise.getDescription());
     }
 }

@@ -5,12 +5,17 @@ import daro.game.validation.Validation;
 import java.io.File;
 import java.util.List;
 
+/**
+ * A class managing the state of a challenge.
+ *
+ * @author Daniel Plantöscher
+ */
 public class Challenge extends Exercise {
     private final String creator;
     private final File file;
 
     /**
-     * Manages the logic of the Levels
+     * Creates a normal challenge object
      *
      * @param name        The name of the level
      * @param description A short description of the task

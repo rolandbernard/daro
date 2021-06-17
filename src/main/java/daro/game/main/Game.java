@@ -8,11 +8,21 @@ import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ * The Application implementation for the JavaFX stage
+ *
+ * @author Daniel Planötscher
+ */
 public class Game extends Application {
     public static void init(String[] args) {
         launch(args);
     }
 
+    /**
+     * Opens the main stage
+     *
+     * @param stage the main stage of the game
+     */
     @Override
     public void start(Stage stage) {
         // load fonts from resources
