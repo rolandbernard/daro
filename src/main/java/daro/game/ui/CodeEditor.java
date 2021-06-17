@@ -128,6 +128,7 @@ public class CodeEditor extends CodeArea {
                 int position = this.getCaretPosition();
                 int paragraph = this.getCurrentParagraph();
                 char lastCharacter = this.getText().charAt(position - 2);
+                String nextCharacter = getText().length() > position ? String.valueOf(getText().charAt(position)) : null;
 
                 Pattern whiteSpace = Pattern.compile("^\\s+");
                 Matcher whitespace = whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0));
@@ -135,7 +136,14 @@ public class CodeEditor extends CodeArea {
                 if (whitespace.find())
                     additionalSpace = whitespace.group();
                 if (Arrays.stream(WHITESPACE_NL).anyMatch(c -> c == lastCharacter)) {
-                    this.insertText(position, additionalSpace + TAB + "\n" + additionalSpace);
+
+                    //ensures that pressing enter e.g. after {, yet without } following, there is no additional new line
+                    String lastCharString = String.valueOf(lastCharacter);
+                    boolean isNextCharacterFollowing = REPEATING_STRING.get(lastCharString) != null &&
+                            REPEATING_STRING.get(lastCharString).equals(nextCharacter);
+
+                    this.insertText(position, additionalSpace + TAB +
+                            (isNextCharacterFollowing ? "\n": "") + additionalSpace);
                     int anchor = position + TAB.length() + additionalSpace.length();
                     // workaround
                     this.selectRange(anchor, anchor);
@@ -197,7 +205,7 @@ public class CodeEditor extends CodeArea {
             }
         }
         try {
-            this.setStyleSpans(0, computeHighlighting(newValue));
+            this.setStyleSpans(0, computeHighlighting(this.getText()));
         } catch (Exception ignored) {
 
         }
