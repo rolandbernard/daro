@@ -182,4 +182,16 @@ public class StringTest {
         interpreter.execute("x = \"Hello\"; x += \" world\"");
         assertEquals(new DaroString("Hello world"), interpreter.execute("x"));
     }
+
+    @Test
+    void substringRange() {
+        interpreter.execute("x = \"Hello\"");
+        assertEquals(new DaroString("ell"), interpreter.execute("x[1:4]"));
+    }
+
+    @Test
+    void substringSingleCharacter() {
+        interpreter.execute("x = \"Hello\"");
+        assertEquals(new DaroString("l"), interpreter.execute("x[2]"));
+    }
 }
