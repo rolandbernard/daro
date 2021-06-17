@@ -129,7 +129,7 @@ public class ExerciseView extends View {
 
             HBox controls = createControlButtons(success);
             VBox popupContent = new VBox();
-            popupContent.getChildren().addAll(heading, items, controls);
+            popupContent.getChildren().addAll(heading, controls, items);
             popupContent.setSpacing(30);
             popupContent.setPadding(new Insets(40));
             popupContent.setAlignment(Pos.CENTER);
