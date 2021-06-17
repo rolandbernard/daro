@@ -355,17 +355,18 @@ public class Scanner {
     }
 
     /**
-     * Return the starting offset of the next token or the offset of the end if
+     * Return the starting {@link Position} of the next token or the offset of the end if
      * there is no next token.
      * 
      * @return The current offset
      */
-    public int getOffset() {
+    public Position getPosition() {
         cacheToken();
         if (nextToken != null) {
-            return nextToken.getPosition().getStart();
+            int pos = nextToken.getPosition().getStart();
+            return new Position(pos, pos, string, file);
         } else {
-            return offset;
+            return new Position(offset, offset, string, file);
         }
     }
 }

@@ -89,7 +89,7 @@ public class Parser {
     private AstSequence parseRoot() {
         AstSequence sequence = parseSequence();
         if (scanner.hasNext()) {
-            throw new ParsingException(new Position(scanner.getOffset()), "Expected another statement (or the end)");
+            throw new ParsingException(scanner.next().getPosition(), "Expected another statement (or the end)");
         }
         return sequence;
     }
@@ -112,7 +112,7 @@ public class Parser {
             }
         } while (statement != null);
         if (statements.isEmpty()) {
-            return new AstSequence(new Position(scanner.getOffset()), new AstNode[0]);
+            return new AstSequence(scanner.getPosition(), new AstNode[0]);
         } else {
             Position position =
                 new Position(statements.get(0).getPosition(), statements.get(statements.size() - 1).getPosition());
