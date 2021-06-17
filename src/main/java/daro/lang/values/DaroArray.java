@@ -1,5 +1,6 @@
 package daro.lang.values;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,7 +141,9 @@ public class DaroArray extends DaroObject {
 
     @Override
     public Scope getMemberScope() {
-        return memberScope;
+        HashMap<String, DaroObject> variables = new HashMap<>();
+        variables.put("length", new DaroInteger(BigInteger.valueOf(values.size())));
+        return new ConstantScope(variables, memberScope);
     }
 
     @Override
