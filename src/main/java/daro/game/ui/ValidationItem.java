@@ -7,12 +7,14 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextBoundsType;
 
 public class ValidationItem extends HBox {
 
     private ValidationResult result;
     private Text text;
     private Icon icon;
+    private static final double PADDING = 24;
 
     public ValidationItem(ValidationResult result) {
         this.result = result;
@@ -25,8 +27,9 @@ public class ValidationItem extends HBox {
         text = new Text();
         text.getStyleClass().add("monospace");
         text.setStyle("-fx-font-size: 16px;");
+        text.setWrappingWidth(Popup.POPUP_WIDTH - (PADDING * 2) - 120);
         VBox texts = new VBox(heading, text);
-        setPadding(new Insets(24));
+        setPadding(new Insets(PADDING));
         getChildren().addAll(icon, texts);
         setStyle("-fx-background-radius: 15px;");
         render();

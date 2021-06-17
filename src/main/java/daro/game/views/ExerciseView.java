@@ -29,7 +29,7 @@ public class ExerciseView extends View {
     private static final double SIDEBAR_WIDTH = 380;
     private static final double BOX_PADDINGS = 20;
 
-    private final Exercise exercise;
+    private Exercise exercise;
     private CodeEditor editor;
     private Popup popup;
 
@@ -37,18 +37,18 @@ public class ExerciseView extends View {
      * <strong>UI: <em>View</em></strong><br>
      * A view to display and solve levels.
      *
-     * @param level the level shown in the view
+     * @param exercise the level shown in the view
      */
-    public ExerciseView(Exercise level) {
-        this.exercise = level;
-        editor = new CodeEditor(level.getCode());
+    public ExerciseView(Exercise exercise) {
+        this.exercise = exercise;
+        editor = new CodeEditor(exercise.getCode());
         HBox mainContent = new HBox(getSidebar(), editor);
 
-        this.popup = new Popup();
+        popup = new Popup();
         StackPane wholeContent = new StackPane();
         wholeContent.getChildren().addAll(mainContent, popup);
         wholeContent.setAlignment(Pos.CENTER);
-        this.getChildren().add(wholeContent);
+        getChildren().add(wholeContent);
     }
 
     private VBox getSidebar() {
