@@ -110,7 +110,7 @@
           "startCode": "",
           "help": {
             "text": "Strings are used to store texts. They have to be created within \"\"",
-            "code": "testString = \"This is a typical string, it contain any characters, and also numbers.\""
+            "code": "testString = \"This is a typical string, it can contain any character - also numbers like 123.\""
           },
           "tests": [
             {
