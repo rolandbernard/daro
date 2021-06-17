@@ -794,6 +794,223 @@
       "name": "Classes",
       "description": "Structure your code",
       "levels": [
+        {
+          "id": 1,
+          "name": "Instantiate classes",
+          "description": "Instantiate a new object of the Test class into a variable named a.",
+          "startCode": "class Test {\n    x = 42\n}\n// Your code goes here",
+          "help": {
+            "text": "",
+            "code": "x = new Foo // Classes can be instantiated like this"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "typeof(Test)",
+              "expected": "type"
+            },
+            {
+              "id": 2,
+              "type": "TRUE",
+              "source": "typeof(a) == Test"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "a.x",
+              "expected": "42"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Define a empty class",
+          "description": "Define any class named Test.",
+          "startCode": "// Your code goes here",
+          "help": {
+            "text": "",
+            "code": "class Foo {\n    // Classes can be defined like this\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "typeof(Test)",
+              "expected": "type"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Define a class variable",
+          "description": "Define a class variable named z with the default value of 42.",
+          "startCode": "class Test {\n    // Your code goes here\n}",
+          "help": {
+            "text": "",
+            "code": "class Foo {\n    a = 12 // This is a class variable\n \n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "typeof(Test)",
+              "expected": "type"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "(new Test).z",
+              "expected": "42"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Define a class function",
+          "description": "Define a class function named z that returns the sum of x and y.",
+          "startCode": "class Test {\n    x = 12;\n     y = 42;\n    // Your code goes here\n}",
+          "help": {
+            "text": "Class functions have direct access to all the variables inside an instance",
+            "code": "class Foo {\n    a = 12;\n    fn foo() {\n        return a;\n    } // This is a class function\n \n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "typeof(Test)",
+              "expected": "type"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "(new Test).z()",
+              "expected": "54"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "(new Test { x = 1, y = 7 }).z()",
+              "expected": "8"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Using classes",
+          "description": "Use the given class to build a list into a variable named a of the number 1..5 using the add function. Do not modify the class!",
+          "startCode": "class List {\n    data = new array;\n    fn add(n) {\n        data.push(n)\n    } // Use this function \n}\n// Your code goes here",
+          "help": {
+            "text": "",
+            "code": "y = new Foo;\ny.bar(42); // This will call the function inside the class"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "typeof(List)",
+              "expected": "type"
+            },
+            {
+              "id": 2,
+              "type": "TRUE",
+              "source": "typeof(a) == List"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "typeof(a.data)",
+              "expected": "array"
+            },
+            {
+              "id": 4,
+              "type": "EQUALS",
+              "source": "typeof(a.add)",
+              "expected": "function"
+            },
+            {
+              "id": 5,
+              "type": "EQUALS",
+              "source": "(new List).data",
+              "expected": "[ ]"
+            },
+            {
+              "id": 6,
+              "type": "EQUALS",
+              "source": "a.data",
+              "expected": "[1, 2, 3, 4, 5]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Misc",
+      "description": "Random stuff",
+      "levels": [
+        {
+          "id": 1,
+          "name": "FizzBuzz",
+          "description": "Write a function named fizzBuzz that takes a number and returns the string \"Fizz\" if the given number is divisible by 3, \"Buzz\" if it is divisible by 5, \"FizzBuzz\" if it is divisible by both, and the string representing the number if none of these cases holds.",
+          "startCode": "fn fizzBuzz(n) {\n    // Your code goes here\n}",
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "fizzBuzz(1)",
+              "expected": "new string { 1 }"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "fizzBuzz(2)",
+              "expected": "new string { 2 }"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "fizzBuzz(3)",
+              "expected": "\"Fizz\""
+            },
+            {
+              "id": 4,
+              "type": "EQUALS",
+              "source": "fizzBuzz(5)",
+              "expected": "\"Buzz\""
+            },
+            {
+              "id": 5,
+              "type": "EQUALS",
+              "source": "fizzBuzz(15)",
+              "expected": "\"FizzBuzz\""
+            },
+            {
+              "id": 6,
+              "type": "EQUALS",
+              "source": "fizzBuzz(99)",
+              "expected": "\"Fizz\""
+            },
+            {
+              "id": 7,
+              "type": "EQUALS",
+              "source": "fizzBuzz(100)",
+              "expected": "\"Buzz\""
+            },
+            {
+              "id": 8,
+              "type": "EQUALS",
+              "source": "fizzBuzz(105)",
+              "expected": "\"FizzBuzz\""
+            },
+            {
+              "id": 9,
+              "type": "EQUALS",
+              "source": "fizzBuzz(112)",
+              "expected": "new string { 112 }"
+            }
+          ]
+        }
       ]
     }
   ]
