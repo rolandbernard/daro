@@ -1,6 +1,5 @@
 package daro.game.ui;
 
-import daro.game.main.Game;
 import daro.game.main.ThemeColor;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -8,6 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 public class CreateButton extends HBox {
+
     /**
      * Creates a new Button, usually used for the creation of new elements.
      *

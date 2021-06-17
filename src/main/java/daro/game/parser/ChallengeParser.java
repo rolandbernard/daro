@@ -10,8 +10,9 @@ import java.io.File;
 import java.util.List;
 
 public final class ChallengeParser {
-    private ChallengeParser() {
 
+    private ChallengeParser() {
+        // Disallow instantiation
     }
 
     public static Challenge parse(String jsonString, File source) {

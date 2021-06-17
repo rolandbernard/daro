@@ -5,14 +5,14 @@ import com.google.gson.JsonObject;
 import daro.game.ui.fields.InputField;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class SettingsHandler {
+
     private SettingsHandler() {
+        // Disallow instantiation
     }
 
     private final static String SETTINGS_PATH = UserData.USER_PATH + "settings.json";

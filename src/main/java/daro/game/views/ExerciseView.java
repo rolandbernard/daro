@@ -25,7 +25,6 @@ import javafx.scene.text.TextAlignment;
 import java.util.List;
 
 public class ExerciseView extends View {
-
     private static final double SIDEBAR_WIDTH = 380;
     private static final double BOX_PADDINGS = 20;
 
@@ -221,5 +220,4 @@ public class ExerciseView extends View {
             View.updateView(this, new MenuView(new ChallengesPage()));
         }
     }
-
 }

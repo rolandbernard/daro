@@ -2,14 +2,14 @@ package daro.game.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Scanner;
 
 public final class PlaygroundHandler {
+
     private PlaygroundHandler() {
+        // Disallow instantiation
     }
 
     // Playgrounds
@@ -34,7 +34,7 @@ public final class PlaygroundHandler {
     }
 
     /**
-     * Create a new Playgroundfile
+     * Create a new Playground file
      *
      * @param name name of the new Playground (without .daro)
      * @return a string being null (if successful) or with an error message
@@ -52,7 +52,7 @@ public final class PlaygroundHandler {
     }
 
     /**
-     * Removes a Playgroundfile
+     * Removes a Playground file
      *
      * @param filename filename with .daro
      * @return true if successful, false if error
@@ -68,7 +68,7 @@ public final class PlaygroundHandler {
     }
 
     /**
-     * Get content of a Playgroundfile
+     * Get content of a Playground file
      *
      * @param file Playground file
      * @return true if successful, false if error

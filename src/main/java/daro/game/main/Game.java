@@ -9,6 +9,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Game extends Application {
+
     public static void init(String[] args) {
         launch(args);
     }

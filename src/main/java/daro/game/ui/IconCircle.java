@@ -3,7 +3,6 @@ package daro.game.ui;
 import daro.game.main.ThemeColor;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 
 public class IconCircle extends StackPane {
     private static final double DIMENSION = 50;

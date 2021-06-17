@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.*;
 
 public class ChallengeBuilderView extends View {
-
     private CodeEditor defaultCode;
     private TextInput nameField, creatorField;
     private TextAreaInput descriptionField;
@@ -160,7 +159,6 @@ public class ChallengeBuilderView extends View {
             sidebarContainer.setVvalue(0);
             callout.setOnClose(e -> sidebar.getChildren().remove(callout));
         }
-
     }
 
     private boolean checkStrings(String ...values) {

@@ -9,7 +9,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class ValidationItem extends HBox {
-
     private ValidationResult result;
     private Text text;
     private Icon icon;

@@ -9,7 +9,7 @@ import java.util.Scanner;
 public final class IOHelpers {
 
     private IOHelpers() {
-
+        // Disallow instantiation
     }
 
     public static void overwriteFile(File file, String content) throws FileNotFoundException {

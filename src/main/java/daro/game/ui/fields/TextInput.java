@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 
 public class TextInput extends InputField {
-
     private TextField field;
 
     public TextInput(String label, String help) {

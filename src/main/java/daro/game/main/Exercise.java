@@ -5,7 +5,6 @@ import daro.game.validation.Validation;
 import java.util.List;
 
 public abstract class Exercise {
-
     private String name, description, code;
     private List<Validation> tests;
     boolean completed;

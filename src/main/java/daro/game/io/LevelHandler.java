@@ -15,6 +15,7 @@ import java.util.Map;
 public final class LevelHandler {
 
     private LevelHandler() {
+        // Disallow instantiation
     }
 
     public static Level getNextLevel(long groupId, long levelId) {

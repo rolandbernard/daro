@@ -26,7 +26,7 @@ public class ValidationResult {
     /**
      * Checks if a validation was successful
      *
-     * @return successfulness of the validation
+     * @return true if the validation was successful, false otherwise
      */
     public boolean evaluate() {
         return success;
@@ -48,7 +48,8 @@ public class ValidationResult {
      */
     @Override
     public String toString() {
-        return success ? "Passed!\n" + "Expected: " + expected : "Failed!\n" + "Expected: " + expected + "\n" + "Actual: " + actual;
+        return success ? "Passed!\n" + "Expected: " + expected
+            : "Failed!\n" + "Expected: " + expected + "\n" + "Actual: " + actual;
     }
 
     /**

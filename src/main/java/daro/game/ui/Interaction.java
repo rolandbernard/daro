@@ -4,7 +4,6 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
 public abstract class Interaction {

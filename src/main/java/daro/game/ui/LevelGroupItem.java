@@ -1,13 +1,11 @@
 package daro.game.ui;
 
-import daro.game.main.Game;
 import daro.game.main.LevelGroup;
 import daro.game.main.ThemeColor;
 import daro.game.pages.LevelGroupPage;
 import daro.game.views.MenuView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -79,7 +77,7 @@ public class LevelGroupItem extends VBox {
      * Generates a bar graph
      *
      * @param percent percentage of completion (e.g. 0.5 for 50%)
-     * @return a stackpane containing the graph
+     * @return a {@link StackPane} containing the graph
      */
     private StackPane getGraph(double percent) {
         Rectangle border = new Rectangle(INNER_WIDTH, 8, Color.web("200D56"));

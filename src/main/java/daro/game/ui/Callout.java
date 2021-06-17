@@ -1,6 +1,5 @@
 package daro.game.ui;
 
-import daro.game.main.ThemeColor;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,7 +9,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class Callout extends StackPane {
-
     private Text text;
     private VBox content;
     private String textColor = null;

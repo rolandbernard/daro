@@ -24,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PlaygroundItem extends StackPane {
-
     private VBox mainContent;
     private File file;
     private final Reloadable parent;

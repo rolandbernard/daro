@@ -1,8 +1,6 @@
 package daro.game.pages;
 
-import daro.game.main.Game;
 import daro.game.main.ThemeColor;
-import daro.game.ui.Navigation;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;

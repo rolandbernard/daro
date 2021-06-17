@@ -6,7 +6,9 @@ import java.io.*;
 import java.nio.file.Files;
 
 public final class UserData {
+
     private UserData() {
+        // Disallow instantiation
     }
 
     static final String USER_PATH = "./user/";
