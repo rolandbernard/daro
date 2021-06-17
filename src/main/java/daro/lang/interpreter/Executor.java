@@ -109,7 +109,7 @@ public class Executor implements Visitor<DaroObject> {
                 } else {
                     throw error;
                 }
-            } catch (Exception error) {
+            } catch (Exception | Error error) {
                 // All other exceptions should be converted to {@link InterpreterException}
                 InterpreterException exception;
                 if (error.getMessage() != null) {

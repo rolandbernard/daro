@@ -167,7 +167,7 @@ public class ExecutionPalette extends VBox implements DebugController {
             } catch (DaroException error) {
                 editor.highlightError(error);
                 terminal.printError(error.toString() + "\n");
-            } catch (Exception error) {
+            } catch (Exception | Error error) {
                 terminal.printError(error.toString() + "\n");
             } finally {
                 stopDebugging();
