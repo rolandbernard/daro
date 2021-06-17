@@ -18,7 +18,7 @@ public class LevelParserTest {
                 "    {" +
                 "      \"id\": 1," +
                 "      \"name\": \"Data\"," +
-                "      \"description_short\": \"Variables and basic data structures\"," +
+                "      \"description\": \"Variables and basic data structures\"," +
                 "      \"levels\": [" +
                 "        {" +
                 "          \"id\": 1," +
@@ -58,7 +58,7 @@ public class LevelParserTest {
                 "    {" +
                 "      \"id\": 1," +
                 "      \"name\": \"Data\"," +
-                "      \"description_short\": \"Variables and basic data structures\"," +
+                "      \"description\": \"Variables and basic data structures\"," +
                 "      \"levels\": [" +
                 "        {" +
                 "          \"id\": 1," +
