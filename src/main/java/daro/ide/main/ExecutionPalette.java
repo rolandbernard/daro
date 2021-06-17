@@ -98,8 +98,8 @@ public class ExecutionPalette extends VBox implements DebugController {
             scope.reload();
         }, "Clear");
 
-        stop.setDisable(true);
         stopDebugging();
+        stopRunning();
 
         Region spacerA = new Region();
         VBox.setVgrow(spacerA, Priority.ALWAYS);
@@ -169,9 +169,10 @@ public class ExecutionPalette extends VBox implements DebugController {
                 terminal.printError(error.toString() + "\n");
             } catch (Exception error) {
                 terminal.printError(error.toString() + "\n");
+            } finally {
+                stopDebugging();
+                stopRunning();
             }
-            stopDebugging();
-            stopRunning();
         });
         thread.start();
     }
@@ -187,6 +188,7 @@ public class ExecutionPalette extends VBox implements DebugController {
             scope.setScope(interpreter.getContext().getScope());
             scope.setStack(new Stack<>());
             scope.reload();
+            editor.showScope(interpreter.getContext().getScope());
         });
     }
 
@@ -202,6 +204,7 @@ public class ExecutionPalette extends VBox implements DebugController {
             scope.setScope(context.peek().getScope());
             scope.setStack(context);
             scope.reload();
+            editor.showScope(context.peek().getScope());
         });
     }
 
@@ -223,9 +226,12 @@ public class ExecutionPalette extends VBox implements DebugController {
      */
     public void allowClosing() {
         if (thread != null) {
+            debugger.terminate();
             thread.interrupt();
-            if (debugger != null) {
-                debugger.next();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                // Ignore failure
             }
         }
     }

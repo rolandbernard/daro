@@ -1,5 +1,8 @@
 package daro.ide.editor;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,10 +16,16 @@ import java.util.stream.Collectors;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
 
+import daro.ide.debug.Interrupter;
 import daro.lang.ast.AstNode;
 import daro.lang.interpreter.DaroException;
+import daro.lang.interpreter.ExecutionContext;
+import daro.lang.interpreter.Interpreter;
+import daro.lang.interpreter.Scope;
+import daro.lang.interpreter.ShadowingScope;
 import daro.lang.parser.Parser;
 import daro.lang.parser.ParsingException;
+import daro.lang.values.DaroObject;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
@@ -39,8 +48,12 @@ public class TextEditor extends CodeArea {
     private Consumer<String> onChange;
     private Set<Integer> breakpoints;
     private DaroException shownError;
+    private Scope shownScope;
     private int shownDebugLine = -1;
+    private Thread thread;
 
+    private static final int HOVER_DELAY = 200;
+    private static final int HOVER_TIMEOUT = 500;
     private static final String TAB = "    ";
 
     /**
@@ -76,13 +89,63 @@ public class TextEditor extends CodeArea {
         Popup popup = new Popup();
         Label popupMessage = new Label();
         popup.getContent().add(popupMessage);
-        setMouseOverTextDelay(Duration.ofMillis(200));
+        setMouseOverTextDelay(Duration.ofMillis(HOVER_DELAY));
         addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, event -> {
+            if (thread != null) {
+                thread.interrupt();
+            }
             int textPosition = event.getCharacterIndex();
+            Point2D screenPosition = event.getScreenPosition();
             if (shownError != null && textPosition >= shownError.getStart() && textPosition <= shownError.getEnd()) {
-                Point2D screenPosition = event.getScreenPosition();
                 popupMessage.setText(shownError.getMessage());
                 popup.show(this, screenPosition.getX(), screenPosition.getY());
+            } else if (shownScope != null) {
+                if (getSelectedText().isEmpty()) {
+                    String text = getText();
+                    int start = textPosition;
+                    int end = textPosition + 1;
+                    while (start > 0 && Character.isLetterOrDigit(text.charAt(start))) {
+                        start--;
+                    }
+                    while (end < text.length() && Character.isLetterOrDigit(text.charAt(end))) {
+                        end++;
+                    }
+                    String word = text.substring(start + 1, end);
+                    DaroObject value = shownScope.getVariableValue(word);
+                    if (value != null) {
+                        popupMessage.setText(value.toString());
+                        popup.show(this, screenPosition.getX(), screenPosition.getY());
+                    }
+                } else {
+                    String code = getSelectedText();
+                    PrintStream voidStream = new PrintStream(new OutputStream() {
+                        @Override
+                        public void write(int b) throws IOException {
+                        }
+                    });
+                    ExecutionContext context = new ExecutionContext(new ShadowingScope(shownScope), voidStream, new Interrupter());
+                    Interpreter interpreter = new Interpreter(context);
+                    thread = new Thread(() -> {
+                        try {
+                            DaroObject value = interpreter.execute(code);
+                            if (value != null) {
+                                Platform.runLater(() -> {
+                                    popupMessage.setText(value.toString());
+                                    popup.show(this, screenPosition.getX(), screenPosition.getY());
+                                });
+                            }
+                        } catch(DaroException error) {
+                            // Ignore exceptions
+                        }
+                    });
+                    thread.start();
+                    try {
+                        thread.join(HOVER_TIMEOUT);
+                    } catch (InterruptedException error) {
+                        // Ignore errors
+                    }
+                    thread.interrupt();
+                }
             }
         });
         addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
@@ -269,6 +332,15 @@ public class TextEditor extends CodeArea {
             shownError = error;
             applyHighlighting(getText());
         });
+    }
+
+    /**
+     * Set the scope that should be used for the tooltip value preview.
+     *
+     * @param scope The scope to use
+     */
+    public void showScope(Scope scope) {
+        shownScope = scope;
     }
 
     /**

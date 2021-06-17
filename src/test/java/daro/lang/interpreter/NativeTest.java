@@ -77,8 +77,8 @@ public class NativeTest {
 
     @Test
     void voidMethodsReturnUndefined() {
-        interpreter.execute("x = java.lang.System.out");
-        assertNull(interpreter.execute("x.println(42)"));
+        interpreter.execute("x = new java.util.ArrayList");
+        assertNull(interpreter.execute("x.clear()"));
     }
 
     @Test
