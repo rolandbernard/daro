@@ -127,13 +127,13 @@ public class CodeEditor extends CodeArea {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 int position = this.getCaretPosition();
                 int paragraph = this.getCurrentParagraph();
-                char lastCharacter = this.getText().charAt(position - 2);
+                char lastCharacter = position - 2 >= 0 ?  this.getText().charAt(position - 2) : ' ';
                 String nextCharacter = getText().length() > position ? String.valueOf(getText().charAt(position)) : null;
 
                 Pattern whiteSpace = Pattern.compile("^\\s+");
-                Matcher whitespace = whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0));
+                Matcher whitespace = getParagraphs().size() > 0 ? whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0)) : null;
                 String additionalSpace = "";
-                if (whitespace.find())
+                if (whitespace != null && whitespace.find())
                     additionalSpace = whitespace.group();
                 if (Arrays.stream(WHITESPACE_NL).anyMatch(c -> c == lastCharacter)) {
 
