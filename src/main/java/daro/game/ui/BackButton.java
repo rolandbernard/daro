@@ -1,23 +1,30 @@
 package daro.game.ui;
 
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-public class BackButton extends HBox {
-    public static double HEIGHT = 30;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A simple component that can be used as BackButton
+ */
+public class BackButton extends HBox {
+
+    /**
+     * Generates a new BackButton
+     *
+     * @param label the label next to the arrow to the left
+     */
     public BackButton(String label) {
-        Text iconText = new Text("\ue5c4");
+        Icon iconText = new Icon("\ue5c4");
         iconText.getStyleClass().add("icon");
 
         Text labelText = new Text(label);
         labelText.getStyleClass().add("text");
 
         getChildren().addAll(iconText, labelText);
-        setPrefHeight(HEIGHT);
-        setCursor(Cursor.HAND);
+        Interaction.setClickable(this, false);
         setAlignment(Pos.CENTER_LEFT);
         setSpacing(15);
     }
