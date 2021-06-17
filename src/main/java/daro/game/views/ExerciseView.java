@@ -29,7 +29,7 @@ public class ExerciseView extends View {
     private static final double SIDEBAR_WIDTH = 380;
     private static final double BOX_PADDINGS = 20;
 
-    private final Exercise exercise;
+    private Exercise exercise;
     private CodeEditor editor;
     private Popup popup;
 
@@ -37,18 +37,18 @@ public class ExerciseView extends View {
      * <strong>UI: <em>View</em></strong><br>
      * A view to display and solve levels.
      *
-     * @param level the level shown in the view
+     * @param exercise the level shown in the view
      */
-    public ExerciseView(Exercise level) {
-        this.exercise = level;
-        editor = new CodeEditor(level.getCode());
+    public ExerciseView(Exercise exercise) {
+        this.exercise = exercise;
+        editor = new CodeEditor(exercise.getCode());
         HBox mainContent = new HBox(getSidebar(), editor);
 
-        this.popup = new Popup();
+        popup = new Popup();
         StackPane wholeContent = new StackPane();
         wholeContent.getChildren().addAll(mainContent, popup);
         wholeContent.setAlignment(Pos.CENTER);
-        this.getChildren().add(wholeContent);
+        getChildren().add(wholeContent);
     }
 
     private VBox getSidebar() {
@@ -124,13 +124,16 @@ public class ExerciseView extends View {
         if (save(success)) {
             VBox items = createValidationItems(results);
             Text heading = new Text(success ? "Congratulations!\nYou passed all the tests" : "Ooops! Try again.");
-            heading.getStyleClass().addAll("text", "heading", "small");
+            heading.getStyleClass().addAll("text", "heading", "medium");
             heading.setTextAlignment(TextAlignment.CENTER);
 
+            Text testsHeading = new Text("Tests (" + results.size() + ")");
+            items.getChildren().add(0, testsHeading);
+            testsHeading.getStyleClass().addAll("text", "heading", "small");
             HBox controls = createControlButtons(success);
             VBox popupContent = new VBox();
-            popupContent.getChildren().addAll(heading, items, controls);
-            popupContent.setSpacing(30);
+            popupContent.getChildren().addAll(heading, controls, items);
+            popupContent.setSpacing(35);
             popupContent.setPadding(new Insets(40));
             popupContent.setAlignment(Pos.CENTER);
             popupContent.setPrefWidth(Popup.POPUP_WIDTH);

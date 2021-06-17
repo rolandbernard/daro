@@ -1,6 +1,6 @@
 .lineno {
-    -fx-pref-width: 40px;
     -fx-font-size: 16px;
+    -fx-text-alignment: right;
 }
 
 .code-editor .text {

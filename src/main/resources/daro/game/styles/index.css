@@ -31,15 +31,6 @@
    -fx-background-color: transparent;
 }
 
-.track, .increment-button, .decrement-button {
-    -fx-background-color: #150F28 !important;
-    -fx-border-color: #150F28 !important;
-}
-
-.thumb {
-    -fx-background-color: #E2E2E2;
-}
-
 /*Heading*/
 .heading {
     -fx-font-weight: bold;

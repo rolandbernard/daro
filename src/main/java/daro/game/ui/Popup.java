@@ -16,6 +16,7 @@ public class Popup extends StackPane {
         wrapper = new ScrollPane(content);
         wrapper.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         wrapper.setMaxWidth(POPUP_WIDTH);
+        wrapper.setPrefWidth(POPUP_WIDTH);
         wrapper.setFitToHeight(true);
         wrapper.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         wrapper.setStyle("-fx-background-color: transparent");
