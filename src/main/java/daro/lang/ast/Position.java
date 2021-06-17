@@ -39,6 +39,35 @@ public class Position {
     }
 
     /**
+     * Create a source {@link Position} from the start position.
+     * 
+     * @param start The starting position
+     */
+    public Position(int start) {
+        this(start, start, null, null);
+    }
+
+    /**
+     * Create a source {@link Position} from the start and end position.
+     * 
+     * @param start The starting position
+     * @param end   The end position
+     */
+    public Position(int start, int end) {
+        this(start, end, null, null);
+    }
+
+    /**
+     * Create a source {@link Position} from the start position and length.
+     * 
+     * @param start The starting position
+     * @param end   The end position
+     * @param text  The text the position is in
+     */
+    public Position(int start, int end, String text) {
+        this(start, end, text, null);
+    }
+    /**
      * Create a source {@link Position} from the start position and length.
      * 
      * @param start The starting position

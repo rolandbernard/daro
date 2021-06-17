@@ -483,13 +483,14 @@ public class ScannerTest {
 
     @Test
     void getOffset() {
-        Scanner scanner = new Scanner("a + 5");
-        assertEquals(0, scanner.getOffset());
+        String code = "a + 5";
+        Scanner scanner = new Scanner(code);
+        assertEquals(new Position(0, 0, code), scanner.getPosition());
         scanner.next();
-        assertEquals(2, scanner.getOffset());
+        assertEquals(new Position(2, 2, code), scanner.getPosition());
         scanner.next();
-        assertEquals(4, scanner.getOffset());
+        assertEquals(new Position(4, 4, code), scanner.getPosition());
         scanner.next();
-        assertEquals(5, scanner.getOffset());
+        assertEquals(new Position(5, 5, code), scanner.getPosition());
     }
 }
