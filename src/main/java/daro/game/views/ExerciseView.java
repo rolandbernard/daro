@@ -124,13 +124,16 @@ public class ExerciseView extends View {
         if (save(success)) {
             VBox items = createValidationItems(results);
             Text heading = new Text(success ? "Congratulations!\nYou passed all the tests" : "Ooops! Try again.");
-            heading.getStyleClass().addAll("text", "heading", "small");
+            heading.getStyleClass().addAll("text", "heading", "medium");
             heading.setTextAlignment(TextAlignment.CENTER);
 
+            Text testsHeading = new Text("Tests (" + results.size() + ")");
+            items.getChildren().add(0, testsHeading);
+            testsHeading.getStyleClass().addAll("text", "heading", "small");
             HBox controls = createControlButtons(success);
             VBox popupContent = new VBox();
             popupContent.getChildren().addAll(heading, controls, items);
-            popupContent.setSpacing(30);
+            popupContent.setSpacing(35);
             popupContent.setPadding(new Insets(40));
             popupContent.setAlignment(Pos.CENTER);
             popupContent.setPrefWidth(Popup.POPUP_WIDTH);

@@ -33,12 +33,12 @@ public class ValidationResult {
     }
 
     /**
-     * Returns the name of the validation: e.g. Test n.1
+     * Returns the name of the validation: e.g. Test 1
      *
      * @return a string containing the value
      */
     public String getName() {
-        return "Test n." + id;
+        return "Test " + id;
     }
 
     /**
@@ -48,7 +48,7 @@ public class ValidationResult {
      */
     @Override
     public String toString() {
-        return success ? "Passed!\n" + expected : "Failed!\n" + "Expected: " + expected + "\n" + "Actual: " + actual;
+        return success ? "Passed!\n" + "Expected: " + expected : "Failed!\n" + "Expected: " + expected + "\n" + "Actual: " + actual;
     }
 
     /**

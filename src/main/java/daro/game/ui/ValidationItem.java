@@ -16,18 +16,17 @@ public class ValidationItem extends HBox {
 
     public ValidationItem(ValidationResult result) {
         this.result = result;
-        setSpacing(5);
+        setSpacing(10);
         setAlignment(Pos.CENTER_LEFT);
         icon = new Icon();
-        icon.setStyle("-fx-font-size: 24px;");
+        icon.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
         Text heading = new Text(result.getName());
         heading.getStyleClass().addAll("text", "heading", "tiny");
         text = new Text();
         text.getStyleClass().add("monospace");
         text.setStyle("-fx-font-size: 16px;");
         VBox texts = new VBox(heading, text);
-        texts.setSpacing(5);
-        setPadding(new Insets(10));
+        setPadding(new Insets(24));
         getChildren().addAll(icon, texts);
         setStyle("-fx-background-radius: 15px;");
         render();

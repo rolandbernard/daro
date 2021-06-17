@@ -15,6 +15,7 @@ public class Validation {
     private ValidationType type;
     private String source;
     private DaroObject expected;
+    private String expectedStringFromJson;
 
     /**
      * Generates a test for daro without an expected value.
@@ -46,6 +47,7 @@ public class Validation {
         this.id = id;
         this.type = type;
         this.source = source;
+        this.expectedStringFromJson = expected;
         this.expected = parseExpectedResult(expected);
     }
 
@@ -79,11 +81,11 @@ public class Validation {
                 switch (type) {
                     case EQUALS:
                         success = codeResult.equals(expected);
-                        expectedString = source + " = " + expected;
+                        expectedString = source + " to be equal to " + expectedStringFromJson;
                         break;
                     case NOT_EQUALS:
                         success = !codeResult.equals(expected);
-                        expectedString = source + " not = " + expected;
+                        expectedString = source + " not to equal to " + expectedStringFromJson;
                         break;
                     case TRUE:
                         success = codeResult.isTrue();
@@ -95,11 +97,11 @@ public class Validation {
                         break;
                     case ARRAY_INCLUDES:
                         success = validateArrayIncludes(codeResult);
-                        expectedString = source + " to contain " + expected;
+                        expectedString = source + " to contain " + expectedStringFromJson;
                         break;
                     case ARRAY_EXCLUDES:
                         success = validateArrayExcludes(codeResult);
-                        expectedString = source + " to not contain " + expected;
+                        expectedString = source + " to not contain " + expectedStringFromJson;
                         break;
 
                 }
