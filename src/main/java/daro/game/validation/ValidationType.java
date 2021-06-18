@@ -5,8 +5,8 @@ package daro.game.validation;
  * values for it
  */
 public enum ValidationType {
-    EQUALS(true, "is equals to"), NOT_EQUALS(true, "is not equals to"), TRUE(false, "is truthy value"),
-    FALSE(false, "is falsy value"), ARRAY_INCLUDES(true, "includes the value"),
+    EQUALS(true, "is equal to"), NOT_EQUALS(true, "is not equal to"), TRUE(false, "is a truthy value"),
+    FALSE(false, "is a falsy value"), ARRAY_INCLUDES(true, "includes the value"),
     ARRAY_EXCLUDES(true, "does not include the value");
 
     private final boolean NEEDS_EXPECTED;

@@ -77,7 +77,10 @@ public class Validation {
         Interpreter interpreter = new Interpreter();
         boolean success = false;
         String givenResult;
-        String expectedString = "";
+        String expectedString = source + " " + type.getLabel();
+        if(type.needsExpectedValue()) {
+            expectedString += " " + expectedStringFromJson;
+        }
         try {
             interpreter.execute(code);
             try {
@@ -86,27 +89,21 @@ public class Validation {
                 switch (type) {
                     case EQUALS:
                         success = codeResult.equals(expected);
-                        expectedString = source + " to be equal to " + expectedStringFromJson;
                         break;
                     case NOT_EQUALS:
                         success = !codeResult.equals(expected);
-                        expectedString = source + " not to equal to " + expectedStringFromJson;
                         break;
                     case TRUE:
                         success = codeResult.isTrue();
-                        expectedString = source + " to be a truthy value";
                         break;
                     case FALSE:
                         success = !codeResult.isTrue();
-                        expectedString = source + " to be a falsy value";
                         break;
                     case ARRAY_INCLUDES:
                         success = validateArrayIncludes(codeResult);
-                        expectedString = source + " to contain " + expectedStringFromJson;
                         break;
                     case ARRAY_EXCLUDES:
                         success = validateArrayExcludes(codeResult);
-                        expectedString = source + " to not contain " + expectedStringFromJson;
                         break;
 
                 }
