@@ -30,7 +30,7 @@ public class Terminal extends VBox {
      * Generates a basic terminal
      */
     public Terminal() {
-        this.setMinWidth(STANDARD_WIDTH);
+        setMinWidth(STANDARD_WIDTH);
         init();
     }
 
@@ -40,8 +40,8 @@ public class Terminal extends VBox {
      * @param width width of the Terminal
      */
     public Terminal(double width) {
-        this.setMinWidth(width);
-        this.setPrefHeight(Integer.MAX_VALUE);
+        setMinWidth(width);
+        setPrefHeight(Integer.MAX_VALUE);
         init();
     }
 
@@ -51,13 +51,13 @@ public class Terminal extends VBox {
     private void init() {
         Text title = new Text("Terminal");
         title.getStyleClass().addAll("heading", "tiny", "text", "monospace");
-        this.textContent = new TextFlow();
+        textContent = new TextFlow();
         VBox container = new VBox(textContent);
         container.setPadding(new Insets(10, 0, 0, 0));
         content = new ScrollPane();
         content.setContent(container);
         content.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        content.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        content.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         content.setStyle("-fx-background-color: transparent;");
         setStyle("-fx-background-color: " + ThemeColor.TERMINAL_BACKGROUND);
         setPadding(new Insets(20));
