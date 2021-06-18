@@ -46,6 +46,10 @@ We split the documentation on how to use the software into four parts:
 * [IDE documentation](docs/ide.md)
 * [Game documentation](docs/game.md)
 
+## Project video
+[![Project Video](docs/images/daro_thumb.jpg)](https://drive.google.com/file/d/1iuJMGOib8d2UzXxNomz_xXO2bxto9sDh/preview "Project video")
+or use: <https://drive.google.com/file/d/1iuJMGOib8d2UzXxNomz_xXO2bxto9sDh/preview>
+
 ## Implementation
 
 ### General
