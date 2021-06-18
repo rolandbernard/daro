@@ -182,4 +182,61 @@ public class ArrayTest {
             interpreter.execute("x[2] = 0");
         });
     }
+
+    @Test
+    void readingArrayRange() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(2), new DaroReal(3))),
+            interpreter.execute("x[1:3]")
+        );
+    }
+
+    @Test
+    void writingArrayRange() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        interpreter.execute("x[1:3] = new []real {5, 6}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(1), new DaroReal(5), new DaroReal(6), new DaroReal(4))),
+            interpreter.execute("x")
+        );
+    }
+
+    @Test
+    void endIndexOutOfBounds() {
+        interpreter.execute("x = new [5]null");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[1:8]");
+        });
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[1:0]");
+        });
+    }
+
+    @Test
+    void endIndexNotAnInteger() {
+        interpreter.execute("x = new [5]null");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[1:2.5]");
+        });
+    }
+
+    @Test
+    void endIndexOutOfBoundsWrite() {
+        interpreter.execute("x = new [5]null");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[1:8] = 0");
+        });
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[1:0] = 0");
+        });
+    }
+
+    @Test
+    void endIndexNotAnIntegerWrite() {
+        interpreter.execute("x = new [5]null");
+        assertThrows(InterpreterException.class, () -> {
+            interpreter.execute("x[1:2.5] = 0");
+        });
+    }
 }
