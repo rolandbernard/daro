@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import daro.game.parser.ChallengeParser;
 import daro.game.main.Challenge;
+import daro.game.validation.ValidationType;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,7 @@ public final class ChallengeHandler {
                     String content = IOHelpers.getFileContent(file);
                     challenges.add(ChallengeParser.parse(content, file));
                 } catch (IOException e) {
+                    e.printStackTrace();
                     return null;
                 }
             }
@@ -128,7 +130,7 @@ public final class ChallengeHandler {
         return getImportedChallenges() != null && getImportedChallenges().stream().anyMatch(challenge::isSimilar);
     }
 
-    public static boolean replaceSimilar(Challenge newChallenge, JsonObject newJsonObj) {
+    public static Challenge replaceSimilar(Challenge newChallenge, JsonObject newJsonObj) {
         File challengesFolder = new File(CHALLENGE_PATH);
         File[] challengeFiles = challengesFolder.listFiles();
         if (challengeFiles != null) {
@@ -138,14 +140,15 @@ public final class ChallengeHandler {
                     Challenge oldChallenge = ChallengeParser.parse(content, file);
                     if (oldChallenge.isSimilar(newChallenge)) {
                         IOHelpers.overwriteFile(file, newJsonObj.toString());
-                        return true;
+                        newChallenge.setSourceFile(file);
+                        return newChallenge;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -172,7 +175,11 @@ public final class ChallengeHandler {
             JsonObject test = new JsonObject();
             test.addProperty("id", i);
             i++;
+
+            ValidationType type = ValidationType.valueOf(map.get("type"));
             for (String key : map.keySet()) {
+                if(key.equals("expected") && !type.needsExpectedValue())
+                    continue;
                 test.addProperty(key, map.get(key));
             }
             testsArray.add(test);

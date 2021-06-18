@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Challenge extends Exercise {
     private final String creator;
-    private final File file;
+    private File file;
 
     /**
      * Creates a normal challenge object
@@ -37,5 +37,9 @@ public class Challenge extends Exercise {
 
     public File getSourceFile() {
         return file;
+    }
+
+    public void setSourceFile (File file){
+        this.file = file;
     }
 }

@@ -115,8 +115,9 @@ public class ChallengesPage extends Page implements Reloadable {
 
         CustomButton replaceBtn = new CustomButton("\ue923", "Replace", true);
         replaceBtn.setOnMouseClicked(e -> {
-            if (ChallengeHandler.replaceSimilar(newChallenge, challengeJson)) {
-                View.updateView(this, new ExerciseView(newChallenge));
+            Challenge usableChallenge = ChallengeHandler.replaceSimilar(newChallenge, challengeJson);
+            if(usableChallenge != null) {
+                View.updateView(this, new ExerciseView(usableChallenge));
             } else {
                 MenuView.getPopup().close();
             }
