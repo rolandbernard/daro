@@ -6,8 +6,7 @@ import java.io.*;
 import java.nio.file.Files;
 
 /**
- * Utility class:
- * Helps accessing the user specific folder of the game.
+ * Utility class: Helps accessing the user specific folder of the game.
  *
  * @author Daniel Planötscher
  */

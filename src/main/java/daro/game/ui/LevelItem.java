@@ -45,7 +45,7 @@ public class LevelItem extends StackPane {
         headingText.getStyleClass().addAll("heading", "small", "text");
 
         String description = level.getDescription().length() > 100 ? level.getDescription().substring(0, 100) + "..."
-                : level.getDescription();
+            : level.getDescription();
 
         Text descriptionText = new Text(description);
         descriptionText.getStyleClass().addAll("text");
@@ -54,8 +54,8 @@ public class LevelItem extends StackPane {
         box.setSpacing(10);
         box.setPadding(new Insets(40));
         box.setStyle(
-                "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                        + "-fx-background-color:" + ThemeColor.LIGHT_BACKGROUND + ";"
+            "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                + "-fx-background-color:" + ThemeColor.LIGHT_BACKGROUND + ";"
         );
 
         if (level.isCompleted()) {

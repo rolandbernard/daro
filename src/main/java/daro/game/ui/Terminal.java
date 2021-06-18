@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
-
 /**
  * <strong>UI: <em>Component</em></strong><br>
  * A simple terminal that runs code and shows its printed values

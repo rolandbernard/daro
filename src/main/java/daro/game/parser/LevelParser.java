@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Utility class:
- * A class that helps parsing the levels and its groups.
+ * Utility class: A class that helps parsing the levels and its groups.
  *
  * @author Daniel Planötscher
  */
@@ -24,7 +23,8 @@ public final class LevelParser {
      * Parses a JsonString for a list of groups
      *
      * @param jsonString     the JsonString you want to parse
-     * @param withCompletion if you want to parse it using the completions (false only for debug)
+     * @param withCompletion if you want to parse it using the completions (false
+     *                       only for debug)
      * @return a list of levelgroups
      */
     public static List<LevelGroup> parseGroups(String jsonString, boolean withCompletion) {
@@ -96,12 +96,10 @@ public final class LevelParser {
         String name = levelJson.get("name").getAsString();
         String description = levelJson.get("description").getAsString();
 
-        JsonArray tests = levelJson.get("tests") != null
-                ? levelJson.get("tests").getAsJsonArray() : null;
+        JsonArray tests = levelJson.get("tests") != null ? levelJson.get("tests").getAsJsonArray() : null;
         List<Validation> testsList = ValidationParser.parse(tests);
 
-        String standardCode = levelJson.get("startCode") == null
-                ? "" : levelJson.get("startCode").getAsString();
+        String standardCode = levelJson.get("startCode") == null ? "" : levelJson.get("startCode").getAsString();
 
         if (completion != null) {
             JsonObject data = completion.get(id);
@@ -116,10 +114,8 @@ public final class LevelParser {
 
         if (levelJson.get("help") != null) {
             JsonObject help = levelJson.get("help").getAsJsonObject();
-            helpText = help.get("text") != null
-                    ? help.get("text").getAsString() : null;
-            helpCode = help.get("code") != null
-                    ? help.get("code").getAsString() : null;
+            helpText = help.get("text") != null ? help.get("text").getAsString() : null;
+            helpCode = help.get("code") != null ? help.get("code").getAsString() : null;
         }
 
         String code = currentCode == null ? standardCode : currentCode;

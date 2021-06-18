@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Utility class:
- * Helps accessing and modifying the settings file.
+ * Utility class: Helps accessing and modifying the settings file.
  *
  * @author Daniel Planötscher
  */
@@ -97,11 +96,11 @@ public final class SettingsHandler {
             for (String settingKey : setting.keySet()) {
                 Object value = setting.get(settingKey).getValue();
                 if (value instanceof Boolean) {
-                    innerSettings.addProperty(settingKey, (boolean) value);
+                    innerSettings.addProperty(settingKey, (boolean)value);
                 } else if (value instanceof String) {
-                    innerSettings.addProperty(settingKey, (String) value);
+                    innerSettings.addProperty(settingKey, (String)value);
                 } else if (value instanceof Number) {
-                    innerSettings.addProperty(settingKey, (Number) value);
+                    innerSettings.addProperty(settingKey, (Number)value);
                 }
             }
             allSettings.add(key, innerSettings);

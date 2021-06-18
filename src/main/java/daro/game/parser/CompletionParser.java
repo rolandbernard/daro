@@ -9,8 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Utility class:
- * A class that helps parsing the completion from UserData.
+ * Utility class: A class that helps parsing the completion from UserData.
  *
  * @author Daniel Planötscher
  */

@@ -1,7 +1,8 @@
 package daro.game.validation;
 
 /**
- * An enum that lists all the possible validation types and defines some default values for it
+ * An enum that lists all the possible validation types and defines some default
+ * values for it
  */
 public enum ValidationType {
     EQUALS(true, "is equals to"), NOT_EQUALS(true, "is not equals to"), TRUE(false, "is truthy value"),
@@ -15,7 +16,7 @@ public enum ValidationType {
      * A type of validation
      *
      * @param needsExpectedValue if the validation needs an expected value
-     * @param label Label used for validations
+     * @param label              Label used for validations
      */
     ValidationType(boolean needsExpectedValue, String label) {
         this.NEEDS_EXPECTED = needsExpectedValue;

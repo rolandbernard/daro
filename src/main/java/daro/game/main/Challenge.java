@@ -27,8 +27,8 @@ public class Challenge extends Exercise {
      * @param source      the sourceFile of the challenge
      */
     public Challenge(
-            String name, String description, String code, List<Validation> tests, String creator, File source,
-            boolean isCompleted
+        String name, String description, String code, List<Validation> tests, String creator, File source,
+        boolean isCompleted
     ) {
         super(name, description, code, tests, isCompleted);
         this.creator = creator;
@@ -49,9 +49,11 @@ public class Challenge extends Exercise {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Challenge challenge = (Challenge) o;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Challenge challenge = (Challenge)o;
         return Objects.equals(creator, challenge.creator) && Objects.equals(file, challenge.file);
     }
 

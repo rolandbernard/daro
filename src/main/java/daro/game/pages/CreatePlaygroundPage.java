@@ -40,7 +40,8 @@ public class CreatePlaygroundPage extends Page {
     }
 
     /**
-     * Creates a new playground, if there is an error it shows the error in a callout.
+     * Creates a new playground, if there is an error it shows the error in a
+     * callout.
      */
     private void createPlayground() {
         Callout callout = new Callout("", ThemeColor.RED.toString());

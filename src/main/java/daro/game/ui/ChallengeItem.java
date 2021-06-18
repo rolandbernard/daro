@@ -45,8 +45,8 @@ public class ChallengeItem extends StackPane {
         mainContent.setPadding(new Insets(40));
         mainContent.setOnMouseClicked(e -> openChallenge());
         mainContent.setStyle(
-                "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                        + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
+            "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
         );
         StackPane itemWrapper = new StackPane(mainContent, deleteButton());
         itemWrapper.setAlignment(Pos.TOP_RIGHT);
@@ -86,7 +86,8 @@ public class ChallengeItem extends StackPane {
     }
 
     /**
-     * Opens a Popup which asks for confirmation once a challenge wants to be deleted
+     * Opens a Popup which asks for confirmation once a challenge wants to be
+     * deleted
      */
     private void openConfirmPopup() {
         Text heading = new Text("Warning");
@@ -109,13 +110,13 @@ public class ChallengeItem extends StackPane {
                 callout = new Callout("The challenge was successfully deleted.", ThemeColor.GREEN.toString());
             } else {
                 callout = new Callout(
-                        "The challenge could not be deleted, please try again later.", ThemeColor.RED.toString()
+                    "The challenge could not be deleted, please try again later.", ThemeColor.RED.toString()
                 );
             }
             parent.reload();
             MenuView.getPopup().close();
             if (parent instanceof Page) {
-                Page p = (Page) parent;
+                Page p = (Page)parent;
                 p.getChildren().add(1, callout);
                 callout.setOnClose(event -> p.getChildren().remove(callout));
             }

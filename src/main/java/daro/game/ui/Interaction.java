@@ -94,7 +94,7 @@ public final class Interaction {
     /**
      * Makes elements feel more clickable.
      *
-     * @param n node that should feel clickable
+     * @param n      node that should feel clickable
      * @param moveUp if it should move up when hovering
      */
     public static void setClickable(Node n, boolean moveUp) {

@@ -36,8 +36,8 @@ public class LevelGroupItem extends VBox {
         setMinSize(DIMENSION, DIMENSION);
         setAlignment(Pos.CENTER);
         setStyle(
-                "-fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                        + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
+            "-fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
         );
         setPadding(new Insets(H_PADDING));
         getChildren().addAll(getHeading(), getCompleted());
@@ -73,7 +73,7 @@ public class LevelGroupItem extends VBox {
     private VBox getCompleted() {
         int completed = levelGroup.countCompletedLevels(), allLevels = levelGroup.countLevels();
 
-        VBox group = new VBox(getGraph((double) completed / allLevels), getRatioLabel(completed, allLevels));
+        VBox group = new VBox(getGraph((double)completed / allLevels), getRatioLabel(completed, allLevels));
         group.setSpacing(10);
         return group;
     }

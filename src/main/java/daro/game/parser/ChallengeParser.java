@@ -10,8 +10,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Utility class:
- * A class that helps parsing challenges from jsonStrings.
+ * Utility class: A class that helps parsing challenges from jsonStrings.
  *
  * @author Daniel Planötscher
  */
@@ -25,7 +24,7 @@ public final class ChallengeParser {
      * Parses a {@link Challenge} from a JsonString
      *
      * @param jsonString the string you want to parse
-     * @param source the source file (needed for a Challenge)
+     * @param source     the source file (needed for a Challenge)
      * @return the finished challenge object
      */
     public static Challenge parse(String jsonString, File source) {

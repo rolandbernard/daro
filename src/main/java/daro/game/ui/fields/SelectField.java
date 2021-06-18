@@ -40,9 +40,11 @@ public class SelectField<T> extends InputField {
 
     public T getValue() {
         return choices.entrySet()
-                .stream().filter(c -> c.getValue().equals(selectField.getValue()))
-                .map(Map.Entry::getKey)
-                .findFirst().orElse(null);
+            .stream()
+            .filter(c -> c.getValue().equals(selectField.getValue()))
+            .map(Map.Entry::getKey)
+            .findFirst()
+            .orElse(null);
     }
 
     /**

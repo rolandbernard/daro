@@ -101,7 +101,7 @@ public class ChallengeBuilderView extends View {
      * @param inputs  its input fields
      * @return a fieldgroup
      */
-    private FieldGroup createFieldGroup(String heading, InputField... inputs) {
+    private FieldGroup createFieldGroup(String heading, InputField ...inputs) {
         FieldGroup group = new FieldGroup(heading, inputs);
         group.setMaxWidth(SIDEBAR_INNER_WIDTH);
         return group;
@@ -125,7 +125,7 @@ public class ChallengeBuilderView extends View {
     private void createTestFields() {
         Map<String, InputField> testMap = new HashMap<>();
         InputField source =
-                new TextInput("Source expression", "A DaRo expression, e.g. the function 'test(10)' or the variable 'a'");
+            new TextInput("Source expression", "A DaRo expression, e.g. the function 'test(10)' or the variable 'a'");
         SelectField<String> type = new SelectField<>(testTypes, null, "Type", null);
         InputField expected = new TextInput("Expected value", "A value e.g. 10, \"test\" or [10, 20, 30]");
         type.onChange(e -> {
@@ -157,7 +157,7 @@ public class ChallengeBuilderView extends View {
         int i = 1;
         for (Node o : tests.getChildren()) {
             if (o instanceof FieldGroup) {
-                FieldGroup group = (FieldGroup) o;
+                FieldGroup group = (FieldGroup)o;
                 group.setName("Test " + i);
                 i++;
             }
@@ -183,7 +183,7 @@ public class ChallengeBuilderView extends View {
         List<Map<String, String>> tests = updateTests();
         if (checkStrings(name, creator, description) && tests.size() > 0) {
             JsonObject object =
-                    ChallengeHandler.serializeChallenge(name, creator, description, defaultCode.getText(), tests);
+                ChallengeHandler.serializeChallenge(name, creator, description, defaultCode.getText(), tests);
 
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
             fileChooser.getExtensionFilters().add(extFilter);
@@ -195,7 +195,7 @@ public class ChallengeBuilderView extends View {
             }
         } else {
             Callout callout =
-                    new Callout("Please fill in all fields and have at least one test.", ThemeColor.RED.toString());
+                new Callout("Please fill in all fields and have at least one test.", ThemeColor.RED.toString());
             sidebar.getChildren().add(2, callout);
             sidebarContainer.setVvalue(0);
             callout.setOnClose(e -> sidebar.getChildren().remove(callout));
@@ -208,10 +208,9 @@ public class ChallengeBuilderView extends View {
      * @param values the string values
      * @return true if all are not empty
      */
-    private boolean checkStrings(String... values) {
+    private boolean checkStrings(String ...values) {
         return Arrays.stream(values).map(String::trim).noneMatch(String::isEmpty);
     }
-
 
     /**
      * Updates the tests to a serializable form and tests it for its correctness

@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Utility class:
- * Helps handling Levels and reading them.
+ * Utility class: Helps handling Levels and reading them.
  *
  * @author Daniel Planötscher
  */
@@ -132,8 +131,8 @@ public final class LevelHandler {
     /**
      * Creates a new JsonObject for a new completion entry
      *
-     * @param levelId id of the level
-     * @param completion the completion status
+     * @param levelId     id of the level
+     * @param completion  the completion status
      * @param currentCode the written code
      * @return JsonObject to be used as completion
      */

@@ -5,7 +5,8 @@ import daro.game.validation.Validation;
 import java.util.List;
 
 /**
- * An abstract class defining default definitions for exercises such as Challenges and Levels
+ * An abstract class defining default definitions for exercises such as
+ * Challenges and Levels
  *
  * @author Daniel Planötscher
  */
@@ -62,7 +63,8 @@ public abstract class Exercise {
     }
 
     /**
-     * Compares one exercise with another and checks if they are similar (same name and description)
+     * Compares one exercise with another and checks if they are similar (same name
+     * and description)
      *
      * @param exercise the exercise you want it to compare it with
      * @return if they are similar or not

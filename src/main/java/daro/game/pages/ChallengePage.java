@@ -27,8 +27,8 @@ import java.util.Optional;
 
 /**
  * <strong>UI: <em>Page</em></strong><br>
- * A page that displays the current list of challenges and the gives the possibility to
- * create / import new ones.
+ * A page that displays the current list of challenges and the gives the
+ * possibility to create / import new ones.
  *
  * @author Daniel Planötscher
  */
@@ -56,8 +56,8 @@ public class ChallengePage extends Page implements Reloadable {
     }
 
     /**
-     * The drag and drop event handlers that allow the adding of new challenges
-     * via dropping them into the game
+     * The drag and drop event handlers that allow the adding of new challenges via
+     * dropping them into the game
      */
     public void initDragAndDrop() {
         setOnDragDropped(event -> {
@@ -66,7 +66,7 @@ public class ChallengePage extends Page implements Reloadable {
             event.consume();
             if (db.hasFiles()) {
                 Optional<File> importFile =
-                        db.getFiles().stream().filter(f -> f.getName().endsWith(".json")).findFirst();
+                    db.getFiles().stream().filter(f -> f.getName().endsWith(".json")).findFirst();
                 importFile.ifPresent(this::importChallenge);
             }
         });
@@ -125,8 +125,7 @@ public class ChallengePage extends Page implements Reloadable {
     private void getImportedChallenges() {
         List<Challenge> challenges = ChallengeHandler.getImportedChallenges();
         if (challenges != null) {
-            challenges.stream().map(c -> new ChallengeItem(c, this))
-                    .forEach(c -> this.challenges.getChildren().add(c));
+            challenges.stream().map(c -> new ChallengeItem(c, this)).forEach(c -> this.challenges.getChildren().add(c));
         }
     }
 

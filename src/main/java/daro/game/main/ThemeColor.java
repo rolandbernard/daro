@@ -1,8 +1,8 @@
 package daro.game.main;
 
 /**
- * A simple enum containing all the theme colors of the game, that
- * can easily be used.
+ * A simple enum containing all the theme colors of the game, that can easily be
+ * used.
  *
  * @author Daniel Planötscher
  */

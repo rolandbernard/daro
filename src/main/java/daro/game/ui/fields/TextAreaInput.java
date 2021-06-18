@@ -15,7 +15,7 @@ public class TextAreaInput extends InputField {
      * Generates a default textarea input
      *
      * @param label the label of the input
-     * @param help its help text
+     * @param help  its help text
      */
     public TextAreaInput(String label, String help) {
         super(label, help);

@@ -5,8 +5,7 @@ import javafx.scene.image.Image;
 import java.io.*;
 
 /**
- * Utility class:
- * Helps accessing the maven resource folder (even when packaged)
+ * Utility class: Helps accessing the maven resource folder (even when packaged)
  *
  * @author Daniel Planötscher
  */

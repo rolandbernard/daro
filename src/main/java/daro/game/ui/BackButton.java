@@ -4,7 +4,6 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-
 /**
  * <strong>UI: <em>Component</em></strong><br>
  * A simple component that can be used as BackButton

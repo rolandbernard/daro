@@ -7,8 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Utility class:
- * Helps handling Playgrounds.
+ * Utility class: Helps handling Playgrounds.
  *
  * @author Daniel Planötscher
  */

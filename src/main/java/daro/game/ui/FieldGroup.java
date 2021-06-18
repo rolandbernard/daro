@@ -19,7 +19,7 @@ public class FieldGroup extends VBox {
      * @param name   the name of the FieldGroup displayed as heading
      * @param fields the fields it should containing
      */
-    public FieldGroup(String name, InputField... fields) {
+    public FieldGroup(String name, InputField ...fields) {
         title = new Text(name);
         title.getStyleClass().addAll("heading", "small", "text");
         this.setSpacing(20);

@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utility class:
- * A class that helps parsing the validations.
+ * Utility class: A class that helps parsing the validations.
  *
  * @author Daniel Planötscher
  */

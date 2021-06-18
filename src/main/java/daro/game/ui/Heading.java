@@ -11,7 +11,9 @@ import javafx.scene.text.Text;
  */
 public class Heading extends VBox {
 
-    /** Generates a basic heading component
+    /**
+     * Generates a basic heading component
+     * 
      * @param heading     a string containing main heading (e.g. Course,
      *                    Playground...)
      * @param description a string containing a description, showing information

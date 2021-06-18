@@ -14,8 +14,8 @@ import java.nio.file.Path;
 import java.util.*;
 
 /**
- * Utility class:
- * Handles many aspects of challenges, such as its serialization, importing etc.
+ * Utility class: Handles many aspects of challenges, such as its serialization,
+ * importing etc.
  *
  * @author Daniel Planötscher
  */
@@ -111,7 +111,6 @@ public final class ChallengeHandler {
         return false;
     }
 
-
     /**
      * Creates a new Challenge when it is built
      *
@@ -143,7 +142,8 @@ public final class ChallengeHandler {
     }
 
     /**
-     * Checks if the given challenge has a similar one in the list of all challenges.
+     * Checks if the given challenge has a similar one in the list of all
+     * challenges.
      *
      * @param challenge the challenge you want to check
      * @return if it has a similar one
@@ -156,7 +156,8 @@ public final class ChallengeHandler {
      * Replaces the the new challenge with the first similar one it can find.
      *
      * @param newChallenge the challenge you want to check
-     * @param newJsonObj   the jsonObject of the new Challenge (to overwrite the current one)
+     * @param newJsonObj   the jsonObject of the new Challenge (to overwrite the
+     *                     current one)
      * @return true if the operation was successful, else false
      */
     public static boolean replaceSimilar(Challenge newChallenge, JsonObject newJsonObj) {
@@ -191,7 +192,7 @@ public final class ChallengeHandler {
      * @return the new JsonObject for the challenge
      */
     public static JsonObject serializeChallenge(
-            String name, String creator, String description, String code, List<Map<String, String>> tests
+        String name, String creator, String description, String code, List<Map<String, String>> tests
     ) {
         JsonObject object = new JsonObject();
         object.addProperty("name", name);

@@ -7,8 +7,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
- * Utility class:
- * Helps creating and reading files, to prevent issues.
+ * Utility class: Helps creating and reading files, to prevent issues.
  *
  * @author Daniel Planötscher
  */
@@ -21,7 +20,7 @@ public final class IOHelpers {
     /**
      * Overwrite an old file with new content
      *
-     * @param file the file object of the file you want to overwrite
+     * @param file    the file object of the file you want to overwrite
      * @param content the new content
      * @throws FileNotFoundException should be handled when called
      */

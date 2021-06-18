@@ -49,7 +49,7 @@ public class SettingsPage extends Page {
      * @param name   the title of the field group
      * @param fields the fields in the field group
      */
-    private void createFieldGroup(String name, InputField... fields) {
+    private void createFieldGroup(String name, InputField ...fields) {
         fieldGroups.getChildren().add(new FieldGroup(name, fields));
     }
 
@@ -60,9 +60,7 @@ public class SettingsPage extends Page {
      * @return a easily usable Map
      */
     private Map<String, JsonElement> getCurrentSettings(String key) {
-        return currentSettings.get(key) == null
-                ? new HashMap<>()
-                : currentSettings.get(key);
+        return currentSettings.get(key) == null ? new HashMap<>() : currentSettings.get(key);
     }
 
     /**
@@ -77,8 +75,8 @@ public class SettingsPage extends Page {
             themeOptions.put(theme, theme);
         }
         SelectField<String> theme = new SelectField<>(
-                themeOptions, editorSettings.get("theme") == null ? null : editorSettings.get("theme").getAsString(),
-                "Theme", "Color theme of the code editor"
+            themeOptions, editorSettings.get("theme") == null ? null : editorSettings.get("theme").getAsString(),
+            "Theme", "Color theme of the code editor"
         );
         editorFields.put("theme", theme);
 
@@ -86,8 +84,8 @@ public class SettingsPage extends Page {
         indentOptions.put(true, "With indent");
         indentOptions.put(false, "Without indent");
         SelectField<Boolean> indent = new SelectField<>(
-                indentOptions, editorSettings.get("indent") == null ? null : editorSettings.get("indent").getAsBoolean(),
-                "Auto Indentation", "Automatic indentation when going into a new line"
+            indentOptions, editorSettings.get("indent") == null ? null : editorSettings.get("indent").getAsBoolean(),
+            "Auto Indentation", "Automatic indentation when going into a new line"
         );
         editorFields.put("indent", indent);
 
@@ -95,13 +93,13 @@ public class SettingsPage extends Page {
         completionOptions.put(true, "With autocompletion");
         completionOptions.put(false, "Without autocompletion");
         SelectField<Boolean> autocompletion = new SelectField<>(
-                completionOptions,
-                editorSettings.get("auto_completion") == null ? null : editorSettings.get("auto_completion").getAsBoolean(),
-                "Auto completion", "e.g. when writing '(' should the editor automatically auto complete ')'"
+            completionOptions,
+            editorSettings.get("auto_completion") == null ? null : editorSettings.get("auto_completion").getAsBoolean(),
+            "Auto completion", "e.g. when writing '(' should the editor automatically auto complete ')'"
         );
         editorFields.put("auto_completion", autocompletion);
 
         allFields.put("editor", editorFields);
-        createFieldGroup("Editor Settings", allFields.get("editor").values().toArray(new InputField[]{}));
+        createFieldGroup("Editor Settings", allFields.get("editor").values().toArray(new InputField[] { }));
     }
 }
