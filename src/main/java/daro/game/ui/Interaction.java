@@ -6,8 +6,18 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
-public abstract class Interaction {
+/**
+ * <strong>UI: <em>Helper</em></strong><br>
+ * Helps handling animations for user interactions
+ *
+ * @author Daniel Planötscher
+ */
+public final class Interaction {
     private static final Duration DURATION = new Duration(300);
+
+    private Interaction() {
+        // Disallow instantiation
+    }
 
     /**
      * Starts an animation, moving the node up
@@ -36,6 +46,11 @@ public abstract class Interaction {
         transition.play();
     }
 
+    /**
+     * Starts an animation, scaling the node down
+     *
+     * @param n node that should scale
+     */
     public static void scaleDown(Node n) {
         ScaleTransition transition = new ScaleTransition();
         transition.setDuration(DURATION);
@@ -45,6 +60,11 @@ public abstract class Interaction {
         transition.play();
     }
 
+    /**
+     * Starts an animation, scaling the node back to normal
+     *
+     * @param n node that should scale
+     */
     public static void scaleBack(Node n) {
         ScaleTransition transition = new ScaleTransition();
         transition.setDuration(DURATION);
@@ -54,6 +74,11 @@ public abstract class Interaction {
         transition.play();
     }
 
+    /**
+     * Starts an animation, scaling the node from 0 to 1
+     *
+     * @param n node that should scale
+     */
     public static void scaleIn(Node n) {
         ScaleTransition transition = new ScaleTransition();
         transition.setDuration(DURATION);
@@ -66,6 +91,12 @@ public abstract class Interaction {
 
     }
 
+    /**
+     * Makes elements feel more clickable.
+     *
+     * @param n node that should feel clickable
+     * @param moveUp if it should move up when hovering
+     */
     public static void setClickable(Node n, boolean moveUp) {
         n.setOnMousePressed(e -> Interaction.scaleDown(n));
         n.setOnMouseReleased(e -> Interaction.scaleBack(n));

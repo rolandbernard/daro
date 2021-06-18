@@ -2,6 +2,12 @@ package daro.game.ui.fields;
 
 import javafx.scene.control.TextField;
 
+/**
+ * <strong>UI: <em>Field</em></strong><br>
+ * A custom one-line text Input Field
+ *
+ * @author Daniel Planötscher
+ */
 public class TextInput extends InputField {
     private TextField field;
 

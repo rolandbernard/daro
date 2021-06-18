@@ -10,8 +10,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * The main class of validations, that runs the unit test
+ *
+ * @author Daniel Planötscher
+ */
 public class Validation {
-    private long id;
+    private final long id;
     private ValidationType type;
     private String source;
     private DaroObject expected;

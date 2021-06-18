@@ -1,5 +1,8 @@
 package daro.game.validation;
 
+/**
+ * An enum that lists all the possible validation types and defines some default values for it
+ */
 public enum ValidationType {
     EQUALS(true, "is equals to"), NOT_EQUALS(true, "is not equals to"), TRUE(false, "is truthy value"),
     FALSE(false, "is falsy value"), ARRAY_INCLUDES(true, "includes the value"),

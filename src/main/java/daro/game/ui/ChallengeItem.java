@@ -16,11 +16,22 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A component representing one Challenge Item
+ *
+ * @author Daniel Planötscher
+ */
 public class ChallengeItem extends StackPane {
-
     private final Challenge challenge;
     private final Reloadable parent;
 
+    /**
+     * Generates a basic challenge item
+     *
+     * @param challenge the challenge it should represent
+     * @param parent    the page is shown in
+     */
     public ChallengeItem(Challenge challenge, Reloadable parent) {
         this.parent = parent;
         this.challenge = challenge;
@@ -34,8 +45,8 @@ public class ChallengeItem extends StackPane {
         mainContent.setPadding(new Insets(40));
         mainContent.setOnMouseClicked(e -> openChallenge());
         mainContent.setStyle(
-            "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
+                "-fx-background-radius: 25px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                        + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
         );
         StackPane itemWrapper = new StackPane(mainContent, deleteButton());
         itemWrapper.setAlignment(Pos.TOP_RIGHT);
@@ -47,20 +58,36 @@ public class ChallengeItem extends StackPane {
         setAlignment(Pos.CENTER_LEFT);
     }
 
+    /**
+     * Opens the challenge
+     */
     private void openChallenge() {
         View.updateView(this, new ExerciseView(challenge));
     }
 
+    /**
+     * Generates the delete Button
+     *
+     * @return an IconCircle containing the button
+     */
     private IconCircle deleteButton() {
         IconCircle button = IconCircle.getDeleteButton(true);
         button.setOnMouseClicked(e -> openConfirmPopup());
         return button;
     }
 
+    /**
+     * Generates a Check-Circle
+     *
+     * @return an IconCircle that represents it is completed
+     */
     private IconCircle checkCircle() {
         return IconCircle.getCheckIcon(true);
     }
 
+    /**
+     * Opens a Popup which asks for confirmation once a challenge wants to be deleted
+     */
     private void openConfirmPopup() {
         Text heading = new Text("Warning");
         heading.getStyleClass().addAll("heading", "small", "text");
@@ -75,23 +102,25 @@ public class ChallengeItem extends StackPane {
         HBox confirmButtons = new HBox(cancel, yes);
         confirmButtons.setSpacing(10);
         confirmButtons.setAlignment(Pos.CENTER);
+
         yes.setOnMouseClicked(e -> {
             Callout callout;
             if (ChallengeHandler.removeChallenge(challenge.getSourceFile())) {
                 callout = new Callout("The challenge was successfully deleted.", ThemeColor.GREEN.toString());
             } else {
                 callout = new Callout(
-                    "The challenge could not be deleted, please try again later.", ThemeColor.RED.toString()
+                        "The challenge could not be deleted, please try again later.", ThemeColor.RED.toString()
                 );
             }
             parent.reload();
             MenuView.getPopup().close();
             if (parent instanceof Page) {
-                Page p = (Page)parent;
+                Page p = (Page) parent;
                 p.getChildren().add(1, callout);
                 callout.setOnClose(event -> p.getChildren().remove(callout));
             }
         });
+
         VBox popup = new VBox(heading, info, confirmButtons);
         popup.setAlignment(Pos.CENTER);
         popup.setSpacing(20);

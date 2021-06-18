@@ -8,12 +8,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A component that displays a {@link ValidationResult}
+ *
+ * @author Daniel Planötscher
+ */
 public class ValidationItem extends HBox {
     private ValidationResult result;
     private Text text;
     private Icon icon;
     private static final double PADDING = 24;
 
+    /**
+     * Generates a basic result item
+     *
+     * @param result the validation result to display
+     */
     public ValidationItem(ValidationResult result) {
         this.result = result;
         setSpacing(10);
@@ -33,6 +44,9 @@ public class ValidationItem extends HBox {
         render();
     }
 
+    /**
+     * Renders its styling based on the result
+     */
     private void render() {
         text.setText(result.toString());
         if (result.evaluate()) {

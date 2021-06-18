@@ -8,6 +8,8 @@ import javafx.scene.text.Text;
 /**
  * <strong>UI: <em>Component</em></strong><br>
  * A simple component that can be used as BackButton
+ *
+ * @author Daniel Planötscher
  */
 public class BackButton extends HBox {
 

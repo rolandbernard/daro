@@ -8,12 +8,24 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A simple Callout used for user interactions (such as saving etc)
+ *
+ * @author Daniel Planötscher
+ */
 public class Callout extends StackPane {
     private Text text;
     private VBox content;
     private String textColor = null;
     private StackPane closeBtn;
 
+    /**
+     * Generates a default callout
+     *
+     * @param text  text content of the callout
+     * @param color background color
+     */
     public Callout(String text, String color) {
         this.text = new Text(text);
         this.text.getStyleClass().add("text");
@@ -26,19 +38,33 @@ public class Callout extends StackPane {
         createCloseBtn();
     }
 
+    /**
+     * Generates a default callout but with different text color
+     *
+     * @param text      text content of the callout
+     * @param color     background color
+     * @param textColor custom text color
+     */
     public Callout(String text, String color, String textColor) {
         this(text, color);
         this.textColor = textColor;
         this.text.setStyle("-fx-fill: " + textColor);
     }
 
+    /**
+     * Updates the text in the callout
+     *
+     * @param text the new text
+     */
     public void setText(String text) {
         this.text.setText(text);
     }
 
+    /**
+     * Generates the close button for the component
+     */
     private void createCloseBtn() {
-        Text icon = new Text("\ue5cd");
-        icon.getStyleClass().add("icon");
+        Icon icon = new Icon("\ue5cd");
         if (textColor != null) {
             icon.setStyle("-fx-fill:" + textColor);
         }
@@ -47,9 +73,14 @@ public class Callout extends StackPane {
         closeBtn.setMaxWidth(30);
         closeBtn.setMaxHeight(30);
         Interaction.setClickable(closeBtn, false);
-        this.getChildren().add(closeBtn);
+        getChildren().add(closeBtn);
     }
 
+    /**
+     * Updates the event handler of the click on the close button
+     *
+     * @param handler the routine that should run when closing a callout
+     */
     public void setOnClose(EventHandler<MouseEvent> handler) {
         closeBtn.setOnMouseClicked(handler);
     }

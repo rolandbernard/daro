@@ -21,10 +21,13 @@ public class Challenge extends Exercise {
      * @param description A short description of the task
      * @param code        code written for the level
      * @param tests       tests that have to run in the Level
+     * @param creator     the creator of the challenge
+     * @param isCompleted the completion state of the challenge
+     * @param source      the sourceFile of the challenge
      */
     public Challenge(
-        String name, String description, String code, List<Validation> tests, String creator, File source,
-        boolean isCompleted
+            String name, String description, String code, List<Validation> tests, String creator, File source,
+            boolean isCompleted
     ) {
         super(name, description, code, tests, isCompleted);
         this.creator = creator;
@@ -39,7 +42,7 @@ public class Challenge extends Exercise {
         return file;
     }
 
-    public void setSourceFile (File file){
+    public void setSourceFile(File file) {
         this.file = file;
     }
 }

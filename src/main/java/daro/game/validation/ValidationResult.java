@@ -2,6 +2,9 @@ package daro.game.validation;
 
 import java.util.List;
 
+/**
+ * A class representing the result of a validation operation
+ */
 public class ValidationResult {
     private boolean success;
     private String expected, actual;

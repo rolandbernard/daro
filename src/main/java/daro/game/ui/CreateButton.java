@@ -6,6 +6,12 @@ import javafx.scene.Cursor;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A custom UI component that represents basic creation buttons (a button with a + next to it)
+ *
+ * @author Daniel Planötscher
+ */
 public class CreateButton extends HBox {
 
     /**

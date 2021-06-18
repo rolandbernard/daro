@@ -11,21 +11,24 @@ import javafx.scene.layout.VBox;
 
 import java.util.LinkedHashMap;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * The main navigation-sidebar for the game
+ *
+ * @author Daniel Planötscher
+ */
 public class Navigation extends VBox {
-
-    public static final double WIDTH = 320;
 
     private LinkedHashMap<NavigationItem, Page> navItems;
     private Page defaultPage;
 
     /**
-     * <strong>UI: <em>Component</em></strong><br>
-     * The main navigation-sidebar for the game
+     * Generates a new Navigation sidebar and sets its currently active page
      *
      * @param defaultPage The default active page
      */
     public Navigation(Page defaultPage) {
-        this.setMinWidth(WIDTH);
+        this.setMinWidth(320);
         this.defaultPage = defaultPage;
         this.setStyle("-fx-background-color: " + ThemeColor.DARK_BACKGROUND);
         this.setAlignment(Pos.TOP_CENTER);

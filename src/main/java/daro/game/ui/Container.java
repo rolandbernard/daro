@@ -5,13 +5,19 @@ import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A component representing scrollable container, usually used for pages.
+ * Includes also an accessible popup
+ *
+ * @author Daniel Planötscher
+ */
 public class Container extends StackPane {
     private Popup popup;
     private ScrollPane content;
 
     /**
-     * <strong>UI: <em>Component</em></strong><br>
-     * A scrollable container used as a container for pages
+     * Generates a basic container
      */
     public Container() {
         popup = new Popup();
@@ -28,8 +34,13 @@ public class Container extends StackPane {
         return popup;
     }
 
-    public void setContent(Node n) {
+    /**
+     * Updates the content of a container
+     *
+     * @param node the new content
+     */
+    public void setContent(Node node) {
         popup.close();
-        content.setContent(n);
+        content.setContent(node);
     }
 }

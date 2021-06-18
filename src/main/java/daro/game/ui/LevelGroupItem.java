@@ -12,15 +12,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A grid item that displays basic information about a level group (name,
+ * description, completed levels) When clicked it leads to the level group
+ * detail page
+ *
+ * @author Daniel Planötscher
+ */
 public class LevelGroupItem extends VBox {
     public static double DIMENSION = 235, H_PADDING = 30, INNER_WIDTH = DIMENSION - H_PADDING * 2;
     private LevelGroup levelGroup;
 
     /**
-     * <strong>UI: <em>Component</em></strong><br>
-     * A grid item that displays basic information about a level group (name,
-     * description, completed levels) When clicked it leads to the level group
-     * detail page
+     * Generates a basic level group page
      *
      * @param levelGroup the level group that is displayed
      */
@@ -31,8 +36,8 @@ public class LevelGroupItem extends VBox {
         setMinSize(DIMENSION, DIMENSION);
         setAlignment(Pos.CENTER);
         setStyle(
-            "-fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
-                + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
+                "-fx-background-radius: 25px;  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 0, 20, 0, 0);"
+                        + "-fx-background-color: " + ThemeColor.LIGHT_BACKGROUND
         );
         setPadding(new Insets(H_PADDING));
         getChildren().addAll(getHeading(), getCompleted());
@@ -68,7 +73,7 @@ public class LevelGroupItem extends VBox {
     private VBox getCompleted() {
         int completed = levelGroup.countCompletedLevels(), allLevels = levelGroup.countLevels();
 
-        VBox group = new VBox(getGraph((double)completed / allLevels), getRatioLabel(completed, allLevels));
+        VBox group = new VBox(getGraph((double) completed / allLevels), getRatioLabel(completed, allLevels));
         group.setSpacing(10);
         return group;
     }

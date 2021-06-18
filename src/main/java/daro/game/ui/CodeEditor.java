@@ -14,6 +14,12 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A full-fledged CodeEditor with syntax highlighting and basic features.
+ *
+ * @author Daniel Planötscher
+ */
 public class CodeEditor extends CodeArea {
     /**
      * All the possible themes
@@ -25,7 +31,6 @@ public class CodeEditor extends CodeArea {
     /**
      * Basic constants for syntax highlighting
      */
-    // Regex for specific groups
     private static final String[] KEYWORDS = {
         "fn", "return", "class", "true", "false", "new", "array", "int", "real", "string", "in"
     };
@@ -80,15 +85,12 @@ public class CodeEditor extends CodeArea {
     private int lastTypePosition;
     private String lastTypeString;
 
-    /**
-     * A full-fledged CodeEditor with syntax highlighting and basic features.
-     */
     public CodeEditor() {
         init();
     }
 
     /**
-     * A full-fledged CodeEditor with syntax highlighting and basic features.
+     * Initializes a CodeEditor with default text.
      *
      * @param defaultText the code which is rendered as default
      */

@@ -12,6 +12,13 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A simple terminal that runs code and shows its printed values
+ *
+ * @author Daniel Planötscher
+ */
 public class Terminal extends VBox {
     private TextFlow textContent;
     private StringBuffer currentString;
@@ -20,7 +27,7 @@ public class Terminal extends VBox {
     public static final double STANDARD_WIDTH = 360;
 
     /**
-     * A simple terminal that shows prints of code
+     * Generates a basic terminal
      */
     public Terminal() {
         this.setMinWidth(STANDARD_WIDTH);
@@ -28,7 +35,7 @@ public class Terminal extends VBox {
     }
 
     /**
-     * A simple terminal that shows prints of code
+     * Generates a basic terminal with a standard width
      *
      * @param width width of the Terminal
      */
@@ -38,6 +45,9 @@ public class Terminal extends VBox {
         init();
     }
 
+    /**
+     * Initializes the styling of a terminal
+     */
     private void init() {
         Text title = new Text("Terminal");
         title.getStyleClass().addAll("heading", "tiny", "text", "monospace");
