@@ -78,7 +78,7 @@ public class Validation {
         boolean success = false;
         String givenResult;
         String expectedString = source + " " + type.getLabel();
-        if(type.needsExpectedValue()) {
+        if (type.needsExpectedValue()) {
             expectedString += " " + expectedStringFromJson;
         }
         try {
