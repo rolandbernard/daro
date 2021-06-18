@@ -494,7 +494,7 @@ public class Executor implements Visitor<DaroObject> {
             int index = ((DaroInteger)right).getValue().intValue();
             if (left instanceof DaroArray) {
                 DaroArray array = (DaroArray)left;
-                if (index < 0 || index >= array.getLength()) {
+                if (array.getLength() == 0) {
                     throw new InterpreterException(ast.getPosition(), "Index out of bounds");
                 } else {
                     return array.getValueAt(index);
@@ -733,14 +733,8 @@ public class Executor implements Visitor<DaroObject> {
         if (object instanceof DaroArray) {
             DaroArray array = (DaroArray)object;
             int index = start != null ? ((DaroInteger)start).getValue().intValue() : 0;
-            if (index < 0 || index >= array.getLength()) {
-                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-            }
             int stop = end != null ? ((DaroInteger)end).getValue().intValue() : array.getLength();
-            if (stop < index || stop < 0 || stop > array.getLength()) {
-                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-            }
-            return new DaroArray(array.getValues().subList(index, stop));
+            return new DaroArray(array.subList(index, stop));
         } else if (object instanceof DaroString) {
             DaroString string = (DaroString)object;
             int index = start != null ? ((DaroInteger)start).getValue().intValue() : 0;

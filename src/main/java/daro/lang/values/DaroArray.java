@@ -1,6 +1,7 @@
 package daro.lang.values;
 
 import java.math.BigInteger;
+import java.util.AbstractList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,7 +113,8 @@ public class DaroArray extends DaroObject {
      * @return The value at index i
      */
     public DaroObject getValueAt(int i) {
-        return values.get(i);
+        int actualIndex = (i % getLength() + getLength()) % getLength();
+        return values.get(actualIndex);
     }
 
     /**
@@ -122,7 +124,8 @@ public class DaroArray extends DaroObject {
      * @param value The value that should be written
      */
     public void putValueAt(int i, DaroObject value) {
-        values.set(i, value);
+        int actualIndex = (i % getLength() + getLength()) % getLength();
+        values.set(actualIndex, value);
     }
 
     /**
@@ -132,6 +135,57 @@ public class DaroArray extends DaroObject {
      */
     public void pushValue(DaroObject value) {
         values.add(value);
+    }
+
+    /**
+     * Get a new list view into this array. The returned view goes from start to end index of this
+     * array. If the returned list is accessed at position 0, the value of the array at start will
+     * be accessed.
+     *
+     * @param start
+     * @param end
+     * @return
+     */
+    public List<DaroObject> subList(int start, int end) {
+        return new AbstractList<DaroObject>(){
+
+            private int actualIndexFor(int index) {
+                if (end > start) {
+                    return ((start + index) % values.size() + values.size()) % values.size();
+                } else {
+                    return ((start - index) % values.size() + values.size()) % values.size();
+                }
+            }
+
+            @Override
+            public DaroObject set(int index, DaroObject object) {
+                return values.set(actualIndexFor(index), object);
+            }
+
+            @Override
+            public DaroObject get(int index) {
+                return values.get(actualIndexFor(index));
+            }
+
+            @Override
+            public int size() {
+                if (values.size() == 0) {
+                    return 0;
+                } else {
+                    return Math.abs(end - start);
+                }
+            }
+
+            @Override
+            public void add(int index, DaroObject object) {
+                values.add(actualIndexFor(index), object);
+            }
+
+            @Override
+            public DaroObject remove(int index) {
+                return values.remove(actualIndexFor(index));
+            }
+        };
     }
 
     @Override

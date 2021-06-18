@@ -254,7 +254,7 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
             int index = ((DaroInteger)right).getValue().intValue();
             if (left instanceof DaroArray) {
                 DaroArray array = (DaroArray)left;
-                if (index < 0 || index >= array.getLength()) {
+                if (array.getLength() == 0) {
                     throw new InterpreterException(ast.getPosition(), "Index out of bounds");
                 } else {
                     return value -> {

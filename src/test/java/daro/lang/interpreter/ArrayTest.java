@@ -260,32 +260,10 @@ public class ArrayTest {
     }
 
     @Test
-    void endIndexOutOfBounds() {
-        interpreter.execute("x = new [5]null");
-        assertThrows(InterpreterException.class, () -> {
-            interpreter.execute("x[1:8]");
-        });
-        assertThrows(InterpreterException.class, () -> {
-            interpreter.execute("x[1:0]");
-        });
-    }
-
-    @Test
     void endIndexNotAnInteger() {
         interpreter.execute("x = new [5]null");
         assertThrows(InterpreterException.class, () -> {
             interpreter.execute("x[1:2.5]");
-        });
-    }
-
-    @Test
-    void endIndexOutOfBoundsWrite() {
-        interpreter.execute("x = new [5]null");
-        assertThrows(InterpreterException.class, () -> {
-            interpreter.execute("x[1:8] = 0");
-        });
-        assertThrows(InterpreterException.class, () -> {
-            interpreter.execute("x[1:0] = 0");
         });
     }
 
