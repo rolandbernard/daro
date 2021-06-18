@@ -774,31 +774,36 @@ public class Parser {
                 } else if (scanner.hasNext(TokenKind.OPEN_BRACKET)) {
                     Token open = scanner.next();
                     AstNode index = parseExpression();
-                    if (index == null) {
-                        throw new ParsingException(
-                            new Position(operand.getPosition(), open.getPosition()),
-                            "Expected an expression after indexing `[`"
-                        );
-                    }
-                    AstNode end = null;
                     if (scanner.hasNext(TokenKind.COLON)) {
-                        Token colon = scanner.next();
-                        end = parseExpression();
-                        if (end == null) {
+                        scanner.next();
+                        AstNode end = parseExpression();
+                        Token closing = scanner.accept(TokenKind.CLOSE_BRACKET);
+                        if (closing == null) {
                             throw new ParsingException(
-                                new Position(index.getPosition(), colon.getPosition()),
-                                "Expected an expression after indexing `:`"
+                                new Position(open.getPosition(), index.getPosition()),
+                                "Expected a closing `]` after opening `[`"
                             );
                         }
-                    }
-                    Token closing = scanner.accept(TokenKind.CLOSE_BRACKET);
-                    if (closing == null) {
-                        throw new ParsingException(
-                            new Position(open.getPosition(), index.getPosition()),
-                            "Expected a closing `]` after opening `[`"
+                        operand = new AstIndexRange(
+                            new Position(operand.getPosition(), closing.getPosition()), operand, index, end
                         );
+                    } else {
+                        if (index == null) {
+                            throw new ParsingException(
+                                new Position(operand.getPosition(), open.getPosition()),
+                                "Expected an expression after indexing `[`"
+                            );
+                        }
+                        Token closing = scanner.accept(TokenKind.CLOSE_BRACKET);
+                        if (closing == null) {
+                            throw new ParsingException(
+                                new Position(open.getPosition(), index.getPosition()),
+                                "Expected a closing `]` after opening `[`"
+                            );
+                        }
+                        operand =
+                            new AstIndex(new Position(operand.getPosition(), closing.getPosition()), operand, index);
                     }
-                    operand = new AstIndex(new Position(operand.getPosition(), closing.getPosition()), operand, index, end);
                 } else /* if (scanner.hasNext(TokenKind.DOT)) */ {
                     Token dot = scanner.next();
                     Token member = scanner.accept(TokenKind.IDENTIFIER);

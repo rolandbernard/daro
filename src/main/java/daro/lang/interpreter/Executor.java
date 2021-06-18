@@ -488,59 +488,29 @@ public class Executor implements Visitor<DaroObject> {
 
     @Override
     public DaroObject visit(AstIndex ast) {
-        DaroObject left = require(ast.getArray());
-        if (left instanceof DaroArray) {
-            DaroArray array = (DaroArray)left;
-            DaroObject right = require(ast.getStart());
-            if (right instanceof DaroInteger) {
-                int index = ((DaroInteger)right).getValue().intValue();
+        DaroObject left = require(ast.getLeft());
+        DaroObject right = require(ast.getRight());
+        if (right instanceof DaroInteger) {
+            int index = ((DaroInteger)right).getValue().intValue();
+            if (left instanceof DaroArray) {
+                DaroArray array = (DaroArray)left;
                 if (index < 0 || index >= array.getLength()) {
                     throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-                } else if (ast.getEnd() == null) {
-                    return array.getValueAt(index);
                 } else {
-                    DaroObject end = require(ast.getEnd());
-                    if (end instanceof DaroInteger) {
-                        int stop = ((DaroInteger)end).getValue().intValue();
-                        if (stop < index || stop < 0 || stop > array.getLength()) {
-                            throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-                        } else {
-                            return new DaroArray(array.getValues().subList(index, stop));
-                        }
-                    } else {
-                        throw new InterpreterException(ast.getEnd().getPosition(), "Index is not an integer");
-                    }
+                    return array.getValueAt(index);
                 }
-            } else {
-                throw new InterpreterException(ast.getStart().getPosition(), "Index is not an integer");
-            }
-        } else if (left instanceof DaroString) {
-            DaroString string = (DaroString)left;
-            DaroObject right = require(ast.getStart());
-            if (right instanceof DaroInteger) {
-                int index = ((DaroInteger)right).getValue().intValue();
+            } else if (left instanceof DaroString) {
+                DaroString string = (DaroString)left;
                 if (index < 0 || index >= string.getValue().length()) {
                     throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-                } else if (ast.getEnd() == null) {
-                    return new DaroString(string.getValue().substring(index, index + 1));
                 } else {
-                    DaroObject end = require(ast.getEnd());
-                    if (end instanceof DaroInteger) {
-                        int stop = ((DaroInteger)end).getValue().intValue();
-                        if (stop < index || stop < 0 || stop > string.getValue().length()) {
-                            throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-                        } else {
-                            return new DaroString(string.getValue().substring(index, stop));
-                        }
-                    } else {
-                        throw new InterpreterException(ast.getEnd().getPosition(), "Index is not an integer");
-                    }
+                    return new DaroString(string.getValue().substring(index, index + 1));
                 }
             } else {
-                throw new InterpreterException(ast.getStart().getPosition(), "Index is not an integer");
+                throw new InterpreterException(ast.getLeft().getPosition(), "Value is not an array or string");
             }
         } else {
-            throw new InterpreterException(ast.getArray().getPosition(), "Value is not an array");
+            throw new InterpreterException(ast.getRight().getPosition(), "Index is not an integer");
         }
     }
 
@@ -741,5 +711,49 @@ public class Executor implements Visitor<DaroObject> {
     @Override
     public DaroObject visit(AstMatchCase ast) {
         throw new InterpreterException(ast.getPosition(), "Execution error");
+    }
+
+    @Override
+    public DaroObject visit(AstIndexRange ast) {
+        DaroObject object = require(ast.getArray());
+        DaroObject start = null;
+        if (ast.getStart() != null) {
+            start = require(ast.getStart());
+            if (!(start instanceof DaroInteger)) {
+                throw new InterpreterException(ast.getStart().getPosition(), "Index is not an integer");
+            }
+        }
+        DaroObject end = null;
+        if (ast.getEnd() != null) {
+            end = require(ast.getEnd());
+            if (!(end instanceof DaroInteger)) {
+                throw new InterpreterException(ast.getEnd().getPosition(), "Index is not an integer");
+            }
+        }
+        if (object instanceof DaroArray) {
+            DaroArray array = (DaroArray)object;
+            int index = start != null ? ((DaroInteger)start).getValue().intValue() : 0;
+            if (index < 0 || index >= array.getLength()) {
+                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
+            }
+            int stop = end != null ? ((DaroInteger)end).getValue().intValue() : array.getLength();
+            if (stop < index || stop < 0 || stop > array.getLength()) {
+                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
+            }
+            return new DaroArray(array.getValues().subList(index, stop));
+        } else if (object instanceof DaroString) {
+            DaroString string = (DaroString)object;
+            int index = start != null ? ((DaroInteger)start).getValue().intValue() : 0;
+            if (index < 0 || index >= string.getValue().length()) {
+                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
+            }
+            int stop = end != null ? ((DaroInteger)end).getValue().intValue() : string.getValue().length();
+            if (stop < index || stop < 0 || stop > string.getValue().length()) {
+                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
+            }
+            return new DaroString(string.getValue().substring(index, stop));
+        } else {
+            throw new InterpreterException(ast.getArray().getPosition(), "Value is not an array");
+        }
     }
 }

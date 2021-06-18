@@ -123,7 +123,8 @@ public class TextEditor extends CodeArea {
                         public void write(int b) throws IOException {
                         }
                     });
-                    ExecutionContext context = new ExecutionContext(new ShadowingScope(shownScope), voidStream, new Interrupter());
+                    ExecutionContext context =
+                        new ExecutionContext(new ShadowingScope(shownScope), voidStream, new Interrupter());
                     Interpreter interpreter = new Interpreter(context);
                     thread = new Thread(() -> {
                         try {
@@ -134,7 +135,7 @@ public class TextEditor extends CodeArea {
                                     popup.show(this, screenPosition.getX(), screenPosition.getY());
                                 });
                             }
-                        } catch(DaroException error) {
+                        } catch (DaroException error) {
                             // Ignore exceptions
                         }
                     });

@@ -67,6 +67,7 @@ public class Position {
     public Position(int start, int end, String text) {
         this(start, end, text, null);
     }
+
     /**
      * Create a source {@link Position} from the start position and length.
      * 

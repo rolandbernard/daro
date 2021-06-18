@@ -248,49 +248,24 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
 
     @Override
     public VariableLocation visit(AstIndex ast) {
-        DaroObject left = Executor.execute(context, ast.getArray());
-        if (left instanceof DaroArray) {
-            DaroArray array = (DaroArray)left;
-            DaroObject right = Executor.execute(context, ast.getStart());
-            if (right instanceof DaroInteger) {
-                int index = ((DaroInteger)right).getValue().intValue();
+        DaroObject left = Executor.execute(context, ast.getLeft());
+        DaroObject right = Executor.execute(context, ast.getRight());
+        if (right instanceof DaroInteger) {
+            int index = ((DaroInteger)right).getValue().intValue();
+            if (left instanceof DaroArray) {
+                DaroArray array = (DaroArray)left;
                 if (index < 0 || index >= array.getLength()) {
                     throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-                } else if (ast.getEnd() == null) {
+                } else {
                     return value -> {
                         array.putValueAt(index, value);
                     };
-                } else {
-                    DaroObject end = Executor.execute(context, ast.getEnd());
-                    if (end instanceof DaroInteger) {
-                        int stop = ((DaroInteger)end).getValue().intValue();
-                        if (stop < index || stop < 0 || stop > array.getLength()) {
-                            throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-                        } else {
-                            return value -> {
-                                if (value instanceof DaroArray) {
-                                    DaroArray values = (DaroArray)value;
-                                    if (values.getLength() != stop - index) {
-                                        throw new InterpreterException("Array size mismatch");
-                                    } else {
-                                        for (int i = 0; i < stop - index; i++) {
-                                            array.putValueAt(index + i, values.getValueAt(i));
-                                        }
-                                    }
-                                } else {
-                                    throw new InterpreterException("Value is not an array");
-                                }
-                            };
-                        }
-                    } else {
-                        throw new InterpreterException(ast.getEnd().getPosition(), "Index is not an integer");
-                    }
                 }
             } else {
-                throw new InterpreterException(ast.getStart().getPosition(), "Index is not an integer");
+                throw new InterpreterException(ast.getLeft().getPosition(), "Value is not an array");
             }
         } else {
-            throw new InterpreterException(ast.getArray().getPosition(), "Value is not an array");
+            throw new InterpreterException(ast.getRight().getPosition(), "Index is not an integer");
         }
     }
 
@@ -347,5 +322,51 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
     @Override
     public VariableLocation visit(AstMatchCase ast) {
         return null;
+    }
+
+    @Override
+    public VariableLocation visit(AstIndexRange ast) {
+        DaroObject object = Executor.execute(context, ast.getArray());
+        DaroObject start = null;
+        if (ast.getStart() != null) {
+            start = Executor.execute(context, ast.getStart());
+            if (!(start instanceof DaroInteger)) {
+                throw new InterpreterException(ast.getStart().getPosition(), "Index is not an integer");
+            }
+        }
+        DaroObject end = null;
+        if (ast.getEnd() != null) {
+            end = Executor.execute(context, ast.getEnd());
+            if (!(end instanceof DaroInteger)) {
+                throw new InterpreterException(ast.getEnd().getPosition(), "Index is not an integer");
+            }
+        }
+        if (object instanceof DaroArray) {
+            DaroArray array = (DaroArray)object;
+            int index = start != null ? ((DaroInteger)start).getValue().intValue() : 0;
+            if (index < 0 || index >= array.getLength()) {
+                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
+            }
+            int stop = end != null ? ((DaroInteger)end).getValue().intValue() : array.getLength();
+            if (stop < index || stop < 0 || stop > array.getLength()) {
+                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
+            }
+            return value -> {
+                if (value instanceof DaroArray) {
+                    DaroArray values = (DaroArray)value;
+                    if (values.getLength() != stop - index) {
+                        throw new InterpreterException("Array size mismatch");
+                    } else {
+                        for (int i = 0; i < stop - index; i++) {
+                            array.putValueAt(index + i, values.getValueAt(i));
+                        }
+                    }
+                } else {
+                    throw new InterpreterException("Value is not an array");
+                }
+            };
+        } else {
+            throw new InterpreterException(ast.getArray().getPosition(), "Value is not an array");
+        }
     }
 }

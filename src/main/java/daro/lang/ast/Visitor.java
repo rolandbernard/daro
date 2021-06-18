@@ -103,4 +103,6 @@ public interface Visitor<T> {
     public T visit(AstMatch ast);
 
     public T visit(AstMatchCase ast);
+
+    public T visit(AstIndexRange ast);
 }

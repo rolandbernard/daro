@@ -5,9 +5,10 @@ import daro.lang.values.DaroObject;
 import java.util.Map;
 
 /**
- * This class implements a scope that will when written to, will always shadow the variables of the parent
- * instead of delegating storing to a parent containing the variable. This scope can be used to
- * protect the parent scope from any kind of manipulation caused by execution inside this scope.
+ * This class implements a scope that will when written to, will always shadow
+ * the variables of the parent instead of delegating storing to a parent
+ * containing the variable. This scope can be used to protect the parent scope
+ * from any kind of manipulation caused by execution inside this scope.
  * 
  * @author Roland Bernard
  */
