@@ -355,8 +355,8 @@ public class Scanner {
     }
 
     /**
-     * Return the starting {@link Position} of the next token or the offset of the end if
-     * there is no next token.
+     * Return the starting {@link Position} of the next token or the offset of the
+     * end if there is no next token.
      * 
      * @return The current offset
      */

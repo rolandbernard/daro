@@ -271,9 +271,7 @@ public class ScopeInitializer implements Visitor<Void> {
 
     @Override
     public Void visit(AstIndex ast) {
-        initialize(ast.getArray());
-        initialize(ast.getStart());
-        initialize(ast.getEnd());
+        initializeBinary(ast);
         return null;
     }
 
@@ -356,6 +354,14 @@ public class ScopeInitializer implements Visitor<Void> {
             }
         }
         initialize(ast.getStatement());
+        return null;
+    }
+
+    @Override
+    public Void visit(AstIndexRange ast) {
+        initialize(ast.getArray());
+        initialize(ast.getStart());
+        initialize(ast.getEnd());
         return null;
     }
 }

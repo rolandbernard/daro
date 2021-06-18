@@ -193,11 +193,68 @@ public class ArrayTest {
     }
 
     @Test
+    void readingArrayRangeWithoutEnd() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(2), new DaroReal(3), new DaroReal(4))),
+            interpreter.execute("x[1:]")
+        );
+    }
+
+    @Test
+    void readingArrayRangeWithoutStart() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(1), new DaroReal(2), new DaroReal(3))),
+            interpreter.execute("x[:3]")
+        );
+    }
+
+    @Test
+    void readingArrayRangeComplete() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(1), new DaroReal(2), new DaroReal(3), new DaroReal(4))),
+            interpreter.execute("x[:]")
+        );
+    }
+
+    @Test
     void writingArrayRange() {
         interpreter.execute("x = new []real {1, 2, 3, 4}");
         interpreter.execute("x[1:3] = new []real {5, 6}");
         assertEquals(
             new DaroArray(List.of(new DaroReal(1), new DaroReal(5), new DaroReal(6), new DaroReal(4))),
+            interpreter.execute("x")
+        );
+    }
+
+    @Test
+    void writingArrayRangeWithoutEnd() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        interpreter.execute("x[1:] = new []real {5, 6, 7}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(1), new DaroReal(5), new DaroReal(6), new DaroReal(7))),
+            interpreter.execute("x")
+        );
+    }
+
+    @Test
+    void writingArrayRangeWithoutStart() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        interpreter.execute("x[:3] = new []real {5, 6, 7}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(5), new DaroReal(6), new DaroReal(7), new DaroReal(4))),
+            interpreter.execute("x")
+        );
+    }
+
+    @Test
+    void writingArrayRangeComplete() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        interpreter.execute("x[:] = new []real {5, 6, 7, 8}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(5), new DaroReal(6), new DaroReal(7), new DaroReal(8))),
             interpreter.execute("x")
         );
     }

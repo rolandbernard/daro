@@ -315,7 +315,7 @@ public class ParserTest {
                 new AstSymbol(null, "foo"),
                 new AstInteger(null, 5)
             ),
-            new AstIndex(null,
+            new AstIndexRange(null,
                 new AstSymbol(null, "foo"),
                 new AstInteger(null, 1),
                 new AstInteger(null, 3)
@@ -332,9 +332,37 @@ public class ParserTest {
 
     @Test
     void missingEndIndexValue() {
-        assertThrows(ParsingException.class, () -> {
-            Parser.parseSourceCode("foo[1:]");
-        });
+        AstNode ast = Parser.parseSourceCode("foo[1:]");
+        assertEquals(new AstSequence(null, new AstNode[] {
+            new AstIndexRange(null,
+                new AstSymbol(null, "foo"),
+                new AstInteger(null, 1),
+                null
+            ),
+        }), ast);
+    }
+
+    @Test
+    void missingStartIndexValue() {
+        AstNode ast = Parser.parseSourceCode("foo[:1]");
+        assertEquals(new AstSequence(null, new AstNode[] {
+            new AstIndexRange(null,
+                new AstSymbol(null, "foo"),
+                null,
+                new AstInteger(null, 1)
+            ),
+        }), ast);
+    }
+
+    @Test
+    void missingBothIndexValue() {
+        AstNode ast = Parser.parseSourceCode("foo[:]");
+        assertEquals(new AstSequence(null, new AstNode[] {
+            new AstIndexRange(null,
+                new AstSymbol(null, "foo"),
+                null, null
+            ),
+        }), ast);
     }
 
     @Test
