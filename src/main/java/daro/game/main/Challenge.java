@@ -4,6 +4,7 @@ import daro.game.validation.Validation;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class managing the state of a challenge.
@@ -44,5 +45,18 @@ public class Challenge extends Exercise {
 
     public void setSourceFile(File file) {
         this.file = file;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Challenge challenge = (Challenge) o;
+        return Objects.equals(creator, challenge.creator) && Objects.equals(file, challenge.file);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(creator, file);
     }
 }
