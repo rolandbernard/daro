@@ -9,14 +9,19 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
+/**
+ * <strong>UI: <em>Page</em></strong><br>
+ * A detail page for a level group containing a list of the levels.
+ *
+ * @author Daniel Plantöscher
+ */
 public class LevelGroupPage extends Page {
     private LevelGroup levelGroup;
 
     /**
-     * <strong>UI: <em>Page</em></strong><br>
-     * A detail page for a level group containing a list of the levels.
+     * Generates a basic LevelGroupPage
      *
-     * @param levelGroup the level group the page displays
+     * @param levelGroup the LevelGroup it should represent
      */
     public LevelGroupPage(LevelGroup levelGroup) {
         this.levelGroup = levelGroup;

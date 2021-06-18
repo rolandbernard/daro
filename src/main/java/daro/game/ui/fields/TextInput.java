@@ -1,18 +1,18 @@
 package daro.game.ui.fields;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 
 public class TextInput extends InputField {
     private TextField field;
 
+    /**
+     * Generates a default text input
+     *
+     * @param label the label of the input
+     * @param help its help text
+     */
     public TextInput(String label, String help) {
         super(label, help);
-        render();
-    }
-
-    private void render() {
         field = new TextField();
         field.getStyleClass().add("input-field");
         this.getChildren().add(field);
@@ -26,10 +26,5 @@ public class TextInput extends InputField {
     @Override
     public String getValue() {
         return field.getText();
-    }
-
-    @Override
-    public void onChange(EventHandler<ActionEvent> handler) {
-        field.setOnAction(handler);
     }
 }

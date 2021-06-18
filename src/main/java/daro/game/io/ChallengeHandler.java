@@ -121,7 +121,7 @@ public final class ChallengeHandler {
     }
 
     /**
-     * Checks if the given challenge has a similar one.
+     * Checks if the given challenge has a similar one in the list of all challenges.
      *
      * @param challenge the challenge you want to check
      * @return if it has a similar one
@@ -130,7 +130,14 @@ public final class ChallengeHandler {
         return getImportedChallenges() != null && getImportedChallenges().stream().anyMatch(challenge::isSimilar);
     }
 
-    public static Challenge replaceSimilar(Challenge newChallenge, JsonObject newJsonObj) {
+    /**
+     * Replaces the the new challenge with the first similar one it can find.
+     *
+     * @param newChallenge the challenge you want to check
+     * @param newJsonObj the jsonObject of the new Challenge (to overwrite the current one)
+     * @return true if the operation was successful, else false
+     */
+    public static boolean replaceSimilar(Challenge newChallenge, JsonObject newJsonObj) {
         File challengesFolder = new File(CHALLENGE_PATH);
         File[] challengeFiles = challengesFolder.listFiles();
         if (challengeFiles != null) {
@@ -141,14 +148,14 @@ public final class ChallengeHandler {
                     if (oldChallenge.isSimilar(newChallenge)) {
                         IOHelpers.overwriteFile(file, newJsonObj.toString());
                         newChallenge.setSourceFile(file);
-                        return newChallenge;
+                        return true;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-        return null;
+        return false;
     }
 
     /**
@@ -178,7 +185,7 @@ public final class ChallengeHandler {
 
             ValidationType type = ValidationType.valueOf(map.get("type"));
             for (String key : map.keySet()) {
-                if(key.equals("expected") && !type.needsExpectedValue())
+                if (key.equals("expected") && !type.needsExpectedValue())
                     continue;
                 test.addProperty(key, map.get(key));
             }

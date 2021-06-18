@@ -56,7 +56,7 @@ public class Navigation extends VBox {
         navItems = new LinkedHashMap<>();
         addNavItem("\ue021", "Course", CoursePage.class);
         addNavItem("\uea26", "Playground", PlaygroundPage.class);
-        addNavItem("\uea2c", "Challenges", ChallengesPage.class);
+        addNavItem("\uea2c", "Challenges", ChallengePage.class);
         addNavItem("\ue8b8", "Settings", SettingsPage.class);
         navItems.put(new NavigationItem("\ue9ba", "Exit", false), null);
         linkNavLinks();

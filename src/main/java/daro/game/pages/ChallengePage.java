@@ -25,11 +25,21 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-public class ChallengesPage extends Page implements Reloadable {
+/**
+ * <strong>UI: <em>Page</em></strong><br>
+ * A page that displays the current list of challenges and the gives the possibility to
+ * create / import new ones.
+ *
+ * @author Daniel Planötscher
+ */
+public class ChallengePage extends Page implements Reloadable {
     private VBox content;
     private VBox challenges;
 
-    public ChallengesPage() {
+    /**
+     * Creates a standard challenge page
+     */
+    public ChallengePage() {
         Heading heading = new Heading("Challenges", "Challenge your friends and create your own levels.");
 
         CreateButton createButton = new CreateButton("Create a new challenge");
@@ -41,14 +51,22 @@ public class ChallengesPage extends Page implements Reloadable {
         content = new VBox(createButton, importButton, challenges);
         content.setSpacing(30);
         getImportedChallenges();
-        this.getChildren().addAll(heading, content);
+        getChildren().addAll(heading, content);
+        initDragAndDrop();
+    }
+
+    /**
+     * The drag and drop event handlers that allow the adding of new challenges
+     * via dropping them into the game
+     */
+    public void initDragAndDrop() {
         setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
             event.setDropCompleted(db.hasFiles());
             event.consume();
             if (db.hasFiles()) {
                 Optional<File> importFile =
-                    db.getFiles().stream().filter(f -> f.getName().endsWith(".json")).findFirst();
+                        db.getFiles().stream().filter(f -> f.getName().endsWith(".json")).findFirst();
                 importFile.ifPresent(this::importChallenge);
             }
         });
@@ -63,6 +81,9 @@ public class ChallengesPage extends Page implements Reloadable {
         });
     }
 
+    /**
+     * Opens the file chooser to accept new levels
+     */
     public void importNewChallenge() {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
@@ -71,9 +92,14 @@ public class ChallengesPage extends Page implements Reloadable {
         if (file != null) {
             importChallenge(file);
         }
-
     }
 
+    /**
+     * Handles the importing of new challenges (opens popup if the current challenge
+     * has a similar one
+     *
+     * @param file the challenge file you want to import
+     */
     private void importChallenge(File file) {
         try {
             String challengeString = IOHelpers.getFileContent(file);
@@ -93,13 +119,24 @@ public class ChallengesPage extends Page implements Reloadable {
         }
     }
 
+    /**
+     * Loads the list of all imported Challenges and maps it to its challenge items
+     */
     private void getImportedChallenges() {
         List<Challenge> challenges = ChallengeHandler.getImportedChallenges();
-        if(challenges != null) {
-            challenges.stream().map(c -> new ChallengeItem(c, this)).forEach(c -> this.challenges.getChildren().add(c));
+        if (challenges != null) {
+            challenges.stream().map(c -> new ChallengeItem(c, this))
+                    .forEach(c -> this.challenges.getChildren().add(c));
         }
     }
 
+    /**
+     * Opens the import warning screen
+     *
+     * @param newChallenge    the challenge object of the new challenge
+     * @param challengeString the json string containing the challenge data
+     * @param file            the file object of the new challenge
+     */
     private void openImportWarning(Challenge newChallenge, String challengeString, File file) {
         JsonObject challengeJson = JsonParser.parseString(challengeString).getAsJsonObject();
         Text heading = new Text("Error");
@@ -115,9 +152,8 @@ public class ChallengesPage extends Page implements Reloadable {
 
         CustomButton replaceBtn = new CustomButton("\ue923", "Replace", true);
         replaceBtn.setOnMouseClicked(e -> {
-            Challenge usableChallenge = ChallengeHandler.replaceSimilar(newChallenge, challengeJson);
-            if(usableChallenge != null) {
-                View.updateView(this, new ExerciseView(usableChallenge));
+            if (ChallengeHandler.replaceSimilar(newChallenge, challengeJson)) {
+                View.updateView(this, new ExerciseView(newChallenge));
             } else {
                 MenuView.getPopup().close();
             }

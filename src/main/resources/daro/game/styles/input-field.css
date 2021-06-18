@@ -11,6 +11,7 @@
 
 .input-field .content {
     -fx-background-color: transparent;
+    -fx-padding: 0px;
 }
 
 .input-field .context-menu {

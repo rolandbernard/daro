@@ -4,10 +4,9 @@ import daro.game.io.ChallengeHandler;
 import daro.game.io.LevelHandler;
 import daro.game.main.Challenge;
 import daro.game.main.Level;
-import daro.game.io.UserData;
 import daro.game.main.Exercise;
 import daro.game.main.ThemeColor;
-import daro.game.pages.ChallengesPage;
+import daro.game.pages.ChallengePage;
 import daro.game.pages.CoursePage;
 import daro.game.ui.*;
 import daro.game.validation.Validation;
@@ -217,7 +216,7 @@ public class ExerciseView extends View {
         if (exercise instanceof Level) {
             View.updateView(this, new MenuView(new CoursePage()));
         } else if (exercise instanceof Challenge) {
-            View.updateView(this, new MenuView(new ChallengesPage()));
+            View.updateView(this, new MenuView(new ChallengePage()));
         }
     }
 }

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import daro.game.io.ChallengeHandler;
 import daro.game.io.IOHelpers;
 import daro.game.main.ThemeColor;
-import daro.game.pages.ChallengesPage;
+import daro.game.pages.ChallengePage;
 import daro.game.ui.*;
 import daro.game.ui.fields.*;
 import daro.game.validation.ValidationType;
@@ -62,7 +62,7 @@ public class ChallengeBuilderView extends View {
         createBtn.setOnMouseClicked(e -> save());
 
         BackButton backButton = new BackButton("Back to all challenges");
-        backButton.setOnMouseClicked(e -> View.updateView(this, new MenuView(new ChallengesPage())));
+        backButton.setOnMouseClicked(e -> View.updateView(this, new MenuView(new ChallengePage())));
 
         sidebar = new VBox(backButton, heading, createGeneralFields(), tests, newTestBtn, createBtn);
         sidebar.setPadding(new Insets(PADDING));
@@ -150,7 +150,7 @@ public class ChallengeBuilderView extends View {
 
             File file = fileChooser.showSaveDialog(this.getScene().getWindow());
             if (createFile(object.toString(), file)) {
-                View.updateView(this, new MenuView(new ChallengesPage()));
+                View.updateView(this, new MenuView(new ChallengePage()));
             }
         } else {
             Callout callout =

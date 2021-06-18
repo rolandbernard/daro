@@ -9,12 +9,17 @@ import javafx.scene.layout.VBox;
 
 import java.io.File;
 
+/**
+ * <strong>UI: <em>Page</em></strong><br>
+ * A page where the user can create daro files to play around with code.
+ *
+ * @author Daniel Planötscher
+ */
 public class PlaygroundPage extends Page implements Reloadable {
     private VBox playgroundList;
 
     /**
-     * <strong>UI: <em>Page</em></strong><br>
-     * A page where the user can create daro files to play around with code.
+     * Generates a basic PlaygroundPage
      */
     public PlaygroundPage() {
         Heading heading = new Heading("Playground", "Play around with the language and use what you've learned.");
