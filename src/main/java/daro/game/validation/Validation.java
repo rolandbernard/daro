@@ -10,11 +10,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * The main class of validations, that runs the unit test
+ *
+ * @author Daniel Planötscher
+ */
 public class Validation {
-    private long id;
+    private final long id;
     private ValidationType type;
     private String source;
     private DaroObject expected;
+    private String expectedStringFromJson;
 
     /**
      * Generates a test for daro without an expected value.
@@ -46,6 +52,7 @@ public class Validation {
         this.id = id;
         this.type = type;
         this.source = source;
+        this.expectedStringFromJson = expected;
         this.expected = parseExpectedResult(expected);
     }
 
@@ -70,7 +77,10 @@ public class Validation {
         Interpreter interpreter = new Interpreter();
         boolean success = false;
         String givenResult;
-        String expectedString = "";
+        String expectedString = source + " " + type.getLabel();
+        if (type.needsExpectedValue()) {
+            expectedString += " " + expectedStringFromJson;
+        }
         try {
             interpreter.execute(code);
             try {
@@ -79,27 +89,21 @@ public class Validation {
                 switch (type) {
                     case EQUALS:
                         success = codeResult.equals(expected);
-                        expectedString = source + " = " + expected;
                         break;
                     case NOT_EQUALS:
                         success = !codeResult.equals(expected);
-                        expectedString = source + " not = " + expected;
                         break;
                     case TRUE:
                         success = codeResult.isTrue();
-                        expectedString = source + " to be a truthy value";
                         break;
                     case FALSE:
                         success = !codeResult.isTrue();
-                        expectedString = source + " to be a falsy value";
                         break;
                     case ARRAY_INCLUDES:
                         success = validateArrayIncludes(codeResult);
-                        expectedString = source + " to contain " + expected;
                         break;
                     case ARRAY_EXCLUDES:
                         success = validateArrayExcludes(codeResult);
-                        expectedString = source + " to not contain " + expected;
                         break;
 
                 }

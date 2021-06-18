@@ -10,37 +10,48 @@ import daro.game.views.EditorView;
 import daro.game.views.MenuView;
 import daro.game.views.View;
 import javafx.geometry.Pos;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
+import java.io.File;
 import java.io.IOException;
 
+/**
+ * <strong>UI: <em>Page</em></strong><br>
+ * A page that shows a TextInput to create new playgrounds.
+ */
 public class CreatePlaygroundPage extends Page {
     private TextInput nameField;
     private CustomButton saveButton;
     private VBox form;
 
+    /**
+     * Generates a standard create playground page
+     */
     public CreatePlaygroundPage() {
         Heading heading = new Heading("Create a new playground", "Give it a name and get started!");
         nameField = new TextInput("Playground name", null);
         saveButton = new CustomButton("\ue161", "Create the playground", true);
-        saveButton.setOnMouseClicked(this::createPlayground);
+        saveButton.setOnMouseClicked(e -> createPlayground());
         form = new VBox(nameField, saveButton);
         form.setAlignment(Pos.TOP_RIGHT);
         form.setSpacing(20);
 
-        this.getChildren().addAll(heading, form);
+        getChildren().addAll(heading, form);
     }
 
-    private void createPlayground(MouseEvent mouseEvent) {
+    /**
+     * Creates a new playground, if there is an error it shows the error in a
+     * callout.
+     */
+    private void createPlayground() {
         Callout callout = new Callout("", ThemeColor.RED.toString());
         if (validateNameField()) {
             String error = PlaygroundHandler.createPlayground(nameField.getValue());
             if (error == null) {
                 try {
-                    View.updateView(
-                        this, new EditorView(PlaygroundHandler.getPlaygroundFile(nameField.getValue() + ".daro"))
-                    );
+                    String filename = nameField.getValue() + ".daro";
+                    File playgroundFile = PlaygroundHandler.getPlaygroundFile(filename);
+                    View.updateView(this, new EditorView(playgroundFile));
                 } catch (IOException e) {
                     View.updateView(this, new MenuView(new PlaygroundPage()));
                 }
@@ -55,6 +66,11 @@ public class CreatePlaygroundPage extends Page {
         callout.setOnClose(e -> form.getChildren().remove(callout));
     }
 
+    /**
+     * Validates the playground name using regex
+     *
+     * @return true if the name is valid
+     */
     private boolean validateNameField() {
         return nameField.getValue().matches("^[a-zA-Z0-9_]+$");
     }

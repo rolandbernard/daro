@@ -5,11 +5,29 @@ import daro.game.validation.Validation;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A class containing the state of levels
+ *
+ * @author Daniel Planötcher
+ */
 public class Level extends Exercise {
     private final long id;
     private final long groupId;
     private String helpText, helpCode;
 
+    /**
+     * Default generator for Levels, containing all its information
+     *
+     * @param id          id of the level used to check its completion
+     * @param name        name of the level
+     * @param description description of the exercise
+     * @param isCompleted if the level is already completed
+     * @param code        the current written code
+     * @param tests       a list of Validations
+     * @param groupId     the id of the group it is in
+     * @param helpText    a help text
+     * @param helpCode    example code provided for the helptext
+     */
     public Level(
         long id, String name, String description, boolean isCompleted, String code, List<Validation> tests,
         long groupId, String helpText, String helpCode

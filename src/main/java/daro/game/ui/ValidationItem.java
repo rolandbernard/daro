@@ -8,31 +8,45 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A component that displays a {@link ValidationResult}
+ *
+ * @author Daniel Planötscher
+ */
 public class ValidationItem extends HBox {
-
     private ValidationResult result;
     private Text text;
     private Icon icon;
+    private static final double PADDING = 24;
 
+    /**
+     * Generates a basic result item
+     *
+     * @param result the validation result to display
+     */
     public ValidationItem(ValidationResult result) {
         this.result = result;
-        setSpacing(5);
+        setSpacing(10);
         setAlignment(Pos.CENTER_LEFT);
         icon = new Icon();
-        icon.setStyle("-fx-font-size: 24px;");
+        icon.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
         Text heading = new Text(result.getName());
         heading.getStyleClass().addAll("text", "heading", "tiny");
         text = new Text();
         text.getStyleClass().add("monospace");
         text.setStyle("-fx-font-size: 16px;");
+        text.setWrappingWidth(Popup.POPUP_WIDTH - (PADDING * 2) - 120);
         VBox texts = new VBox(heading, text);
-        texts.setSpacing(5);
-        setPadding(new Insets(10));
+        setPadding(new Insets(PADDING));
         getChildren().addAll(icon, texts);
         setStyle("-fx-background-radius: 15px;");
         render();
     }
 
+    /**
+     * Renders its styling based on the result
+     */
     private void render() {
         text.setText(result.toString());
         if (result.evaluate()) {

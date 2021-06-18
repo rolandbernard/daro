@@ -4,10 +4,9 @@ import daro.game.io.ChallengeHandler;
 import daro.game.io.LevelHandler;
 import daro.game.main.Challenge;
 import daro.game.main.Level;
-import daro.game.io.UserData;
 import daro.game.main.Exercise;
 import daro.game.main.ThemeColor;
-import daro.game.pages.ChallengesPage;
+import daro.game.pages.ChallengePage;
 import daro.game.pages.CoursePage;
 import daro.game.ui.*;
 import daro.game.validation.Validation;
@@ -24,33 +23,42 @@ import javafx.scene.text.TextAlignment;
 
 import java.util.List;
 
+/**
+ * <strong>UI: <em>View</em></strong><br>
+ * A view to display and solve levels.
+ *
+ * @author Daniel Planötscher
+ */
 public class ExerciseView extends View {
-
     private static final double SIDEBAR_WIDTH = 380;
     private static final double BOX_PADDINGS = 20;
 
-    private final Exercise exercise;
+    private Exercise exercise;
     private CodeEditor editor;
     private Popup popup;
 
     /**
-     * <strong>UI: <em>View</em></strong><br>
-     * A view to display and solve levels.
+     * Generates a basic exercise view
      *
-     * @param level the level shown in the view
+     * @param exercise the exercise shown in the view
      */
-    public ExerciseView(Exercise level) {
-        this.exercise = level;
-        editor = new CodeEditor(level.getCode());
+    public ExerciseView(Exercise exercise) {
+        this.exercise = exercise;
+        editor = new CodeEditor(exercise.getCode());
         HBox mainContent = new HBox(getSidebar(), editor);
 
-        this.popup = new Popup();
+        popup = new Popup();
         StackPane wholeContent = new StackPane();
         wholeContent.getChildren().addAll(mainContent, popup);
         wholeContent.setAlignment(Pos.CENTER);
-        this.getChildren().add(wholeContent);
+        getChildren().add(wholeContent);
     }
 
+    /**
+     * Generates the sidebar containing the task, terminal and controls.
+     *
+     * @return a VBox with the sidebar
+     */
     private VBox getSidebar() {
         VBox bar = new VBox();
         ScrollPane textBox = createTextBox();
@@ -76,7 +84,7 @@ public class ExerciseView extends View {
         CustomButton submitButton =
             new CustomButton("\ue86c", "Submit your result", false, ThemeColor.ACCENT_DARK.toString());
         runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
-        submitButton.setOnMouseClicked(this::openValidationPopup);
+        submitButton.setOnMouseClicked(e -> openValidationPopup());
 
         bar.getChildren().addAll(controlsBox, textBox, terminal, runButton, submitButton);
         bar.setMinWidth(SIDEBAR_WIDTH);
@@ -84,6 +92,11 @@ public class ExerciseView extends View {
         return bar;
     }
 
+    /**
+     * Creates a new TextBox that is used for task description and name
+     *
+     * @return the scrollpane of the TextBox
+     */
     private ScrollPane createTextBox() {
         Text title = new Text(exercise.getName());
         title.setWrappingWidth(SIDEBAR_WIDTH - BOX_PADDINGS * 2);
@@ -106,10 +119,16 @@ public class ExerciseView extends View {
         return pane;
     }
 
+    /**
+     * Saves the current exercise
+     *
+     * @param completion if the current solution is right or not
+     * @return the successfulness of the operation
+     */
     private boolean save(boolean completion) {
         if (exercise instanceof Level) {
             Level l = (Level)exercise;
-            return UserData.writeLevelData(l.getGroupId(), l.getId(), completion, editor.getText());
+            return LevelHandler.writeLevelData(l.getGroupId(), l.getId(), completion, editor.getText());
         } else if (exercise instanceof Challenge) {
             Challenge c = (Challenge)exercise;
             return ChallengeHandler.saveChallenge(c, editor.getText(), completion);
@@ -117,20 +136,26 @@ public class ExerciseView extends View {
         return false;
     }
 
-    private void openValidationPopup(MouseEvent mouseEvent) {
+    /**
+     * Opens a Popup with the evaluation results and further controls
+     */
+    private void openValidationPopup() {
         popup.open();
         List<ValidationResult> results = Validation.run(editor.getText(), exercise.getTests());
         boolean success = ValidationResult.evaluate(results);
         if (save(success)) {
             VBox items = createValidationItems(results);
             Text heading = new Text(success ? "Congratulations!\nYou passed all the tests" : "Ooops! Try again.");
-            heading.getStyleClass().addAll("text", "heading", "small");
+            heading.getStyleClass().addAll("text", "heading", "medium");
             heading.setTextAlignment(TextAlignment.CENTER);
 
+            Text testsHeading = new Text("Tests (" + results.size() + ")");
+            items.getChildren().add(0, testsHeading);
+            testsHeading.getStyleClass().addAll("text", "heading", "small");
             HBox controls = createControlButtons(success);
             VBox popupContent = new VBox();
-            popupContent.getChildren().addAll(heading, items, controls);
-            popupContent.setSpacing(30);
+            popupContent.getChildren().addAll(heading, controls, items);
+            popupContent.setSpacing(35);
             popupContent.setPadding(new Insets(40));
             popupContent.setAlignment(Pos.CENTER);
             popupContent.setPrefWidth(Popup.POPUP_WIDTH);
@@ -138,6 +163,12 @@ public class ExerciseView extends View {
         }
     }
 
+    /**
+     * Creates a list of ValidationResults
+     *
+     * @param results the given results
+     * @return a vbox containing the results
+     */
     private VBox createValidationItems(List<ValidationResult> results) {
         VBox items = new VBox();
         items.setSpacing(20);
@@ -145,12 +176,18 @@ public class ExerciseView extends View {
         return items;
     }
 
+    /**
+     * Creates the control buttons for the Validation Popup
+     *
+     * @param success if the validation was successful (passed or failed)
+     * @return an Hbox containing the buttons
+     */
     private HBox createControlButtons(boolean success) {
         HBox buttons = new HBox();
         CustomButton mainButton = null;
         if (success && exercise instanceof Level) {
             Level l = (Level)exercise;
-            Level nextLevel = LevelHandler.getNextLevel(l.getGroupId(), l.getId());
+            Level nextLevel = LevelHandler.getNextLevel(l);
             if (nextLevel != null) {
                 mainButton = new CustomButton("\ue16a", "Next Level", true);
                 mainButton.setOnMouseClicked(e -> View.updateView(this, new ExerciseView(nextLevel)));
@@ -170,6 +207,11 @@ public class ExerciseView extends View {
         return buttons;
     }
 
+    /**
+     * Generates the help button displayed in the top right corner
+     *
+     * @return an HBox with the Help Button
+     */
     private HBox getHelpButton() {
         Icon icon = new Icon("\ue887");
         Text info = new Text("Help");
@@ -181,6 +223,11 @@ public class ExerciseView extends View {
         return btn;
     }
 
+    /**
+     * Opens the help button
+     *
+     * @param mouseEvent the click event that fired this operation
+     */
     private void openHelpPopup(MouseEvent mouseEvent) {
         if (exercise instanceof Level) {
             Level l = (Level)exercise;
@@ -211,12 +258,14 @@ public class ExerciseView extends View {
         }
     }
 
+    /**
+     * Returns back to overview based on the exercises Class
+     */
     private void backToOverview() {
         if (exercise instanceof Level) {
             View.updateView(this, new MenuView(new CoursePage()));
         } else if (exercise instanceof Challenge) {
-            View.updateView(this, new MenuView(new ChallengesPage()));
+            View.updateView(this, new MenuView(new ChallengePage()));
         }
     }
-
 }

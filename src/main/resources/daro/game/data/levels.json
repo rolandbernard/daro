@@ -110,7 +110,7 @@
           "startCode": "",
           "help": {
             "text": "Strings are used to store texts. They have to be created within \"\"",
-            "code": "testString = \"This is a typical string, it contain any characters, and also numbers.\""
+            "code": "testString = \"This is a typical string, it can contain any character - also numbers like 123.\""
           },
           "tests": [
             {
@@ -696,7 +696,7 @@
           "id": 2,
           "name": "Accessing arrays",
           "description": "Create a function that returns the first element of an array.",
-          "startCode": "fn getFirst(arr) {\n\t\n}",
+          "startCode": "fn getFirst(arr) {\n    \n}",
           "help": {
             "text": "Arrays are accessed by a special syntax. The syntax uses the index of the element, but starts counting from 0",
             "code": "arr = new array { 1, 2, 3, 4, 5, 6, 7, 8, 10 }\nthird = arr[2];//third = 3\n//the index starts counting from 0, so the second element would have the index 1"
@@ -726,7 +726,7 @@
           "id": 3,
           "name": "Loops and arrays - for in loops",
           "description": "Create a function that sums all values of the array. For example [2, 3, 5] => 2 + 3 + 5",
-          "startCode": "fn sumAll(arr) {\n\t\n}",
+          "startCode": "fn sumAll(arr) {\n    \n}",
           "help": {
             "text": "For-in loops simplify the process of going through each value of the array.",
             "code": "arr = new array { 1, 2, 3, 4, 5, 6, 7, 8, 10 }\nfor element in arr {\n\tprintln(element);\n}\n//this code prints each element of the array 'arr'."
@@ -786,6 +786,92 @@
               "expected": "new [10]real"
             }
           ]
+        },
+        {
+          "id": 6,
+          "name": "Worst case",
+          "description": "Create a function that get the minimum of all values of the given array. For example [2, 3, 5] => 2",
+          "startCode": "fn min(arr) {\n    // Your code goes here\n}",
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "min(new array {1, 2, 3, 4})",
+              "expected": "1"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "min(new array {100, 200, 50, 10, 60})",
+              "expected": "10"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "min(new array {100, -200, 50, 10, 60})",
+              "expected": "-200"
+            },
+            {
+              "id": 4,
+              "type": "EQUALS",
+              "source": "min(new array {-100, -5, -60, -700, -1})",
+              "expected": "-700"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "The other way around",
+          "description": "Create a function that returns the reverse of the given array. For example [2, 3, 5] => [5, 3, 2]",
+          "startCode": "fn flip(arr) {\n    // Your code goes here\n}",
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "flip(new array { 2, 3, 5 })",
+              "expected": "[5, 3, 2]"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "flip(new array { 2, 3, 5, 3, 1 })",
+              "expected": "[1, 3, 5, 3, 2]"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "flip(new array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })",
+              "expected": "[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "Symmetrical",
+          "description": "Create a function that returns true only if the beginning of the array contains a palindrome of numbers. This means the array is the same as its reverse.",
+          "startCode": "fn test(arr) {\n    // Your code goes here\n}",
+          "tests": [
+            {
+              "id": 1,
+              "type": "FALSE",
+              "source": "test(new array { 2, 3, 5 })"
+            },
+            {
+              "id": 2,
+              "type": "TRUE",
+              "source": "test(new array { 2, 3, 4, 4, 3, 2 })"
+            },
+            {
+              "id": 3,
+              "type": "TRUE",
+              "source": "test(new array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 })"
+            },
+            {
+              "id": 4,
+              "type": "FALSE",
+              "source": "test(new array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 8, 7, 6, 5, 4, 3, 2, 1 })"
+            }
+          ]
         }
       ]
     },
@@ -794,6 +880,395 @@
       "name": "Classes",
       "description": "Structure your code",
       "levels": [
+        {
+          "id": 1,
+          "name": "Creating new life",
+          "description": "Instantiate a new object of the Test class into a variable named a.",
+          "startCode": "class Test {\n    x = 42\n}\n// Your code goes here",
+          "help": {
+            "code": "x = new Foo // Classes can be instantiated like this"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "typeof(Test)",
+              "expected": "type"
+            },
+            {
+              "id": 2,
+              "type": "TRUE",
+              "source": "typeof(a) == Test"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "a.x",
+              "expected": "42"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Drawing the plans",
+          "description": "Define any class named Test.",
+          "startCode": "// Your code goes here",
+          "help": {
+            "code": "class Foo {\n    // Classes can be defined like this\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "typeof(Test)",
+              "expected": "type"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Bundling thoughts",
+          "description": "Define a class variable named z with the default value of 42.",
+          "startCode": "class Test {\n    // Your code goes here\n}",
+          "help": {
+            "code": "class Foo {\n    a = 12 // This is a class variable\n \n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "typeof(Test)",
+              "expected": "type"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "(new Test).z",
+              "expected": "42"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "The state from within",
+          "description": "Define a class function named z that returns the sum of x and y.",
+          "startCode": "class Test {\n    x = 12;\n    y = 42;\n    // Your code goes here\n}",
+          "help": {
+            "text": "Class functions have direct access to all the variables inside an instance",
+            "code": "class Foo {\n    a = 12;\n    fn foo() {\n        return a;\n    } // This is a class function\n \n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "typeof(Test)",
+              "expected": "type"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "(new Test).z()",
+              "expected": "54"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "(new Test { x = 1, y = 7 }).z()",
+              "expected": "8"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Harness the power",
+          "description": "Use the given class to build a list into a variable named a of the number 1..5 using the add function. Do not modify the class!",
+          "startCode": "class List {\n    data = new array;\n    fn add(n) {\n        data.push(n)\n    } // Use this function \n}\n// Your code goes here",
+          "help": {
+            "code": "y = new Foo;\ny.bar(42); // This will call the function inside the class"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "typeof(List)",
+              "expected": "type"
+            },
+            {
+              "id": 2,
+              "type": "TRUE",
+              "source": "typeof(a) == List"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "typeof(a.data)",
+              "expected": "array"
+            },
+            {
+              "id": 4,
+              "type": "EQUALS",
+              "source": "typeof(a.add)",
+              "expected": "function"
+            },
+            {
+              "id": 5,
+              "type": "EQUALS",
+              "source": "(new List).data",
+              "expected": "[ ]"
+            },
+            {
+              "id": 6,
+              "type": "EQUALS",
+              "source": "a.data",
+              "expected": "[1, 2, 3, 4, 5]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Recursion",
+      "description": "The same thing again",
+      "levels": [
+        {
+          "id": 1,
+          "name": "Loops but different",
+          "description": "Create a recursive function named fak that returns the factorial of a given number.",
+          "startCode": "fn fak(n) {\n    // Your code goes here\n}",
+          "help": {
+            "text": "A recursive function is a function that calls itself.\nTip: The factorial of a number n is the product of all natural number less or equal than n.",
+            "code": "fn sum(n) {\n    if n == 0 {\n        return 0;\n    } else {\n        return n + sum(n - 1);\n    }\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "fak(1)",
+              "expected": "1"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "fak(2)",
+              "expected": "2"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "fak(3)",
+              "expected": "6"
+            },
+            {
+              "id": 4,
+              "type": "EQUALS",
+              "source": "fak(4)",
+              "expected": "24"
+            },
+            {
+              "id": 5,
+              "type": "EQUALS",
+              "source": "fak(5)",
+              "expected": "120"
+            },
+            {
+              "id": 6,
+              "type": "EQUALS",
+              "source": "fak(10)",
+              "expected": "3628800"
+            },
+            {
+              "id": 7,
+              "type": "EQUALS",
+              "source": "fak(100)",
+              "expected": "93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Summing up history",
+          "description": "Create a recursive function named fib that returns the fibonacci number with the given index.",
+          "startCode": "fn fib(n) {\n    // Your code goes here\n}",
+          "help": {
+            "text": "Tip: The fibonacci sequence starts with 0, 1, 1, 2, 3, 5, ... Each element is the sum of the two previous numbers."
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "fib(1)",
+              "expected": "1"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "fib(2)",
+              "expected": "1"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "fib(3)",
+              "expected": "2"
+            },
+            {
+              "id": 4,
+              "type": "EQUALS",
+              "source": "fib(4)",
+              "expected": "3"
+            },
+            {
+              "id": 5,
+              "type": "EQUALS",
+              "source": "fib(5)",
+              "expected": "5"
+            },
+            {
+              "id": 6,
+              "type": "EQUALS",
+              "source": "fib(10)",
+              "expected": "55"
+            },
+            {
+              "id": 7,
+              "type": "EQUALS",
+              "source": "fib(20)",
+              "expected": "6765"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Going deeper",
+          "description": "Create a function named sum that sums up all of the elements in a given array. Nested array elements should be added individually instead of adding the array object.",
+          "startCode": "fn sum(arr) {\n    // Your code goes here\n}",
+          "help": {
+            "text": "Tip: You can test if the element is an array, in the following way.",
+            "code": "if typeof(e) == array {\n    // e is an array\n} else {\n    // e is not an array\n}"
+          },
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "sum(new array { 4, 1, 2, 5, 3 })",
+              "expected": "15"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "sum(new array { new array { 4 }, 1, 2, new array { 5, 3 } })",
+              "expected": "15"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "sum(new array { new array { new array { 4, new array { 1, new array { 2 } } }, new array { 5, 3 } } })",
+              "expected": "15"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Misc",
+      "description": "Random stuff",
+      "levels": [
+        {
+          "id": 1,
+          "name": "Fizz or Buzz",
+          "description": "Write a function named fizzBuzz that takes a number and returns the string \"Fizz\" if the given number is divisible by 3, \"Buzz\" if it is divisible by 5, \"FizzBuzz\" if it is divisible by both, and the string representing the number if none of these cases holds.",
+          "startCode": "fn fizzBuzz(n) {\n    // Your code goes here\n}",
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "fizzBuzz(1)",
+              "expected": "new string { 1 }"
+            },
+            {
+              "id": 2,
+              "type": "EQUALS",
+              "source": "fizzBuzz(2)",
+              "expected": "new string { 2 }"
+            },
+            {
+              "id": 3,
+              "type": "EQUALS",
+              "source": "fizzBuzz(3)",
+              "expected": "\"Fizz\""
+            },
+            {
+              "id": 4,
+              "type": "EQUALS",
+              "source": "fizzBuzz(5)",
+              "expected": "\"Buzz\""
+            },
+            {
+              "id": 5,
+              "type": "EQUALS",
+              "source": "fizzBuzz(15)",
+              "expected": "\"FizzBuzz\""
+            },
+            {
+              "id": 6,
+              "type": "EQUALS",
+              "source": "fizzBuzz(99)",
+              "expected": "\"Fizz\""
+            },
+            {
+              "id": 7,
+              "type": "EQUALS",
+              "source": "fizzBuzz(100)",
+              "expected": "\"Buzz\""
+            },
+            {
+              "id": 8,
+              "type": "EQUALS",
+              "source": "fizzBuzz(105)",
+              "expected": "\"FizzBuzz\""
+            },
+            {
+              "id": 9,
+              "type": "EQUALS",
+              "source": "fizzBuzz(112)",
+              "expected": "new string { 112 }"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Take the loot",
+          "description": "Write a function named take that given an array of numbers and a maximum limit returns a subset of the array that when summed together get closest to the limit without going over.",
+          "startCode": "fn take(arr, limit) {\n    // Your code goes here\n}",
+          "tests": [
+            {
+              "id": 1,
+              "type": "EQUALS",
+              "source": "take(new array { 50, 100, 1000, 1500, 1610 }, 1650).length",
+              "expected": "3"
+            },
+            {
+              "id": 2,
+              "type": "ARRAY_INCLUDES",
+              "source": "take(new array { 50, 100, 1000, 1500, 1610 }, 1650)",
+              "expected": "50"
+            },
+            {
+              "id": 3,
+              "type": "ARRAY_INCLUDES",
+              "source": "take(new array { 50, 100, 1000, 1500, 1610 }, 1650)",
+              "expected": "100"
+            },
+            {
+              "id": 4,
+              "type": "ARRAY_INCLUDES",
+              "source": "take(new array { 50, 100, 1000, 1500, 1610 }, 1650)",
+              "expected": "1500"
+            }
+          ]
+        }
       ]
     }
   ]

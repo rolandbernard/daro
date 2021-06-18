@@ -10,15 +10,17 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * An overview item, containing basic information about the level. When clicked
+ * it changes the scene to the LevelView
+ *
+ * @author Daniel Planötscher
+ */
 public class LevelItem extends StackPane {
-
     private Level level;
 
     /**
-     * <strong>UI: <em>Component</em></strong><br>
-     * An overview item, containing basic information about the level. When clicked
-     * it changes the scene to the LevelView
-     *
      * @param level the level displayed
      */
     public LevelItem(Level level) {
@@ -26,14 +28,10 @@ public class LevelItem extends StackPane {
         getChildren().add(getHeading());
         setAlignment(Pos.CENTER_LEFT);
         if (level.isCompleted()) {
-            getChildren().add(getCompletionIcon());
+            getChildren().add(IconCircle.getCheckIcon(true));
         }
         setOnMouseClicked(event -> View.updateView(this, new ExerciseView(level)));
         Interaction.setClickable(this, true);
-    }
-
-    private StackPane getCompletionIcon() {
-        return IconCircle.getCheckIcon(true);
     }
 
     /**

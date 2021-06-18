@@ -5,22 +5,37 @@ import com.google.gson.JsonObject;
 import daro.game.ui.fields.InputField;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility class: Helps accessing and modifying the settings file.
+ *
+ * @author Daniel Planötscher
+ */
 public final class SettingsHandler {
+
     private SettingsHandler() {
+        // Disallow instantiation
     }
 
     private final static String SETTINGS_PATH = UserData.USER_PATH + "settings.json";
 
+    /**
+     * Gets the JsonObject of the settings
+     *
+     * @return a JsonObject of all current settings
+     */
     private static JsonObject getSettings() {
         return UserData.parseUserJson("settings.json");
     }
 
+    /**
+     * Parses all settings into a usable Map
+     *
+     * @return a Map that can be used more easily in Java
+     */
     public static Map<String, Map<String, JsonElement>> getAllSettings() {
         JsonObject settings = getSettings();
         Map<String, Map<String, JsonElement>> settingsMap = new HashMap<>();
@@ -34,6 +49,12 @@ public final class SettingsHandler {
         return settingsMap;
     }
 
+    /**
+     * Only returns a specific group of settings (e.g. only editor settings)
+     *
+     * @param key the key of the SettingsGroup
+     * @return a Map that can be used by more easily in Java
+     */
     public static Map<String, JsonElement> getSettingsByKey(String key) {
         JsonObject settings = getSettings();
         Map<String, JsonElement> settingsMap = new HashMap<>();
@@ -46,6 +67,12 @@ public final class SettingsHandler {
         return settingsMap;
     }
 
+    /**
+     * Generates a usable Java Map from a JsonObject
+     *
+     * @param elements the JsonObject you want to convert
+     * @return the key value pairs
+     */
     private static Map<String, JsonElement> generateMapFromJson(JsonObject elements) {
         Map<String, JsonElement> settingsMap = new HashMap<>();
         for (String elementKey : elements.keySet()) {
@@ -55,6 +82,12 @@ public final class SettingsHandler {
         return settingsMap;
     }
 
+    /**
+     * Overwrites the current settings with the current inputs
+     *
+     * @param settings a map containing the current settings
+     * @return successfulness of saving
+     */
     public static boolean save(Map<String, Map<String, InputField>> settings) {
         JsonObject allSettings = new JsonObject();
         for (String key : settings.keySet()) {

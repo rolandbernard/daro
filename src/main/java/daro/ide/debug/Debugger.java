@@ -134,7 +134,8 @@ public class Debugger implements ExecutionObserver {
     }
 
     /**
-     * After execution of this method, no other break should be taken for any reason.
+     * After execution of this method, no other break should be taken for any
+     * reason.
      */
     public void terminate() {
         setState(DebuggerState.TERMINATED);

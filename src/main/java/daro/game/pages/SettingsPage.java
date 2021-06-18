@@ -4,22 +4,24 @@ import com.google.gson.JsonElement;
 import daro.game.io.SettingsHandler;
 import daro.game.main.ThemeColor;
 import daro.game.ui.*;
-import daro.game.ui.fields.FieldGroup;
+import daro.game.ui.FieldGroup;
 import daro.game.ui.fields.InputField;
 import daro.game.ui.fields.SelectField;
 import javafx.scene.layout.VBox;
 
 import java.util.*;
 
+/**
+ * <strong>UI: <em>Page</em></strong><br>
+ * A page that handles the user's settings.
+ */
 public class SettingsPage extends Page {
     private Map<String, Map<String, JsonElement>> currentSettings;
     private Map<String, Map<String, InputField>> allFields;
     private VBox fieldGroups;
 
     /**
-     * <strong>UI: <em>Page</em></strong><br>
-     * <p>
-     * A page to handle user settings.
+     * Initializes the basic SettingsPage
      */
     public SettingsPage() {
         allFields = new HashMap<>();
@@ -51,10 +53,19 @@ public class SettingsPage extends Page {
         fieldGroups.getChildren().add(new FieldGroup(name, fields));
     }
 
+    /**
+     * Gets the current settings for a key, or returns an empty {@link HashMap}.
+     *
+     * @param key the settings key (e.g. editor)
+     * @return a easily usable Map
+     */
     private Map<String, JsonElement> getCurrentSettings(String key) {
         return currentSettings.get(key) == null ? new HashMap<>() : currentSettings.get(key);
     }
 
+    /**
+     * Generates all the editor fields and adds them as a formgroup to the page.
+     */
     private void generateEditorFields() {
         Map<String, JsonElement> editorSettings = getCurrentSettings("editor");
         Map<String, InputField> editorFields = new HashMap<>();

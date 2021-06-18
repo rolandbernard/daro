@@ -1,9 +1,7 @@
 package daro.game.ui;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import daro.game.io.SettingsHandler;
-import daro.game.main.Game;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -16,18 +14,23 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A full-fledged CodeEditor with syntax highlighting and basic features.
+ *
+ * @author Daniel Planötscher
+ */
 public class CodeEditor extends CodeArea {
     /**
      * All the possible themes
      */
     public static final String[] THEMES = {
-        "dark", "light"
+        "dark", "light", "plastic", "evening"
     };
 
     /**
      * Basic constants for syntax highlighting
      */
-    // Regex for specific groups
     private static final String[] KEYWORDS = {
         "fn", "return", "class", "true", "false", "new", "array", "int", "real", "string", "in"
     };
@@ -36,10 +39,10 @@ public class CodeEditor extends CodeArea {
     };
     private static final String[] SYMBOLS = {
         "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!=", ">", "<", "\\+", "-", "/",
-        "\\*", "%"
+        "\\*", "%", "\\="
     };
     private static final String[] FUNCTIONS = {
-        "([^\\s]+)?(\\s)?(?=(\\())"
+        "([_a-zA-Z][_a-zA-Z0-9]*)(?=(\\())"
     };
     private static final String[] COMMENTS = {
         "\\/\\/.*[^\\n]", "\\/\\*(.*?\\n*)*\\*\\/"
@@ -82,15 +85,12 @@ public class CodeEditor extends CodeArea {
     private int lastTypePosition;
     private String lastTypeString;
 
-    /**
-     * A full-fledged CodeEditor with syntax highlighting and basic features.
-     */
     public CodeEditor() {
         init();
     }
 
     /**
-     * A full-fledged CodeEditor with syntax highlighting and basic features.
+     * Initializes a CodeEditor with default text.
      *
      * @param defaultText the code which is rendered as default
      */
@@ -127,15 +127,28 @@ public class CodeEditor extends CodeArea {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 int position = this.getCaretPosition();
                 int paragraph = this.getCurrentParagraph();
-                char lastCharacter = this.getText().charAt(position - 2);
+                char lastCharacter = position - 2 >= 0 ? this.getText().charAt(position - 2) : ' ';
+                String nextCharacter =
+                    getText().length() > position ? String.valueOf(getText().charAt(position)) : null;
 
                 Pattern whiteSpace = Pattern.compile("^\\s+");
-                Matcher whitespace = whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0));
+                Matcher whitespace = getParagraphs().size() > 0
+                    ? whiteSpace.matcher(this.getParagraph(paragraph - 1).getSegments().get(0))
+                    : null;
                 String additionalSpace = "";
-                if (whitespace.find())
+                if (whitespace != null && whitespace.find())
                     additionalSpace = whitespace.group();
                 if (Arrays.stream(WHITESPACE_NL).anyMatch(c -> c == lastCharacter)) {
-                    this.insertText(position, additionalSpace + TAB + "\n" + additionalSpace);
+
+                    // ensures that pressing enter e.g. after {, yet without } following, there is
+                    // no additional new line
+                    String lastCharString = String.valueOf(lastCharacter);
+                    boolean isNextCharacterFollowing = REPEATING_STRING.get(lastCharString) != null
+                        && REPEATING_STRING.get(lastCharString).equals(nextCharacter);
+
+                    this.insertText(
+                        position, additionalSpace + TAB + (isNextCharacterFollowing ? "\n" : "") + additionalSpace
+                    );
                     int anchor = position + TAB.length() + additionalSpace.length();
                     // workaround
                     this.selectRange(anchor, anchor);
@@ -197,7 +210,7 @@ public class CodeEditor extends CodeArea {
             }
         }
         try {
-            this.setStyleSpans(0, computeHighlighting(newValue));
+            this.setStyleSpans(0, computeHighlighting(this.getText()));
         } catch (Exception ignored) {
 
         }

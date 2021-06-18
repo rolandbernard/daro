@@ -1,19 +1,24 @@
 package daro.game.ui.fields;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
 
+/**
+ * <strong>UI: <em>Field</em></strong><br>
+ * A custom TextArea input field
+ *
+ * @author Daniel Planötscher
+ */
 public class TextAreaInput extends InputField {
-
     private TextArea field;
 
+    /**
+     * Generates a default textarea input
+     *
+     * @param label the label of the input
+     * @param help  its help text
+     */
     public TextAreaInput(String label, String help) {
         super(label, help);
-        init();
-    }
-
-    private void init() {
         field = new TextArea();
         field.getStyleClass().add("input-field");
         field.setWrapText(true);
@@ -24,10 +29,5 @@ public class TextAreaInput extends InputField {
     @Override
     public String getValue() {
         return this.field.getText();
-    }
-
-    @Override
-    public void onChange(EventHandler<ActionEvent> handler) {
-        // TODO
     }
 }

@@ -3,11 +3,13 @@
 This section will talk about the game of the project. Run the game by typing `mvn javafx:run` in the terminal or by
 running the packaged version after running `mvn package`
 
+![Screenshot](images/game.png)
+
 ## Purpose
 
 The purpose of the game is to teach the 'DaRo' programming language to beginners and amateurs of programming. In
 addition to that, it can be used to play around with the language and to challenge other people by creating your own
-levels, so-called challenges, which can be sent to others and imported directly in the game.
+levels, so-called challenges, which can be sent to others and imported directly into the game.
 
 ## Usage
 
@@ -25,6 +27,9 @@ The course is split into different sections, so-called 'groups of levels, or Lev
 specific feature of programming and how it is done in the DaRo language. When clicking on one of these group of levels,
 the different levels will be listed, and you can choose which exercise you want to solve.
 
+![Screenshot](images/game/levels.PNG)
+
+
 #### Level section
 
 Once you have clicked on one level, the scene will change to a different View, where you can solve the exercise. On the
@@ -32,11 +37,20 @@ left side a sidebar is shown that gives you basic information about the exercise
 terminal, in which you can run your code (by using e.g. `print("test")` or `println("test")`
 you can write into the terminal) and use it as a tool to debug your code. In the bottom-left corner, the Level View
 provides you with two buttons, one is to run the current code in the terminal, and the other one is to submit the code
-for testing. The rest of the screen is filled with a CodeEditor, that by default supports auto-completion,
-syntax-highlighting and auto-indentation, to ensure a good user experience. Once you finished coding and believe that
-your code should run how expected. You can submit it for testing, where the code is tested using pre-defined Unit Tests.
+for testing. The rest of the screen is filled with a Code-Editor, that by default supports auto-completion,
+syntax-highlighting and auto-indentation, to ensure a good user experience.
+![Screenshot](images/game/level.PNG)
+
+Once you finished coding and believe that your code should run as expected. You can submit it for testing, where the code is tested using pre-defined Unit Tests.
 If your code does not pass all the tests, don't worry and just try again, otherwise the game gives you the possibility
 to move on to the next level.
+![Screenshot](images/game/level_successful.PNG)
+![Screenshot](images/game/level_failed.PNG)
+
+If you need help while coding along, most of the levels have a 'Help' button in the top-left corner, which give
+some additional information about the concept needed to solve the level
+![Screenshot](images/game/level_help.PNG)
+
 
 ### 2. Playground
 
@@ -45,12 +59,16 @@ containing the + sign, you can create a playground file by giving it a name. How
 numbers and '_'. Once created a playground, you can write code and use the terminal, very similarly as in the level
 view. By clicking 'Save & close' you can return to the overview page and either create a new playground, work on a
 different one or navigate to other parts of the game.
+![Screenshot](images/game/playgrounds.PNG)
+![Screenshot](images/game/create_playground.PNG)
+![Screenshot](images/game/playground.PNG)
 
 ### 3. Challenges
 
 The challenges have the purpose to create you own levels and challenge your friends and colleagues with them. This page
 allows you to either create a new challenge, which can be saved on your system in the form of a json file and sent to
 others or to import such a json file into the game and solve the exercise.
+![Screenshot](images/game/challenges.PNG)
 
 #### Create a challenge
 
@@ -79,9 +97,13 @@ fn sum(a, b) {
 }
 ```
 When you want to save this level, you have to choose a directory to save it in.
+![Screenshot](images/game/create_challenge1.PNG)
+![Screenshot](images/game/create_challenge2.PNG)
+![Screenshot](images/game/create_challenge3.PNG)
 
 #### Import and solve a challenge
-If your friend sent you a challenge, you can directly import it when clicking on 'import a challenge'.
+If your friend sent you a challenge, you can directly import it when clicking on 'import a challenge'. Otherwise you
+can just drag and drop into the Challenges Page.
 After importing it, it will be listed on the 'Challenges'-page. Once you have clicked on it, it will
 open a view, which is very similar to the Level View. Here you write your code, run it and submit it for testing.
 
@@ -89,6 +111,6 @@ open a view, which is very similar to the Level View. Here you write your code, 
 As the name suggests, this page is used to define some general settings, mostly for the Editor, e.g. if
 you prefer with or without auto-indentation and auto-completion, but you can also change the theme of the
 code editor.
+![Screenshot](images/game/settings.PNG)
  
-![Screenshot](images/game.png)
 

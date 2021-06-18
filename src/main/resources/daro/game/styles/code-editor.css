@@ -1,6 +1,6 @@
 .lineno {
-    -fx-pref-width: 40px;
     -fx-font-size: 16px;
+    -fx-text-alignment: right;
 }
 
 .code-editor .text {
@@ -63,33 +63,33 @@
 }
 
 .code-editor.theme-light {
-    -fx-background-color: #DEE3F1;
+    -fx-background-color: #F8F8F8;
 }
 
 .code-editor.theme-light .text {
-    -fx-fill: #1D1F26;
+    -fx-fill: #0F0F0F;
 }
 
 .code-editor.theme-light .selection {
-    -fx-fill: #DAE1F3;
+    -fx-fill: #A3E1EA;
 }
 
 .code-editor.theme-light .paragraph-box:has-caret {
-    -fx-background-color: #EDF2FF;
+    -fx-background-color: #FFFFFF;
 }
 
 .code-editor.theme-light .syntax-keyword {
     -fx-font-weight: bold;
-	-fx-fill: #FF76E1;
+	-fx-fill: #E71EF9;
 }
 
 .code-editor.theme-light .syntax-symbol {
-    -fx-fill: #3F3F3F;
+    -fx-fill: #414141;
 }
 
 .code-editor.theme-light .syntax-control {
     -fx-font-weight: bold;
-    -fx-fill: #BC7409;
+    -fx-fill: #F03939;
 }
 
 .code-editor.theme-light .syntax-function {
@@ -109,6 +109,121 @@
 }
 
 .code-editor.theme-light .lineno {
-    -fx-background-color: #BEE8FF;
+    -fx-background-color: #E4E4E4;
 }
 
+.code-editor.theme-plastic {
+    -fx-background-color: #21252b;
+}
+
+.code-editor.theme-plastic .text {
+    -fx-fill: #d7d7d7;
+}
+
+.code-editor.theme-plastic .selection {
+    -fx-fill: #343f41;
+}
+
+.code-editor.theme-plastic .paragraph-box:has-caret {
+    -fx-background-color: #252930;
+}
+
+.code-editor.theme-plastic .syntax-keyword {
+	-fx-fill: #e06c75;
+}
+
+.code-editor.theme-plastic .syntax-symbol {
+    -fx-fill: #7c8696;
+}
+
+.code-editor.theme-plastic .syntax-control {
+    -fx-fill: #e06c75;
+}
+
+.code-editor.theme-plastic .syntax-function {
+    -fx-fill: #d19a66;
+}
+
+.code-editor.theme-plastic .syntax-comment {
+    -fx-font-style: italic;
+    -fx-fill: #abb2bf;
+}
+
+.code-editor.theme-plastic .syntax-string {
+    -fx-fill: #98c379;
+}
+
+.code-editor.theme-plastic .syntax-digit {
+    -fx-fill: #56b6c2;
+}
+
+.code-editor.theme-plastic .lineno {
+    -fx-background-color: #21252b;
+}
+
+.code-editor.theme-plastic .lineno .text {
+    -fx-fill: #7c8696;
+}
+
+.code-editor.theme-plastic .caret {
+    -fx-stroke: white;
+}
+
+.code-editor.theme-evening {
+    -fx-background-color: #261414;
+}
+
+.code-editor.theme-evening .text {
+    -fx-fill: #d7d7d7;
+}
+
+.code-editor.theme-evening .selection {
+    -fx-fill: #451f1f;
+}
+
+.code-editor.theme-evening .paragraph-box:has-caret {
+    -fx-background-color: #2b1414;
+}
+
+.code-editor.theme-evening .syntax-keyword {
+	-fx-fill: #ff5415;
+	-fx-font-weight: bold;
+}
+
+.code-editor.theme-evening .syntax-symbol {
+    -fx-fill: #7c8696;
+}
+
+.code-editor.theme-evening .syntax-control {
+    -fx-fill: #e75563;
+}
+
+.code-editor.theme-evening .syntax-function {
+-fx-font-style: italic;
+    -fx-fill: #ec8965;
+}
+
+.code-editor.theme-evening .syntax-comment {
+    -fx-font-style: italic;
+    -fx-fill: #78655e;
+}
+
+.code-editor.theme-evening .syntax-string {
+    -fx-fill: #98c379;
+}
+
+.code-editor.theme-evening .syntax-digit {
+    -fx-fill: #56b6c2;
+}
+
+.code-editor.theme-evening .lineno {
+    -fx-background-color: #160808;
+}
+
+.code-editor.theme-evening .lineno .text {
+    -fx-fill: white;
+}
+
+.code-editor.theme-evening .caret {
+    -fx-stroke: white;
+}

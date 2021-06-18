@@ -12,6 +12,12 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A simple terminal that runs code and shows its printed values
+ *
+ * @author Daniel Planötscher
+ */
 public class Terminal extends VBox {
     private TextFlow textContent;
     private StringBuffer currentString;
@@ -20,34 +26,37 @@ public class Terminal extends VBox {
     public static final double STANDARD_WIDTH = 360;
 
     /**
-     * A simple terminal that shows prints of code
+     * Generates a basic terminal
      */
     public Terminal() {
-        this.setMinWidth(STANDARD_WIDTH);
+        setMinWidth(STANDARD_WIDTH);
         init();
     }
 
     /**
-     * A simple terminal that shows prints of code
+     * Generates a basic terminal with a standard width
      *
      * @param width width of the Terminal
      */
     public Terminal(double width) {
-        this.setMinWidth(width);
-        this.setPrefHeight(Integer.MAX_VALUE);
+        setMinWidth(width);
+        setPrefHeight(Integer.MAX_VALUE);
         init();
     }
 
+    /**
+     * Initializes the styling of a terminal
+     */
     private void init() {
         Text title = new Text("Terminal");
         title.getStyleClass().addAll("heading", "tiny", "text", "monospace");
-        this.textContent = new TextFlow();
+        textContent = new TextFlow();
         VBox container = new VBox(textContent);
         container.setPadding(new Insets(10, 0, 0, 0));
         content = new ScrollPane();
         content.setContent(container);
         content.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        content.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        content.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         content.setStyle("-fx-background-color: transparent;");
         setStyle("-fx-background-color: " + ThemeColor.TERMINAL_BACKGROUND);
         setPadding(new Insets(20));

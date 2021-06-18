@@ -5,25 +5,29 @@ import daro.game.main.LevelGroup;
 import daro.game.ui.Heading;
 import daro.game.ui.LevelGroupItem;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 import java.util.List;
-import java.util.concurrent.Flow;
 
+/**
+ * <strong>UI: <em>Page</em></strong><br>
+ * A page that displays the overview of all LevelGroups.
+ *
+ * @author Daniel Planötscher
+ */
 public class CoursePage extends Page {
+
     /**
-     * <strong>UI: <em>Page</em></strong><br>
-     * A page that displays the overview of all LevelGroups.
+     * Generates a standard CoursePage
      */
     public CoursePage() {
         Heading heading = new Heading("Courses", "Learn the fundamentals of programming with the interactive course.");
-        this.getChildren().addAll(heading, getLevelGroups());
+        getChildren().addAll(heading, getLevelGroups());
     }
 
     /**
      * Generates the overview of the level groups
-     * 
+     *
      * @return a FlowPane containing all the level groups
      */
     private FlowPane getLevelGroups() {

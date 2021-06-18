@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import daro.game.parser.ChallengeParser;
 import daro.game.main.Challenge;
+import daro.game.validation.ValidationType;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,33 +13,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+/**
+ * Utility class: Handles many aspects of challenges, such as its serialization,
+ * importing etc.
+ *
+ * @author Daniel Planötscher
+ */
 public final class ChallengeHandler {
     private static final String CHALLENGE_PATH = UserData.USER_PATH + "challenges/";
 
     private ChallengeHandler() {
+        // Disallow instantiation
     }
 
-    public static File importChallenge(File file) {
-        try {
-            String newName = generateUniqueName();
-            Files.copy(file.toPath(), Path.of(CHALLENGE_PATH + newName));
-            return new File(CHALLENGE_PATH + newName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static boolean removeChallenge(File file) {
-        try {
-            Files.delete(file.toPath());
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
+    /**
+     * Gets all imported challenges
+     *
+     * @return a list containing the parsed challenges
+     */
     public static List<Challenge> getImportedChallenges() {
         File challengesFolder = new File(CHALLENGE_PATH);
         ArrayList<Challenge> challenges = new ArrayList<>();
@@ -57,12 +49,54 @@ public final class ChallengeHandler {
                     challenges.add(ChallengeParser.parse(content, file));
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return null;
                 }
             }
         }
         return challenges;
     }
 
+    /**
+     * Imports a new challenge into the challenge folder
+     *
+     * @param file challengeFile
+     * @return the new imported file
+     */
+    public static File importChallenge(File file) {
+        try {
+            String newName = generateUniqueName();
+            Files.copy(file.toPath(), Path.of(CHALLENGE_PATH + newName));
+            return new File(CHALLENGE_PATH + newName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Deletes a challenge from the challenge folder
+     *
+     * @param file the file of the challenge
+     * @return successfulness of the deletion
+     */
+    public static boolean removeChallenge(File file) {
+        try {
+            Files.delete(file.toPath());
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Saves the current state of a challenge
+     *
+     * @param challenge  the challenge object you want to update
+     * @param code       the updated code of the update
+     * @param completion the completion of the new code
+     * @return if the operation was successful or not
+     */
     public static boolean saveChallenge(Challenge challenge, String code, boolean completion) {
         try {
             String jsonString = IOHelpers.getFileContent(challenge.getSourceFile());
@@ -78,6 +112,27 @@ public final class ChallengeHandler {
     }
 
     /**
+     * Creates a new Challenge when it is built
+     *
+     * @param value the serialized challenge
+     * @param file  the file you want to save it to
+     * @return true if successful
+     */
+    public static boolean create(String value, File file) {
+        if (file != null) {
+            try {
+                if (file.exists() || file.createNewFile()) {
+                    IOHelpers.overwriteFile(file, value);
+                    return true;
+                }
+            } catch (IOException e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Unique filenames are possible by using the current timestamp.
      *
      * @return a string with a unique filename
@@ -86,10 +141,25 @@ public final class ChallengeHandler {
         return new Date().getTime() + ".json";
     }
 
-    public static boolean hasSimilar(Challenge c) {
-        return getImportedChallenges().stream().anyMatch(c::isSimilar);
+    /**
+     * Checks if the given challenge has a similar one in the list of all
+     * challenges.
+     *
+     * @param challenge the challenge you want to check
+     * @return if it has a similar one
+     */
+    public static boolean hasSimilar(Challenge challenge) {
+        return getImportedChallenges() != null && getImportedChallenges().stream().anyMatch(challenge::isSimilar);
     }
 
+    /**
+     * Replaces the the new challenge with the first similar one it can find.
+     *
+     * @param newChallenge the challenge you want to check
+     * @param newJsonObj   the jsonObject of the new Challenge (to overwrite the
+     *                     current one)
+     * @return true if the operation was successful, else false
+     */
     public static boolean replaceSimilar(Challenge newChallenge, JsonObject newJsonObj) {
         File challengesFolder = new File(CHALLENGE_PATH);
         File[] challengeFiles = challengesFolder.listFiles();
@@ -100,6 +170,7 @@ public final class ChallengeHandler {
                     Challenge oldChallenge = ChallengeParser.parse(content, file);
                     if (oldChallenge.isSimilar(newChallenge)) {
                         IOHelpers.overwriteFile(file, newJsonObj.toString());
+                        newChallenge.setSourceFile(file);
                         return true;
                     }
                 } catch (IOException e) {
@@ -110,6 +181,16 @@ public final class ChallengeHandler {
         return false;
     }
 
+    /**
+     * Serializes a challenge for creation
+     *
+     * @param name        name of the challenge
+     * @param creator     creator of the challenge
+     * @param description description of the challenge
+     * @param code        standard code of the challenge
+     * @param tests       a list containing its tests
+     * @return the new JsonObject for the challenge
+     */
     public static JsonObject serializeChallenge(
         String name, String creator, String description, String code, List<Map<String, String>> tests
     ) {
@@ -124,7 +205,11 @@ public final class ChallengeHandler {
             JsonObject test = new JsonObject();
             test.addProperty("id", i);
             i++;
+
+            ValidationType type = ValidationType.valueOf(map.get("type"));
             for (String key : map.keySet()) {
+                if (key.equals("expected") && !type.needsExpectedValue())
+                    continue;
                 test.addProperty(key, map.get(key));
             }
             testsArray.add(test);

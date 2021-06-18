@@ -2,6 +2,9 @@ package daro.game.validation;
 
 import java.util.List;
 
+/**
+ * A class representing the result of a validation operation
+ */
 public class ValidationResult {
     private boolean success;
     private String expected, actual;
@@ -26,19 +29,19 @@ public class ValidationResult {
     /**
      * Checks if a validation was successful
      *
-     * @return successfulness of the validation
+     * @return true if the validation was successful, false otherwise
      */
     public boolean evaluate() {
         return success;
     }
 
     /**
-     * Returns the name of the validation: e.g. Test n.1
+     * Returns the name of the validation: e.g. Test 1
      *
      * @return a string containing the value
      */
     public String getName() {
-        return "Test n." + id;
+        return "Test " + id;
     }
 
     /**
@@ -48,7 +51,8 @@ public class ValidationResult {
      */
     @Override
     public String toString() {
-        return success ? "Passed!\n" + expected : "Failed!\n" + "Expected: " + expected + "\n" + "Actual: " + actual;
+        return success ? "Passed!\n" + "Expected: " + expected
+            : "Failed!\n" + "Expected: " + expected + "\n" + "Actual: " + actual;
     }
 
     /**

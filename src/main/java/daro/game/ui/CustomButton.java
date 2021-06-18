@@ -6,6 +6,12 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A Button with custom stylings and an icon
+ *
+ * @author Daniel Planötscher
+ */
 public class CustomButton extends HBox {
     public static double HEIGHT = 50;
 
@@ -50,9 +56,7 @@ public class CustomButton extends HBox {
      * @return the Text used in the Button
      */
     private Text generateIcon(String iconString) {
-        Text icon = new Text(iconString);
-        icon.getStyleClass().add("icon");
-        return icon;
+        return new Icon(iconString);
     }
 
     /**

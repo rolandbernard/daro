@@ -11,21 +11,24 @@ import javafx.scene.layout.VBox;
 
 import java.util.LinkedHashMap;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * The main navigation-sidebar for the game
+ *
+ * @author Daniel Planötscher
+ */
 public class Navigation extends VBox {
-
-    public static final double WIDTH = 320;
 
     private LinkedHashMap<NavigationItem, Page> navItems;
     private Page defaultPage;
 
     /**
-     * <strong>UI: <em>Component</em></strong><br>
-     * The main navigation-sidebar for the game
+     * Generates a new Navigation sidebar and sets its currently active page
      *
      * @param defaultPage The default active page
      */
     public Navigation(Page defaultPage) {
-        this.setMinWidth(WIDTH);
+        this.setMinWidth(320);
         this.defaultPage = defaultPage;
         this.setStyle("-fx-background-color: " + ThemeColor.DARK_BACKGROUND);
         this.setAlignment(Pos.TOP_CENTER);
@@ -37,7 +40,7 @@ public class Navigation extends VBox {
     /**
      * Generates the logo for the top part of the navigation
      *
-     * @return imageview containing the logo
+     * @return {@link ImageView} containing the logo
      */
     private ImageView getLogo() {
         ImageView logo = new ImageView(ResourceHandler.getImage("logo.png"));
@@ -56,7 +59,7 @@ public class Navigation extends VBox {
         navItems = new LinkedHashMap<>();
         addNavItem("\ue021", "Course", CoursePage.class);
         addNavItem("\uea26", "Playground", PlaygroundPage.class);
-        addNavItem("\uea2c", "Challenges", ChallengesPage.class);
+        addNavItem("\uea2c", "Challenges", ChallengePage.class);
         addNavItem("\ue8b8", "Settings", SettingsPage.class);
         navItems.put(new NavigationItem("\ue9ba", "Exit", false), null);
         linkNavLinks();

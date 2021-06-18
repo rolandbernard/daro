@@ -3,6 +3,12 @@ package daro.game.main;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A class containing the state of LevelGroups and some basic operations for
+ * them
+ *
+ * @author Daniel Planötcher
+ */
 public class LevelGroup {
     private final long id;
     private String name, description;

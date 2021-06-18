@@ -4,10 +4,16 @@ import javafx.scene.image.Image;
 
 import java.io.*;
 
+/**
+ * Utility class: Helps accessing the maven resource folder (even when packaged)
+ *
+ * @author Daniel Planötscher
+ */
 public final class ResourceHandler {
     private static final String RESOURCE_ROOT = "/daro/game/";
 
     private ResourceHandler() {
+        // Disallow instantiation
     }
 
     /**

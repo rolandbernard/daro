@@ -1,28 +1,31 @@
 package daro.game.ui;
 
-import daro.game.main.Game;
 import daro.game.main.LevelGroup;
 import daro.game.main.ThemeColor;
 import daro.game.pages.LevelGroupPage;
 import daro.game.views.MenuView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * A grid item that displays basic information about a level group (name,
+ * description, completed levels) When clicked it leads to the level group
+ * detail page
+ *
+ * @author Daniel Planötscher
+ */
 public class LevelGroupItem extends VBox {
     public static double DIMENSION = 235, H_PADDING = 30, INNER_WIDTH = DIMENSION - H_PADDING * 2;
     private LevelGroup levelGroup;
 
     /**
-     * <strong>UI: <em>Component</em></strong><br>
-     * A grid item that displays basic information about a level group (name,
-     * description, completed levels) When clicked it leads to the level group
-     * detail page
+     * Generates a basic level group page
      *
      * @param levelGroup the level group that is displayed
      */
@@ -79,7 +82,7 @@ public class LevelGroupItem extends VBox {
      * Generates a bar graph
      *
      * @param percent percentage of completion (e.g. 0.5 for 50%)
-     * @return a stackpane containing the graph
+     * @return a {@link StackPane} containing the graph
      */
     private StackPane getGraph(double percent) {
         Rectangle border = new Rectangle(INNER_WIDTH, 8, Color.web("200D56"));

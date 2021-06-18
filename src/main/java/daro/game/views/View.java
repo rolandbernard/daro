@@ -1,20 +1,24 @@
 package daro.game.views;
 
-import daro.game.main.Game;
 import daro.game.main.ThemeColor;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 
+/**
+ * <strong>UI: <em>Template</em></strong><br>
+ * An abstract class used to create Views<br>
+ * Views are states of the game, with certain goals (e.g. MenuView has the
+ * purpose of showing a menu)
+ *
+ * @author Daniel Planötscher
+ */
 public abstract class View extends HBox {
     /**
-     * <strong>UI: <em>Template</em></strong><br>
-     * An abstract class used to create Views<br>
-     * Views are states of the game, with certain goals (e.g. MenuView has the
-     * purpose of showing a menu)
+     * Sets default stylings for new Views
      */
     public View() {
-        this.setFillHeight(true);
-        this.setStyle("-fx-background-color: " + ThemeColor.BACKGROUND);
+        setFillHeight(true);
+        setStyle("-fx-background-color: " + ThemeColor.BACKGROUND);
     }
 
     /**

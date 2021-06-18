@@ -23,17 +23,22 @@ import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * <strong>UI: <em>Component</em></strong><br>
+ * An overview item of a playground, containing basic information about it.
+ *
+ * @author Daniel Planötscher
+ */
 public class PlaygroundItem extends StackPane {
-
     private VBox mainContent;
     private File file;
-    private final Reloadable parent;
+    private Reloadable parent;
 
     /**
-     * <strong>UI: <em>Component</em></strong><br>
-     * An overview item of a playground, containing basic information about it.
+     * Generates a basic playground item
      *
-     * @param file The file fo the playground
+     * @param file   The file fo the playground
+     * @param parent the page it is displayed in
      */
     public PlaygroundItem(File file, Reloadable parent) {
         this.file = file;
@@ -59,10 +64,23 @@ public class PlaygroundItem extends StackPane {
         setAlignment(Pos.TOP_RIGHT);
     }
 
+    /**
+     * Gets the clean name of a the playground file
+     *
+     * @return a string without .daro
+     */
     private String cleanName() {
         return file.getName().split("\\.")[0];
     }
 
+    /**
+     * Generates a InfoBox, which is a text and an icon containing information about
+     * the playground
+     *
+     * @param icon  the icon string
+     * @param label the label text
+     * @return the info box as an HBox
+     */
     private HBox generateInfoBox(String icon, String label) {
         Icon iconText = new Icon(icon);
         Text labelText = new Text(label);
@@ -97,16 +115,31 @@ public class PlaygroundItem extends StackPane {
         }
     }
 
+    /**
+     * Formats a FileTime as with the given format
+     *
+     * @param format the desired format
+     * @param time   the file time
+     * @return a formatted date
+     */
     private String formatDate(SimpleDateFormat format, FileTime time) {
         return format.format(new Date(time.toMillis()));
     }
 
+    /**
+     * Generates a delete button
+     *
+     * @return an icon circle with an event handler
+     */
     private IconCircle deleteButton() {
         IconCircle button = IconCircle.getDeleteButton(true);
         button.setOnMouseClicked(e -> openConfirmPopup());
         return button;
     }
 
+    /**
+     * Opens a confirmation popup if the user is sure to delete a playground
+     */
     private void openConfirmPopup() {
         Text heading = new Text("Warning");
         heading.getStyleClass().addAll("heading", "small", "text");

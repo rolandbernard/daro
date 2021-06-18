@@ -8,13 +8,19 @@ import daro.game.validation.ValidationType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class: A class that helps parsing the validations.
+ *
+ * @author Daniel Planötscher
+ */
 public final class ValidationParser {
-    private ValidationParser() {
 
+    private ValidationParser() {
+        // Disallow instantiation
     }
 
     /**
-     * Parses a list of validations from a json
+     * Parses a list of validations from a JsonArray
      *
      * @param validations a JsonArray containing validations
      * @return a list of validations
@@ -30,6 +36,12 @@ public final class ValidationParser {
         return testsList;
     }
 
+    /**
+     * Parses a only a specific validation from a JsonObject
+     *
+     * @param validation a JsonObject containing validation information
+     * @return a new Validation Object
+     */
     public static Validation parse(JsonObject validation) {
         long id = validation.get("id").getAsLong();
         String source = validation.get("source").getAsString();
