@@ -39,7 +39,7 @@ public class CodeEditor extends CodeArea {
     };
     private static final String[] SYMBOLS = {
         "\\|\\|", "\\(", "\\)", ",", "\\.", "\\{", "\\}", "\\[", "\\]", "&&", "\\;", "!=", ">", "<", "\\+", "-", "/",
-        "\\*", "%"
+        "\\*", "%", "\\="
     };
     private static final String[] FUNCTIONS = {
         "([_a-zA-Z][_a-zA-Z0-9]*)(?=(\\())"
