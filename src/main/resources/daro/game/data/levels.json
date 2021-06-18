@@ -886,7 +886,6 @@
           "description": "Instantiate a new object of the Test class into a variable named a.",
           "startCode": "class Test {\n    x = 42\n}\n// Your code goes here",
           "help": {
-            "text": "",
             "code": "x = new Foo // Classes can be instantiated like this"
           },
           "tests": [
@@ -915,7 +914,6 @@
           "description": "Define any class named Test.",
           "startCode": "// Your code goes here",
           "help": {
-            "text": "",
             "code": "class Foo {\n    // Classes can be defined like this\n}"
           },
           "tests": [
@@ -933,7 +931,6 @@
           "description": "Define a class variable named z with the default value of 42.",
           "startCode": "class Test {\n    // Your code goes here\n}",
           "help": {
-            "text": "",
             "code": "class Foo {\n    a = 12 // This is a class variable\n \n}"
           },
           "tests": [
@@ -987,7 +984,6 @@
           "description": "Use the given class to build a list into a variable named a of the number 1..5 using the add function. Do not modify the class!",
           "startCode": "class List {\n    data = new array;\n    fn add(n) {\n        data.push(n)\n    } // Use this function \n}\n// Your code goes here",
           "help": {
-            "text": "",
             "code": "y = new Foo;\ny.bar(42); // This will call the function inside the class"
           },
           "tests": [
@@ -1041,7 +1037,7 @@
           "description": "Create a recursive function named fak that returns the factorial of a given number.",
           "startCode": "fn fak(n) {\n    // Your code goes here\n}",
           "help": {
-            "text": "A recursive function is a function that calls itself.\nTip: The factorial of a number n is the product of all natural number less or equal the n.",
+            "text": "A recursive function is a function that calls itself.\nTip: The factorial of a number n is the product of all natural number less or equal than n.",
             "code": "fn sum(n) {\n    if n == 0 {\n        return 0;\n    } else {\n        return n + sum(n - 1);\n    }\n}"
           },
           "tests": [
