@@ -21,6 +21,7 @@ public abstract class Exercise {
      * @param description A short description of the task
      * @param tests       tests that have to run in the Level
      * @param code        code written for the level
+     * @param isCompleted if the exercise is already completed successfully
      */
     public Exercise(String name, String description, String code, List<Validation> tests, boolean isCompleted) {
         this.completed = isCompleted;

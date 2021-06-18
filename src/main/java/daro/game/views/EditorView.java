@@ -11,24 +11,28 @@ import javafx.scene.layout.VBox;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * <strong>UI: <em>View</em></strong><br>
+ * A view showing a CodeEditor and a Terminal used for playgrounds
+ *
+ * @author Daniel Planötscher
+ */
 public class EditorView extends View {
-    private final static double TERMINAL_WIDTH = 360;
-
     /**
-     * A view showing a CodeEditor and a Terminal used for playgrounds
+     * Generates a basic Editor View
      *
-     * @param file playground file
+     * @param file playground file to display
      */
     public EditorView(File file) {
         try {
             String code = PlaygroundHandler.getPlayground(file);
             VBox sidebar = new VBox();
-            Terminal terminal = new Terminal(TERMINAL_WIDTH);
+            Terminal terminal = new Terminal(360);
             CodeEditor editor = new CodeEditor(code);
 
             CustomButton runButton = new CustomButton("\ue037", "Run the program", false);
             CustomButton closeButton =
-                new CustomButton("\ue9ba", "Save & Close", false, ThemeColor.ACCENT_DARK.toString());
+                    new CustomButton("\ue9ba", "Save & Close", false, ThemeColor.ACCENT_DARK.toString());
             runButton.setOnMouseClicked(e -> terminal.update(editor.getText()));
             closeButton.setOnMouseClicked(e -> {
                 if (PlaygroundHandler.savePlayground(file, editor.getText())) {
@@ -44,7 +48,7 @@ public class EditorView extends View {
     }
 
     /**
-     * Sets the to menu
+     * Sets the view to MenuView
      */
     private void returnToOverview() {
         View.updateView(this, new MenuView(new PlaygroundPage()));

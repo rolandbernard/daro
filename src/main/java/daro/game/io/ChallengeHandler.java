@@ -111,6 +111,28 @@ public final class ChallengeHandler {
         return false;
     }
 
+
+    /**
+     * Creates a new Challenge when it is built
+     *
+     * @param value the serialized challenge
+     * @param file  the file you want to save it to
+     * @return true if successful
+     */
+    public static boolean create(String value, File file) {
+        if (file != null) {
+            try {
+                if (file.exists() || file.createNewFile()) {
+                    IOHelpers.overwriteFile(file, value);
+                    return true;
+                }
+            } catch (IOException e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
     /**
      * Unique filenames are possible by using the current timestamp.
      *
@@ -134,7 +156,7 @@ public final class ChallengeHandler {
      * Replaces the the new challenge with the first similar one it can find.
      *
      * @param newChallenge the challenge you want to check
-     * @param newJsonObj the jsonObject of the new Challenge (to overwrite the current one)
+     * @param newJsonObj   the jsonObject of the new Challenge (to overwrite the current one)
      * @return true if the operation was successful, else false
      */
     public static boolean replaceSimilar(Challenge newChallenge, JsonObject newJsonObj) {

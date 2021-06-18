@@ -15,6 +15,7 @@ public enum ValidationType {
      * A type of validation
      *
      * @param needsExpectedValue if the validation needs an expected value
+     * @param label Label used for validations
      */
     ValidationType(boolean needsExpectedValue, String label) {
         this.NEEDS_EXPECTED = needsExpectedValue;
