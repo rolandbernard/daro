@@ -150,7 +150,7 @@ public class DaroArray extends DaroObject {
         return new AbstractList<DaroObject>(){
 
             private int actualIndexFor(int index) {
-                if (end > start) {
+                if (start <= end) {
                     return ((start + index) % values.size() + values.size()) % values.size();
                 } else {
                     return ((start - index) % values.size() + values.size()) % values.size();

@@ -501,10 +501,12 @@ public class Executor implements Visitor<DaroObject> {
                 }
             } else if (left instanceof DaroString) {
                 DaroString string = (DaroString)left;
-                if (index < 0 || index >= string.getValue().length()) {
+                int length = string.getValue().length();
+                if (length == 0) {
                     throw new InterpreterException(ast.getPosition(), "Index out of bounds");
                 } else {
-                    return new DaroString(string.getValue().substring(index, index + 1));
+                    int actualIndex = (index % length + length) % length;
+                    return new DaroString(string.getValue().substring(actualIndex, actualIndex + 1));
                 }
             } else {
                 throw new InterpreterException(ast.getLeft().getPosition(), "Value is not an array or string");
@@ -734,18 +736,33 @@ public class Executor implements Visitor<DaroObject> {
             DaroArray array = (DaroArray)object;
             int index = start != null ? ((DaroInteger)start).getValue().intValue() : 0;
             int stop = end != null ? ((DaroInteger)end).getValue().intValue() : array.getLength();
-            return new DaroArray(array.subList(index, stop));
+            if (array.getLength() == 0 && index != stop) {
+                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
+            } else {
+                return new DaroArray(array.subList(index, stop));
+            }
         } else if (object instanceof DaroString) {
             DaroString string = (DaroString)object;
             int index = start != null ? ((DaroInteger)start).getValue().intValue() : 0;
-            if (index < 0 || index >= string.getValue().length()) {
-                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-            }
             int stop = end != null ? ((DaroInteger)end).getValue().intValue() : string.getValue().length();
-            if (stop < index || stop < 0 || stop > string.getValue().length()) {
+            int length = string.getValue().length();
+            if (length == 0 && index != stop) {
                 throw new InterpreterException(ast.getPosition(), "Index out of bounds");
+            } else {
+                // int actualStart = (index % length + length) % length;
+                // int actualEnd = (stop % length + length) % length;
+                StringBuilder result = new StringBuilder();
+                for (int i = 0; i < Math.abs(stop - index); i++) {
+                    int actualIndex;
+                    if (index <= stop) {
+                        actualIndex = ((index + i) % length + length) % length;
+                    } else {
+                        actualIndex = ((index - i) % length + length) % length;
+                    }
+                    result.append(string.getValue().charAt(actualIndex));
+                }
+                return new DaroString(result.toString());
             }
-            return new DaroString(string.getValue().substring(index, stop));
         } else {
             throw new InterpreterException(ast.getArray().getPosition(), "Value is not an array");
         }

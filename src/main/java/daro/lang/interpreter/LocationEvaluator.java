@@ -1,5 +1,7 @@
 package daro.lang.interpreter;
 
+import java.util.List;
+
 import daro.lang.ast.*;
 import daro.lang.values.*;
 
@@ -344,21 +346,16 @@ public class LocationEvaluator implements Visitor<VariableLocation> {
         if (object instanceof DaroArray) {
             DaroArray array = (DaroArray)object;
             int index = start != null ? ((DaroInteger)start).getValue().intValue() : 0;
-            if (index < 0 || index >= array.getLength()) {
-                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-            }
             int stop = end != null ? ((DaroInteger)end).getValue().intValue() : array.getLength();
-            if (stop < index || stop < 0 || stop > array.getLength()) {
-                throw new InterpreterException(ast.getPosition(), "Index out of bounds");
-            }
+            List<DaroObject> view = array.subList(index, stop);
             return value -> {
                 if (value instanceof DaroArray) {
                     DaroArray values = (DaroArray)value;
-                    if (values.getLength() != stop - index) {
+                    if (values.getLength() != view.size()) {
                         throw new InterpreterException("Array size mismatch");
                     } else {
-                        for (int i = 0; i < stop - index; i++) {
-                            array.putValueAt(index + i, values.getValueAt(i));
+                        for (int i = 0; i < view.size(); i++) {
+                            view.set(i, values.getValueAt(i));
                         }
                     }
                 } else {

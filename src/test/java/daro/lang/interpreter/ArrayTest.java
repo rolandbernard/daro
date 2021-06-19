@@ -220,6 +220,45 @@ public class ArrayTest {
     }
 
     @Test
+    void readingArrayRangeOverflow() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(3), new DaroReal(4), new DaroReal(1))),
+            interpreter.execute("x[2:5]")
+        );
+    }
+
+    @Test
+    void readingArrayRangeUnderflow() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(3), new DaroReal(4), new DaroReal(1))),
+            interpreter.execute("x[-2:1]")
+        );
+    }
+
+    @Test
+    void readingArrayRangeDouble() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        assertEquals(
+            new DaroArray(List.of(
+                new DaroReal(1), new DaroReal(2), new DaroReal(3), new DaroReal(4),
+                new DaroReal(1), new DaroReal(2), new DaroReal(3), new DaroReal(4)
+            )),
+            interpreter.execute("x[0:8]")
+        );
+    }
+
+    @Test
+    void readingArrayRangeReverse() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(4), new DaroReal(3), new DaroReal(2), new DaroReal(1))),
+            interpreter.execute("x[3:-1]")
+        );
+    }
+
+    @Test
     void writingArrayRange() {
         interpreter.execute("x = new []real {1, 2, 3, 4}");
         interpreter.execute("x[1:3] = new []real {5, 6}");
@@ -260,6 +299,36 @@ public class ArrayTest {
     }
 
     @Test
+    void writingArrayRangeOverflow() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        interpreter.execute("x[2:5] = new []real {5, 6, 7}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(7), new DaroReal(2), new DaroReal(5), new DaroReal(6))),
+            interpreter.execute("x")
+        );
+    }
+
+    @Test
+    void writingArrayRangeUnderflow() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        interpreter.execute("x[-2:1] = new []real {5, 6, 7}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(7), new DaroReal(2), new DaroReal(5), new DaroReal(6))),
+            interpreter.execute("x")
+        );
+    }
+
+    @Test
+    void writingArrayRangeReverse() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        interpreter.execute("x[1:-2] = new []real {5, 6, 7}");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(6), new DaroReal(5), new DaroReal(3), new DaroReal(7))),
+            interpreter.execute("x")
+        );
+    }
+
+    @Test
     void endIndexNotAnInteger() {
         interpreter.execute("x = new [5]null");
         assertThrows(InterpreterException.class, () -> {
@@ -273,5 +342,39 @@ public class ArrayTest {
         assertThrows(InterpreterException.class, () -> {
             interpreter.execute("x[1:2.5] = 0");
         });
+    }
+
+    @Test
+    void readFromArrayUnderflow() {
+        interpreter.execute("x = new [2]real{1, 2}");
+        assertEquals(new DaroReal(2), interpreter.execute("x[-1]"));
+        assertEquals(new DaroReal(1), interpreter.execute("x[-2]"));
+    }
+
+    @Test
+    void readFromArrayOverflow() {
+        interpreter.execute("x = new [2]real{1, 2}");
+        assertEquals(new DaroReal(1), interpreter.execute("x[2]"));
+        assertEquals(new DaroReal(2), interpreter.execute("x[3]"));
+    }
+
+    @Test
+    void writeToArrayUnderflow() {
+        interpreter.execute("x = new [2]real{1, 2}");
+        interpreter.execute("x[-1] = 4.0");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(1), new DaroReal(4))),
+            interpreter.execute("x")
+        );
+    }
+
+    @Test
+    void writeToArrayOverflow() {
+        interpreter.execute("x = new [2]real{1, 2}");
+        interpreter.execute("x[2] = 4.0");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(4), new DaroReal(2))),
+            interpreter.execute("x")
+        );
     }
 }

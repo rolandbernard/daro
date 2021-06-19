@@ -194,4 +194,40 @@ public class StringTest {
         interpreter.execute("x = \"Hello\"");
         assertEquals(new DaroString("l"), interpreter.execute("x[2]"));
     }
+
+    @Test
+    void substringSingleCharacterOverflow() {
+        interpreter.execute("x = \"Hello\"");
+        assertEquals(new DaroString("e"), interpreter.execute("x[6]"));
+    }
+
+    @Test
+    void substringSingleCharacterUnderflow() {
+        interpreter.execute("x = \"Hello\"");
+        assertEquals(new DaroString("o"), interpreter.execute("x[-1]"));
+    }
+
+    @Test
+    void substringRangeOverflow() {
+        interpreter.execute("x = \"Hello\"");
+        assertEquals(new DaroString("elloH"), interpreter.execute("x[1:6]"));
+    }
+
+    @Test
+    void substringRangeUnderflow() {
+        interpreter.execute("x = \"Hello\"");
+        assertEquals(new DaroString("oHell"), interpreter.execute("x[-1:4]"));
+    }
+
+    @Test
+    void substringRangeDouble() {
+        interpreter.execute("x = \"Hello\"");
+        assertEquals(new DaroString("HelloHello"), interpreter.execute("x[0:10]"));
+    }
+
+    @Test
+    void substringRangeReversed() {
+        interpreter.execute("x = \"Hello\"");
+        assertEquals(new DaroString("leHo"), interpreter.execute("x[2:-2]"));
+    }
 }
