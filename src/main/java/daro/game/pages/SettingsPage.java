@@ -87,8 +87,7 @@ public class SettingsPage extends Page {
         indentOptions.put(AutoIndent.OFF, "Without indent");
         SelectField<AutoIndent> indent = new SelectField<>(
             indentOptions,
-            editorSettings.get("indent") == null
-                ? AutoIndent.IDE
+            editorSettings.get("indent") == null ? AutoIndent.IDE
                 : AutoIndent.valueOf(editorSettings.get("indent").getAsString()),
             "Auto Indentation", "Automatic indentation when going into a new line"
         );
@@ -99,7 +98,8 @@ public class SettingsPage extends Page {
         completionOptions.put(false, "Without autocompletion");
         SelectField<Boolean> autocompletion = new SelectField<>(
             completionOptions,
-            editorSettings.get("auto_completion") == null ? false : editorSettings.get("auto_completion").getAsBoolean(),
+            editorSettings.get("auto_completion") == null ? false
+                : editorSettings.get("auto_completion").getAsBoolean(),
             "Auto completion", "e.g. when writing '(' should the editor automatically auto complete ')'"
         );
         editorFields.put("auto_completion", autocompletion);
