@@ -76,9 +76,9 @@ public class ArrayTest {
     }
 
     @Test
-    void foreachArray() {
+    void forEachArray() {
         interpreter.execute("x = new array {10, 20, 30}");
-        interpreter.execute("sum = 0; x.foreach(fn(x) { sum += x})");
+        interpreter.execute("sum = 0; x.forEach(fn(x) { sum += x})");
         assertEquals(new DaroInteger(BigInteger.valueOf(60)), interpreter.execute("sum"));
     }
 
@@ -376,5 +376,72 @@ public class ArrayTest {
             new DaroArray(List.of(new DaroReal(4), new DaroReal(2))),
             interpreter.execute("x")
         );
+    }
+
+    @Test
+    void cloneCreatesNewArray() {
+        interpreter.execute("x = new [2]real{1, 2}");
+        interpreter.execute("y = x.clone()");
+        interpreter.execute("y[1] = 3.0");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(1), new DaroReal(2))),
+            interpreter.execute("x")
+        );
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(1), new DaroReal(3))),
+            interpreter.execute("y")
+        );
+    }
+
+    @Test
+    void mappingToANewArray() {
+        interpreter.execute("x = new [2]real{1, 2}");
+        interpreter.execute("y = x.map(fn (a) { 2 * a })");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(1), new DaroReal(2))),
+            interpreter.execute("x")
+        );
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(2), new DaroReal(4))),
+            interpreter.execute("y")
+        );
+    }
+
+    @Test
+    void filterToANewArray() {
+        interpreter.execute("x = new [2]real{1, 2}");
+        interpreter.execute("y = x.filter(fn (a) { a < 2 })");
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(1), new DaroReal(2))),
+            interpreter.execute("x")
+        );
+        assertEquals(
+            new DaroArray(List.of(new DaroReal(1))),
+            interpreter.execute("y")
+        );
+    }
+
+    @Test
+    void reduceWithInitial() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        assertEquals(
+            new DaroReal(20),
+            interpreter.execute("x.reduce(fn (a, b) { a + b }, 10)")
+        );
+    }
+
+    @Test
+    void reduceWithoutInitial() {
+        interpreter.execute("x = new []real {1, 2, 3, 4}");
+        assertEquals(
+            new DaroReal(10),
+            interpreter.execute("x.reduce(fn (a, b) { a + b })")
+        );
+    }
+
+    @Test
+    void reduceWithoutInitialOnEmpty() {
+        interpreter.execute("x = new []real {}");
+        assertNull(interpreter.execute("x.reduce(fn (a, b) { a + b })"));
     }
 }

@@ -72,14 +72,14 @@ public interface Scope {
      * @param name The name to search for
      * @return A {@link VariableLocation} to store the variable at
      */
-    abstract public VariableLocation getVariableLocation(String name);
+    public VariableLocation getVariableLocation(String name);
 
     /**
      * Resets the scope to its default state. This is the state it was initialized
      * in with the constructor. This will also remove parents that were added after
      * creation.
      */
-    abstract public void reset();
+    public void reset();
 
     /**
      * Returns the scopes that include all the variables that are excluded by the
@@ -87,7 +87,7 @@ public interface Scope {
      *
      * @return The parents of this scope
      */
-    abstract public Scope[] getParents();
+    public Scope[] getParents();
 
     /**
      * Get a string representation of the {@link Scope}. This method may be used by

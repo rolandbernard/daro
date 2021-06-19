@@ -2,6 +2,7 @@ package daro.lang.values;
 
 import java.math.BigInteger;
 import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +43,6 @@ public class DaroArray extends DaroObject {
                 pushValue(value);
             }
         }));
-        variables.put("foreach", new DaroLambdaFunction(1, (params, observers) -> {
-            DaroFunction function = (DaroFunction)params[0];
-            values.forEach(a -> function.execute(new DaroObject[] {
-                a
-            }, observers));
-        }));
         variables.put("pop", new DaroLambdaFunction(0, params -> {
             if (values.size() > 0) {
                 DaroObject ret = values.get(values.size() - 1);
@@ -57,7 +52,7 @@ public class DaroArray extends DaroObject {
                 return null;
             }
         }));
-        variables.put("sort", new DaroLambdaFunction(1, (params, observers) -> {
+        variables.put("sort", new DaroLambdaFunction(1, (params, context) -> {
             if (params[0] instanceof DaroFunction) {
                 DaroFunction function = (DaroFunction)params[0];
                 if (!function.allowsParamCount(2)) {
@@ -66,10 +61,10 @@ public class DaroArray extends DaroObject {
                     values.sort((a, b) -> {
                         DaroObject less = function.execute(new DaroObject[] {
                             a, b
-                        }, observers);
+                        }, context);
                         DaroObject more = function.execute(new DaroObject[] {
                             b, a
-                        }, observers);
+                        }, context);
                         if (less != null && less.isTrue() && more != null && more.isTrue()) {
                             return 0;
                         } else if (less != null && less.isTrue()) {
@@ -84,6 +79,84 @@ public class DaroArray extends DaroObject {
             } else {
                 throw new InterpreterException("Sorting comparison must be a function");
             }
+        }));
+        variables.put("forEach", new DaroLambdaFunction(1, (params, context) -> {
+            if (params[0] instanceof DaroFunction) {
+                DaroFunction function = (DaroFunction)params[0];
+                if (!function.allowsParamCount(1)) {
+                    throw new InterpreterException("Function must accept one argument");
+                } else {
+                    values.forEach(a -> function.execute(new DaroObject[] {
+                        a
+                    }, context));
+                }
+            } else {
+                throw new InterpreterException("Parameter must be a function");
+            }
+        }));
+        variables.put("map", new DaroLambdaFunction(1, (params, context) -> {
+            if (params[0] instanceof DaroFunction) {
+                DaroFunction function = (DaroFunction)params[0];
+                if (!function.allowsParamCount(1)) {
+                    throw new InterpreterException("Function must accept one argument");
+                } else {
+                    return new DaroArray(values.stream().map(a -> function.execute(new DaroObject[] {
+                        a
+                    }, context)).filter(a -> a != null).collect(Collectors.toList()));
+                }
+            } else {
+                throw new InterpreterException("Parameter must be a function");
+            }
+        }));
+        variables.put("filter", new DaroLambdaFunction(1, (params, context) -> {
+            if (params[0] instanceof DaroFunction) {
+                DaroFunction function = (DaroFunction)params[0];
+                if (!function.allowsParamCount(1)) {
+                    throw new InterpreterException("Function must accept one argument");
+                } else {
+                    return new DaroArray(values.stream().filter(a -> {
+                        DaroObject value = function.execute(new DaroObject[] {
+                            a
+                        }, context);
+                        return value != null && value.isTrue();
+                    }).collect(Collectors.toList()));
+                }
+            } else {
+                throw new InterpreterException("Parameter must be a function");
+            }
+        }));
+        variables.put("reduce", new DaroLambdaFunction(count -> count == 1 || count == 2, (params, context) -> {
+            if (params[0] instanceof DaroFunction) {
+                DaroFunction function = (DaroFunction)params[0];
+                if (!function.allowsParamCount(2)) {
+                    throw new InterpreterException("Function must accept two argument");
+                } else {
+                    DaroObject accumulator;
+                    if (params.length == 1) {
+                        if (values.size() > 0) {
+                            accumulator = values.get(0);
+                        } else {
+                            return null;
+                        }
+                    } else {
+                        accumulator = params[1];
+                    }
+                    for (DaroObject value : values.subList(params.length == 1 ? 1 : 0, values.size())) {
+                        accumulator = function.execute(new DaroObject[] {
+                            accumulator, value
+                        }, context);
+                        if (accumulator == null) {
+                            throw new InterpreterException("Accumulator must not be undefined");
+                        }
+                    }
+                    return accumulator;
+                }
+            } else {
+                throw new InterpreterException("Parameter must be a function");
+            }
+        }));
+        variables.put("clone", new DaroLambdaFunction(0, params -> {
+            return new DaroArray(new ArrayList<>(values));
         }));
         return new ConstantScope(variables, super.getMemberScope());
     }
@@ -138,16 +211,16 @@ public class DaroArray extends DaroObject {
     }
 
     /**
-     * Get a new list view into this array. The returned view goes from start to end index of this
-     * array. If the returned list is accessed at position 0, the value of the array at start will
-     * be accessed.
+     * Get a new list view into this array. The returned view goes from start to end
+     * index of this array. If the returned list is accessed at position 0, the
+     * value of the array at start will be accessed.
      *
      * @param start
      * @param end
      * @return
      */
     public List<DaroObject> subList(int start, int end) {
-        return new AbstractList<DaroObject>(){
+        return new AbstractList<DaroObject>() {
 
             private int actualIndexFor(int index) {
                 if (start <= end) {

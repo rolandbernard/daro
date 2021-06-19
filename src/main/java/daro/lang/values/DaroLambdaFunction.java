@@ -36,6 +36,19 @@ public class DaroLambdaFunction extends DaroFunction {
     }
 
     /**
+     * Create a {@link DaroFunction} from a parameter count and a
+     * {@link BiFunction}.
+     * 
+     * @param parameters The number of parameters the function accepts
+     * @param function   The {@link BiFunction} the function executes
+     */
+    public DaroLambdaFunction(int parameters, BiFunction<DaroObject[], ExecutionContext, DaroObject> function) {
+        this(count -> count == parameters, (params, context) -> {
+            return function.apply(params, context);
+        });
+    }
+
+    /**
      * Create a {@link DaroFunction} from a parameter count and a {@link Function}.
      * 
      * @param parameters The number of parameters the function accepts

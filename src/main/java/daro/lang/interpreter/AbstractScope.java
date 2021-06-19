@@ -83,7 +83,7 @@ public abstract class AbstractScope implements Scope {
     }
 
     @Override
-    abstract public Scope getFinalLevel();
+    public abstract Scope getFinalLevel();
 
     @Override
     public Scope[] getParents() {
