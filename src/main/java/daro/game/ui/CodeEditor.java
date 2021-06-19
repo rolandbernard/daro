@@ -28,6 +28,10 @@ public class CodeEditor extends CodeArea {
         "dark", "light", "plastic", "evening"
     };
 
+    public static enum AutoIndent {
+        OFF, IDE, FULL
+    };
+
     /**
      * Basic constants for syntax highlighting
      */
@@ -121,10 +125,16 @@ public class CodeEditor extends CodeArea {
      * @param keyEvent the key event to operate with
      */
     private void handleKeyPress(KeyEvent keyEvent) {
-        if (
-            settings.get("indent") == null || (settings.get("indent") != null && settings.get("indent").getAsBoolean())
-        ) {
-            if (keyEvent.getCode() == KeyCode.ENTER) {
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+            AutoIndent indent = AutoIndent.IDE;
+            if (settings.get("indent") != null) {
+                try {
+                    indent = AutoIndent.valueOf(settings.get("indent").getAsString());
+                } catch (Exception error) {
+                    // Act as if no setting was set
+                }
+            }
+            if (indent == AutoIndent.FULL) {
                 int position = this.getCaretPosition();
                 int paragraph = this.getCurrentParagraph();
                 char lastCharacter = position - 2 >= 0 ? this.getText().charAt(position - 2) : ' ';
@@ -155,11 +165,32 @@ public class CodeEditor extends CodeArea {
                 } else {
                     insertText(position, additionalSpace);
                 }
+            } else if (indent == AutoIndent.IDE) {
+                int position = getCaretPosition();
+                int paragraph = getCurrentParagraph();
+                if (paragraph > 0) {
+                    Pattern spacePattern = Pattern.compile("^\\s+");
+                    Matcher spaceMatcher = spacePattern.matcher(getParagraph(paragraph - 1).getSegments().get(0));
+                    String additionalSpace = "";
+                    if (spaceMatcher.find()) {
+                        additionalSpace = spaceMatcher.group();
+                    }
+                    insertText(position, additionalSpace);
+                }
             }
-        }
-        if (keyEvent.getCode() == KeyCode.TAB) {
-            // Change TAB width
-            this.replaceText(this.getCaretPosition() - 1, this.getCaretPosition(), TAB);
+        } else if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
+            int position = getCaretPosition();
+            int column = getCaretColumn();
+            String text = getText();
+            int length = column % TAB.length();
+            String tab = TAB.substring(0, length);
+            if (position >= length && text.substring(position - length, position).equals(tab)) {
+                deleteText(position - length, position);
+            }
+        } else if (keyEvent.getCode() == KeyCode.TAB) {
+            int column = getCaretColumn();
+            String tab = TAB.substring((column - 1) % TAB.length());
+            replaceText(getCaretPosition() - 1, getCaretPosition(), tab);
         }
     }
 
@@ -173,10 +204,7 @@ public class CodeEditor extends CodeArea {
      */
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int position = this.getCaretPosition();
-        if (
-            settings.get("auto_completion") == null
-                || (settings.get("auto_completion") != null && settings.get("auto_completion").getAsBoolean())
-        ) {
+        if (settings.get("auto_completion") != null && settings.get("auto_completion").getAsBoolean()) {
             if (oldValue.length() < newValue.length()) {
                 REPEATING_STRING.keySet().forEach(string -> {
                     try {
@@ -212,7 +240,7 @@ public class CodeEditor extends CodeArea {
         try {
             this.setStyleSpans(0, computeHighlighting(this.getText()));
         } catch (Exception ignored) {
-
+            // Ignore any exception here, we can not handle it
         }
     }
 

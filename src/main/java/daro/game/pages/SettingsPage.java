@@ -5,6 +5,7 @@ import daro.game.io.SettingsHandler;
 import daro.game.main.ThemeColor;
 import daro.game.ui.*;
 import daro.game.ui.FieldGroup;
+import daro.game.ui.CodeEditor.AutoIndent;
 import daro.game.ui.fields.InputField;
 import daro.game.ui.fields.SelectField;
 import javafx.scene.layout.VBox;
@@ -64,7 +65,7 @@ public class SettingsPage extends Page {
     }
 
     /**
-     * Generates all the editor fields and adds them as a formgroup to the page.
+     * Generates all the editor fields and adds them as a FormGroup to the page.
      */
     private void generateEditorFields() {
         Map<String, JsonElement> editorSettings = getCurrentSettings("editor");
@@ -80,11 +81,15 @@ public class SettingsPage extends Page {
         );
         editorFields.put("theme", theme);
 
-        LinkedHashMap<Boolean, String> indentOptions = new LinkedHashMap<>();
-        indentOptions.put(true, "With indent");
-        indentOptions.put(false, "Without indent");
-        SelectField<Boolean> indent = new SelectField<>(
-            indentOptions, editorSettings.get("indent") == null ? null : editorSettings.get("indent").getAsBoolean(),
+        LinkedHashMap<AutoIndent, String> indentOptions = new LinkedHashMap<>();
+        indentOptions.put(AutoIndent.IDE, "With reasonable indent");
+        indentOptions.put(AutoIndent.FULL, "With aggressive indent");
+        indentOptions.put(AutoIndent.OFF, "Without indent");
+        SelectField<AutoIndent> indent = new SelectField<>(
+            indentOptions,
+            editorSettings.get("indent") == null
+                ? AutoIndent.IDE
+                : AutoIndent.valueOf(editorSettings.get("indent").getAsString()),
             "Auto Indentation", "Automatic indentation when going into a new line"
         );
         editorFields.put("indent", indent);
@@ -94,7 +99,7 @@ public class SettingsPage extends Page {
         completionOptions.put(false, "Without autocompletion");
         SelectField<Boolean> autocompletion = new SelectField<>(
             completionOptions,
-            editorSettings.get("auto_completion") == null ? null : editorSettings.get("auto_completion").getAsBoolean(),
+            editorSettings.get("auto_completion") == null ? false : editorSettings.get("auto_completion").getAsBoolean(),
             "Auto completion", "e.g. when writing '(' should the editor automatically auto complete ')'"
         );
         editorFields.put("auto_completion", autocompletion);

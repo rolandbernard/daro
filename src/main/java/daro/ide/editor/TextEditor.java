@@ -200,11 +200,14 @@ public class TextEditor extends CodeArea {
             int column = getCaretColumn();
             String text = getText();
             int length = column % TAB.length();
-            if (position >= length && text.substring(position - length, position).equals(TAB.substring(0, length))) {
+            String tab = TAB.substring(0, length);
+            if (position >= length && text.substring(position - length, position).equals(tab)) {
                 deleteText(position - length, position);
             }
         } else if (keyEvent.getCode() == KeyCode.TAB) {
-            replaceText(getCaretPosition() - 1, getCaretPosition(), TAB);
+            int column = getCaretColumn();
+            String tab = TAB.substring((column - 1) % TAB.length());
+            replaceText(getCaretPosition() - 1, getCaretPosition(), tab);
         }
     }
 
