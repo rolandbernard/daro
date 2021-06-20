@@ -215,9 +215,9 @@ public class DaroArray extends DaroObject {
      * index of this array. If the returned list is accessed at position 0, the
      * value of the array at start will be accessed.
      *
-     * @param start
-     * @param end
-     * @return
+     * @param start The start (inclusive) of the sub list
+     * @param end   The end (exclusive) of the sub list
+     * @return The list view into the array
      */
     public List<DaroObject> subList(int start, int end) {
         return new AbstractList<DaroObject>() {
