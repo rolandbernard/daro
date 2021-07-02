@@ -145,7 +145,7 @@ public class Debugger implements ExecutionObserver {
      * Break the execution and wait for someone to call one of the continuation
      * methods.
      */
-    private void breakProgram() {
+    private synchronized void breakProgram() {
         if (getState() != DebuggerState.TERMINATED) {
             lastBefore = stack.peek().getBefore();
             lastNode = stack.peek().getNode();
@@ -153,9 +153,7 @@ public class Debugger implements ExecutionObserver {
             lastLine = stack.peek().getLine();
             controller.startDebugging(stack);
             try {
-                synchronized (this) {
-                    wait();
-                }
+                wait();
             } catch (InterruptedException e) {
                 setState(DebuggerState.ERROR);
                 throw new InterpreterException(stack.peek().getPosition(), "Debugger was interrupted");

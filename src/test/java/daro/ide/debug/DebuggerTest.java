@@ -34,7 +34,7 @@ public class DebuggerTest implements DebugController {
     private boolean debugEnded;
 
     @BeforeEach
-    void initializeInterpreter() {
+    synchronized void initializeInterpreter() {
         interpreter = new Interpreter();
         debugger = new Debugger(this);
         observers = new ExecutionObserver[] { debugger };
@@ -42,13 +42,13 @@ public class DebuggerTest implements DebugController {
     }
 
     @Test
-    void normalExecutionIsNotHalted() {
+    synchronized void normalExecutionIsNotHalted() {
         String program = "x = 5\ny = 4\nz = x + y\n";
         assertEquals(new DaroInteger(BigInteger.valueOf(9)), interpreter.execute(program, observers));
     }
 
     @Test
-    void debuggerHaltsAtBreakpoints() throws InterruptedException {
+    synchronized void debuggerHaltsAtBreakpoints() throws InterruptedException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
@@ -56,13 +56,11 @@ public class DebuggerTest implements DebugController {
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
     }
 
     @Test
-    void debuggerGivesTheHaltingPosition() throws InterruptedException {
+    synchronized void debuggerGivesTheHaltingPosition() throws InterruptedException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
@@ -70,14 +68,12 @@ public class DebuggerTest implements DebugController {
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         assertEquals(new Position(6, 11, program), debugLocation);
     }
 
     @Test
-    void debuggerGivesTheHaltingScope() throws InterruptedException {
+    synchronized void debuggerGivesTheHaltingScope() throws InterruptedException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
@@ -85,14 +81,12 @@ public class DebuggerTest implements DebugController {
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         assertEquals(interpreter.getContext().getScope(), debugScope);
     }
 
     @Test
-    void debuggerCanBeContinuedWithNext() throws InterruptedException, ExecutionException {
+    synchronized void debuggerCanBeContinuedWithNext() throws InterruptedException, ExecutionException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
@@ -100,15 +94,13 @@ public class DebuggerTest implements DebugController {
         Future<DaroObject> future = executor.submit(() -> {
             return interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.next();
         assertEquals(new DaroInteger(BigInteger.valueOf(9)), future.get());
     }
 
     @Test
-    void debuggerCallsStopDebugging() throws InterruptedException, ExecutionException {
+    synchronized void debuggerCallsStopDebugging() throws InterruptedException, ExecutionException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
@@ -116,16 +108,14 @@ public class DebuggerTest implements DebugController {
         Future<DaroObject> future = executor.submit(() -> {
             return interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.next();
         future.get();
         assertTrue(debugEnded);
     }
 
     @Test
-    void debuggerNextGetCaughtByNextBreakpoint() throws InterruptedException, ExecutionException {
+    synchronized void debuggerNextGetCaughtByNextBreakpoint() throws InterruptedException, ExecutionException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1, 2));
@@ -133,17 +123,13 @@ public class DebuggerTest implements DebugController {
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.next();
-        synchronized (this) {
-            wait();
-        }
+        wait();
     }
 
     @Test
-    void debuggerSecondBreakPosition() throws InterruptedException, ExecutionException {
+    synchronized void debuggerSecondBreakPosition() throws InterruptedException, ExecutionException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1, 2));
@@ -151,18 +137,14 @@ public class DebuggerTest implements DebugController {
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.next();
-        synchronized (this) {
-            wait();
-        }
+        wait();
         assertEquals(new Position(12, 21, program), debugLocation);
     }
 
     @Test
-    void debuggerSecondBreakScope() throws InterruptedException, ExecutionException {
+    synchronized void debuggerSecondBreakScope() throws InterruptedException, ExecutionException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1, 2));
@@ -170,18 +152,14 @@ public class DebuggerTest implements DebugController {
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.next();
-        synchronized (this) {
-            wait();
-        }
+        wait();
         assertEquals(interpreter.getContext().getScope(), debugScope);
     }
 
     @Test
-    void debuggerStepGoesToNextNode() throws InterruptedException, ExecutionException {
+    synchronized void debuggerStepGoesToNextNode() throws InterruptedException, ExecutionException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
@@ -189,18 +167,14 @@ public class DebuggerTest implements DebugController {
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.step();
-        synchronized (this) {
-            wait();
-        }
+        wait();
         assertEquals(new Position(6, 7, program), debugLocation);
     }
 
     @Test
-    void debuggerStepOverGoesToNextLine() throws InterruptedException, ExecutionException {
+    synchronized void debuggerStepOverGoesToNextLine() throws InterruptedException, ExecutionException {
         String program = "fn test() { 42 }\ntest()\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
@@ -208,18 +182,14 @@ public class DebuggerTest implements DebugController {
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.stepOver();
-        synchronized (this) {
-            wait();
-        }
+        wait();
         assertEquals(new Position(24, 33, program), debugLocation);
     }
 
     @Test
-    void debuggerStepIntoGoesIntoFunctions() throws InterruptedException, ExecutionException {
+    synchronized void debuggerStepIntoGoesIntoFunctions() throws InterruptedException, ExecutionException {
         String program = "fn test() { 42 }\ntest()\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
@@ -227,18 +197,14 @@ public class DebuggerTest implements DebugController {
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.stepInto();
-        synchronized (this) {
-            wait();
-        }
+        wait();
         assertEquals(new Position(10, 16, program), debugLocation);
     }
 
     @Test
-    void debuggerStepOutReturnsFromFunctions() throws InterruptedException, ExecutionException {
+    synchronized void debuggerStepOutReturnsFromFunctions() throws InterruptedException, ExecutionException {
         String program = "fn test() {\n42\n}\ntest()\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
@@ -246,18 +212,14 @@ public class DebuggerTest implements DebugController {
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.stepOut();
-        synchronized (this) {
-            wait();
-        }
+        wait();
         assertEquals(new Position(17, 23, program), debugLocation);
     }
 
     @Test
-    void debuggerStepOutReturnsFromProgram() throws InterruptedException, ExecutionException {
+    synchronized void debuggerStepOutReturnsFromProgram() throws InterruptedException, ExecutionException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
@@ -265,37 +227,31 @@ public class DebuggerTest implements DebugController {
         Future<DaroObject> future = executor.submit(() -> {
             return interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.stepOut();
         assertEquals(new DaroInteger(BigInteger.valueOf(9)), future.get());
     }
 
     @Test
-    void debuggerHaltsAtException() throws InterruptedException {
+    synchronized void debuggerHaltsAtException() throws InterruptedException {
         String program = "x = 5\ny = 0 / 0\n";
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
     }
 
     @Test
-    void debuggerHaltsAtLocalizationException() throws InterruptedException {
+    synchronized void debuggerHaltsAtLocalizationException() throws InterruptedException {
         String program = "x = 5\ny.x = 5\n";
         executor.execute(() -> {
             interpreter.execute(program, observers);
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
     }
 
     @Test
-    void debuggerHaltsAtExceptionNextThrows() throws InterruptedException, ExecutionException {
+    synchronized void debuggerHaltsAtExceptionNextThrows() throws InterruptedException, ExecutionException {
         String program = "x = 5\ny = 0 / 0\n";
         Future<Boolean> future = executor.submit(() -> {
             try {
@@ -305,15 +261,13 @@ public class DebuggerTest implements DebugController {
                 return true;
             }
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.next();
         assertTrue(future.get());
     }
 
     @Test
-    void debuggerHaltsAtLocalizationExceptionNextThrows() throws InterruptedException, ExecutionException {
+    synchronized void debuggerHaltsAtLocalizationExceptionNextThrows() throws InterruptedException, ExecutionException {
         String program = "x = 5\ny.x = 5\n";
         Future<Boolean> future = executor.submit(() -> {
             try {
@@ -323,15 +277,13 @@ public class DebuggerTest implements DebugController {
                 return true;
             }
         });
-        synchronized (this) {
-            wait();
-        }
+        wait();
         debugger.next();
         assertTrue(future.get());
     }
 
     @Test
-    void debuggerDoesNotHaltAfterTerminate() throws InterruptedException, ExecutionException {
+    synchronized void debuggerDoesNotHaltAfterTerminate() throws InterruptedException, ExecutionException {
         String program = "x = 5\ny = 4\nz = x + y\n";
         HashMap<Path, Set<Integer>> breakpoints = new HashMap<>();
         breakpoints.put(null, Set.of(1));
