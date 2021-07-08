@@ -749,8 +749,6 @@ public class Executor implements Visitor<DaroObject> {
             if (length == 0 && index != stop) {
                 throw new InterpreterException(ast.getPosition(), "Index out of bounds");
             } else {
-                // int actualStart = (index % length + length) % length;
-                // int actualEnd = (stop % length + length) % length;
                 StringBuilder result = new StringBuilder();
                 for (int i = 0; i < Math.abs(stop - index); i++) {
                     int actualIndex;
