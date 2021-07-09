@@ -5,7 +5,6 @@ import daro.game.io.SettingsHandler;
 import daro.game.main.ThemeColor;
 import daro.game.ui.*;
 import daro.game.ui.FieldGroup;
-import daro.game.ui.CodeEditor.AutoIndent;
 import daro.game.ui.fields.InputField;
 import daro.game.ui.fields.SelectField;
 import javafx.scene.layout.VBox;
@@ -81,14 +80,13 @@ public class SettingsPage extends Page {
         );
         editorFields.put("theme", theme);
 
-        LinkedHashMap<AutoIndent, String> indentOptions = new LinkedHashMap<>();
-        indentOptions.put(AutoIndent.IDE, "With reasonable indent");
-        indentOptions.put(AutoIndent.FULL, "With aggressive indent");
-        indentOptions.put(AutoIndent.OFF, "Without indent");
-        SelectField<AutoIndent> indent = new SelectField<>(
+        LinkedHashMap<String, String> indentOptions = new LinkedHashMap<>();
+        indentOptions.put("IDE", "With reasonable indent");
+        indentOptions.put("FULL", "With aggressive indent");
+        indentOptions.put("OFF", "Without indent");
+        SelectField<String> indent = new SelectField<>(
             indentOptions,
-            editorSettings.get("indent") == null ? AutoIndent.IDE
-                : AutoIndent.valueOf(editorSettings.get("indent").getAsString()),
+            editorSettings.get("indent") == null ? "IDE" : editorSettings.get("indent").getAsString(),
             "Auto Indentation", "Automatic indentation when going into a new line"
         );
         editorFields.put("indent", indent);
